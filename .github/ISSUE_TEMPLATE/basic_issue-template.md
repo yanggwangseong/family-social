@@ -7,15 +7,6 @@ assignees: ''
 
 ---
 
----
-name: Basic issue template
-about: Basic issue template
-title: ''
-labels: ''
-assignees: ''
-
----
-
 ## 💡 이슈 제목
 
 
