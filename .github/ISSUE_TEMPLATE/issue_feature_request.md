@@ -7,15 +7,6 @@ assignees: ''
 
 ---
 
----
-name: Feature issue template
-about: Feature issue template
-title: ''
-labels: feat
-assignees: ''
-
----
-
 ## 💡 이슈 제목
 
 
