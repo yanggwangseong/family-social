@@ -1,0 +1,37 @@
+version: "3"
+services:
+  frontend:
+    restart: "on-failure"
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./frontend
+    volumes:
+      # hot reload를 위해 mount
+      - "./frontend:/usr/src/next"
+      - "/usr/src/next/node_modules"
+      - "/usr/src/next/.next"
+
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3000:80"
+
+  backend:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend
+    container_name: social_backend
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    # env_file:
+    #   - ./.env
+    # environment:
+    #   POSTGRESQL_ROOT_PASSWORD: ${POSTGRESQL_ROOT_PASSWORD}
+    #   POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+    #   POSTGRESQL_HOST: ${POSTGRESQL_HOST}
+    #   POSTGRESQL_USER: ${POSTGRESQL_USER}
+    #   POSTGRESQL_PORT: ${POSTGRESQL_PORT}
