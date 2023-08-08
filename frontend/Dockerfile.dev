@@ -12,13 +12,13 @@ FROM node:18-alpine3.18
 
 # CMD [ "npm", "run", "dev" ]
 
-WORKDIR /usr/src/next
+WORKDIR /app
 
-COPY *.* /usr/src/next
+COPY *.* /app
 
 RUN npm install
 
-COPY . /usr/src/next
+COPY . /app
 
 RUN npm run build
 
