@@ -1,0 +1,22 @@
+version: "3"
+services:
+  frontend:
+    image: yanggwangseong/social-frontend:latest
+
+  nginx:
+    restart: always
+    image: yanggwangseong/social-nginx:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      - frontend
+      - backend
+
+  backend:
+    image: yanggwangseong/social-backend:latest
+    # environment:
+    #   POSTGRESQL_HOST: $POSTGRESQL_HOST
+    #   POSTGRESQL_USER: $POSTGRESQL_USER
+    #   POSTGRESQL_ROOT_PASSWORD: $POSTGRESQL_ROOT_PASSWORD
+    #   POSTGRESQL_DATABASE: $POSTGRESQL_DATABASE
+    #   POSTGRESQL_PORT: $POSTGRESQL_PORT
