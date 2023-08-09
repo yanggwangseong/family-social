@@ -1,0 +1,30 @@
+version: "3"
+services:
+  frontend:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    container_name: social_frontend_product
+
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    container_name: social_nginx_product
+    ports:
+      - "3000:80"
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: ./backend
+    container_name: social_backend
+    restart: always
+    # environment:
+    #   POSTGRESQL_HOST: $POSTGRESQL_HOST
+    #   POSTGRESQL_USER: $POSTGRESQL_USER
+    #   POSTGRESQL_ROOT_PASSWORD: $POSTGRESQL_ROOT_PASSWORD
+    #   POSTGRESQL_DATABASE: $POSTGRESQL_DATABASE
+    #   POSTGRESQL_PORT: $POSTGRESQL_PORT
