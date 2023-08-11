@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmModuleOptions } from '@/common/typeorm';
+import { typeORMConfig } from '@/common/typeorm';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -12,7 +12,7 @@ import { UsersModule } from './users/users.module';
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],
 			isGlobal: true,
 		}),
-		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
+		TypeOrmModule.forRootAsync(typeORMConfig),
 		UsersModule,
 	],
 	controllers: [AppController],
