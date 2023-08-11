@@ -9,7 +9,8 @@ services:
       # hot reload를 위해 mount
       - "./frontend:/app"
       - "/app/node_modules"
-      - "/app/.next"
+      # - "/app"
+      # - "/app/.next"
 
   nginx:
     restart: always
