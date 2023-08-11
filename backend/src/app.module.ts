@@ -12,7 +12,7 @@ import { UsersModule } from './users/users.module';
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],
 			isGlobal: true,
 		}),
-		TypeOrmModule.forRootAsync(typeORMConfig),
+		TypeOrmModule.forRoot(typeORMConfig),
 		UsersModule,
 	],
 	controllers: [AppController],
