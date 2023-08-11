@@ -5,7 +5,6 @@ export const TypeOrmModuleOptions = {
 	inject: [ConfigService],
 	useFactory: async (configService: ConfigService) => {
 		const NODE_ENV = configService.get('NODE_ENV');
-
 		const option = {
 			type: configService.get('DB_TYPE'),
 			host: configService.get('DB_HOST'),
