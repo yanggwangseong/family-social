@@ -1,4 +1,5 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 // export const TypeOrmModuleOptions = {
 // 	imports: [ConfigModule],
@@ -23,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 // 		return option;
 // 	},
 // };
-export const typeORMConfig = {
+export const typeORMConfig: TypeOrmModuleOptions = {
 	type: 'postgres',
 	host: process.env.DB_HOST,
 	port: 5432,
