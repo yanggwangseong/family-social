@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModuleOptions } from '@/common/typeorm';
 
 @Module({
 	imports: [
@@ -9,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],
 			isGlobal: true,
 		}),
+		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 	],
 	controllers: [AppController],
 	providers: [AppService],
