@@ -16,6 +16,8 @@ export class UsersService {
 		user.id = uuidv4();
 		user.name = 'test';
 		const createUser = await this.usersRepository.save(user);
-		return createUser;
+		//return createUser;
+
+		return await this.usersRepository.find();
 	}
 }
