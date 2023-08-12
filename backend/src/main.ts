@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -22,6 +23,9 @@ async function bootstrap() {
 
 	// global pipes
 	app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+
+	// sucess interceptor
+	app.useGlobalInterceptors(new SuccessInterceptor());
 
 	// cors
 	app.enableCors(options);
