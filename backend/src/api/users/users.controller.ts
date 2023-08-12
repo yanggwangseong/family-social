@@ -1,4 +1,4 @@
-import { Controller, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -7,4 +7,9 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 @Controller('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
+
+	@Get()
+	async test() {
+		return await this.usersService.test();
+	}
 }
