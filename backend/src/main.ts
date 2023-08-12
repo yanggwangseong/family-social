@@ -1,6 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+const getSwaggerOptions = () => ({
+	swaggerOptions: {
+		persistAuthorization: true, //웹 페이지를 새로고침을 해도 Token 값 유지
+	},
+});
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -11,8 +19,35 @@ async function bootstrap() {
 		credentials: true,
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	};
+
+	// global pipes
+	app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+
+	// cors
 	app.enableCors(options);
+
+	// cookie parser
 	app.use(cookieParser());
+
+	// swagger
+	const config = new DocumentBuilder()
+		.setTitle('fam API')
+		.setDescription('fam 서비스를 위한 API 문서')
+		.setVersion('1.0.0')
+		.addBearerAuth(
+			{
+				type: 'http',
+				scheme: 'bearer',
+				name: 'JWT',
+				in: 'header',
+			},
+			'accessToken',
+		)
+		.addSecurityRequirements('accessToken')
+		.build();
+
+	const document = SwaggerModule.createDocument(app, config);
+	SwaggerModule.setup('api/v1/swagger', app, document, getSwaggerOptions());
 
 	app.setGlobalPrefix('api');
 	await app.listen(5001);
