@@ -1,6 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmModuleOptions } from '@/common/typeorm';
@@ -17,8 +15,8 @@ import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 		UsersModule,
 	],
-	controllers: [AppController],
-	providers: [AppService],
+	controllers: [],
+	providers: [],
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
