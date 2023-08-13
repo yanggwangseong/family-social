@@ -16,6 +16,7 @@
 		"incremental": true,
 		"baseUrl": ".",
 		"paths": {
+			"@/atoms/*": ["atoms/*"],
 			"@/components/*": ["components/*"],
 			"@/ui/*": ["components/ui/*"],
 			"@/screens/*": ["components/screens/*"],
