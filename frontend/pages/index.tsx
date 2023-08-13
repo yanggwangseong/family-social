@@ -1,4 +1,4 @@
-import Format from '@/components/ui/layout/format';
+import Format from '@/components/ui/layout/Format';
 import { NextPage } from 'next';
 import React from 'react';
 
