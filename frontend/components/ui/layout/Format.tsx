@@ -1,19 +1,11 @@
-import Head from 'next/head';
+import Meta from '@/utils/meta/Meta';
+import { IMeta } from '@/utils/meta/meta.interface';
+import { FC, PropsWithChildren } from 'react';
 
-type AppLayoutProps = {
-	children: React.ReactNode;
-	title: string | undefined;
-};
-
-const Format = ({ children, title }: AppLayoutProps) => {
+const Format: FC<PropsWithChildren<IMeta>> = ({ children, ...meta }) => {
 	return (
 		<>
-			<Head>
-				<title>{title}</title>
-				<meta name="description" content="yanglog" />
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-
+			<Meta {...meta} />
 			<main>{children}</main>
 		</>
 	);
