@@ -4,6 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -22,7 +23,10 @@ async function bootstrap() {
 	};
 
 	// global pipes
-	app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+	app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+	// exception
+	app.useGlobalFilters(new ServiceHttpExceptionFilter());
 
 	// sucess interceptor
 	app.useGlobalInterceptors(new SuccessInterceptor());
