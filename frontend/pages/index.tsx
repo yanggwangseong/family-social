@@ -28,8 +28,8 @@ const HomePage: NextPage = () => {
 
 	return (
 		<Format title={'main'}>
-			<div>
-				<div className="w-6/12 h-3/6">
+			<div className="flex items-center justify-center">
+				<div className="w-1/4 h-1/4">
 					<Lottie animationData={groovyWalkAnimation} />
 				</div>
 				<div>{data?.data.data}</div>
