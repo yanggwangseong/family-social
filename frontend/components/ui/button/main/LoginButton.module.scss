@@ -1,0 +1,32 @@
+.container {
+	@screen md {
+		@apply mt-4;
+	}
+
+	.link {
+		@screen md {
+			@apply text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold;
+			height: 56px;
+			width: 504px;
+			border-radius: 40px;
+		}
+	}
+
+	.btn_container {
+		@screen md {
+			@apply flex justify-center;
+		}
+
+		.icon_container {
+			@screen md {
+				@apply flex justify-center items-center;
+			}
+		}
+
+		.btn_text {
+			@screen md {
+				@apply ml-2;
+			}
+		}
+	}
+}
