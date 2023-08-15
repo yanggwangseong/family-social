@@ -1,14 +1,16 @@
 import Format from '@/components/ui/layout/Format';
 import mainLandingAnimation from '@/assets/lottie/landing.json';
 import Lottie from 'lottie-react';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaSignInAlt } from 'react-icons/fa';
 import React, { FC } from 'react';
 import Link from 'next/link';
+import styles from './Home.module.scss';
+import Image from 'next/image';
 
 const Home: FC = () => {
 	return (
 		<Format title={'main'}>
-			<div className="flex justify-center h-full items-center">
+			<div className={styles.container}>
 				<div className="h-1/2 flex">
 					<div className="w-1/2 flex justify-center">
 						<Lottie animationData={mainLandingAnimation} />
@@ -27,7 +29,12 @@ const Home: FC = () => {
 								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
 								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
 							>
-								로그인
+								<div className="flex justify-center">
+									<div className="flex justify-center items-center">
+										<FaSignInAlt color="#DB4437"></FaSignInAlt>
+									</div>
+									<div className="ml-2">로그인</div>
+								</div>
 							</Link>
 						</div>
 						<div className="mt-4">
@@ -38,9 +45,28 @@ const Home: FC = () => {
 							>
 								<div className="flex justify-center">
 									<div className="flex justify-center items-center">
-										<FaGoogle></FaGoogle>
+										<FaGoogle color="#4285F4"></FaGoogle>
 									</div>
 									<div className="ml-2">구글 로그인</div>
+								</div>
+							</Link>
+						</div>
+						<div className="mt-4">
+							<Link
+								href={'/'}
+								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
+								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
+							>
+								<div className="flex justify-center">
+									<div className="flex justify-center items-center">
+										<Image
+											src="/images/naver/naver_btn.png"
+											alt="네이버 로그인 버튼"
+											width={24}
+											height={24}
+										></Image>
+									</div>
+									<div className="ml-2">네이버 로그인</div>
 								</div>
 							</Link>
 						</div>
