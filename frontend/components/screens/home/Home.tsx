@@ -1,6 +1,7 @@
 import Format from '@/components/ui/layout/Format';
 import mainLandingAnimation from '@/assets/lottie/landing.json';
 import Lottie from 'lottie-react';
+import { FaGoogle } from 'react-icons/fa';
 import React, { FC } from 'react';
 import Link from 'next/link';
 
@@ -35,7 +36,12 @@ const Home: FC = () => {
 								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
 								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
 							>
-								구글 로그인
+								<div className="flex justify-center">
+									<div className="flex justify-center items-center">
+										<FaGoogle></FaGoogle>
+									</div>
+									<div className="ml-2">구글 로그인</div>
+								</div>
 							</Link>
 						</div>
 					</div>
