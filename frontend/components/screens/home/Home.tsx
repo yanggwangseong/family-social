@@ -45,7 +45,7 @@ const Home: FC = () => {
 							>
 								<div className="flex justify-center">
 									<div className="flex justify-center items-center">
-										<FaGoogle color="#4285F4"></FaGoogle>
+										<FaGoogle color="#4285F4" size={24}></FaGoogle>
 									</div>
 									<div className="ml-2">구글 로그인</div>
 								</div>
@@ -62,11 +62,30 @@ const Home: FC = () => {
 										<Image
 											src="/images/naver/naver_btn.png"
 											alt="네이버 로그인 버튼"
-											width={24}
-											height={24}
+											width={26}
+											height={26}
 										></Image>
 									</div>
 									<div className="ml-2">네이버 로그인</div>
+								</div>
+							</Link>
+						</div>
+						<div className="mt-4">
+							<Link
+								href={'/'}
+								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
+								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
+							>
+								<div className="flex justify-center">
+									<div className="flex justify-center items-center">
+										<Image
+											src="/images/kakao/kakao_btn.png"
+											alt="카카오 로그인 버튼"
+											width={26}
+											height={26}
+										></Image>
+									</div>
+									<div className="ml-2">카카오 로그인</div>
 								</div>
 							</Link>
 						</div>

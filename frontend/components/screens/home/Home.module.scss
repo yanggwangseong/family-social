@@ -1,3 +1,5 @@
 .container {
-	@apply flex justify-center h-full items-center;
+	@screen md {
+		@apply flex justify-center h-full items-center;
+	}
 }
