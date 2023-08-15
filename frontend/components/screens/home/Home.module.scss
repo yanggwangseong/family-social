@@ -26,6 +26,19 @@
 			}
 			@apply text-customDark font-bold;
 		}
+
+		.contents_subtitle {
+			@screen md {
+				@apply text-lg mt-4;
+			}
+			@apply text-customGray;
+		}
+
+		.sign_subject {
+			@screen md {
+				@apply text-lg mt-16 mb-8;
+			}
+		}
 	}
 
 	//lottie

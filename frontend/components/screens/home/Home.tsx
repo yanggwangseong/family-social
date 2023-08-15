@@ -21,10 +21,10 @@ const Home: FC = () => {
 					</div>
 					<div className={styles.contents_container}>
 						<div className={styles.contents_title_wrap}>팸 커뮤니티</div>
-						<div className="mt-4  text-customGray text-lg">
+						<div className={styles.contents_subtitle}>
 							함께 콘텐츠를 연결하고 공유하세요.
 						</div>
-						<div className="text-lg mt-16 mb-8">Sign in to Fam</div>
+						<div className={styles.sign_subject}>Sign in to Fam</div>
 
 						<LoginButton
 							link="login"
