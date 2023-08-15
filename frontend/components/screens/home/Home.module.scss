@@ -1,0 +1,50 @@
+.container {
+	@screen md {
+		@apply flex justify-center h-full items-center;
+	}
+
+	.contents_wrap {
+		@screen md {
+			@apply flex;
+		}
+	}
+
+	.lottie_container {
+		@screen md {
+			@apply w-1/2 flex justify-center;
+		}
+	}
+
+	.contents_container {
+		@screen md {
+			@apply p-10 ml-20;
+		}
+
+		.contents_title_wrap {
+			@screen md {
+				@apply text-4xl;
+			}
+			@apply text-customDark font-bold;
+		}
+
+		.contents_subtitle {
+			@screen md {
+				@apply text-lg mt-4;
+			}
+			@apply text-customGray;
+		}
+
+		.sign_subject {
+			@screen md {
+				@apply text-lg mt-16 mb-8;
+			}
+		}
+	}
+
+	//lottie
+	.lottie {
+		@screen md {
+			@apply w-4/5;
+		}
+	}
+}
