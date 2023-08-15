@@ -6,89 +6,53 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 import styles from './Home.module.scss';
 import Image from 'next/image';
+import LoginButton from '@/components/ui/button/main/LoginButton';
 
 const Home: FC = () => {
 	return (
 		<Format title={'main'}>
 			<div className={styles.container}>
-				<div className="h-1/2 flex">
-					<div className="w-1/2 flex justify-center">
-						<Lottie animationData={mainLandingAnimation} />
+				<div className={styles.contents_wrap}>
+					<div className={styles.lottie_container}>
+						<Lottie
+							className={styles.lottie}
+							animationData={mainLandingAnimation}
+						/>
 					</div>
-					<div className="p-10 ml-20">
-						<div className="font-bold text-4xl text-customDark">
-							팸 커뮤니티
-						</div>
-						<div className="mt-4 text-customGray text-lg">
+					<div className={styles.contents_container}>
+						<div className={styles.contents_title_wrap}>팸 커뮤니티</div>
+						<div className="mt-4  text-customGray text-lg">
 							함께 콘텐츠를 연결하고 공유하세요.
 						</div>
-						<div className="text-lg mt-16">Sign in to Fam</div>
-						<div className="mt-6">
-							<Link
-								href={'/login'}
-								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
-								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
-							>
-								<div className="flex justify-center">
-									<div className="flex justify-center items-center">
-										<FaSignInAlt color="#DB4437"></FaSignInAlt>
-									</div>
-									<div className="ml-2">로그인</div>
-								</div>
-							</Link>
-						</div>
-						<div className="mt-4">
-							<Link
-								href={'/login'}
-								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
-								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
-							>
-								<div className="flex justify-center">
-									<div className="flex justify-center items-center">
-										<FaGoogle color="#4285F4" size={24}></FaGoogle>
-									</div>
-									<div className="ml-2">구글 로그인</div>
-								</div>
-							</Link>
-						</div>
-						<div className="mt-4">
-							<Link
-								href={'/'}
-								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
-								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
-							>
-								<div className="flex justify-center">
-									<div className="flex justify-center items-center">
-										<Image
-											src="/images/naver/naver_btn.png"
-											alt="네이버 로그인 버튼"
-											width={26}
-											height={26}
-										></Image>
-									</div>
-									<div className="ml-2">네이버 로그인</div>
-								</div>
-							</Link>
-						</div>
-						<div className="mt-4">
-							<Link
-								href={'/'}
-								className="text-customDark text-center w-full inline-block border border-solid border-customDark py-4 font-bold"
-								style={{ height: '56px', width: '504px', borderRadius: '40px' }}
-							>
-								<div className="flex justify-center">
-									<div className="flex justify-center items-center">
-										<Image
-											src="/images/kakao/kakao_btn.png"
-											alt="카카오 로그인 버튼"
-											width={26}
-											height={26}
-										></Image>
-									</div>
-									<div className="ml-2">카카오 로그인</div>
-								</div>
-							</Link>
-						</div>
+						<div className="text-lg mt-16 mb-8">Sign in to Fam</div>
+
+						<LoginButton
+							link="login"
+							text="로그인"
+							Icon={FaSignInAlt}
+							IconColor="DB4437"
+							IconSize={24}
+						></LoginButton>
+
+						<LoginButton
+							link="/"
+							text="구글 로그인"
+							Icon={FaGoogle}
+							IconColor="4285F4"
+							IconSize={24}
+						></LoginButton>
+
+						<LoginButton
+							link="/"
+							text="네이버 로그인"
+							imgUrn="/images/naver/naver_btn.png"
+						></LoginButton>
+
+						<LoginButton
+							link="/"
+							text="카카오 로그인"
+							imgUrn="/images/kakao/kakao_btn.png"
+						></LoginButton>
 					</div>
 				</div>
 			</div>
