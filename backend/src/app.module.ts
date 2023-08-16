@@ -6,6 +6,7 @@ import { UsersModule } from '@/api/users/users.module';
 import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailOptions } from './common/config/emailConfig';
+import { MembersModule } from './api/members/members.module';
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import { EmailOptions } from './common/config/emailConfig';
 		//TypeOrmModule.forRoot(typeORMConfig),
 		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 		UsersModule,
+		MembersModule,
 	],
 	controllers: [],
 	providers: [],
