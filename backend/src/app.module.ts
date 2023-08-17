@@ -7,6 +7,7 @@ import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailOptions } from './common/config/emailConfig';
 import { MembersModule } from './api/members/members.module';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
 	imports: [
@@ -19,6 +20,7 @@ import { MembersModule } from './api/members/members.module';
 		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 		UsersModule,
 		MembersModule,
+		AuthModule,
 	],
 	controllers: [],
 	providers: [],
