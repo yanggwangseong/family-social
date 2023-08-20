@@ -19,3 +19,9 @@ export const INVALID_REQUEST_BODY = new ErrorCodeDTO(
 	HttpStatus.BAD_REQUEST,
 	'RequestBody is invalid',
 );
+
+// 409
+export const ENTITY_CONFLICT = new ErrorCodeDTO(
+	HttpStatus.CONFLICT,
+	'Entity is CONFLICT',
+);
