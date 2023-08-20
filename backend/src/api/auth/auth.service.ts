@@ -45,5 +45,8 @@ export class AuthService {
 		return hashData;
 	}
 
-	private async CompareHashData() {}
+	private async CompareHashData<T extends string>(userInput: T, storedHash: T) {
+		const compare = await bcrypt.compare(userInput, storedHash);
+		return compare;
+	}
 }
