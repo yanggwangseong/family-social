@@ -49,7 +49,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 			email: email,
 			username: username,
 			password: password,
-			signupVerifyToken: uuidv4(),
+			signupVerifyToken: signupVerifyToken,
 		});
 
 		const id: string = insertResult.identifiers[0].id; // 타입 명시
