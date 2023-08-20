@@ -5,12 +5,16 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateMemberSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
 import { MemberCreateReqDto } from '@/dto/member/req/member-create-req.dto';
 import { MembersService } from '../members/members.service';
+import { AuthService } from './auth.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-	constructor(private readonly membersService: MembersService) {}
+	constructor(
+		private readonly membersService: MembersService,
+		private readonly authService: AuthService,
+	) {}
 
 	/**
 	 * @summary Local 로그인을 위한 User 생성
@@ -23,6 +27,6 @@ export class AuthController {
 	@CreateMemberSwagger()
 	@Post('sign-up')
 	async createMember(@Body() dto: MemberCreateReqDto) {
-		return await this.membersService.createMember(dto);
+		return await this.authService.createMember(dto);
 	}
 }

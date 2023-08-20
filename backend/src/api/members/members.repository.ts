@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { MemberEntity } from '@/entities/member.entity';
 import { ICreateMemberArgs } from '@/types/args/member';
 import { v4 as uuidv4 } from 'uuid';
-import { EntityNotFoundException } from '@/common/exception/service.exception';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -26,8 +25,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 			},
 		});
 
-		// member가 null일 경우에 대한 처리는 생략
-		return member; // null일 경우 컴파일 에러 발생하지 않음
+		return member;
 	}
 
 	async findMemberByEmail({ email }: { email: string }) {
@@ -42,15 +40,19 @@ export class MembersRepository extends Repository<MemberEntity> {
 		});
 	}
 
-	async createMember({ email, username, password }: ICreateMemberArgs) {
-		const {
-			identifiers: [{ id }],
-		} = await this.repository.insert({
+	async createMember(
+		{ email, username, password }: ICreateMemberArgs,
+		signupVerifyToken: string,
+	) {
+		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			email: email,
 			username: username,
 			password: password,
+			signupVerifyToken: uuidv4(),
 		});
+
+		const id: string = insertResult.identifiers[0].id; // 타입 명시
 
 		return this.findMemberById({ memberId: id });
 	}
