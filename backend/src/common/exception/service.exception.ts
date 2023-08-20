@@ -1,4 +1,5 @@
 import {
+	ENTITY_CONFLICT,
 	ENTITY_NOT_FOUND,
 	ErrorCode,
 	INVALID_REQUEST_BODY,
@@ -14,6 +15,11 @@ export const InvalidRequestBodyException = (
 	message?: string,
 ): ServiceException => {
 	return new ServiceException(INVALID_REQUEST_BODY, message);
+};
+
+// CONFLICT SERVICE EXCEPTION
+export const EntityConflictException = (message?: string): ServiceException => {
+	return new ServiceException(ENTITY_CONFLICT, message);
 };
 
 interface HttpExceptionResponse {
