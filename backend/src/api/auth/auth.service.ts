@@ -22,7 +22,7 @@ export class AuthService {
 				'해당 이메일에 해당하는 유저가 존재 합니다.',
 			);
 
-		const signupVerifyToken = uuidv4();
+		const signupVerifyToken = await this.EncryptHashData(uuidv4());
 		// dto.password = await this.hashData(dto.password);
 		const newMember = await this.membersRepository.createMember(
 			dto,
@@ -35,4 +35,15 @@ export class AuthService {
 
 		return newMember;
 	}
+
+	private async sendSignUpEmailVerify() {}
+
+	private async EncryptHashData<T extends string>(data: T) {
+		const salt = await bcrypt.genSalt();
+
+		const hashData = await bcrypt.hash(data, salt);
+		return hashData;
+	}
+
+	private async CompareHashData() {}
 }
