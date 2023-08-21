@@ -1,12 +1,12 @@
 import Format from '@/components/ui/layout/Format';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './SignUp.module.scss';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthFields } from './sign-up.interface';
 import { useMutation } from 'react-query';
 import Field from '@/components/ui/field/Field';
-import { validEmail } from './sign-up.constants';
+import { validEmail, validPassword } from './sign-up.constants';
 import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
@@ -14,12 +14,16 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 const SignUp: FC = () => {
+	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);
+
 	const router = useRouter();
 	const {
 		register,
-		formState: { errors },
+		formState: { errors, isValid },
 		handleSubmit,
 		reset,
+		getValues,
+		watch,
 	} = useForm<AuthFields>({
 		mode: 'onChange',
 	});
@@ -35,79 +39,121 @@ const SignUp: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 				Report.success('성공', `${data.username}님 환영합니다.`, '확인', () =>
-					router.push('/login'),
+					setEmailVerify(true),
 				);
-				reset();
+				//reset();
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
-					Loading.remove();
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
 				}
 			},
 		},
 	);
 
+	const password = watch('password');
+
 	const onSubmit: SubmitHandler<AuthFields> = data => {
 		registerSync(data);
-		reset();
+		//reset();
 	};
 
 	return (
 		<Format title={'signup'}>
-			<div className={styles.container}>
-				<div className={styles.contents_card}>
-					<div className={styles.contents_wrap}>
-						<div className={styles.signin__header_title}>회원가입</div>
-						<div className={styles.signin__header_subtitle}>
-							이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
+			{isEmailVerify ? (
+				<div className={styles.container}>
+					<div className={styles.contents_card}>
+						<div className={styles.contents_wrap}>
+							<div className={styles.signin__header_title}>
+								이메일 인증 확인
+							</div>
+							<div className={styles.signin__header_subtitle}>
+								이메일을 확인하려면 아래에 입력 하세요.
+							</div>
+							<div>
+								코드가 포함된 이메일을 {getValues('email')}(으)로 보냈습니다.
+							</div>
 						</div>
-						<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-							<Field
-								{...register('email', {
-									required: 'Email is required',
-									pattern: {
-										value: validEmail,
-										message: 'Please enter a valid email address',
-									},
-								})}
-								placeholder="Email"
-								error={errors.email}
-							/>
-							<Field
-								{...register('password', {
-									required: 'Password is required',
-									minLength: {
-										value: 10,
-										message: 'Min length should more 10 symbols',
-									},
-								})}
-								placeholder="Password"
-								error={errors.password}
-								type={'password'}
-							/>
-							<Field
-								{...register('username', {
-									required: 'username is required',
-									minLength: {
-										value: 3,
-										message: 'Min length should more 3 symbols',
-									},
-								})}
-								placeholder="username"
-								error={errors.username}
-							/>
-							<button>회원가입</button>
-						</form>
-					</div>
-					<div className={styles.footer_wrap}>
-						이미 회원이신가요?
-						<Link href={'/signin'} className={styles.signup}>
-							로그인
-						</Link>
 					</div>
 				</div>
-			</div>
+			) : (
+				<div className={styles.container}>
+					<div className={styles.contents_card}>
+						<div className={styles.contents_wrap}>
+							<div className={styles.signin__header_title}>회원가입</div>
+							<div className={styles.signin__header_subtitle}>
+								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
+							</div>
+							<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+								<div>Email</div>
+								<Field
+									{...register('email', {
+										required: '이메일 입력은 필수입니다!',
+										pattern: {
+											value: validEmail,
+											message: '이메일 형식을 확인 해주세요!',
+										},
+									})}
+									placeholder="이메일을 입력해주세요!"
+									error={errors.email}
+								/>
+								<div className={styles.form_label}>비밀번호</div>
+								<Field
+									{...register('password', {
+										required: '비밀번호 입력은 필수입니다!',
+										pattern: {
+											value: validPassword,
+											message: '영문,숫자,특수문자를 포함하여 작성해주세요',
+										},
+										minLength: {
+											value: 10,
+											message: '최소 비밀번호는 10자 이상입니다.',
+										},
+									})}
+									placeholder="비밀번호를 입력해주세요!"
+									error={errors.password}
+									type={'password'}
+								/>
+								<div className={styles.form_label}>비밀번호 확인</div>
+								<Field
+									{...register('passwordCompare', {
+										required: '비밀번호 확인은 필수입니다!',
+										validate: value =>
+											value !== password && '비밀번호와 일치하지 않습니다', // 비밀번호 확인과 일치하는지 검증
+									})}
+									placeholder="비밀번호 확인을 입력 해주세요!"
+									error={errors.passwordCompare}
+									type={'password'}
+								/>
+								<div className={styles.form_label}>이름</div>
+								<Field
+									{...register('username', {
+										required: '이름은 필수입니다!',
+										minLength: {
+											value: 2,
+											message: '최소 이름은 2자 이상입니다.',
+										},
+									})}
+									placeholder="이름을 입력 해주세요!"
+									error={errors.username}
+								/>
+								<button disabled={!isValid}>회원가입</button>
+							</form>
+						</div>
+						<div className={styles.footer_wrap}>
+							이미 회원이신가요?
+							<Link href={'/signin'} className={styles.signup}>
+								로그인
+							</Link>
+						</div>
+					</div>
+				</div>
+			)}
 		</Format>
 	);
 };
