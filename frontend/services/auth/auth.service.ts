@@ -11,4 +11,15 @@ export const AuthService = {
 
 		return data;
 	},
+
+	async emailVerify(emailVerifyCode: string) {
+		const { data } = await axiosClassic.post<AuthResponse>(
+			'/auth/email-verify',
+			{
+				emailVerifyCode,
+			},
+		);
+
+		return data;
+	},
 };

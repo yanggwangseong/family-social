@@ -13,6 +13,7 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import EmailVerify from './email-verify/EmailVerify';
 
 const SignUp: FC = () => {
 	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);
@@ -67,21 +68,7 @@ const SignUp: FC = () => {
 	return (
 		<Format title={'signup'}>
 			{isEmailVerify ? (
-				<div className={styles.container}>
-					<div className={styles.contents_card}>
-						<div className={styles.contents_wrap}>
-							<div className={styles.signin__header_title}>
-								이메일 인증 확인
-							</div>
-							<div className={styles.signin__header_subtitle}>
-								이메일을 확인하려면 아래에 입력 하세요.
-							</div>
-							<div>
-								코드가 포함된 이메일을 {getValues('email')}(으)로 보냈습니다.
-							</div>
-						</div>
-					</div>
-				</div>
+				<EmailVerify email={getValues('email')} />
 			) : (
 				<div className={styles.container}>
 					<div className={styles.contents_card}>
@@ -146,7 +133,7 @@ const SignUp: FC = () => {
 
 								<CustomButton
 									type="submit"
-									className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-3xl py-4 px-4 w-full"
+									className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full py-4 px-4 w-full"
 									disabled={!isValid}
 								>
 									회원가입
