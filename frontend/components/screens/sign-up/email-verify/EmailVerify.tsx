@@ -9,6 +9,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const EmailVerify: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -65,7 +66,9 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 					<div className={styles.signin__header_subtitle}>
 						이메일을 확인하려면 아래에 입력 하세요.
 					</div>
-					<div>코드가 포함된 이메일을 {email}(으)로 보냈습니다.</div>
+					<div className="mt-10">
+						코드가 포함된 이메일을 {email}(으)로 보냈습니다.
+					</div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<div className={styles.form_label}>확인 코드</div>
 						<Field
@@ -75,6 +78,14 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 							error={errors.emailVerifyCode}
 							type={'text'}
 						/>
+
+						<CustomButton
+							type="submit"
+							className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full py-4 px-4 w-full"
+							disabled={!isValid}
+						>
+							확인
+						</CustomButton>
 					</form>
 				</div>
 			</div>
