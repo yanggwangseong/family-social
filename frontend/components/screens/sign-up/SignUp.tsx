@@ -12,6 +12,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const SignUp: FC = () => {
 	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);
@@ -124,7 +125,7 @@ const SignUp: FC = () => {
 									{...register('passwordCompare', {
 										required: '비밀번호 확인은 필수입니다!',
 										validate: value =>
-											value !== password && '비밀번호와 일치하지 않습니다', // 비밀번호 확인과 일치하는지 검증
+											value === password || '비밀번호와 일치하지 않습니다', // 비밀번호 확인과 일치하는지 검증
 									})}
 									placeholder="비밀번호 확인을 입력 해주세요!"
 									error={errors.passwordCompare}
@@ -142,7 +143,14 @@ const SignUp: FC = () => {
 									placeholder="이름을 입력 해주세요!"
 									error={errors.username}
 								/>
-								<button disabled={!isValid}>회원가입</button>
+
+								<CustomButton
+									type="submit"
+									className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-3xl py-4 px-4 w-full"
+									disabled={!isValid}
+								>
+									회원가입
+								</CustomButton>
 							</form>
 						</div>
 						<div className={styles.footer_wrap}>
