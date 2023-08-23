@@ -1,7 +1,14 @@
 import { Column, Entity, Unique } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+	IsEmail,
+	IsNotEmpty,
+	IsString,
+	Matches,
+	MaxLength,
+	MinLength,
+} from 'class-validator';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -23,6 +30,8 @@ export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@IsString()
 	@MaxLength(60)
+	@MinLength(10)
+	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
 	password?: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: true })
@@ -32,7 +41,9 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
-	@MaxLength(60)
+	@IsString()
+	@MaxLength(10)
+	@MinLength(10)
 	signupVerifyToken?: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: true })

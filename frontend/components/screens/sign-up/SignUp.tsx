@@ -11,14 +11,12 @@ import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import EmailVerify from './email-verify/EmailVerify';
 
 const SignUp: FC = () => {
 	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);
 
-	const router = useRouter();
 	const {
 		register,
 		formState: { errors, isValid },
