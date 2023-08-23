@@ -14,6 +14,17 @@ export class MembersRepository extends Repository<MemberEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async findsignupVerifyTokenByEmail({ email }: { email: string }) {
+		return await this.repository.findOneOrFail({
+			where: {
+				email: email,
+			},
+			select: {
+				signupVerifyToken: true,
+			},
+		});
+	}
+
 	async findMemberById({ memberId }: { memberId: string }) {
 		const member = await this.repository.findOne({
 			where: {

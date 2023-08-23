@@ -25,3 +25,21 @@ export const CreateMemberSwagger = () => {
 		}),
 	);
 };
+
+export const VerifyEmailSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '이메일 인증코드 검증',
+		}),
+		ApiCreatedResponse({
+			description: '이메일 인증 성공',
+			type: MemberResDto,
+		}),
+		ApiConflictResponse({
+			description: '이메일 검증 코드가 일치 하지 않습니다',
+		}),
+		ApiNotFoundResponse({
+			description: '유저를 찾을 수 없습니다.',
+		}),
+	);
+};
