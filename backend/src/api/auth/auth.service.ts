@@ -16,7 +16,7 @@ import { generateRandomCode } from '@/utils/generate-random-code';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ITokenInCookieArgs } from '@/types/args/auth';
-import { CookieOptions } from 'express';
+import { CookieOptions, Response } from 'express';
 import { IRefreshTokenArgs } from '@/types/token';
 
 @Injectable()
@@ -50,6 +50,20 @@ export class AuthService {
 		await this.setCurrentRefreshToken(member.id, refreshToken);
 
 		return [accessToken, refreshToken];
+	}
+
+	async clearCookieAndResetRefreshToken(res: Response, sub: string) {
+		const accessTokenCookieName = this.configService.get<string>(
+			'ACCESS_TOKEN_COOKIE_NAME',
+		);
+		const refreshTokenCookieName = this.configService.get<string>(
+			'REFRESH_TOKEN_COOKIE_NAME',
+		);
+
+		res.clearCookie(accessTokenCookieName!);
+		res.clearCookie(refreshTokenCookieName!);
+
+		await this.setCurrentRefreshToken(sub, '');
 	}
 
 	async refreshTokens({
@@ -225,7 +239,9 @@ export class AuthService {
 	}
 
 	private async setCurrentRefreshToken(id: string, refreshToken: string) {
-		const currentHashedRefreshToken = await this.EncryptHashData(refreshToken);
+		const currentHashedRefreshToken = refreshToken
+			? await this.EncryptHashData(refreshToken)
+			: '';
 		await this.membersRepository.updateRefreshToken({
 			memberId: id,
 			refreshToken: currentHashedRefreshToken,
