@@ -1,4 +1,5 @@
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
+import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,
@@ -33,7 +34,7 @@ export const VerifyEmailSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '이메일 인증 성공',
-			type: MemberResDto,
+			type: VerifyEmailResDto,
 		}),
 		ApiConflictResponse({
 			description: '이메일 검증 코드가 일치 하지 않습니다',
