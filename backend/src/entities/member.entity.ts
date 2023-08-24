@@ -31,7 +31,6 @@ export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
 	@IsString()
-	@IsOptional()
 	@MaxLength(60)
 	@MinLength(10)
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
