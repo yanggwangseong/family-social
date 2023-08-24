@@ -27,7 +27,8 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 
 	const { mutate: verifySync } = useMutation(
 		['emailverify'],
-		(data: EmailVerifyType) => AuthService.emailVerify(data.emailVerifyCode),
+		(data: EmailVerifyType) =>
+			AuthService.emailVerify(data.emailVerifyCode, email),
 		{
 			onMutate: variable => {
 				Loading.hourglass();

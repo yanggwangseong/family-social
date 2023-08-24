@@ -104,6 +104,7 @@ const SignUp: FC = () => {
 									placeholder="비밀번호를 입력해주세요!"
 									error={errors.password}
 									type={'password'}
+									autoComplete="off"
 								/>
 								<div className={styles.form_label}>비밀번호 확인</div>
 								<Field
@@ -115,6 +116,7 @@ const SignUp: FC = () => {
 									placeholder="비밀번호 확인을 입력 해주세요!"
 									error={errors.passwordCompare}
 									type={'password'}
+									autoComplete="off"
 								/>
 								<div className={styles.form_label}>이름</div>
 								<Field
