@@ -14,6 +14,17 @@ export class MembersRepository extends Repository<MemberEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async updateRefreshToken({
+		memberId,
+		refreshToken,
+	}: {
+		memberId: string;
+		refreshToken: string;
+	}) {
+		await this.update({ id: memberId }, { refreshToken: refreshToken });
+		return this.findMemberById({ memberId: memberId });
+	}
+
 	async signInUser({ email }: ILoginMemberArgs) {
 		return await this.repository.findOne({
 			select: {
