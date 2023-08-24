@@ -60,7 +60,6 @@ export class AuthController {
 			token: refreshToken,
 			res,
 		});
-		return true;
 	}
 
 	/**
@@ -100,9 +99,11 @@ export class AuthController {
 	 */
 	@UseGuards(AccessTokenGuard)
 	@Post('/logout')
-	logout(@CurrentUser('sub') sub: string) {
-		console.log(sub);
-		return true;
+	async logout(
+		@CurrentUser('sub') sub: string,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		await this.authService.clearCookieAndResetRefreshToken(res, sub);
 	}
 
 	/**
