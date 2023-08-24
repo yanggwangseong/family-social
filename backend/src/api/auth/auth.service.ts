@@ -41,7 +41,14 @@ export class AuthService {
 		if (!passwordMatches)
 			throw EntityConflictException('비밀번호가 일치 하지 않습니다.');
 
-		return await this.signatureTokens(member.id, member.username);
+		const [accessToken, refreshToken] = await this.signatureTokens(
+			member.id,
+			member.username,
+		);
+
+		await this.setCurrentRefreshToken(member.id, refreshToken);
+
+		return [accessToken, refreshToken];
 	}
 
 	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
@@ -186,6 +193,14 @@ export class AuthService {
 		]);
 
 		return [accessToken, refreshToken];
+	}
+
+	private async setCurrentRefreshToken(id: string, refreshToken: string) {
+		const currentHashedRefreshToken = await this.EncryptHashData(refreshToken);
+		await this.membersRepository.updateRefreshToken({
+			memberId: id,
+			refreshToken: currentHashedRefreshToken,
+		});
 	}
 
 	ResponseTokenInCookie({ type, token, res }: ITokenInCookieArgs) {
