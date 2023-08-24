@@ -41,9 +41,10 @@ export class AuthService {
 	}
 
 	async verifyEmail(dto: IVerifyEmailArgs) {
-		const memberByEmail = await this.membersRepository.findMemberByEmail({
-			email: dto.email,
-		});
+		const memberByEmail =
+			await this.membersRepository.findsignupVerifyTokenByEmail({
+				email: dto.email,
+			});
 
 		if (!memberByEmail)
 			throw EntityNotFoundException(
@@ -56,7 +57,7 @@ export class AuthService {
 		);
 		if (!verifyEmailMatches)
 			throw EntityConflictException('이메일 검증 코드가 일치 하지 않습니다.');
-		return verifyEmailMatches;
+		return memberByEmail;
 	}
 
 	private async sendSignUpEmailVerify(

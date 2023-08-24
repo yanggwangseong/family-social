@@ -15,12 +15,13 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async findsignupVerifyTokenByEmail({ email }: { email: string }) {
-		return await this.repository.findOneOrFail({
+		return await this.repository.findOne({
 			where: {
 				email: email,
 			},
 			select: {
 				signupVerifyToken: true,
+				username: true,
 			},
 		});
 	}
