@@ -1,8 +1,6 @@
 import { MemberEntity } from '@/entities/member.entity';
 import { PickType } from '@nestjs/swagger';
 
-export class MemberCreateReqDto extends PickType(MemberEntity, [
-	'email',
+export class VerifyEmailResDto extends PickType(MemberEntity, [
 	'username',
-	'password',
 ] as const) {}

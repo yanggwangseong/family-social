@@ -2,10 +2,9 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
-import { Injectable, Logger } from '@nestjs/common';
-import { ICreateMemberArgs } from '@/types/args/member';
+import { Injectable } from '@nestjs/common';
+import { ICreateMemberArgs, IVerifyEmailArgs } from '@/types/args/member';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
-import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { MembersRepository } from '../members/members.repository';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -30,7 +29,7 @@ export class AuthService {
 		const signupVerifyToken = generateRandomCode(10);
 		const newMember = await this.membersRepository.createMember(
 			dto,
-			signupVerifyToken,
+			await this.EncryptHashData<string>(signupVerifyToken),
 		);
 		if (!newMember)
 			throw EntityNotFoundException('생성한 유저를 찾을 수 없습니다.');
@@ -39,6 +38,26 @@ export class AuthService {
 		await this.sendSignUpEmailVerify(dto.email, signupVerifyToken);
 
 		return newMember;
+	}
+
+	async verifyEmail(dto: IVerifyEmailArgs) {
+		const memberByEmail =
+			await this.membersRepository.findsignupVerifyTokenByEmail({
+				email: dto.email,
+			});
+
+		if (!memberByEmail)
+			throw EntityNotFoundException(
+				'이메일에 해당하는 유저를 찾을 수 없습니다',
+			);
+
+		const verifyEmailMatches = await this.CompareHashData<string>(
+			dto.signupVerifyToken,
+			memberByEmail.signupVerifyToken!,
+		);
+		if (!verifyEmailMatches)
+			throw EntityConflictException('이메일 검증 코드가 일치 하지 않습니다.');
+		return memberByEmail;
 	}
 
 	private async sendSignUpEmailVerify(
@@ -71,13 +90,13 @@ export class AuthService {
 							   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);'
 						>
 						<h1>이메일 인증</h1>
-						<p>가입해 주셔서 감사합니다! 아래의 인증 코드를 사용하세요:</p>
+						<p style='margin-bottom:30px;'>가입해 주셔서 감사합니다! 아래의 인증 코드를 사용하세요:</p>
 						<p
 							style='font-size: 24px;
 								   font-weight: bold;
 								   color: #007bff;'
 							>${signupVerifyToken}</p>
-						<p>이 코드를 인증 페이지에서 입력하여 가입을 완료하세요.</p>
+						<p style='margin-top:30px;'>이 코드를 인증 페이지에서 입력하여 가입을 완료하세요.</p>
 						<p>만약 이 서비스에 가입하지 않으셨다면 이 이메일을 무시하셔도 됩니다.</p>
 						<p>감사합니다.</p>
 					</div>
@@ -90,14 +109,17 @@ export class AuthService {
 		}
 	}
 
-	private async EncryptHashData<T extends string>(data: T) {
+	private async EncryptHashData<T extends string = string>(data: T) {
 		const salt = await bcrypt.genSalt(10);
 
 		const hashData = await bcrypt.hash(data, salt);
 		return hashData;
 	}
 
-	private async CompareHashData<T extends string>(userInput: T, storedHash: T) {
+	private async CompareHashData<T extends string = string>(
+		userInput: T,
+		storedHash: T,
+	) {
 		const compare = await bcrypt.compare(userInput, storedHash);
 		return compare;
 	}

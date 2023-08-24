@@ -1,0 +1,38 @@
+.container {
+	@screen md {
+		@apply flex justify-center;
+	}
+	@apply p-4;
+
+	.contents_card {
+		@screen md {
+			@apply border border-solid border-customDark px-4 flex flex-col;
+			width: 768px;
+		}
+		@apply w-full flex flex-col;
+
+		.contents_wrap {
+			@apply flex-grow;
+
+			.signin__header_title {
+				@screen md {
+					@apply text-4xl font-bold mt-20;
+				}
+				@apply text-customDark text-4xl font-bold mt-10;
+			}
+
+			.signin__header_subtitle {
+				@screen md {
+					@apply text-base mt-4;
+				}
+				@apply text-customGray text-base mt-4;
+			}
+
+			.form {
+				.form_label {
+					@apply text-customDark mt-4 mb-2;
+				}
+			}
+		}
+	}
+}
