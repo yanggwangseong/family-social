@@ -39,7 +39,7 @@ export const VerifyEmailSwagger = () => {
 			description: '이메일 검증 코드가 일치 하지 않습니다',
 		}),
 		ApiNotFoundResponse({
-			description: '유저를 찾을 수 없습니다.',
+			description: '이메일에 해당하는 유저를 찾을 수 없습니다.',
 		}),
 	);
 };

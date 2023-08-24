@@ -2,10 +2,9 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ICreateMemberArgs, IVerifyEmailArgs } from '@/types/args/member';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
-import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { MembersRepository } from '../members/members.repository';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -30,7 +29,7 @@ export class AuthService {
 		const signupVerifyToken = generateRandomCode(10);
 		const newMember = await this.membersRepository.createMember(
 			dto,
-			await this.EncryptHashData(signupVerifyToken),
+			await this.EncryptHashData<string>(signupVerifyToken),
 		);
 		if (!newMember)
 			throw EntityNotFoundException('생성한 유저를 찾을 수 없습니다.');
@@ -42,28 +41,21 @@ export class AuthService {
 	}
 
 	async verifyEmail(dto: IVerifyEmailArgs) {
-		const email = await this.membersRepository.findMemberByEmail({
+		const memberByEmail = await this.membersRepository.findMemberByEmail({
 			email: dto.email,
 		});
 
-		if (!email)
+		if (!memberByEmail)
 			throw EntityNotFoundException(
 				'이메일에 해당하는 유저를 찾을 수 없습니다',
 			);
 
-		const code = await this.membersRepository.findsignupVerifyTokenByEmail({
-			email: dto.email,
-		});
-
-		if (!code.signupVerifyToken || !dto.signupVerifyToken)
-			throw EntityNotFoundException(
-				'이메일에 해당하는 인증코드를 찾을 수 없습니다',
-			);
-
-		const verifyEmailMatches = await this.CompareHashData(
+		const verifyEmailMatches = await this.CompareHashData<string>(
 			dto.signupVerifyToken,
-			code.signupVerifyToken,
+			memberByEmail.signupVerifyToken!,
 		);
+		if (!verifyEmailMatches)
+			throw EntityConflictException('이메일 검증 코드가 일치 하지 않습니다.');
 		return verifyEmailMatches;
 	}
 
@@ -116,14 +108,17 @@ export class AuthService {
 		}
 	}
 
-	private async EncryptHashData<T extends string>(data: T) {
+	private async EncryptHashData<T extends string = string>(data: T) {
 		const salt = await bcrypt.genSalt(10);
 
 		const hashData = await bcrypt.hash(data, salt);
 		return hashData;
 	}
 
-	private async CompareHashData<T extends string>(userInput: T, storedHash: T) {
+	private async CompareHashData<T extends string = string>(
+		userInput: T,
+		storedHash: T,
+	) {
 		const compare = await bcrypt.compare(userInput, storedHash);
 		return compare;
 	}

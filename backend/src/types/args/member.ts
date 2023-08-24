@@ -5,5 +5,5 @@ export interface ICreateMemberArgs {
 }
 
 export interface IVerifyEmailArgs extends Pick<ICreateMemberArgs, 'email'> {
-	signupVerifyToken?: string;
+	signupVerifyToken: string;
 }
