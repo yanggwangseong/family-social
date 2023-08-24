@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Post,
+	Res,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ApiTags } from '@nestjs/swagger';
@@ -13,6 +20,7 @@ import { AuthService } from './auth.service';
 import { VerifyEmailReqDto } from '@/dto/member/req/verify-email-req.dto';
 import { MemberLoginReqDto } from '@/dto/member/req/member-login-req.dto';
 import { Response } from 'express';
+import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -49,6 +57,7 @@ export class AuthController {
 			token: refreshToken,
 			res,
 		});
+		return true;
 	}
 
 	/**
@@ -77,5 +86,11 @@ export class AuthController {
 	@Post('email-verify')
 	async verifyEmail(@Body() dto: VerifyEmailReqDto) {
 		return await this.authService.verifyEmail(dto);
+	}
+
+	@UseGuards(AccessTokenGuard)
+	@Post('/logout')
+	logout() {
+		return true;
 	}
 }
