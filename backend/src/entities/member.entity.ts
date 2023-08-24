@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
 	IsEmail,
 	IsNotEmpty,
+	IsOptional,
 	IsString,
 	Matches,
 	MaxLength,
@@ -29,6 +30,7 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@IsString()
+	@IsOptional()
 	@MaxLength(60)
 	@MinLength(10)
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
@@ -36,11 +38,13 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
+	@IsOptional()
 	@MaxLength(30)
 	phoneNumber?: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
+	@IsOptional()
 	@IsString()
 	@MaxLength(10)
 	@MinLength(10)
@@ -48,11 +52,13 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
+	@IsOptional()
 	@MaxLength(30)
 	socialType?: 'kakao' | 'google' | 'naver';
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
+	@IsOptional()
 	@MaxLength(60)
 	refreshToken?: string;
 }
