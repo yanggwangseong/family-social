@@ -22,6 +22,8 @@ import { MemberLoginReqDto } from '@/dto/member/req/member-login-req.dto';
 import { Response } from 'express';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
+import { CurrentUser } from '@/common/decorators/user.decorator';
+import { IRefreshTokenArgs } from '@/types/token';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -92,7 +94,31 @@ export class AuthController {
 	//@UseGuards(AccessTokenGuard)
 	@UseGuards(RefreshTokenGuard)
 	@Post('/logout')
-	logout() {
+	logout(
+		@CurrentUser()
+		user: IRefreshTokenArgs,
+	) {
+		console.log(user.sub);
+		console.log(user.username);
+		console.log(user.refreshToken);
+		return true;
+	}
+
+	/**
+	 * @summary Local User refreshtoken 재발급 및 accesstoken 재발급
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
+	@UseGuards(RefreshTokenGuard)
+	@Post('/refreshtoken')
+	async refreshTokens(
+		@CurrentUser()
+		user: IRefreshTokenArgs,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		await this.authService.refreshTokens(user);
 		return true;
 	}
 }
