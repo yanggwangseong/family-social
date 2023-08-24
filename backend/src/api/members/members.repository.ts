@@ -64,6 +64,21 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return member;
 	}
 
+	async findRefreshTokenById({ memberId }: { memberId: string }) {
+		const member = await this.repository.findOne({
+			where: {
+				id: memberId,
+			},
+			select: {
+				username: true,
+				id: true,
+				refreshToken: true,
+			},
+		});
+
+		return member;
+	}
+
 	async findMemberByEmail({ email }: { email: string }) {
 		return this.repository.findOne({
 			where: {
