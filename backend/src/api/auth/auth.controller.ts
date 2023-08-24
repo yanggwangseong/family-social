@@ -91,16 +91,17 @@ export class AuthController {
 		return await this.authService.verifyEmail(dto);
 	}
 
-	//@UseGuards(AccessTokenGuard)
-	@UseGuards(RefreshTokenGuard)
+	/**
+	 * @summary Local User 로그아웃
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 쿠키삭제, refreshtoken 값 초기화
+	 */
+	@UseGuards(AccessTokenGuard)
 	@Post('/logout')
-	logout(
-		@CurrentUser()
-		user: IRefreshTokenArgs,
-	) {
-		console.log(user.sub);
-		console.log(user.username);
-		console.log(user.refreshToken);
+	logout(@CurrentUser('sub') sub: string) {
+		console.log(sub);
 		return true;
 	}
 
@@ -118,7 +119,19 @@ export class AuthController {
 		user: IRefreshTokenArgs,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		await this.authService.refreshTokens(user);
-		return true;
+		const [accessToken, refreshToken] = await this.authService.refreshTokens(
+			user,
+		);
+
+		this.authService.ResponseTokenInCookie({
+			type: 'accessToken',
+			token: accessToken,
+			res,
+		});
+		this.authService.ResponseTokenInCookie({
+			type: 'refreshToken',
+			token: refreshToken,
+			res,
+		});
 	}
 }

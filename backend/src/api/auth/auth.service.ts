@@ -52,7 +52,33 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	async refreshTokens({ sub, username, refreshToken }: IRefreshTokenArgs) {}
+	async refreshTokens({
+		sub,
+		username,
+		refreshToken: refreshTokenArgs,
+	}: IRefreshTokenArgs) {
+		const member = await this.membersRepository.findRefreshTokenById({
+			memberId: sub,
+		});
+		if (!member) throw EntityNotFoundException('유저를 찾을 수 없습니다.');
+
+		const refreshTokenMatches = await this.CompareHashData<string>(
+			refreshTokenArgs,
+			member.refreshToken!,
+		);
+
+		if (!refreshTokenMatches)
+			throw EntityConflictException('토큰 정보가 일치 하지 않습니다.');
+
+		const [accessToken, refreshToken] = await this.signatureTokens(
+			sub,
+			username,
+		);
+
+		await this.setCurrentRefreshToken(sub, refreshToken);
+
+		return [accessToken, refreshToken];
+	}
 
 	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
 		const member = await this.membersRepository.findMemberByEmail({
