@@ -21,6 +21,7 @@ import { VerifyEmailReqDto } from '@/dto/member/req/verify-email-req.dto';
 import { MemberLoginReqDto } from '@/dto/member/req/member-login-req.dto';
 import { Response } from 'express';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -88,7 +89,8 @@ export class AuthController {
 		return await this.authService.verifyEmail(dto);
 	}
 
-	@UseGuards(AccessTokenGuard)
+	//@UseGuards(AccessTokenGuard)
+	@UseGuards(RefreshTokenGuard)
 	@Post('/logout')
 	logout() {
 		return true;
