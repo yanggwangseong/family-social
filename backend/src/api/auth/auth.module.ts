@@ -7,6 +7,7 @@ import { MemberEntity } from '@/entities/member.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
+import { RefreshTokenStrategy } from '@/common/strategies/refreshToken.strategy';
 
 @Module({
 	imports: [
@@ -23,6 +24,6 @@ import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
 		TypeOrmModule.forFeature([MemberEntity]),
 	],
 	controllers: [AuthController],
-	providers: [AuthService, AccessTokenStrategy],
+	providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
 })
 export class AuthModule {}
