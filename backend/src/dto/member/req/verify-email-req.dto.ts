@@ -1,9 +1,11 @@
 import { MemberEntity } from '@/entities/member.entity';
-import { ApiPropertyOptional, PickType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class VerifyEmailDto extends PickType(MemberEntity, ['email'] as const) {
-	@ApiPropertyOptional({
+export class VerifyEmailReqDto extends PickType(MemberEntity, [
+	'email',
+] as const) {
+	@ApiProperty({
 		description: '이메일 인증을 위한 코드',
 		example: '468DvYlW5D',
 	})
