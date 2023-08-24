@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ApiTags } from '@nestjs/swagger';
@@ -12,6 +12,7 @@ import { MembersService } from '../members/members.service';
 import { AuthService } from './auth.service';
 import { VerifyEmailReqDto } from '@/dto/member/req/verify-email-req.dto';
 import { MemberLoginReqDto } from '@/dto/member/req/member-login-req.dto';
+import { Response } from 'express';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -33,8 +34,21 @@ export class AuthController {
 	 */
 	@LoginMemberSwagger()
 	@Post('sign-in')
-	async signInUser(@Body() dto: MemberLoginReqDto) {
-		return await this.authService.signInUser();
+	async signInUser(
+		@Body() dto: MemberLoginReqDto,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const [accessToken, refreshToken] = await this.authService.signInUser(dto);
+		this.authService.ResponseTokenInCookie({
+			type: 'accessToken',
+			token: accessToken,
+			res,
+		});
+		this.authService.ResponseTokenInCookie({
+			type: 'refreshToken',
+			token: refreshToken,
+			res,
+		});
 	}
 
 	/**

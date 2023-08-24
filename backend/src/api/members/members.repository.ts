@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MemberEntity } from '@/entities/member.entity';
-import { ICreateMemberArgs } from '@/types/args/member';
+import { ICreateMemberArgs, ILoginMemberArgs } from '@/types/args/member';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -12,6 +12,19 @@ export class MembersRepository extends Repository<MemberEntity> {
 		private readonly repository: Repository<MemberEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async signInUser({ email }: ILoginMemberArgs) {
+		return await this.repository.findOne({
+			select: {
+				username: true,
+				id: true,
+				password: true,
+			},
+			where: {
+				email: email,
+			},
+		});
 	}
 
 	async findsignupVerifyTokenByEmail({ email }: { email: string }) {

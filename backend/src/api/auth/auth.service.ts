@@ -3,21 +3,46 @@ import {
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { Injectable } from '@nestjs/common';
-import { ICreateMemberArgs, IVerifyEmailArgs } from '@/types/args/member';
+import {
+	ICreateMemberArgs,
+	ILoginMemberArgs,
+	IVerifyEmailArgs,
+} from '@/types/args/member';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
 import * as bcrypt from 'bcryptjs';
 import { MembersRepository } from '../members/members.repository';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomCode } from '@/utils/generate-random-code';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { ITokenInCookieArgs } from '@/types/args/auth';
+import { CookieOptions } from 'express';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly membersRepository: MembersRepository,
 		private readonly mailerService: MailerService,
+		private readonly jwtService: JwtService,
+		private readonly configService: ConfigService,
 	) {}
 
-	async signInUser() {}
+	async signInUser(dto: ILoginMemberArgs) {
+		const member = await this.membersRepository.signInUser(dto);
+
+		if (!member)
+			throw EntityNotFoundException(
+				'이메일에 해당하는 유저를 찾을 수 없습니다',
+			);
+		const passwordMatches = await this.CompareHashData<string>(
+			dto.password!,
+			member.password!,
+		);
+		if (!passwordMatches)
+			throw EntityConflictException('비밀번호가 일치 하지 않습니다.');
+
+		return await this.signatureTokens(member.id, member.username);
+	}
 
 	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
 		const member = await this.membersRepository.findMemberByEmail({
@@ -30,7 +55,10 @@ export class AuthService {
 
 		const signupVerifyToken = generateRandomCode(10);
 		const newMember = await this.membersRepository.createMember(
-			dto,
+			{
+				...dto,
+				password: await this.EncryptHashData<string>(dto.password!),
+			},
 			await this.EncryptHashData<string>(signupVerifyToken),
 		);
 		if (!newMember)
@@ -124,5 +152,65 @@ export class AuthService {
 	) {
 		const compare = await bcrypt.compare(userInput, storedHash);
 		return compare;
+	}
+
+	private async signatureTokens(
+		id: string,
+		name: string,
+	): Promise<[string, string]> {
+		const [accessToken, refreshToken]: [string, string] = await Promise.all([
+			await this.jwtService.signAsync(
+				{
+					sub: id,
+					username: name,
+				},
+				{
+					secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+					expiresIn: this.configService.get<string>(
+						'JWT_ACCESS_TOKEN_EXPIRATION',
+					),
+				},
+			),
+			await this.jwtService.signAsync(
+				{
+					sub: id,
+					username: name,
+				},
+				{
+					secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+					expiresIn: this.configService.get<string>(
+						'JWT_REFRESH_TOKEN_EXPIRATION',
+					),
+				},
+			),
+		]);
+
+		return [accessToken, refreshToken];
+	}
+
+	ResponseTokenInCookie({ type, token, res }: ITokenInCookieArgs) {
+		const accessTokenCookieName = this.configService.get<string>(
+			'ACCESS_TOKEN_COOKIE_NAME',
+		);
+		const refreshTokenCookieName = this.configService.get<string>(
+			'REFRESH_TOKEN_COOKIE_NAME',
+		);
+
+		const tokenName =
+			type === 'refreshToken'
+				? refreshTokenCookieName!
+				: accessTokenCookieName!;
+		let cookieOptions: CookieOptions = {
+			maxAge: Number(this.configService.get<number>('COOKIE_MAX_AGE')),
+		};
+
+		if (type === 'refreshToken') {
+			cookieOptions = {
+				...cookieOptions,
+				httpOnly: true,
+			};
+		}
+
+		res.cookie(tokenName, token, cookieOptions);
 	}
 }
