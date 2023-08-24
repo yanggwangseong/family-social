@@ -17,6 +17,8 @@ export class AuthService {
 		private readonly mailerService: MailerService,
 	) {}
 
+	async signInUser() {}
+
 	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
 		const member = await this.membersRepository.findMemberByEmail({
 			email: dto.email,

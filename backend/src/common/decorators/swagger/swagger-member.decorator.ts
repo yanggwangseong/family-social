@@ -9,6 +9,24 @@ import {
 	ApiResponse,
 } from '@nestjs/swagger';
 
+export const LoginMemberSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '멤버 로그인',
+		}),
+		ApiCreatedResponse({
+			description: '멤버 로그인 성공',
+			type: MemberResDto,
+		}),
+		// ApiConflictResponse({
+		// 	description: '이미 멤버가 존재함',
+		// }),
+		// ApiNotFoundResponse({
+		// 	description: '생성한 유저를 찾을 수 없습니다.',
+		// }),
+	);
+};
+
 export const CreateMemberSwagger = () => {
 	return applyDecorators(
 		ApiOperation({

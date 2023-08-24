@@ -29,6 +29,7 @@ export class MemberEntity extends DefaultEntity {
 	email!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
+	@ApiProperty()
 	@IsString()
 	@IsOptional()
 	@MaxLength(60)
