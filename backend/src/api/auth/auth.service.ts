@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ITokenInCookieArgs } from '@/types/args/auth';
 import { CookieOptions } from 'express';
+import { IRefreshTokenArgs } from '@/types/token';
 
 @Injectable()
 export class AuthService {
@@ -50,6 +51,8 @@ export class AuthService {
 
 		return [accessToken, refreshToken];
 	}
+
+	async refreshTokens({ sub, username, refreshToken }: IRefreshTokenArgs) {}
 
 	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
 		const member = await this.membersRepository.findMemberByEmail({
