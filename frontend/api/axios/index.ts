@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY } from '@/constants/index';
+import { ACCESS_TOKEN_KEY, API_URL } from '@/constants/index';
 import { getCookie } from '@/utils/cookie';
 import axios, {
 	AxiosError,
@@ -10,8 +10,6 @@ import { axiosRefreshAPI } from './refresh';
 export const getContentType = () => ({
 	'Content-Type': 'application/json',
 });
-
-export const API_URL = `http://localhost:3000/api`;
 
 export const axiosClassic = axios.create({
 	baseURL: API_URL,

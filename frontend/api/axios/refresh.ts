@@ -1,6 +1,5 @@
+import { API_URL } from '@/constants/index';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-
-export const API_URL = `http://localhost:3000/api`;
 
 export const axiosRefreshAPI = (() => {
 	const axiosInstance = axios.create({
