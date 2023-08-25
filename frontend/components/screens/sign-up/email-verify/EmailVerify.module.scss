@@ -1,8 +1,8 @@
 .container {
 	@screen md {
-		@apply flex justify-center;
+		@apply flex justify-center h-full;
 	}
-	@apply p-4;
+	@apply p-4 h-full;
 
 	.contents_card {
 		@screen md {
