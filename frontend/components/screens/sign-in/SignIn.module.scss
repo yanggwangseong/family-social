@@ -4,37 +4,64 @@
 	}
 	@apply p-4 h-full;
 
-	.contents_card {
-		@screen md {
-			@apply border border-solid border-customDark px-4 flex flex-col;
-			width: 768px;
-		}
-		@apply w-full flex flex-col;
+	.form {
+		@apply h-full;
+		.contents_card {
+			@screen md {
+				@apply border border-solid border-customDark px-4 flex flex-col h-full;
+				width: 768px;
+			}
+			@apply w-full flex flex-col h-full;
 
-		.contents_wrap {
-			@apply flex-grow;
+			.contents_wrap {
+				@apply flex-grow;
 
-			.signin__header_title {
-				@screen md {
-					@apply text-4xl font-bold mt-20;
+				.signin__header_title {
+					@screen md {
+						@apply text-4xl font-bold mt-10;
+					}
+					@apply text-customDark text-4xl font-bold mt-10;
 				}
-				@apply text-customDark text-4xl font-bold mt-40;
+
+				.signin__header_subtitle {
+					@screen md {
+						@apply text-base mt-4;
+					}
+					@apply text-customGray text-base mt-4;
+				}
+				.label_field {
+					@apply text-customDark mt-8 mb-2;
+
+					&::after {
+						@apply text-customOrange;
+						content: '*';
+					}
+				}
+				.form_label {
+					@apply text-customDark mt-4 mb-2;
+					&::after {
+						@apply text-customOrange;
+						content: '*';
+					}
+				}
+				// .form {
+				// 	> div:nth-child(1) {
+				// 		@apply text-customDark mt-8 mb-2;
+				// 	}
+
+				// 	.form_label {
+				// 		@apply text-customDark mt-4 mb-2;
+				// 	}
+				// }
 			}
 
-			.signin__header_subtitle {
-				@screen md {
-					@apply text-base mt-4;
+			.footer_wrap {
+				@apply text-center mb-8 text-customGray text-base;
+
+				.signup {
+					@apply ml-2;
+					color: #e5855d;
 				}
-				@apply text-customGray text-base mt-4;
-			}
-		}
-
-		.footer_wrap {
-			@apply text-center mb-8 text-customGray text-base;
-
-			.signup {
-				@apply ml-2;
-				color: #e5855d;
 			}
 		}
 	}
