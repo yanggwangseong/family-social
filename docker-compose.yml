@@ -2,9 +2,6 @@ version: "3"
 services:
   frontend:
     image: yanggwangseong/social-frontend:latest
-    environment:
-      NEXT_PUBLIC_COOKIE_KEY: $NEXT_PUBLIC_COOKIE_KEY
-      NEXT_PUBLIC_API_URL: $NEXT_PUBLIC_API_URL
 
   nginx:
     restart: always
