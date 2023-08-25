@@ -1,0 +1,14 @@
+.input {
+	@apply border border-solid border-customDark rounded-full py-1 px-5;
+	> input[type='text'],
+	> input[type='password'] {
+		@apply bg-basic text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+
+		&::placeholder {
+			@apply font-normal;
+		}
+	}
+}
+.error {
+	@apply text-customOrange;
+}
