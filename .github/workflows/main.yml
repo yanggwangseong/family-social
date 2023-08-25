@@ -62,5 +62,6 @@ jobs:
           existing_bucket_name: ${{ secrets.AWS_BUCKET_NAME }}
           deployment_package: deploy.zip
           wait_for_environment_recovery: 300
+          use_existing_version_if_available: true
           # version_label: ${{ steps.build-number.outputs.BUILD_NUMBER }}
           # version_description: Version ${{steps.build-number.outputs.BUILD_NUMBER}} deployed via github actions ${{ github.sha }}
