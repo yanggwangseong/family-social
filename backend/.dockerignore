@@ -4,3 +4,6 @@ Dockerfile.dev
 node_modules
 npm-debug.log
 dist
+
+# env
+*.env*

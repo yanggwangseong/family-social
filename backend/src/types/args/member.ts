@@ -1,3 +1,6 @@
+export interface ILoginMemberArgs
+	extends Pick<ICreateMemberArgs, 'email' | 'password'> {}
+
 export interface ICreateMemberArgs {
 	email: string;
 	username: string;

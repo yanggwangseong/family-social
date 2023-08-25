@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MemberEntity } from '@/entities/member.entity';
-import { ICreateMemberArgs } from '@/types/args/member';
+import { ICreateMemberArgs, ILoginMemberArgs } from '@/types/args/member';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -12,6 +12,30 @@ export class MembersRepository extends Repository<MemberEntity> {
 		private readonly repository: Repository<MemberEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async updateRefreshToken({
+		memberId,
+		refreshToken,
+	}: {
+		memberId: string;
+		refreshToken: string;
+	}) {
+		await this.update({ id: memberId }, { refreshToken: refreshToken });
+		return this.findMemberById({ memberId: memberId });
+	}
+
+	async signInUser({ email }: ILoginMemberArgs) {
+		return await this.repository.findOne({
+			select: {
+				username: true,
+				id: true,
+				password: true,
+			},
+			where: {
+				email: email,
+			},
+		});
 	}
 
 	async findsignupVerifyTokenByEmail({ email }: { email: string }) {
@@ -34,6 +58,21 @@ export class MembersRepository extends Repository<MemberEntity> {
 			select: {
 				username: true,
 				id: true,
+			},
+		});
+
+		return member;
+	}
+
+	async findRefreshTokenById({ memberId }: { memberId: string }) {
+		const member = await this.repository.findOne({
+			where: {
+				id: memberId,
+			},
+			select: {
+				username: true,
+				id: true,
+				refreshToken: true,
 			},
 		});
 
