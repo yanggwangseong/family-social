@@ -3,4 +3,5 @@ export interface AuthFields {
 	password: string;
 	username: string;
 	passwordCompare: string;
+	phoneNumber: string;
 }
