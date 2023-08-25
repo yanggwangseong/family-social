@@ -5,6 +5,7 @@ export interface ICreateMemberArgs {
 	email: string;
 	username: string;
 	password?: string;
+	phoneNumber: string;
 }
 
 export interface IVerifyEmailArgs extends Pick<ICreateMemberArgs, 'email'> {

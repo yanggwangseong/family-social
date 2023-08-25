@@ -92,7 +92,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async createMember(
-		{ email, username, password }: ICreateMemberArgs,
+		{ email, username, password, phoneNumber }: ICreateMemberArgs,
 		signupVerifyToken: string,
 	) {
 		const insertResult = await this.repository.insert({
@@ -100,6 +100,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 			email: email,
 			username: username,
 			password: password,
+			phoneNumber: phoneNumber,
 			signupVerifyToken: signupVerifyToken,
 		});
 
