@@ -36,11 +36,12 @@ export class MemberEntity extends DefaultEntity {
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
 	password?: string;
 
-	@Column({ type: 'varchar', length: 30, nullable: true })
+	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsOptional()
+	@IsNotEmpty()
+	@IsString()
 	@MaxLength(30)
-	phoneNumber?: string;
+	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()

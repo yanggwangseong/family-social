@@ -31,7 +31,12 @@ const SignUp: FC = () => {
 	const { mutate: registerSync } = useMutation(
 		['register'],
 		(data: AuthFields) =>
-			AuthService.register(data.email, data.password, data.username),
+			AuthService.register(
+				data.email,
+				data.password,
+				data.username,
+				data.phoneNumber,
+			),
 		{
 			onMutate: variable => {
 				Loading.hourglass();
@@ -129,6 +134,19 @@ const SignUp: FC = () => {
 									})}
 									placeholder="이름을 입력 해주세요!"
 									error={errors.username}
+								/>
+								<div className={styles.form_label}>전화번호</div>
+								<Field
+									{...register('phoneNumber', {
+										required: '전화번호는 필수입니다',
+										minLength: {
+											value: 11,
+											message: '전화번호는 11자리 입니다.',
+										},
+									})}
+									maxLength={11}
+									placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
+									error={errors.phoneNumber}
 								/>
 
 								<CustomButton
