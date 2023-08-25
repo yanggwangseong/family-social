@@ -27,7 +27,7 @@ const Home: FC = () => {
 						<div className={styles.sign_subject}>Sign in to Fam</div>
 
 						<LoginButton
-							link="login"
+							link="signin"
 							text="로그인"
 							Icon={FaSignInAlt}
 							IconColor="DB4437"
