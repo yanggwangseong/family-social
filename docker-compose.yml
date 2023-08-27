@@ -2,6 +2,8 @@ version: "3"
 services:
   frontend:
     image: yanggwangseong/social-frontend:latest
+    environment:
+      DB_TYPE: $DB_TYPE
 
   nginx:
     restart: always
