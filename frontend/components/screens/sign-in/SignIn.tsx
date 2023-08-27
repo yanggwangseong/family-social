@@ -51,10 +51,9 @@ const SignIn: FC = () => {
 	);
 
 	const onSubmit: SubmitHandler<LoginFields> = data => {
-		console.log(process.env.NEXT_PUBLIC_COOKIE_KEY);
-		console.log(process.env.NEXT_PUBLIC_API_URL);
-		console.log(process.env.HOSTNAME);
-		console.log(process.env.DB_TYPE);
+		console.log('NEXT_PUBLIC_COOKIE_KEY', process.env.NEXT_PUBLIC_COOKIE_KEY);
+		console.log('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
+
 		loginSync(data);
 	};
 
