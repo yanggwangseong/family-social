@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { MemberGroupEntity } from './member-group.entity';
 
 @Entity({ name: 'fam_group' })
 export class GroupEntity extends DefaultEntity {
@@ -11,4 +12,7 @@ export class GroupEntity extends DefaultEntity {
 	@IsString()
 	@MaxLength(60)
 	groupName!: string;
+
+	@OneToMany(() => MemberGroupEntity, (mg) => mg.group)
+	groupByMemberGroups?: MemberGroupEntity[];
 }

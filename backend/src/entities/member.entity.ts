@@ -1,4 +1,4 @@
-import { Column, Entity, Unique } from 'typeorm';
+import { Column, Entity, OneToMany, Unique } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -10,6 +10,7 @@ import {
 	MaxLength,
 	MinLength,
 } from 'class-validator';
+import { MemberGroupEntity } from './member-group.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -62,4 +63,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsOptional()
 	@MaxLength(60)
 	refreshToken?: string;
+
+	@OneToMany(() => MemberGroupEntity, (mg) => mg.member)
+	memberGroups?: MemberGroupEntity[];
 }
