@@ -17,6 +17,13 @@ export class MemberGroupEntity extends DefaultEntity {
 	})
 	role!: Trole;
 
+	@Column({
+		type: 'boolean',
+		nullable: false,
+		default: false,
+	})
+	invitationAccepted!: boolean;
+
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
