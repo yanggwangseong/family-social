@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { GroupsRepository } from './groups.repository';
 import { MemberGroupRepository } from './member-group.repository';
-import { EntityConflictException } from '@/common/exception/service.exception';
+import {
+	EntityConflictException,
+	EntityNotFoundException,
+} from '@/common/exception/service.exception';
 
 @Injectable()
 export class GroupsService {
@@ -35,5 +38,26 @@ export class GroupsService {
 			invitationAccepted: true,
 		});
 		return group;
+	}
+
+	async createMemberByGroup({
+		memberId,
+		groupId,
+	}: {
+		memberId: string;
+		groupId: string;
+	}) {
+		const group = await this.groupsRepository.findGroupById({
+			groupId: groupId,
+		});
+		if (!group) throw EntityNotFoundException('그룹을 찾을 수 없습니다.');
+
+		await this.memberGroupRepository.createMemberGroup({
+			memberId: memberId,
+			groupId: groupId,
+			role: 'user',
+			invitationAccepted: false,
+		});
+		//[TODO] 그룹 초대 notification
 	}
 }

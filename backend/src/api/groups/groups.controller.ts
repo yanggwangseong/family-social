@@ -1,6 +1,8 @@
 import {
 	Body,
 	Controller,
+	Param,
+	ParseUUIDPipe,
 	Post,
 	UseGuards,
 	UseInterceptors,
@@ -12,8 +14,12 @@ import { GroupsService } from './groups.service';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupCreateReqDto } from '@/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateGroupSwagger } from '@/common/decorators/swagger/swagger-group.decorator';
+import {
+	CreateGroupSwagger,
+	CreateMemberByGroupSwagger,
+} from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
+import { GroupMemberCreateReqDto } from '@/dto/group/req/group-member-create-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -30,7 +36,6 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
-
 	@CreateGroupSwagger()
 	@Post()
 	async createGroup(
@@ -40,6 +45,26 @@ export class GroupsController {
 		return await this.groupsService.createGroup({
 			memberId: sub,
 			groupName: dto.groupName,
+		});
+	}
+
+	/**
+	 * @summary Group 멤버 생성
+	 *
+	 * @tag groups
+	 * @param memberId string
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹에 초대된 멤버
+	 */
+	@CreateMemberByGroupSwagger()
+	@Post(':groupId/members')
+	async createMemberByGroup(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Body() dto: GroupMemberCreateReqDto,
+	) {
+		await this.groupsService.createMemberByGroup({
+			memberId: dto.memberId,
+			groupId: groupId,
 		});
 	}
 }

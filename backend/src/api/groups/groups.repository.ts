@@ -33,6 +33,20 @@ export class GroupsRepository extends Repository<GroupEntity> {
 	}
 
 	async findGroupById({ groupId }: { groupId: string }) {
+		const group = await this.repository.findOne({
+			where: {
+				id: groupId,
+			},
+			select: {
+				id: true,
+				groupName: true,
+			},
+		});
+
+		return group;
+	}
+
+	async findOrFailGroupById({ groupId }: { groupId: string }) {
 		const group = await this.repository.findOneOrFail({
 			where: {
 				id: groupId,
@@ -54,6 +68,6 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findGroupById({ groupId: id });
+		return this.findOrFailGroupById({ groupId: id });
 	}
 }
