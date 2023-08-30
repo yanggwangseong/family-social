@@ -13,6 +13,25 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async findGroupByGroupName({
+		memberId,
+		groupName,
+	}: {
+		memberId: string;
+		groupName: string;
+	}) {
+		return await this.repository.count({
+			where: {
+				groupName: groupName,
+				groupByMemberGroups: {
+					memberId: memberId,
+					role: 'main',
+				},
+			},
+			relations: ['groupByMemberGroups'],
+		});
+	}
+
 	async findGroupById({ groupId }: { groupId: string }) {
 		const group = await this.repository.findOneOrFail({
 			where: {

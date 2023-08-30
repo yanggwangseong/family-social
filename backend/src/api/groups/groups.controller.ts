@@ -13,6 +13,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupCreateReqDto } from '@/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateGroupSwagger } from '@/common/decorators/swagger/swagger-group.decorator';
+import { CurrentUser } from '@/common/decorators/user.decorator';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -27,13 +28,18 @@ export class GroupsController {
 	 * @tag groups
 	 * @param groupName string
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 그룹이름
+	 * @returns 그룹명
 	 */
 
 	@CreateGroupSwagger()
 	@Post()
-	async createGroup(@Body() dto: GroupCreateReqDto) {
-		console.log(dto.groupName);
-		return true;
+	async createGroup(
+		@Body() dto: GroupCreateReqDto,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.groupsService.createGroup({
+			memberId: sub,
+			groupName: dto.groupName,
+		});
 	}
 }
