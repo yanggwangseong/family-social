@@ -6,3 +6,8 @@ export interface ICreateMemberGroupArgs {
 	role: Trole;
 	invitationAccepted: boolean;
 }
+
+export interface IUpdateGroupMemberInvitationAccept
+	extends Pick<ICreateMemberGroupArgs, 'memberId' | 'invitationAccepted'> {
+	memberGroupId: string;
+}

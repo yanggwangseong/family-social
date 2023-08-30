@@ -1,5 +1,8 @@
 import { MemberGroupEntity } from '@/entities/member-group.entity';
-import { ICreateMemberGroupArgs } from '@/types/args/member-group';
+import {
+	ICreateMemberGroupArgs,
+	IUpdateGroupMemberInvitationAccept,
+} from '@/types/args/member-group';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,7 +17,31 @@ export class MemberGroupRepository extends Repository<MemberGroupEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async findMemberGroupById({ memberGroupId }: { memberGroupId: string }) {
+	async findMemberGroupById({
+		memberGroupId,
+		memberId,
+	}: {
+		memberGroupId: string;
+		memberId: string;
+	}) {
+		const memberGroup = await this.repository.findOne({
+			where: {
+				id: memberGroupId,
+				memberId: memberId,
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return memberGroup;
+	}
+
+	async findOrFailMemberGroupById({
+		memberGroupId,
+	}: {
+		memberGroupId: string;
+	}) {
 		const memberGroup = await this.repository.findOneOrFail({
 			where: {
 				id: memberGroupId,
@@ -43,6 +70,17 @@ export class MemberGroupRepository extends Repository<MemberGroupEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findMemberGroupById({ memberGroupId: id });
+		return this.findOrFailMemberGroupById({ memberGroupId: id });
+	}
+
+	async updateGroupMemberInvitationAccept({
+		memberId,
+		memberGroupId,
+		invitationAccepted,
+	}: IUpdateGroupMemberInvitationAccept) {
+		await this.update(
+			{ id: memberGroupId, memberId: memberId },
+			{ invitationAccepted: invitationAccepted },
+		);
 	}
 }

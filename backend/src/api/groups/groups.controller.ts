@@ -4,6 +4,7 @@ import {
 	Param,
 	ParseUUIDPipe,
 	Post,
+	Put,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -17,9 +18,11 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	CreateGroupSwagger,
 	CreateMemberByGroupSwagger,
+	UpdateGroupMemberInvitationAcceptSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { GroupMemberCreateReqDto } from '@/dto/group/req/group-member-create-req.dto';
+import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -65,6 +68,28 @@ export class GroupsController {
 		await this.groupsService.createMemberByGroup({
 			memberId: dto.memberId,
 			groupId: groupId,
+		});
+	}
+
+	/**
+	 * @summary 자신에게 온 그룹 초대 수락하기
+	 *
+	 * @tag groups
+	 * @param memberGroupId string
+	 * @param invitationAccepted boolean
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹에 초대된 멤버
+	 */
+	@UpdateGroupMemberInvitationAcceptSwagger()
+	@Put('/accept-invitation')
+	async groupMemberInvitationAccept(
+		@CurrentUser('sub') sub: string,
+		@Body() dto: AcceptInvitationUpdateReqDto,
+	) {
+		await this.groupsService.groupMemberInvitationAccept({
+			memberId: sub,
+			memberGroupId: dto.memberGroupId,
+			invitationAccepted: dto.invitationAccepted,
 		});
 	}
 }

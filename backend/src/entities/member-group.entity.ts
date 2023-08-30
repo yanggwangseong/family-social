@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { MemberEntity } from './member.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
 import { GroupEntity } from './group.entity';
 
 export type Trole = 'main' | 'user';
@@ -17,6 +17,9 @@ export class MemberGroupEntity extends DefaultEntity {
 	})
 	role!: Trole;
 
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsBoolean()
 	@Column({
 		type: 'boolean',
 		nullable: false,

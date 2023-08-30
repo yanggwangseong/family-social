@@ -35,3 +35,17 @@ export const CreateMemberByGroupSwagger = () => {
 		}),
 	);
 };
+
+export const UpdateGroupMemberInvitationAcceptSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '그룹 초대 수락 하기',
+		}),
+		ApiCreatedResponse({
+			description: '그룹 초대 수락 성공',
+		}),
+		ApiNotFoundResponse({
+			description: '초대 받은 그룹을 찾을 수 없습니다.',
+		}),
+	);
+};

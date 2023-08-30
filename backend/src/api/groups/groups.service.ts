@@ -5,6 +5,7 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
+import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
 
 @Injectable()
 export class GroupsService {
@@ -59,5 +60,22 @@ export class GroupsService {
 			invitationAccepted: false,
 		});
 		//[TODO] 그룹 초대 notification
+	}
+
+	async groupMemberInvitationAccept(
+		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
+	) {
+		const group = await this.memberGroupRepository.findMemberGroupById({
+			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
+			memberId: updateGroupMemberInvitationAccept.memberId,
+		});
+		if (!group)
+			throw EntityNotFoundException('초대 받은 그룹을 찾을 수 없습니다.');
+
+		await this.memberGroupRepository.updateGroupMemberInvitationAccept({
+			memberId: updateGroupMemberInvitationAccept.memberId,
+			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
+			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
+		});
 	}
 }
