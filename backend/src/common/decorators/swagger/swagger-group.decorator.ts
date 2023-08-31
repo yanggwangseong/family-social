@@ -7,6 +7,20 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 
+export const DeleteGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 그룹 삭제',
+		}),
+		ApiCreatedResponse({
+			description: '그룹 삭제 성공',
+		}),
+		ApiNotFoundResponse({
+			description: '그룹을 찾을 수 없습니다.',
+		}),
+	);
+};
+
 export const UpdateGroupSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
@@ -18,6 +32,9 @@ export const UpdateGroupSwagger = () => {
 		}),
 		ApiConflictResponse({
 			description: '중복된 그룹 이름을 이미 가지고 있습니다.',
+		}),
+		ApiNotFoundResponse({
+			description: '그룹을 찾을 수 없습니다.',
 		}),
 	);
 };

@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -18,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	CreateGroupSwagger,
 	CreateMemberByGroupSwagger,
+	DeleteGroupSwagger,
 	UpdateGroupMemberInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
@@ -71,6 +73,26 @@ export class GroupsController {
 		return await this.groupsService.updateGroup({
 			groupId: groupId,
 			groupName: dto.groupName,
+			memberId: sub,
+		});
+	}
+
+	/**
+	 * @summary 그룹 삭제
+	 *
+	 * @tag groups
+	 * @param groupId string
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteGroupSwagger()
+	@Delete(':groupId')
+	async deleteGroup(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.groupsService.deleteGroup({
+			groupId: groupId,
 			memberId: sub,
 		});
 	}
