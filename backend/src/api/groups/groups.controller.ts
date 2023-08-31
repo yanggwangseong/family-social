@@ -19,10 +19,12 @@ import {
 	CreateGroupSwagger,
 	CreateMemberByGroupSwagger,
 	UpdateGroupMemberInvitationAcceptSwagger,
+	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { GroupMemberCreateReqDto } from '@/dto/group/req/group-member-create-req.dto';
 import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
+import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -48,6 +50,28 @@ export class GroupsController {
 		return await this.groupsService.createGroup({
 			memberId: sub,
 			groupName: dto.groupName,
+		});
+	}
+
+	/**
+	 * @summary 그룹 정보 수정
+	 *
+	 * @tag groups
+	 * @param groupName string
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹명
+	 */
+	@UpdateGroupSwagger()
+	@Put(':groupId')
+	async updateGroup(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+		@Body() dto: GroupUpdateReqDto,
+	) {
+		return await this.groupsService.updateGroup({
+			groupId: groupId,
+			groupName: dto.groupName,
+			memberId: sub,
 		});
 	}
 

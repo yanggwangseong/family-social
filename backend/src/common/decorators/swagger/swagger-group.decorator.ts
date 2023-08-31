@@ -7,6 +7,21 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 
+export const UpdateGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '그룹 정보 수정',
+		}),
+		ApiCreatedResponse({
+			description: '그룹 정보 수정 성공',
+			type: GroupResDto,
+		}),
+		ApiConflictResponse({
+			description: '중복된 그룹 이름을 이미 가지고 있습니다.',
+		}),
+	);
+};
+
 export const CreateGroupSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
