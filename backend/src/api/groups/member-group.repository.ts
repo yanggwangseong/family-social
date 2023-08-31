@@ -1,4 +1,5 @@
 import { MemberGroupEntity } from '@/entities/member-group.entity';
+import { IDeleteGroupArgs } from '@/types/args/group';
 import {
 	ICreateMemberGroupArgs,
 	IUpdateGroupMemberInvitationAccept,
@@ -15,6 +16,31 @@ export class MemberGroupRepository extends Repository<MemberGroupEntity> {
 		private readonly repository: Repository<MemberGroupEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async isMainRoleForMemberInGroup({ groupId, memberId }: IDeleteGroupArgs) {
+		const role = await this.repository.findOneOrFail({
+			select: {
+				role: true,
+			},
+			where: {
+				groupId: groupId,
+				memberId: memberId,
+			},
+		});
+
+		return role;
+	}
+
+	async getMemberGroupCountByGroupId({ groupId }: { groupId: string }) {
+		const memberGroup = await this.repository.count({
+			where: {
+				groupId: groupId,
+				invitationAccepted: true,
+			},
+		});
+
+		return memberGroup;
 	}
 
 	async findMemberGroupById({
@@ -82,5 +108,13 @@ export class MemberGroupRepository extends Repository<MemberGroupEntity> {
 			{ id: memberGroupId, memberId: memberId },
 			{ invitationAccepted: invitationAccepted },
 		);
+	}
+
+	async deleteGroupMember({ groupId }: { groupId: string }) {
+		const { affected } = await this.delete({
+			groupId: groupId,
+		});
+
+		return !!affected;
 	}
 }

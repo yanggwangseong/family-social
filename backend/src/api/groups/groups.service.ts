@@ -6,6 +6,7 @@ import {
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
+import { IDeleteGroupArgs } from '@/types/args/group';
 
 @Injectable()
 export class GroupsService {
@@ -54,6 +55,51 @@ export class GroupsService {
 			groupId: groupId,
 			groupName: groupName,
 		});
+	}
+
+	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs) {
+		// 그룹 유/무 체크
+		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
+		// 해당 그룹의 권한이 main인지 체크
+		const role = await this.memberGroupRepository.isMainRoleForMemberInGroup({
+			groupId: deleteGroupArgs.groupId,
+			memberId: deleteGroupArgs.memberId,
+		});
+		if (role.role !== 'main') {
+			//[TODO] 401 에러로 변경
+			throw EntityConflictException('그룹을 삭제 할 권한이 없습니다.');
+		}
+
+		const count = await this.memberGroupRepository.getMemberGroupCountByGroupId(
+			{
+				groupId: group.id,
+			},
+		);
+		// 그룹 구성원이 main 1명일때만 삭제 가능.
+		if (count !== 1) {
+			throw EntityConflictException(
+				'그룹 삭제시 그룹에 관리자 본인만 있을 때 가능 합니다.',
+			);
+		}
+
+		const [GroupMemberStatus, GroupStatus] = await Promise.all([
+			await this.memberGroupRepository.deleteGroupMember({
+				groupId: group.id,
+			}),
+			await this.groupsRepository.deleteGroup({
+				groupId: group.id,
+			}),
+		]);
+
+		if (!GroupMemberStatus)
+			throw EntityConflictException(
+				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
+			);
+
+		if (!GroupStatus)
+			throw EntityConflictException(
+				'그룹을 삭제하던 도중 에러가 발생했습니다.',
+			);
 	}
 
 	async createMemberByGroup({

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { GroupEntity } from '@/entities/group.entity';
+import { IDeleteGroupArgs } from '@/types/args/group';
 
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
@@ -80,5 +81,13 @@ export class GroupsRepository extends Repository<GroupEntity> {
 	}) {
 		await this.update({ id: groupId }, { groupName: groupName });
 		return await this.findOrFailGroupById({ groupId: groupId });
+	}
+
+	async deleteGroup({ groupId }: { groupId: string }) {
+		const { affected } = await this.delete({
+			id: groupId,
+		});
+
+		return !!affected;
 	}
 }
