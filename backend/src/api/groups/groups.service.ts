@@ -83,7 +83,7 @@ export class GroupsService {
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
-			await this.memberGroupRepository.deleteGroupMember({
+			await this.memberGroupRepository.deleteGroupAllMember({
 				groupId: group.id,
 			}),
 			await this.groupsRepository.deleteGroup({
@@ -136,6 +136,18 @@ export class GroupsService {
 			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
 			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
 		});
+	}
+
+	async groupMemberDelete({ groupMemberId }: { groupMemberId: string }) {
+		const status =
+			await this.memberGroupRepository.deleteGroupMemberByMemberGroupId({
+				groupMemberId: groupMemberId,
+			});
+
+		if (!status)
+			throw EntityConflictException(
+				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
+			);
 	}
 
 	private async checkDuplicateGroupName(

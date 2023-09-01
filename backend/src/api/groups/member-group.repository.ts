@@ -110,9 +110,21 @@ export class MemberGroupRepository extends Repository<MemberGroupEntity> {
 		);
 	}
 
-	async deleteGroupMember({ groupId }: { groupId: string }) {
+	async deleteGroupAllMember({ groupId }: { groupId: string }) {
 		const { affected } = await this.delete({
 			groupId: groupId,
+		});
+
+		return !!affected;
+	}
+
+	async deleteGroupMemberByMemberGroupId({
+		groupMemberId,
+	}: {
+		groupMemberId: string;
+	}) {
+		const { affected } = await this.delete({
+			id: groupMemberId,
 		});
 
 		return !!affected;
