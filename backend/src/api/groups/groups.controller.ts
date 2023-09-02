@@ -138,4 +138,25 @@ export class GroupsController {
 			invitationAccepted: dto.invitationAccepted,
 		});
 	}
+
+	/**
+	 * @summary 그룹 멤버 삭제
+	 *
+	 * @tag groups
+	 * @param memberGroupId string
+	 * @param invitationAccepted boolean
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@Delete('/:groupId/members/:groupMemberId')
+	async groupMemberDelete(
+		@CurrentUser('sub') sub: string,
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('groupMemberId', ParseUUIDPipe) groupMemberId: string,
+	) {
+		//[TODO]
+		await this.groupsService.groupMemberDelete({
+			groupMemberId,
+		});
+	}
 }
