@@ -9,6 +9,7 @@ import { EmailOptions } from './common/config/emailConfig';
 import { MembersModule } from './api/members/members.module';
 import { AuthModule } from './api/auth/auth.module';
 import { GroupsModule } from './api/groups/groups.module';
+import { FamsModule } from './api/fams/fams.module';
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import { GroupsModule } from './api/groups/groups.module';
 		MembersModule,
 		AuthModule,
 		GroupsModule,
+		FamsModule,
 	],
 	controllers: [],
 	providers: [],
