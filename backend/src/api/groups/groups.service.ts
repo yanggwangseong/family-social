@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { GroupsRepository } from './groups.repository';
-import { MemberGroupRepository } from './member-group.repository';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
 import { IDeleteGroupArgs } from '@/types/args/group';
+import { FamsRepository } from '../fams/fams.repository';
 
 @Injectable()
 export class GroupsService {
 	constructor(
 		private readonly groupsRepository: GroupsRepository,
-		private readonly memberGroupRepository: MemberGroupRepository,
+		private readonly famsRepository: FamsRepository,
 	) {}
 
 	async createGroup({
@@ -27,7 +27,7 @@ export class GroupsService {
 
 		const group = await this.groupsRepository.createGroup({ groupName });
 
-		await this.memberGroupRepository.createMemberGroup({
+		await this.famsRepository.createMemberGroup({
 			memberId: memberId,
 			groupId: group.id,
 			role: 'main',
@@ -61,7 +61,7 @@ export class GroupsService {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
 		// 해당 그룹의 권한이 main인지 체크
-		const role = await this.memberGroupRepository.isMainRoleForMemberInGroup({
+		const role = await this.famsRepository.isMainRoleForMemberInGroup({
 			groupId: deleteGroupArgs.groupId,
 			memberId: deleteGroupArgs.memberId,
 		});
@@ -70,11 +70,9 @@ export class GroupsService {
 			throw EntityConflictException('그룹을 삭제 할 권한이 없습니다.');
 		}
 
-		const count = await this.memberGroupRepository.getMemberGroupCountByGroupId(
-			{
-				groupId: group.id,
-			},
-		);
+		const count = await this.famsRepository.getMemberGroupCountByGroupId({
+			groupId: group.id,
+		});
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
 		if (count !== 1) {
 			throw EntityConflictException(
@@ -83,7 +81,7 @@ export class GroupsService {
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
-			await this.memberGroupRepository.deleteGroupAllMember({
+			await this.famsRepository.deleteGroupAllMember({
 				groupId: group.id,
 			}),
 			await this.groupsRepository.deleteGroup({
@@ -112,7 +110,7 @@ export class GroupsService {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(groupId);
 
-		await this.memberGroupRepository.createMemberGroup({
+		await this.famsRepository.createMemberGroup({
 			memberId: memberId,
 			groupId: groupId,
 			role: 'user',
@@ -124,14 +122,14 @@ export class GroupsService {
 	async groupMemberInvitationAccept(
 		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
 	) {
-		const group = await this.memberGroupRepository.findMemberGroupById({
+		const group = await this.famsRepository.findMemberGroupById({
 			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
 			memberId: updateGroupMemberInvitationAccept.memberId,
 		});
 		if (!group)
 			throw EntityNotFoundException('초대 받은 그룹을 찾을 수 없습니다.');
 
-		await this.memberGroupRepository.updateGroupMemberInvitationAccept({
+		await this.famsRepository.updateGroupMemberInvitationAccept({
 			memberId: updateGroupMemberInvitationAccept.memberId,
 			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
 			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
@@ -139,10 +137,9 @@ export class GroupsService {
 	}
 
 	async groupMemberDelete({ groupMemberId }: { groupMemberId: string }) {
-		const status =
-			await this.memberGroupRepository.deleteGroupMemberByMemberGroupId({
-				groupMemberId: groupMemberId,
-			});
+		const status = await this.famsRepository.deleteGroupMemberByMemberGroupId({
+			groupMemberId: groupMemberId,
+		});
 
 		if (!status)
 			throw EntityConflictException(
