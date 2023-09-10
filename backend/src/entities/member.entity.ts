@@ -10,7 +10,7 @@ import {
 	MaxLength,
 	MinLength,
 } from 'class-validator';
-import { MemberGroupEntity } from './member-group.entity';
+import { FamEntity } from './fam.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -64,6 +64,6 @@ export class MemberEntity extends DefaultEntity {
 	@MaxLength(60)
 	refreshToken?: string;
 
-	@OneToMany(() => MemberGroupEntity, (mg) => mg.member)
-	memberGroups?: MemberGroupEntity[];
+	@OneToMany(() => FamEntity, (fa) => fa.member)
+	memberGroups?: FamEntity[];
 }
