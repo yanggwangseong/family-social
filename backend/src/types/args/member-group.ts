@@ -9,5 +9,5 @@ export interface ICreateMemberGroupArgs {
 
 export interface IUpdateGroupMemberInvitationAccept
 	extends Pick<ICreateMemberGroupArgs, 'memberId' | 'invitationAccepted'> {
-	memberGroupId: string;
+	famId: string;
 }

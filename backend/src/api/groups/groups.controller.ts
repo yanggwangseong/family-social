@@ -24,7 +24,6 @@ import {
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { GroupMemberCreateReqDto } from '@/dto/group/req/group-member-create-req.dto';
 import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
 
@@ -98,7 +97,7 @@ export class GroupsController {
 	}
 
 	/**
-	 * @summary Group 멤버 생성
+	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *
 	 * @tag groups
 	 * @param memberId string
@@ -106,13 +105,13 @@ export class GroupsController {
 	 * @returns 그룹에 초대된 멤버
 	 */
 	@CreateMemberByGroupSwagger()
-	@Post(':groupId/members')
+	@Post('/:groupId/members/:memberId/fams')
 	async createMemberByGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Body() dto: GroupMemberCreateReqDto,
+		@Param('memberId', ParseUUIDPipe) memberId: string,
 	) {
 		await this.groupsService.createMemberByGroup({
-			memberId: dto.memberId,
+			memberId: memberId,
 			groupId: groupId,
 		});
 	}
@@ -121,42 +120,49 @@ export class GroupsController {
 	 * @summary 자신에게 온 그룹 초대 수락하기
 	 *
 	 * @tag groups
-	 * @param memberGroupId string
-	 * @param invitationAccepted boolean
+	 * @param sub 로그인 인증된 멤버 아이디
+	 * @param famId 대상이 되는 fam 테이블의 레코드 아이디
+	 * @param invitationAccepted 초대 수락 여/부
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹에 초대된 멤버
 	 */
 	@UpdateGroupMemberInvitationAcceptSwagger()
-	@Put('/accept-invitation')
+	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
 	async groupMemberInvitationAccept(
 		@CurrentUser('sub') sub: string,
+		@Param('famId', ParseUUIDPipe) famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
 		await this.groupsService.groupMemberInvitationAccept({
 			memberId: sub,
-			memberGroupId: dto.memberGroupId,
+			famId: famId,
 			invitationAccepted: dto.invitationAccepted,
 		});
 	}
 
 	/**
-	 * @summary 그룹 멤버 삭제
+	 * @summary 특정 그룹의 특정 멤버의 fam 삭제
 	 *
 	 * @tag groups
-	 * @param memberGroupId string
-	 * @param invitationAccepted boolean
+	 * @param sub 로그인 인증된 멤버 아이디
+	 * @param groupId 그룹 아이디
+	 * @param memberId  대상이 되는 멤버 아이디
+	 * @param famId  대상이 되는 fam 테이블의 레코드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
-	@Delete('/:groupId/members/:groupMemberId')
+	@Delete('/:groupId/members/:memberId/fams/:famId')
 	async groupMemberDelete(
 		@CurrentUser('sub') sub: string,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('groupMemberId', ParseUUIDPipe) groupMemberId: string,
+		@Param('memberId', ParseUUIDPipe) memberId: string,
+		@Param('famId', ParseUUIDPipe) famId: string,
 	) {
-		//[TODO]
 		await this.groupsService.groupMemberDelete({
-			groupMemberId,
+			groupId: groupId,
+			memberId: memberId,
+			famId: famId,
+			ownMemberId: sub,
 		});
 	}
 }

@@ -5,18 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEntity } from '@/entities/group.entity';
 import { GroupsRepository } from './groups.repository';
 import { MemberGroupEntity } from '@/entities/member-group.entity';
-import { MemberGroupRepository } from './member-group.repository';
 import { FamsRepository } from '../fams/fams.repository';
+import { FamEntity } from '@/entities/fam.entity';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([GroupEntity, MemberGroupEntity])],
+	imports: [TypeOrmModule.forFeature([GroupEntity, FamEntity])],
 	controllers: [GroupsController],
-	providers: [
-		GroupsService,
-		GroupsRepository,
-		MemberGroupRepository,
-		FamsRepository,
-	],
+	providers: [GroupsService, GroupsRepository, FamsRepository],
 	exports: [],
 })
 export class GroupsModule {}

@@ -7,6 +7,7 @@ import {
 import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { FamsRepository } from '../fams/fams.repository';
+import { GroupResDto } from '@/dto/group/res/group-res.dto';
 
 @Injectable()
 export class GroupsService {
@@ -21,7 +22,7 @@ export class GroupsService {
 	}: {
 		memberId: string;
 		groupName: string;
-	}) {
+	}): Promise<GroupResDto> {
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
@@ -123,7 +124,7 @@ export class GroupsService {
 		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
 	) {
 		const group = await this.famsRepository.findMemberGroupById({
-			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
+			famId: updateGroupMemberInvitationAccept.famId,
 			memberId: updateGroupMemberInvitationAccept.memberId,
 		});
 		if (!group)
@@ -131,14 +132,27 @@ export class GroupsService {
 
 		await this.famsRepository.updateGroupMemberInvitationAccept({
 			memberId: updateGroupMemberInvitationAccept.memberId,
-			memberGroupId: updateGroupMemberInvitationAccept.memberGroupId,
+			famId: updateGroupMemberInvitationAccept.famId,
 			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
 		});
 	}
 
-	async groupMemberDelete({ groupMemberId }: { groupMemberId: string }) {
-		const status = await this.famsRepository.deleteGroupMemberByMemberGroupId({
-			groupMemberId: groupMemberId,
+	async groupMemberDelete({
+		groupId,
+		memberId,
+		famId,
+		ownMemberId,
+	}: {
+		groupId: string;
+		famId: string;
+		ownMemberId: string;
+		memberId: string;
+	}) {
+		const status = await this.famsRepository.deleteGroupMemberByFamId({
+			groupId,
+			memberId,
+			famId,
+			ownMemberId,
 		});
 
 		if (!status)

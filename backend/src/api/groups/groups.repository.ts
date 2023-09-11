@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { GroupEntity } from '@/entities/group.entity';
 import { IDeleteGroupArgs } from '@/types/args/group';
+import { GroupResDto } from '@/dto/group/res/group-res.dto';
 
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
@@ -47,7 +48,11 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
-	async findOrFailGroupById({ groupId }: { groupId: string }) {
+	async findOrFailGroupById({
+		groupId,
+	}: {
+		groupId: string;
+	}): Promise<GroupResDto> {
 		const group = await this.repository.findOneOrFail({
 			where: {
 				id: groupId,
@@ -61,7 +66,11 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
-	async createGroup({ groupName }: { groupName: string }) {
+	async createGroup({
+		groupName,
+	}: {
+		groupName: string;
+	}): Promise<GroupResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			groupName: groupName,

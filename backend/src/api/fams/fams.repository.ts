@@ -44,15 +44,15 @@ export class FamsRepository extends Repository<FamEntity> {
 	}
 
 	async findMemberGroupById({
-		memberGroupId,
+		famId,
 		memberId,
 	}: {
-		memberGroupId: string;
+		famId: string;
 		memberId: string;
 	}) {
 		const memberGroup = await this.repository.findOne({
 			where: {
-				id: memberGroupId,
+				id: famId,
 				memberId: memberId,
 			},
 			select: {
@@ -101,11 +101,11 @@ export class FamsRepository extends Repository<FamEntity> {
 
 	async updateGroupMemberInvitationAccept({
 		memberId,
-		memberGroupId,
+		famId,
 		invitationAccepted,
 	}: IUpdateGroupMemberInvitationAccept) {
 		await this.update(
-			{ id: memberGroupId, memberId: memberId },
+			{ id: famId, memberId: memberId },
 			{ invitationAccepted: invitationAccepted },
 		);
 	}
@@ -118,13 +118,19 @@ export class FamsRepository extends Repository<FamEntity> {
 		return !!affected;
 	}
 
-	async deleteGroupMemberByMemberGroupId({
-		groupMemberId,
+	async deleteGroupMemberByFamId({
+		groupId,
+		memberId,
+		famId,
+		ownMemberId,
 	}: {
-		groupMemberId: string;
+		groupId: string;
+		memberId: string;
+		famId: string;
+		ownMemberId: string;
 	}) {
 		const { affected } = await this.delete({
-			id: groupMemberId,
+			id: famId,
 		});
 
 		return !!affected;
