@@ -63,12 +63,15 @@ export const CreateFamByMemberOfGroupSwagger = () => {
 			description: '그룹 멤버 생성 성공',
 		}),
 		ApiNotFoundResponse({
-			description: '그룹을 찾을 수 없습니다.',
+			description: '1. 그룹을 찾을 수 없습니다. \n2. 유저를 찾을 수 없습니다.',
+		}),
+		ApiConflictResponse({
+			description: '자기 자신을 초대할 수 없습니다.',
 		}),
 	);
 };
 
-export const UpdateGroupMemberInvitationAcceptSwagger = () => {
+export const UpdateFamInvitationAcceptSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '그룹 초대 수락 하기',

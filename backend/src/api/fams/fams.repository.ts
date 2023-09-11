@@ -1,9 +1,10 @@
 import { FamEntity } from '@/entities/fam.entity';
-import { IDeleteGroupArgs } from '@/types/args/group';
 import {
-	ICreateMemberGroupArgs,
-	IUpdateGroupMemberInvitationAccept,
-} from '@/types/args/member-group';
+	ICreateFamArgs,
+	IFindInvitationByFamArgs,
+	IUpdateFamInvitationAcceptArgs,
+} from '@/types/args/fam';
+import { IDeleteGroupArgs } from '@/types/args/group';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -43,16 +44,15 @@ export class FamsRepository extends Repository<FamEntity> {
 		return memberGroup;
 	}
 
-	async findMemberGroupById({
-		famId,
+	async findInvitationByFam({
+		groupId,
 		memberId,
-	}: {
-		famId: string;
-		memberId: string;
-	}) {
-		const memberGroup = await this.repository.findOne({
+		famId,
+	}: IFindInvitationByFamArgs) {
+		const fam = await this.repository.findOne({
 			where: {
 				id: famId,
+				groupId: groupId,
 				memberId: memberId,
 			},
 			select: {
@@ -60,32 +60,28 @@ export class FamsRepository extends Repository<FamEntity> {
 			},
 		});
 
-		return memberGroup;
+		return fam;
 	}
 
-	async findOrFailMemberGroupById({
-		memberGroupId,
-	}: {
-		memberGroupId: string;
-	}) {
-		const memberGroup = await this.repository.findOneOrFail({
+	async findOrFailFamById({ famId }: { famId: string }) {
+		const fam = await this.repository.findOneOrFail({
 			where: {
-				id: memberGroupId,
+				id: famId,
 			},
 			select: {
 				id: true,
 			},
 		});
 
-		return memberGroup;
+		return fam;
 	}
 
-	async createMemberGroup({
+	async createFam({
 		memberId,
 		groupId,
 		role,
 		invitationAccepted,
-	}: ICreateMemberGroupArgs) {
+	}: ICreateFamArgs) {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			memberId: memberId,
@@ -96,16 +92,17 @@ export class FamsRepository extends Repository<FamEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailMemberGroupById({ memberGroupId: id });
+		return this.findOrFailFamById({ famId: id });
 	}
 
-	async updateGroupMemberInvitationAccept({
+	async updateFamInvitationAccept({
 		memberId,
 		famId,
 		invitationAccepted,
-	}: IUpdateGroupMemberInvitationAccept) {
+		groupId,
+	}: IUpdateFamInvitationAcceptArgs) {
 		await this.update(
-			{ id: famId, memberId: memberId },
+			{ id: famId, memberId: memberId, groupId: groupId },
 			{ invitationAccepted: invitationAccepted },
 		);
 	}

@@ -4,7 +4,6 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
-import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { FamsRepository } from '../fams/fams.repository';
 import { GroupResDto } from '@/dto/group/res/group-res.dto';
@@ -28,7 +27,7 @@ export class GroupsService {
 
 		const group = await this.groupsRepository.createGroup({ groupName });
 
-		await this.famsRepository.createMemberGroup({
+		await this.famsRepository.createFam({
 			memberId: memberId,
 			groupId: group.id,
 			role: 'main',
@@ -99,23 +98,6 @@ export class GroupsService {
 			throw EntityConflictException(
 				'그룹을 삭제하던 도중 에러가 발생했습니다.',
 			);
-	}
-
-	async groupMemberInvitationAccept(
-		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
-	) {
-		const group = await this.famsRepository.findMemberGroupById({
-			famId: updateGroupMemberInvitationAccept.famId,
-			memberId: updateGroupMemberInvitationAccept.memberId,
-		});
-		if (!group)
-			throw EntityNotFoundException('초대 받은 그룹을 찾을 수 없습니다.');
-
-		await this.famsRepository.updateGroupMemberInvitationAccept({
-			memberId: updateGroupMemberInvitationAccept.memberId,
-			famId: updateGroupMemberInvitationAccept.famId,
-			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
-		});
 	}
 
 	async groupMemberDelete({

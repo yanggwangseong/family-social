@@ -20,7 +20,7 @@ import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
 	DeleteGroupSwagger,
-	UpdateGroupMemberInvitationAcceptSwagger,
+	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -28,6 +28,7 @@ import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
 import { FamsService } from '../fams/fams.service';
 import { MembersService } from '../members/members.service';
+import { EntityConflictException } from '@/common/exception/service.exception';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -106,16 +107,22 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *
 	 * @tag groups
-	 * @param memberId string
+	 * @param memberId 초대받은 특정 멤버의 아이디
+	 * @param groupId 초대받은 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
 	@CreateFamByMemberOfGroupSwagger()
 	@Post('/:groupId/members/:memberId/fams')
 	async CreateFamByMemberOfGroup(
+		@CurrentUser('sub') sub: string,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 	) {
+		//자기 자신을 초대한지 체크
+		if (sub === memberId) {
+			throw EntityConflictException('자기 자신을 초대할 수 없습니다.');
+		}
 		// 그룹 체크
 		await this.groupsService.findGroupByIdOrThrow(groupId);
 		// 멤버 체크
@@ -128,24 +135,34 @@ export class GroupsController {
 	}
 
 	/**
-	 * @summary 자신에게 온 그룹 초대 수락하기
+	 * @summary 그룹 초대 수락하기
 	 *
 	 * @tag groups
-	 * @param sub 로그인 인증된 멤버 아이디
+	 * @param groupId 초대받은 그룹 아이디
+	 * @param memberId 초대받은 멤버 아이디
 	 * @param famId 대상이 되는 fam 테이블의 레코드 아이디
 	 * @param invitationAccepted 초대 수락 여/부
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 그룹에 초대된 멤버
+	 * @returns void
 	 */
-	@UpdateGroupMemberInvitationAcceptSwagger()
+	@UpdateFamInvitationAcceptSwagger()
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
-	async groupMemberInvitationAccept(
-		@CurrentUser('sub') sub: string,
+	async UpdateFamInvitationAccept(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
-		await this.groupsService.groupMemberInvitationAccept({
-			memberId: sub,
+		// 초대받은 유저인지 체크
+		await this.famsService.findInvitationByFam({
+			groupId: groupId,
+			memberId: memberId,
+			famId: famId,
+		});
+
+		await this.famsService.UpdateFamInvitationAccept({
+			groupId: groupId,
+			memberId: memberId,
 			famId: famId,
 			invitationAccepted: dto.invitationAccepted,
 		});
