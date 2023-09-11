@@ -115,19 +115,19 @@ export class FamsRepository extends Repository<FamEntity> {
 		return !!affected;
 	}
 
-	async deleteGroupMemberByFamId({
+	async deleteFam({
 		groupId,
 		memberId,
 		famId,
-		ownMemberId,
 	}: {
 		groupId: string;
 		memberId: string;
 		famId: string;
-		ownMemberId: string;
 	}) {
 		const { affected } = await this.delete({
 			id: famId,
+			groupId: groupId,
+			memberId: memberId,
 		});
 
 		return !!affected;

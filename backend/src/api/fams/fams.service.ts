@@ -4,13 +4,16 @@ import {
 	IFindInvitationByFamArgs,
 	IUpdateFamInvitationAcceptArgs,
 } from '@/types/args/fam';
-import { EntityNotFoundException } from '@/common/exception/service.exception';
+import {
+	EntityConflictException,
+	EntityNotFoundException,
+} from '@/common/exception/service.exception';
 
 @Injectable()
 export class FamsService {
 	constructor(private readonly famsRepository: FamsRepository) {}
 
-	async CreateFamByMemberOfGroup({
+	async createFamByMemberOfGroup({
 		memberId,
 		groupId,
 	}: {
@@ -26,7 +29,7 @@ export class FamsService {
 		//[TODO] 그룹 초대 notification
 	}
 
-	async UpdateFamInvitationAccept({
+	async updateFamInvitationAccept({
 		groupId,
 		memberId,
 		famId,
@@ -40,7 +43,28 @@ export class FamsService {
 		});
 	}
 
-	async findInvitationByFam({
+	async deleteFamByMemberOfGroup({
+		groupId,
+		memberId,
+		famId,
+	}: {
+		groupId: string;
+		memberId: string;
+		famId: string;
+	}) {
+		const status = await this.famsRepository.deleteFam({
+			groupId,
+			memberId,
+			famId,
+		});
+
+		if (!status)
+			throw EntityConflictException(
+				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
+			);
+	}
+
+	async checkIfFamExists({
 		groupId,
 		memberId,
 		famId,

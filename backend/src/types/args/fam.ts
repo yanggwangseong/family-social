@@ -1,9 +1,9 @@
-import { Trole } from '@/entities/member-group.entity';
+import { roleType } from '@/entities/fam.entity';
 
 export interface ICreateFamArgs {
 	memberId: string;
 	groupId: string;
-	role: Trole;
+	role: roleType;
 	invitationAccepted: boolean;
 }
 

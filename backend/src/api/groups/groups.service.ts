@@ -100,30 +100,6 @@ export class GroupsService {
 			);
 	}
 
-	async groupMemberDelete({
-		groupId,
-		memberId,
-		famId,
-		ownMemberId,
-	}: {
-		groupId: string;
-		famId: string;
-		ownMemberId: string;
-		memberId: string;
-	}) {
-		const status = await this.famsRepository.deleteGroupMemberByFamId({
-			groupId,
-			memberId,
-			famId,
-			ownMemberId,
-		});
-
-		if (!status)
-			throw EntityConflictException(
-				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
-			);
-	}
-
 	private async checkDuplicateGroupName(
 		memberId: string,
 		groupName: string,

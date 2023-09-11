@@ -24,11 +24,11 @@ import {
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
 import { FamsService } from '../fams/fams.service';
 import { MembersService } from '../members/members.service';
 import { EntityConflictException } from '@/common/exception/service.exception';
+import { AcceptInvitationUpdateReqDto } from '@/dto/fam/req/accept-invitation-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -114,7 +114,7 @@ export class GroupsController {
 	 */
 	@CreateFamByMemberOfGroupSwagger()
 	@Post('/:groupId/members/:memberId/fams')
-	async CreateFamByMemberOfGroup(
+	async createFamByMemberOfGroup(
 		@CurrentUser('sub') sub: string,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
@@ -128,7 +128,7 @@ export class GroupsController {
 		// 멤버 체크
 		await this.membersService.findMemberByIdOrThrow(memberId);
 
-		await this.famsService.CreateFamByMemberOfGroup({
+		await this.famsService.createFamByMemberOfGroup({
 			memberId: memberId,
 			groupId: groupId,
 		});
@@ -147,20 +147,20 @@ export class GroupsController {
 	 */
 	@UpdateFamInvitationAcceptSwagger()
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
-	async UpdateFamInvitationAccept(
+	async updateFamInvitationAccept(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
 		// 초대받은 유저인지 체크
-		await this.famsService.findInvitationByFam({
+		await this.famsService.checkIfFamExists({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
 		});
 
-		await this.famsService.UpdateFamInvitationAccept({
+		await this.famsService.updateFamInvitationAccept({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
@@ -180,17 +180,22 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@Delete('/:groupId/members/:memberId/fams/:famId')
-	async groupMemberDelete(
-		@CurrentUser('sub') sub: string,
+	async deleteFamByMemberOfGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 	) {
-		await this.groupsService.groupMemberDelete({
+		// fam에 존재하는지 확인
+		await this.famsService.checkIfFamExists({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
-			ownMemberId: sub,
+		});
+
+		await this.famsService.deleteFamByMemberOfGroup({
+			groupId: groupId,
+			memberId: memberId,
+			famId: famId,
 		});
 	}
 }
