@@ -11,5 +11,13 @@ export class FamsService {
 	}: {
 		memberId: string;
 		groupId: string;
-	}) {}
+	}) {
+		await this.famsRepository.createMemberGroup({
+			memberId: memberId,
+			groupId: groupId,
+			role: 'user',
+			invitationAccepted: false,
+		});
+		//[TODO] 그룹 초대 notification
+	}
 }

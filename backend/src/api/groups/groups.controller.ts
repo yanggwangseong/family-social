@@ -17,8 +17,8 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupCreateReqDto } from '@/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
 import {
+	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
-	CreateMemberByGroupSwagger,
 	DeleteGroupSwagger,
 	UpdateGroupMemberInvitationAcceptSwagger,
 	UpdateGroupSwagger,
@@ -26,13 +26,19 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
+import { FamsService } from '../fams/fams.service';
+import { MembersService } from '../members/members.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('groups')
 @Controller('groups')
 export class GroupsController {
-	constructor(private readonly groupsService: GroupsService) {}
+	constructor(
+		private readonly groupsService: GroupsService,
+		private readonly famsService: FamsService,
+		private readonly membersService: MembersService,
+	) {}
 
 	/**
 	 * @summary 유저가 속하는 Group생성
@@ -102,15 +108,20 @@ export class GroupsController {
 	 * @tag groups
 	 * @param memberId string
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 그룹에 초대된 멤버
+	 * @returns void
 	 */
-	@CreateMemberByGroupSwagger()
+	@CreateFamByMemberOfGroupSwagger()
 	@Post('/:groupId/members/:memberId/fams')
-	async createMemberByGroup(
+	async CreateFamByMemberOfGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 	) {
-		await this.groupsService.createMemberByGroup({
+		// 그룹 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+		// 멤버 체크
+		await this.membersService.findMemberByIdOrThrow(memberId);
+
+		await this.famsService.CreateFamByMemberOfGroup({
 			memberId: memberId,
 			groupId: groupId,
 		});

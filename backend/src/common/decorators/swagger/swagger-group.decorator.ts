@@ -54,7 +54,7 @@ export const CreateGroupSwagger = () => {
 	);
 };
 
-export const CreateMemberByGroupSwagger = () => {
+export const CreateFamByMemberOfGroupSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '그룹 멤버 생성',

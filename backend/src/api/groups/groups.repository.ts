@@ -34,7 +34,11 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		});
 	}
 
-	async findGroupById({ groupId }: { groupId: string }) {
+	async findGroupById({
+		groupId,
+	}: {
+		groupId: string;
+	}): Promise<GroupResDto | null> {
 		const group = await this.repository.findOne({
 			where: {
 				id: groupId,

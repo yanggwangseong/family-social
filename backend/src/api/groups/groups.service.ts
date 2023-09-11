@@ -101,25 +101,6 @@ export class GroupsService {
 			);
 	}
 
-	async createMemberByGroup({
-		memberId,
-		groupId,
-	}: {
-		memberId: string;
-		groupId: string;
-	}) {
-		// 그룹 유/무 체크
-		const group = await this.findGroupByIdOrThrow(groupId);
-
-		await this.famsRepository.createMemberGroup({
-			memberId: memberId,
-			groupId: groupId,
-			role: 'user',
-			invitationAccepted: false,
-		});
-		//[TODO] 그룹 초대 notification
-	}
-
 	async groupMemberInvitationAccept(
 		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
 	) {
@@ -175,7 +156,7 @@ export class GroupsService {
 		}
 	}
 
-	private async findGroupByIdOrThrow(groupId: string) {
+	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {
 		const group = await this.groupsRepository.findGroupById({
 			groupId,
 		});
