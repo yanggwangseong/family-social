@@ -18,12 +18,12 @@ export const LoginMemberSwagger = () => {
 			description: '멤버 로그인 성공',
 			type: MemberResDto,
 		}),
-		// ApiConflictResponse({
-		// 	description: '이미 멤버가 존재함',
-		// }),
-		// ApiNotFoundResponse({
-		// 	description: '생성한 유저를 찾을 수 없습니다.',
-		// }),
+		ApiConflictResponse({
+			description: '비밀번호가 일치 하지 않습니다.',
+		}),
+		ApiNotFoundResponse({
+			description: '이메일에 해당하는 유저를 찾을 수 없습니다.',
+		}),
 	);
 };
 
