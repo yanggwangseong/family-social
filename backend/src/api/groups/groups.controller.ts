@@ -108,6 +108,7 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *
 	 * @tag groups
+	 * @param sub 인증된 유저 아이디
 	 * @param memberId 초대받은 특정 멤버의 아이디
 	 * @param groupId 초대받은 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>

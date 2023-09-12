@@ -1,3 +1,4 @@
+import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 import { FamEntity } from '@/entities/fam.entity';
 import {
@@ -34,7 +35,11 @@ export class FamsRepository extends Repository<FamEntity> {
 		return role;
 	}
 
-	async getInvitationsList({ memberId }: { memberId: string }) {
+	async getInvitationsList({
+		memberId,
+	}: {
+		memberId: string;
+	}): Promise<[FamInvitationsResDto[], number]> {
 		const result = await this.repository.findAndCount({
 			where: {
 				memberId: memberId,

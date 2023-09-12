@@ -9,6 +9,7 @@ import {
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { FamResDto } from '@/dto/fam/res/fam-res.dto';
+import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
 
 @Injectable()
 export class FamsService {
@@ -65,10 +66,14 @@ export class FamsService {
 			);
 	}
 
-	async getInvitationsList({ memberId }: { memberId: string }) {
+	async getInvitationsList({ memberId }: { memberId: string }): Promise<{
+		list: FamInvitationsResDto[];
+		count: number;
+	}> {
 		const [list, count] = await this.famsRepository.getInvitationsList({
 			memberId,
 		});
+
 		return {
 			list,
 			count,
