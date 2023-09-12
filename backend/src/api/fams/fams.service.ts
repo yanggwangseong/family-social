@@ -8,6 +8,7 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
+import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 
 @Injectable()
 export class FamsService {
@@ -19,7 +20,7 @@ export class FamsService {
 	}: {
 		memberId: string;
 		groupId: string;
-	}) {
+	}): Promise<void> {
 		await this.famsRepository.createFam({
 			memberId: memberId,
 			groupId: groupId,
@@ -34,8 +35,8 @@ export class FamsService {
 		memberId,
 		famId,
 		invitationAccepted,
-	}: IUpdateFamInvitationAcceptArgs) {
-		await this.famsRepository.updateFamInvitationAccept({
+	}: IUpdateFamInvitationAcceptArgs): Promise<FamResDto> {
+		return await this.famsRepository.updateFamInvitationAccept({
 			groupId,
 			memberId,
 			famId,
@@ -64,11 +65,21 @@ export class FamsService {
 			);
 	}
 
+	async getInvitationsList({ memberId }: { memberId: string }) {
+		const [list, count] = await this.famsRepository.getInvitationsList({
+			memberId,
+		});
+		return {
+			list,
+			count,
+		};
+	}
+
 	async checkIfFamExists({
 		groupId,
 		memberId,
 		famId,
-	}: IFindInvitationByFamArgs) {
+	}: IFindInvitationByFamArgs): Promise<FamResDto> {
 		const fam = await this.famsRepository.findInvitationByFam({
 			groupId: groupId,
 			memberId: memberId,

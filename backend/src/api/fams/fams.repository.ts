@@ -1,3 +1,4 @@
+import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 import { FamEntity } from '@/entities/fam.entity';
 import {
 	ICreateFamArgs,
@@ -33,6 +34,28 @@ export class FamsRepository extends Repository<FamEntity> {
 		return role;
 	}
 
+	async getInvitationsList({ memberId }: { memberId: string }) {
+		const result = await this.repository.findAndCount({
+			where: {
+				memberId: memberId,
+				invitationAccepted: false,
+			},
+			select: {
+				id: true,
+				invitationAccepted: true,
+				group: {
+					id: true,
+					groupName: true,
+				},
+			},
+			relations: {
+				group: true,
+			},
+		});
+
+		return result;
+	}
+
 	async getMemberGroupCountByGroupId({ groupId }: { groupId: string }) {
 		const memberGroup = await this.repository.count({
 			where: {
@@ -48,7 +71,7 @@ export class FamsRepository extends Repository<FamEntity> {
 		groupId,
 		memberId,
 		famId,
-	}: IFindInvitationByFamArgs) {
+	}: IFindInvitationByFamArgs): Promise<FamResDto | null> {
 		const fam = await this.repository.findOne({
 			where: {
 				id: famId,
@@ -57,19 +80,21 @@ export class FamsRepository extends Repository<FamEntity> {
 			},
 			select: {
 				id: true,
+				invitationAccepted: true,
 			},
 		});
 
 		return fam;
 	}
 
-	async findOrFailFamById({ famId }: { famId: string }) {
+	async findOrFailFamById({ famId }: { famId: string }): Promise<FamResDto> {
 		const fam = await this.repository.findOneOrFail({
 			where: {
 				id: famId,
 			},
 			select: {
 				id: true,
+				invitationAccepted: true,
 			},
 		});
 
@@ -81,7 +106,7 @@ export class FamsRepository extends Repository<FamEntity> {
 		groupId,
 		role,
 		invitationAccepted,
-	}: ICreateFamArgs) {
+	}: ICreateFamArgs): Promise<FamResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			memberId: memberId,
@@ -100,11 +125,13 @@ export class FamsRepository extends Repository<FamEntity> {
 		famId,
 		invitationAccepted,
 		groupId,
-	}: IUpdateFamInvitationAcceptArgs) {
+	}: IUpdateFamInvitationAcceptArgs): Promise<FamResDto> {
 		await this.update(
 			{ id: famId, memberId: memberId, groupId: groupId },
 			{ invitationAccepted: invitationAccepted },
 		);
+
+		return this.findOrFailFamById({ famId: famId });
 	}
 
 	async deleteGroupAllMember({ groupId }: { groupId: string }) {

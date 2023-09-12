@@ -30,7 +30,9 @@ export class GroupsRepository extends Repository<GroupEntity> {
 					role: 'main',
 				},
 			},
-			relations: ['groupByMemberGroups'],
+			relations: {
+				groupByMemberGroups: true,
+			},
 		});
 	}
 

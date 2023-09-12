@@ -19,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
+	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
@@ -160,7 +161,7 @@ export class GroupsController {
 			famId: famId,
 		});
 
-		await this.famsService.updateFamInvitationAccept({
+		return await this.famsService.updateFamInvitationAccept({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
@@ -172,13 +173,13 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 삭제
 	 *
 	 * @tag groups
-	 * @param sub 로그인 인증된 멤버 아이디
 	 * @param groupId 그룹 아이디
 	 * @param memberId  대상이 되는 멤버 아이디
 	 * @param famId  대상이 되는 fam 테이블의 레코드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
+	@DeleteFamByMemberOfGroupSwagger()
 	@Delete('/:groupId/members/:memberId/fams/:famId')
 	async deleteFamByMemberOfGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
@@ -186,7 +187,7 @@ export class GroupsController {
 		@Param('famId', ParseUUIDPipe) famId: string,
 	) {
 		// fam에 존재하는지 확인
-		await this.famsService.checkIfFamExists({
+		const fam = await this.famsService.checkIfFamExists({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
@@ -197,5 +198,7 @@ export class GroupsController {
 			memberId: memberId,
 			famId: famId,
 		});
+
+		return fam;
 	}
 }

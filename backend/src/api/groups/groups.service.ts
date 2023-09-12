@@ -60,11 +60,13 @@ export class GroupsService {
 	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs) {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
+
 		// 해당 그룹의 권한이 main인지 체크
 		const role = await this.famsRepository.isMainRoleForMemberInGroup({
 			groupId: deleteGroupArgs.groupId,
 			memberId: deleteGroupArgs.memberId,
 		});
+
 		if (role.role !== 'main') {
 			//[TODO] 401 에러로 변경
 			throw EntityConflictException('그룹을 삭제 할 권한이 없습니다.');
@@ -73,6 +75,7 @@ export class GroupsService {
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
 			groupId: group.id,
 		});
+
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
 		if (count !== 1) {
 			throw EntityConflictException(
