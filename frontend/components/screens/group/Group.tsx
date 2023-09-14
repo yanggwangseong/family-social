@@ -1,14 +1,20 @@
 import Format from '@/components/ui/layout/Format';
 import React, { FC } from 'react';
 import styles from './Group.module.scss';
+import Field from '@/components/ui/field/Field';
 
 const Group: FC = () => {
 	return (
 		<Format title={'groups'}>
 			<div className={styles.container}>
 				<div className={styles.header_container}>
-					<div>logo</div>
-					<div className={styles.right_icons_container}>아이콘</div>
+					<div className={styles.header_wrap}>
+						<div className={styles.header_left_container}>
+							<div className={styles.header_logo}>Fam</div>
+							<Field style={{ marginLeft: '40px' }}></Field>
+						</div>
+						<div className={styles.right_icons_container}>아이콘</div>
+					</div>
 				</div>
 				<div>
 					<div>sidebar</div>
