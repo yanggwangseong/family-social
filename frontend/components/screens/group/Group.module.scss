@@ -4,6 +4,7 @@
 	}
 	@apply h-full text-customDark;
 
+	//헤더
 	.header_container {
 		.header_wrap {
 			@screen md {
@@ -28,5 +29,10 @@
 				@apply w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
 			}
 		}
+	}
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
 	}
 }

@@ -4,6 +4,8 @@ import styles from './Group.module.scss';
 import Field from '@/components/ui/field/Field';
 import { FaRegBell } from 'react-icons/fa';
 import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
+import Link from 'next/link';
+import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
 
 const Group: FC = () => {
 	return (
@@ -16,9 +18,11 @@ const Group: FC = () => {
 							<Field style={{ marginLeft: '40px' }}></Field>
 						</div>
 						<div className={styles.right_icons_container}>
-							<div className={styles.icon_wrap}>
-								<AiOutlineHome size={22}></AiOutlineHome>
-							</div>
+							<Link href={'/feeds'}>
+								<div className={styles.icon_wrap}>
+									<AiOutlineHome size={22}></AiOutlineHome>
+								</div>
+							</Link>
 							<div className={styles.icon_wrap}>
 								<FaRegBell size={22}></FaRegBell>
 							</div>
@@ -28,8 +32,8 @@ const Group: FC = () => {
 						</div>
 					</div>
 				</div>
-				<div>
-					<div>sidebar</div>
+				<div className={styles.contents_container}>
+					<GroupSidebar />
 					<div>contensts</div>
 					<div>rightside</div>
 				</div>
