@@ -1,0 +1,18 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full;
+
+	.header_container {
+		@screen md {
+			@apply mx-11;
+		}
+		@apply flex mx-4 h-20 border-customDark border-solid;
+		border-bottom: 1px;
+
+		.right_icons_container {
+			@apply ml-auto;
+		}
+	}
+}
