@@ -22,7 +22,11 @@
 		@apply h-20 border-customDark border-solid border-b;
 
 		.right_icons_container {
-			@apply ml-auto;
+			@apply ml-auto flex gap-3;
+
+			.icon_wrap {
+				@apply w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
+			}
 		}
 	}
 }
