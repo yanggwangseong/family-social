@@ -1,13 +1,19 @@
 .sidebar_container {
-	@apply mx-11 pt-3 border-r border-solid border-customDark h-full;
+	@apply px-11 pt-3 border-r border-solid border-customDark h-full;
 	width: 360px;
 
 	.sidebar_title {
-		@apply text-3xl font-medium mb-12;
+		@apply text-2xl font-medium mb-12;
 	}
 
 	.sidebar_menu_container {
-		@apply flex mt-11;
+		@apply flex mt-11 py-4 cursor-pointer;
+
+		&:hover {
+			> svg {
+				@apply text-customOrange;
+			}
+		}
 	}
 
 	.sidebar_menu_text {

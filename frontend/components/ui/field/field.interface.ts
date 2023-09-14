@@ -5,6 +5,7 @@ import { IconType } from 'react-icons';
 export interface FieldProps {
 	error?: FieldError | undefined;
 	Icon?: IconType;
+	fieldClass?: string;
 }
 
 type TypeInputPropsField = InputHTMLAttributes<HTMLInputElement> & FieldProps;

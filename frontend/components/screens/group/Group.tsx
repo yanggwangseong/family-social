@@ -15,7 +15,10 @@ const Group: FC = () => {
 					<div className={styles.header_wrap}>
 						<div className={styles.header_left_container}>
 							<div className={styles.header_logo}>Fam</div>
-							<Field style={{ marginLeft: '40px' }}></Field>
+							<Field
+								style={{ marginLeft: '40px' }}
+								fieldClass={'input'}
+							></Field>
 						</div>
 						<div className={styles.right_icons_container}>
 							<Link href={'/feeds'}>

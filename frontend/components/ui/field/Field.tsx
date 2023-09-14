@@ -4,11 +4,14 @@ import styles from './Field.module.scss';
 import { FieldType } from './field.interface';
 
 const Field = forwardRef<HTMLInputElement, FieldType>(
-	({ error, type = 'text', style, Icon, ...rest }, ref) => {
+	(
+		{ fieldClass = 'input', error, type = 'text', style, Icon, ...rest },
+		ref,
+	) => {
 		return (
 			<>
 				<div
-					className={cn(styles.input, {
+					className={cn(styles[fieldClass], {
 						[styles.withIcon]: !!Icon,
 					})}
 					style={style}

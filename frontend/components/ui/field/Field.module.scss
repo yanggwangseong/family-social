@@ -1,3 +1,4 @@
+// 기본 input 스타일
 .input {
 	@apply border border-solid border-customDark rounded-full py-1 px-5;
 	> input[type='text'],
@@ -9,6 +10,7 @@
 		}
 	}
 }
+
 .error {
 	@apply text-customOrange;
 }
