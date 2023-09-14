@@ -1,0 +1,49 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.form {
+		@apply flex justify-center;
+		height: calc(100vh - 80px);
+		.contents_card {
+			@screen md {
+				@apply mx-4 flex flex-col h-full;
+				width: 768px;
+			}
+			@apply w-full flex flex-col h-full;
+
+			.contents_wrap {
+				@screen md {
+					@apply flex-grow mt-12;
+				}
+				@apply flex-grow mt-12 px-4;
+
+				.page_label_container {
+					@apply mt-12;
+					.page_label {
+						@apply text-customGray;
+					}
+
+					.page_title {
+						@apply text-2xl font-medium;
+					}
+				}
+
+				.form_label {
+					@apply text-customDark mt-4 mb-2;
+					&::after {
+						@apply text-customOrange;
+						content: '*';
+					}
+				}
+			}
+
+			.footer_wrap {
+				@apply mb-8;
+			}
+		}
+	}
+}

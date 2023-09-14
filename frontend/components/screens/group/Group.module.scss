@@ -4,36 +4,6 @@
 	}
 	@apply h-full text-customDark;
 
-	//헤더
-	.header_container {
-		.header_wrap {
-			@screen md {
-				@apply mx-11;
-			}
-			@apply flex justify-center items-center mx-4 h-full;
-
-			//header logo
-			.header_left_container {
-				@apply flex;
-				.header_logo {
-					@apply text-4xl font-bold;
-				}
-			}
-		}
-		@apply h-20 border-customDark border-solid border-b;
-
-		.right_icons_container {
-			@apply ml-auto flex gap-3;
-
-			.icon_wrap {
-				@apply w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
-
-				&:hover {
-					@apply bg-customOrange cursor-pointer;
-				}
-			}
-		}
-	}
 	//컨텐츠
 	.contents_container {
 		@apply flex;
