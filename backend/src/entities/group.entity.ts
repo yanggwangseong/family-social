@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { FamEntity } from './fam.entity';
 
 @Entity({ name: 'fam_group' })
@@ -15,6 +15,16 @@ export class GroupEntity extends DefaultEntity {
 	@IsString()
 	@MaxLength(60)
 	groupName!: string;
+
+	@Column({ type: 'text', nullable: true })
+	@ApiPropertyOptional({
+		maxLength: 1000,
+		nullable: true,
+	})
+	@IsOptional()
+	@IsString()
+	@MaxLength(1000)
+	groupDescription?: string;
 
 	@OneToMany(() => FamEntity, (fa) => fa.group)
 	groupByMemberGroups?: FamEntity[];

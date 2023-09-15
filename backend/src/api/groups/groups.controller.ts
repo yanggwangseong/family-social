@@ -59,6 +59,7 @@ export class GroupsController {
 		return await this.groupsService.createGroup({
 			memberId: sub,
 			groupName: dto.groupName,
+			groupDescription: dto.groupDescription,
 		});
 	}
 

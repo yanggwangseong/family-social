@@ -95,7 +95,12 @@ const GroupCreate: FC = () => {
 								<div>
 									<textarea
 										className={styles.field_area}
-										{...register('groupDescription')}
+										{...register('groupDescription', {
+											maxLength: {
+												value: 1000,
+												message: '최대 1000자까지 가능합니다',
+											},
+										})}
 										placeholder="그룹명을 입력해주세요"
 									></textarea>
 								</div>

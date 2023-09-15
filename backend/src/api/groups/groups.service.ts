@@ -18,14 +18,19 @@ export class GroupsService {
 	async createGroup({
 		memberId,
 		groupName,
+		groupDescription,
 	}: {
 		memberId: string;
 		groupName: string;
+		groupDescription?: string;
 	}): Promise<GroupResDto> {
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
-		const group = await this.groupsRepository.createGroup({ groupName });
+		const group = await this.groupsRepository.createGroup({
+			groupName,
+			groupDescription,
+		});
 
 		await this.famsRepository.createFam({
 			memberId: memberId,

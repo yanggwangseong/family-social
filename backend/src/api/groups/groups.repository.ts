@@ -74,12 +74,15 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 	async createGroup({
 		groupName,
+		groupDescription,
 	}: {
 		groupName: string;
+		groupDescription?: string;
 	}): Promise<GroupResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			groupName: groupName,
+			groupDescription: groupDescription,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
