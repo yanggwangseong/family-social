@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { BackSpaceProps } from './back-space.interface';
 
-const BackSpace: FC<BackSpaceProps> = ({ title }) => {
+const BackSpace: FC<BackSpaceProps> = ({ title, link }) => {
 	return (
 		<div className={styles.backspace_container}>
-			<Link className={styles.icon_container} href={'/groups'}>
+			<Link className={styles.icon_container} href={link}>
 				<AiOutlineArrowLeft size={20}></AiOutlineArrowLeft>
 			</Link>
 

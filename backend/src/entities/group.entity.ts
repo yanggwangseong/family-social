@@ -7,7 +7,10 @@ import { FamEntity } from './fam.entity';
 @Entity({ name: 'fam_group' })
 export class GroupEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 60, nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		maxLength: 60,
+		nullable: false,
+	})
 	@IsNotEmpty()
 	@IsString()
 	@MaxLength(60)
