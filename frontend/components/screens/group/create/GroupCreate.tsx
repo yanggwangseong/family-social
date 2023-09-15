@@ -3,10 +3,9 @@ import styles from './GroupCreate.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
 import Field from '@/components/ui/field/Field';
-import Link from 'next/link';
 import Profile from '@/components/ui/profile/Profile';
+import BackSpace from '@/components/ui/back-space/BackSpace';
 
 const GroupCreate: FC = () => {
 	return (
@@ -17,39 +16,26 @@ const GroupCreate: FC = () => {
 				<form className={styles.form}>
 					<div className={styles.contents_card}>
 						<div className={styles.contents_wrap}>
-							<div className="flex">
-								<Link
-									className="p-4 border border-solid border-customDark rounded-full"
-									href={'/groups'}
-								>
-									<AiOutlineArrowLeft size={20}></AiOutlineArrowLeft>
-								</Link>
-
-								<div className="text-2xl font-bold flex justify-center items-center ml-7">
-									Back
-								</div>
-							</div>
+							{/* 뒤로가기 */}
+							<BackSpace title={'Back'} />
 
 							<div className={styles.page_label_container}>
 								<div className={styles.page_label}>그룹 {'>'} 그룹 만들기</div>
 								<div className={styles.page_title}>그룹 만들기</div>
 							</div>
 
-							<div className="mt-12">
+							{/* 프로필 */}
+							<div className={styles.form_container}>
 								<Profile />
 							</div>
 
-							<div className="mt-12">
+							{/* 작성폼 */}
+							<div className={styles.form_container}>
 								<div className={styles.form_label}>그룹명</div>
 								<Field></Field>
 								<div className={styles.form_label}>그룹설명</div>
 								<div>
-									<textarea
-										className="border border-solid border-customDark bg-basic 
-									rounded-2xl w-full py-2 px-4
-									focus:outline-none
-									"
-									></textarea>
+									<textarea className={styles.field_area}></textarea>
 								</div>
 							</div>
 						</div>

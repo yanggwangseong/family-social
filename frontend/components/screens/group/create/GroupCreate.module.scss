@@ -32,11 +32,21 @@
 					}
 				}
 
-				.form_label {
-					@apply text-customDark mt-4 mb-2;
-					&::after {
-						@apply text-customOrange;
-						content: '*';
+				.form_container {
+					@apply mt-12;
+
+					.form_label {
+						@apply text-customDark mt-4 mb-2;
+						&::after {
+							@apply text-customOrange;
+							content: '*';
+						}
+					}
+
+					.field_area {
+						@apply border border-solid border-customDark bg-basic 
+						rounded-2xl w-full py-2 px-4
+						focus:outline-none;
 					}
 				}
 			}
