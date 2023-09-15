@@ -8,31 +8,28 @@ import {
 } from 'react-icons/ai';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import Menu from '../menu/Menu';
 
 const GroupSidebar: FC = () => {
 	const router = useRouter();
 	const handleClickPageMove = () => {
 		router.push('/groups/create');
 	};
+
 	return (
 		<div className={styles.sidebar_container}>
 			<div className={styles.sidebar_title}>그룹</div>
-			<div className={styles.sidebar_menu_container}>
-				<AiOutlineAudit size={40}></AiOutlineAudit>
-				<div className={styles.sidebar_menu_text}>내 피드</div>
-			</div>
-			<div className={styles.sidebar_menu_container}>
-				<AiOutlineTeam size={40}></AiOutlineTeam>
-				<div className={styles.sidebar_menu_text}>내 그룹</div>
-			</div>
-			<div className={styles.sidebar_menu_container}>
-				<AiOutlineUsergroupAdd size={40}></AiOutlineUsergroupAdd>
-				<div className={styles.sidebar_menu_text}>그룹 요청</div>
-			</div>
-			<div className={styles.sidebar_menu_container}>
-				<AiOutlineCompass size={40}></AiOutlineCompass>
-				<div className={styles.sidebar_menu_text}>찾아보기</div>
-			</div>
+			{/* 사이드 메뉴 */}
+			<Menu link="/groups/feeds" Icon={AiOutlineAudit} menu="내 피드" />
+			<Menu link="/groups/joins" Icon={AiOutlineTeam} menu="내 그룹" />
+			<Menu
+				link="/groups/requests"
+				Icon={AiOutlineUsergroupAdd}
+				menu="그룹 요청"
+			/>
+			<Menu link="/groups/discover" Icon={AiOutlineCompass} menu="찾아보기" />
+
 			<div className={styles.sidebar_btn_container}>
 				<CustomButton
 					type="button"

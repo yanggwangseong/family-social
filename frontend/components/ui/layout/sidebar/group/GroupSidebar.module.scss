@@ -6,20 +6,6 @@
 		@apply text-2xl font-medium mb-12;
 	}
 
-	.sidebar_menu_container {
-		@apply flex mt-11 py-4 cursor-pointer;
-
-		&:hover {
-			> svg {
-				@apply text-customOrange;
-			}
-		}
-	}
-
-	.sidebar_menu_text {
-		@apply font-medium text-lg ml-10 flex justify-center items-center;
-	}
-
 	.sidebar_btn_container {
 		@apply mt-16;
 	}
