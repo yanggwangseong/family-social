@@ -13,8 +13,11 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { CreateGroupFields } from './group-create.interface';
 import { GroupService } from '@/services/group/group.service';
+import { useRouter } from 'next/router';
 
 const GroupCreate: FC = () => {
+	const router = useRouter();
+
 	const {
 		register,
 		formState: { errors, isValid },
@@ -37,7 +40,14 @@ const GroupCreate: FC = () => {
 			onSuccess(data) {
 				console.log(data);
 				Loading.remove();
-				Report.success('성공', `그룹을 생성 하였습니다.`, '확인');
+				Report.success(
+					'성공',
+					`${data.groupName} 그룹을 생성 하였습니다.`,
+					'확인',
+					() => {
+						router.push(`/groups/${data.id}`);
+					},
+				);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
