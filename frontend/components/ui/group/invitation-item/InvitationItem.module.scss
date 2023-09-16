@@ -1,0 +1,19 @@
+.invitation_item_container {
+	@apply w-full p-4 border border-solid border-customDark flex flex-col gap-4;
+
+	.group_profile_container {
+		@apply flex;
+
+		.group_profile_subject_container {
+			@apply flex justify-center items-center mr-10;
+		}
+	}
+
+	.message_container {
+		@apply mt-5;
+	}
+
+	.invitation_btn_container {
+		@apply flex w-full gap-1;
+	}
+}

@@ -3,7 +3,7 @@ import styles from './GroupRequests.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
 import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
-import InvitationItem from './invitations/InvitationItem';
+import Invitations from './invitations/Invitations';
 
 const GroupRequests: FC = () => {
 	return (
@@ -15,7 +15,8 @@ const GroupRequests: FC = () => {
 					<GroupSidebar />
 					<div className={styles.main_contents_container}>
 						<div className={styles.top_title}>그룹 멤버 초대 요청</div>
-						<InvitationItem></InvitationItem>
+						{/* 그룹 초대 요청리스트 */}
+						<Invitations />
 					</div>
 				</div>
 			</div>
