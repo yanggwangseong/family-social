@@ -16,8 +16,19 @@
 			}
 			@apply w-full;
 
-			.top_title {
-				@apply font-medium text-2xl mb-10;
+			.top_title_contianer {
+				@apply mb-10 flex;
+				.top_title {
+					@apply font-medium text-2xl;
+				}
+
+				.top_title_icon_container {
+					@apply flex justify-center items-center;
+				}
+
+				.top_title_count {
+					@apply flex justify-center items-center text-2xl text-customGray;
+				}
 			}
 		}
 	}

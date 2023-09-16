@@ -8,7 +8,7 @@ const InvitationItem: FC = () => {
 		<div className={styles.invitation_item_container}>
 			<div className={styles.group_profile_container}>
 				<div className={styles.group_profile_subject_container}>
-					<div>그룹</div>
+					<div className={styles.group_profile_subject}>그룹</div>
 				</div>
 				{/* 그룹 프로필 */}
 				<GroupProfile></GroupProfile>

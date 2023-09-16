@@ -6,6 +6,10 @@
 
 		.group_profile_subject_container {
 			@apply flex justify-center items-center mr-10;
+
+			.group_profile_subject {
+				@apply text-xl font-medium;
+			}
 		}
 	}
 
@@ -14,6 +18,6 @@
 	}
 
 	.invitation_btn_container {
-		@apply flex w-full gap-1;
+		@apply flex w-full gap-5;
 	}
 }

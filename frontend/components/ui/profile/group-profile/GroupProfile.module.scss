@@ -1,5 +1,9 @@
 .profile_container {
-	@apply flex;
+	@apply flex p-3 rounded-lg cursor-pointer;
+
+	&:hover {
+		@apply bg-gray-100;
+	}
 
 	.profile_img_container {
 		@apply border border-solid border-customDark mr-3;
