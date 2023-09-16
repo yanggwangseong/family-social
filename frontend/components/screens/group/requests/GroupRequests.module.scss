@@ -8,5 +8,17 @@
 	.contents_container {
 		@apply flex;
 		height: calc(100vh - 80px);
+
+		.main_contents_container {
+			@screen md {
+				@apply mx-32 mt-10;
+				width: 768px;
+			}
+			@apply w-full;
+
+			.top_title {
+				@apply font-medium text-2xl mb-10;
+			}
+		}
 	}
 }
