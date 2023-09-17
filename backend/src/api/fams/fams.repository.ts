@@ -53,6 +53,10 @@ export class FamsRepository extends Repository<FamEntity> {
 					groupName: true,
 					groupDescription: true,
 				},
+				member: {
+					id: true,
+					username: true,
+				},
 			},
 			relations: {
 				group: true,

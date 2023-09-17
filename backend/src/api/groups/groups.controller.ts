@@ -141,6 +141,7 @@ export class GroupsController {
 	 * @summary 그룹 초대 수락하기
 	 *
 	 * @tag groups
+	 * @param sub 인증된 유저 아이디
 	 * @param groupId 초대받은 그룹 아이디
 	 * @param memberId 초대받은 멤버 아이디
 	 * @param famId 대상이 되는 fam 테이블의 레코드 아이디
@@ -151,11 +152,17 @@ export class GroupsController {
 	@UpdateFamInvitationAcceptSwagger()
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
 	async updateFamInvitationAccept(
+		@CurrentUser('sub') sub: string,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
+		//초대 받은 멤버와 인증된 멤버와 같은지 체크
+		if (sub !== memberId) {
+			throw EntityConflictException('초대받은 멤버와 다른 사용자 입니다');
+		}
+
 		// 초대받은 유저인지 체크
 		await this.famsService.checkIfFamExists({
 			groupId: groupId,

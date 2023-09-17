@@ -85,6 +85,9 @@ export const UpdateFamInvitationAcceptSwagger = () => {
 		ApiNotFoundResponse({
 			description: '초대 받은 그룹을 찾을 수 없습니다.',
 		}),
+		ApiConflictResponse({
+			description: '초대받은 멤버와 다른 사용자 입니다.',
+		}),
 	);
 };
 
