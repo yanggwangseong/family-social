@@ -1,4 +1,7 @@
-import { FamInvitationsResponse } from '@/shared/interfaces/fam.interface';
+import {
+	FamInvitationsResponse,
+	FamResponse,
+} from '@/shared/interfaces/fam.interface';
 import { axiosAPI } from 'api/axios';
 
 export const FamService = {
@@ -7,6 +10,24 @@ export const FamService = {
 			'/fams/invitations',
 		);
 
+		return data;
+	},
+
+	async AcceptInvitation({
+		groupId,
+		memberId,
+		famId,
+	}: {
+		groupId: string;
+		memberId: string;
+		famId: string;
+	}) {
+		const { data } = await axiosAPI.post<FamResponse>(
+			'/groups/:groupId/members/:memberId/fams/:famId/accept-invitation',
+			{
+				invitationAccepted: true,
+			},
+		);
 		return data;
 	},
 };

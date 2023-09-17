@@ -6,9 +6,12 @@ export interface FamInvitationsResponse {
 	count: number;
 }
 
-export interface FamInvitation {
-	id: string;
-	invitationAccepted: false;
+export interface FamInvitation extends FamResponse {
 	group: GroupResponse;
 	member: AuthResponse;
+}
+
+export interface FamResponse {
+	id: string;
+	invitationAccepted: false;
 }
