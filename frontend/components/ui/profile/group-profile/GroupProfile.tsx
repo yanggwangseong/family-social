@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import styles from './GroupProfile.module.scss';
 import Image from 'next/image';
+import { GroupResponse } from '@/shared/interfaces/group.interface';
 
-const GroupProfile: FC = () => {
+const GroupProfile: FC<{ group: GroupResponse }> = ({ group }) => {
 	return (
 		<div className={styles.profile_container}>
 			<div className={styles.profile_img_container}>
@@ -15,8 +16,10 @@ const GroupProfile: FC = () => {
 				></Image>
 			</div>
 			<div>
-				<div className={styles.profile_username}>그룹이름입니다</div>
-				<div className={styles.profile_description}>그룹설명입니다</div>
+				<div className={styles.profile_username}>{group.groupName}</div>
+				<div className={styles.profile_description}>
+					{group.groupDescription}
+				</div>
 			</div>
 		</div>
 	);

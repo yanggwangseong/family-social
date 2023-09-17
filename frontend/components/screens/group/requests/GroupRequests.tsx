@@ -30,10 +30,10 @@ const GroupRequests: FC = () => {
 							<div className={styles.top_title_icon_container}>
 								<BsDot size={22} color="#707070"></BsDot>
 							</div>
-							<div className={styles.top_title_count}>1개</div>
+							<div className={styles.top_title_count}>{data.count}개</div>
 						</div>
 						{/* 그룹 초대 요청리스트 */}
-						<Invitations invitations={data} />
+						<Invitations invitations={data.list} />
 					</div>
 				</div>
 			</div>
