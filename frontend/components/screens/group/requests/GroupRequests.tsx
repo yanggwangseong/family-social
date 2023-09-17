@@ -5,8 +5,18 @@ import Header from '@/components/ui/header/Header';
 import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
 import Invitations from './invitations/Invitations';
 import { BsDot } from 'react-icons/bs';
+import { useQuery } from 'react-query';
+import { FamService } from '@/services/fam/fam.service';
 
 const GroupRequests: FC = () => {
+	const { data, isLoading } = useQuery(
+		['group-requests'],
+		async () => await FamService.getInvitations(),
+	);
+
+	if (isLoading) return <div>Loading</div>;
+	if (!data) return null;
+
 	return (
 		<Format title={'group-requests'}>
 			<div className={styles.container}>
@@ -23,7 +33,7 @@ const GroupRequests: FC = () => {
 							<div className={styles.top_title_count}>1개</div>
 						</div>
 						{/* 그룹 초대 요청리스트 */}
-						<Invitations />
+						<Invitations invitations={data} />
 					</div>
 				</div>
 			</div>

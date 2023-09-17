@@ -48,6 +48,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			select: {
 				id: true,
 				groupName: true,
+				groupDescription: true,
 			},
 		});
 
@@ -66,6 +67,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			select: {
 				id: true,
 				groupName: true,
+				groupDescription: true,
 			},
 		});
 
