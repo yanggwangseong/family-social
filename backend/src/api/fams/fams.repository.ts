@@ -60,6 +60,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			},
 			relations: {
 				group: true,
+				member: true,
 			},
 		});
 
