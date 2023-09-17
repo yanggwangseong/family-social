@@ -22,6 +22,9 @@ async function bootstrap() {
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	};
 
+	// set global prefix
+	app.setGlobalPrefix('api');
+
 	// global pipes
 	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
@@ -57,7 +60,6 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('api/v1/swagger', app, document, getSwaggerOptions());
 
-	app.setGlobalPrefix('api');
 	await app.listen(5001);
 }
 bootstrap();
