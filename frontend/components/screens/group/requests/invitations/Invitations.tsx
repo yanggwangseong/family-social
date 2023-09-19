@@ -7,17 +7,14 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useMutation, useQueryClient } from 'react-query';
 import axios from 'axios';
 import { FamService } from '@/services/fam/fam.service';
-import { AcceptInvitationFields } from './invitations.interface';
+import { InvitationFields } from './invitations.interface';
 
 const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
-	//초대 수락 usemutation [put] /groups/:groupId/members/:memberId/fams/:famId/accept-invitation
-	//초대 거절 usemutation [delete] /groups/:groupId/members/:memberId/fams/:famId
-
 	const queryClient = useQueryClient();
 
 	const { mutate: acceptInvitationSync } = useMutation(
 		['accept-invitation'],
-		(data: AcceptInvitationFields) => FamService.AcceptInvitation(data),
+		(data: InvitationFields) => FamService.AcceptInvitation(data),
 		{
 			onMutate: variable => {
 				Loading.hourglass();
@@ -42,7 +39,7 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 
 	const { mutate: rejectInvitationSync } = useMutation(
 		['reject-invitation'],
-		(data: AcceptInvitationFields) => FamService.RejectInvitation(data),
+		(data: InvitationFields) => FamService.RejectInvitation(data),
 		{
 			onMutate: variable => {
 				Loading.hourglass();
@@ -65,11 +62,11 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 		},
 	);
 
-	const handleAcceptInvitation = (data: AcceptInvitationFields) => {
+	const handleAcceptInvitation = (data: InvitationFields) => {
 		acceptInvitationSync(data);
 	};
 
-	const handleRejectInvitation = (data: AcceptInvitationFields) => {
+	const handleRejectInvitation = (data: InvitationFields) => {
 		rejectInvitationSync(data);
 	};
 
