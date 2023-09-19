@@ -2,9 +2,17 @@ import React, { FC } from 'react';
 import GroupProfile from '@/ui/profile/group-profile/GroupProfile';
 import CustomButton from '@/ui/button/custom-button/CustomButton';
 import styles from './InvitationItem.module.scss';
-import { FamInvitation } from '@/shared/interfaces/fam.interface';
+import { InvitationItemProps } from './invitation-item.interface';
 
-const InvitationItem: FC<{ invitation: FamInvitation }> = ({ invitation }) => {
+const InvitationItem: FC<InvitationItemProps> = ({
+	invitation,
+	onAcceptInvitation,
+}) => {
+	const data = {
+		groupId: invitation.group.id,
+		memberId: invitation.member.id,
+		famId: invitation.id,
+	};
 	return (
 		<div className={styles.invitation_item_container}>
 			<div className={styles.group_profile_container}>
@@ -26,6 +34,7 @@ const InvitationItem: FC<{ invitation: FamInvitation }> = ({ invitation }) => {
 					className="mt-8 mb-4 bg-customDark text-customOrange 
 					font-bold border border-solid border-customDark 
 					rounded-full py-4 px-4 w-full hover:opacity-80"
+					onClick={() => onAcceptInvitation(data)}
 				>
 					수락
 				</CustomButton>

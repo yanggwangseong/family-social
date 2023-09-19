@@ -22,8 +22,8 @@ export const FamService = {
 		memberId: string;
 		famId: string;
 	}) {
-		const { data } = await axiosAPI.post<FamResponse>(
-			'/groups/:groupId/members/:memberId/fams/:famId/accept-invitation',
+		const { data } = await axiosAPI.put<FamResponse>(
+			`/groups/${groupId}/members/${memberId}/fams/${famId}/accept-invitation`,
 			{
 				invitationAccepted: true,
 			},

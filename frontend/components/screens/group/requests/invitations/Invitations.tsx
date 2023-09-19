@@ -4,7 +4,7 @@ import styles from './Invitations.module.scss';
 import { FamInvitation } from '@/shared/interfaces/fam.interface';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import axios from 'axios';
 import { FamService } from '@/services/fam/fam.service';
 import { AcceptInvitationFields } from './invitations.interface';
@@ -12,6 +12,8 @@ import { AcceptInvitationFields } from './invitations.interface';
 const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 	//초대 수락 usemutation [put] /groups/:groupId/members/:memberId/fams/:famId/accept-invitation
 	//초대 거절 usemutation [delete] /groups/:groupId/members/:memberId/fams/:famId
+
+	const queryClient = useQueryClient();
 
 	const { mutate: acceptInvitationSync } = useMutation(
 		['login'],
@@ -22,7 +24,8 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `로그인 성공 하였습니다.`, '확인');
+				Report.success('성공', `그룹가입 하였습니다.`, '확인');
+				queryClient.invalidateQueries(['group-requests']);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
@@ -37,11 +40,18 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 		},
 	);
 
-	const handleAcceptInvitation = () => {};
+	const handleAcceptInvitation = (data: AcceptInvitationFields) => {
+		acceptInvitationSync(data);
+	};
+
 	return (
 		<div className={styles.invitation_container}>
 			{invitations.map((invitation, index) => (
-				<InvitationItem key={index} invitation={invitation}></InvitationItem>
+				<InvitationItem
+					key={index}
+					invitation={invitation}
+					onAcceptInvitation={handleAcceptInvitation}
+				></InvitationItem>
 			))}
 		</div>
 	);
