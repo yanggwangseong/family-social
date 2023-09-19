@@ -30,4 +30,19 @@ export const FamService = {
 		);
 		return data;
 	},
+
+	async RejectInvitation({
+		groupId,
+		memberId,
+		famId,
+	}: {
+		groupId: string;
+		memberId: string;
+		famId: string;
+	}) {
+		const { data } = await axiosAPI.delete<FamResponse>(
+			`/groups/${groupId}/members/${memberId}/fams/${famId}`,
+		);
+		return data;
+	},
 };

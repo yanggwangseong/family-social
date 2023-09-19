@@ -16,7 +16,7 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 	const queryClient = useQueryClient();
 
 	const { mutate: acceptInvitationSync } = useMutation(
-		['login'],
+		['accept-invitation'],
 		(data: AcceptInvitationFields) => FamService.AcceptInvitation(data),
 		{
 			onMutate: variable => {
@@ -40,9 +40,36 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 		},
 	);
 
+	const { mutate: rejectInvitationSync } = useMutation(
+		['reject-invitation'],
+		(data: AcceptInvitationFields) => FamService.RejectInvitation(data),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `그룹가입을 거절 하였습니다.`, '확인');
+				queryClient.invalidateQueries(['group-requests']);
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
 	const handleAcceptInvitation = (data: AcceptInvitationFields) => {
 		acceptInvitationSync(data);
 	};
+
+	const handleRejectInvitation = (data: AcceptInvitationFields) => {};
 
 	return (
 		<div className={styles.invitation_container}>
