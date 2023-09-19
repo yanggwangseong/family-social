@@ -4,4 +4,5 @@ import { FamInvitation } from '@/shared/interfaces/fam.interface';
 export interface InvitationItemProps {
 	invitation: FamInvitation;
 	onAcceptInvitation: (data: AcceptInvitationFields) => void;
+	onRejectInvitation: (data: AcceptInvitationFields) => void;
 }

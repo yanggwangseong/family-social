@@ -7,6 +7,7 @@ import { InvitationItemProps } from './invitation-item.interface';
 const InvitationItem: FC<InvitationItemProps> = ({
 	invitation,
 	onAcceptInvitation,
+	onRejectInvitation,
 }) => {
 	const data = {
 		groupId: invitation.group.id,
@@ -44,6 +45,7 @@ const InvitationItem: FC<InvitationItemProps> = ({
 					className="mt-8 mb-4 bg-basic text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full py-4 px-4 w-full hover:bg-gray-200"
+					onClick={() => onRejectInvitation(data)}
 				>
 					거절
 				</CustomButton>

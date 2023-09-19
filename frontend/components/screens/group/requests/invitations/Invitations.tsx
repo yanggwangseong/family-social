@@ -69,7 +69,9 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 		acceptInvitationSync(data);
 	};
 
-	const handleRejectInvitation = (data: AcceptInvitationFields) => {};
+	const handleRejectInvitation = (data: AcceptInvitationFields) => {
+		rejectInvitationSync(data);
+	};
 
 	return (
 		<div className={styles.invitation_container}>
@@ -78,6 +80,7 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 					key={index}
 					invitation={invitation}
 					onAcceptInvitation={handleAcceptInvitation}
+					onRejectInvitation={handleRejectInvitation}
 				></InvitationItem>
 			))}
 		</div>
