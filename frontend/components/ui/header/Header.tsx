@@ -10,7 +10,7 @@ const Header: FC = () => {
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
 				<div className={styles.header_left_container}>
-					<div className={styles.header_logo}>Fam</div>
+					<div className={styles.header_logo}>FAM</div>
 					<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
 				</div>
 				<div className={styles.right_icons_container}>
