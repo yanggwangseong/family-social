@@ -1,0 +1,8 @@
+.sidebar_container {
+	@apply pt-3 border-r border-solid border-customDark h-full;
+	width: 276px;
+
+	.sidebar_btn_container {
+		@apply flex px-10;
+	}
+}
