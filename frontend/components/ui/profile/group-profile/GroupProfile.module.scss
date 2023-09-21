@@ -2,7 +2,13 @@
 	@apply flex p-3 rounded-lg cursor-pointer;
 
 	&:hover {
-		@apply bg-gray-100;
+		@apply text-customOrange;
+		.profile_img_container {
+			@apply border-customOrange;
+		}
+		.profile_description {
+			@apply text-customOrange;
+		}
 	}
 
 	.profile_img_container {
