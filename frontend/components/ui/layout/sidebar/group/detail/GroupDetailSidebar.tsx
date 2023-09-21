@@ -13,8 +13,9 @@ import { FiSettings } from 'react-icons/fi';
 import { TbDoorExit } from 'react-icons/tb';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import Link from 'next/link';
 
-const GroupDetailSidebar: FC = () => {
+const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
 	const [isOpenSetting, setOpenSetting] = useState<boolean>(false);
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
@@ -126,7 +127,7 @@ const GroupDetailSidebar: FC = () => {
 					onClick={() => setToggleSetting(!isToggleSetting)}
 				>
 					<div className="text-customGray font-medium hover:text-customOrange">
-						설정
+						관리자 도구
 					</div>
 					<div className="ml-auto flex justify-center items-center">
 						{isToggleSetting ? (
@@ -138,7 +139,10 @@ const GroupDetailSidebar: FC = () => {
 				</div>
 				{isToggleSetting && (
 					<>
-						<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
+						<Link
+							className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer"
+							href={`/groups/${groupId}/edit`}
+						>
 							<div className="flex justify-center items-center">
 								<FiSettings size={22} />
 							</div>
@@ -148,18 +152,7 @@ const GroupDetailSidebar: FC = () => {
 									그룹 정보 수정 등 관리
 								</div>
 							</div>
-						</div>
-						<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
-							<div className="flex justify-center items-center">
-								<FiSettings size={22} />
-							</div>
-							<div className="flex flex-col ml-4">
-								<div>그룹 설정</div>
-								<div className="text-xs text-customGray hover:text-customOrange">
-									그룹 정보 수정 등 관리
-								</div>
-							</div>
-						</div>
+						</Link>
 					</>
 				)}
 			</div>

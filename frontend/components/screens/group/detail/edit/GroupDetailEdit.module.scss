@@ -22,19 +22,22 @@
 		@apply flex;
 		height: calc(100vh - 80px);
 
-		.detail_container {
-			width: calc(100vw - 300px);
-			.lottie {
-				width: 100%;
-				height: 400px;
+		.main_contents_container {
+			@screen md {
+				@apply mx-32 mt-10 flex justify-center;
+				width: 768px;
 			}
+			@apply w-full;
 
-			.main_contents_container {
-				@screen md {
-					@apply mx-32;
-					width: 768px;
-				}
+			.detail_container {
 				@apply w-full;
+				.detail_wrap {
+					@apply border border-solid border-customDark p-4 bg-white shadow-2xl;
+					min-height: 400px;
+					.detail_container_title {
+						@apply font-medium text-xl;
+					}
+				}
 			}
 		}
 	}
