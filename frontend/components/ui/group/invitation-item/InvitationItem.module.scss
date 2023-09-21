@@ -1,5 +1,5 @@
 .invitation_item_container {
-	@apply w-full p-4 border border-solid border-customDark flex flex-col gap-4;
+	@apply w-full p-4 border border-solid border-customDark flex flex-col gap-4 shadow-2xl;
 
 	.group_profile_container {
 		@apply flex;

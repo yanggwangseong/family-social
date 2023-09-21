@@ -6,14 +6,18 @@ import {
 	BsPersonFill,
 	BsTelephonePlus,
 	BsThreeDots,
+	BsHouseDoor,
 } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FiSettings } from 'react-icons/fi';
+import { TbDoorExit } from 'react-icons/tb';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const GroupDetailSidebar: FC = () => {
 	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
+	const [isOpenSetting, setOpenSetting] = useState<boolean>(false);
+	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 	return (
 		<div className={styles.sidebar_container}>
 			<GroupProfile
@@ -76,31 +80,88 @@ const GroupDetailSidebar: FC = () => {
 						</div>
 					)}
 				</div>
-				<div className="flex justify-center items-center ml-auto">
-					<BsThreeDots size={22} />
+				<div className="flex justify-center items-center ml-auto cursor-pointer relative">
+					<BsThreeDots
+						size={22}
+						onClick={() => setOpenSetting(!isOpenSetting)}
+					/>
+					{isOpenSetting && (
+						<div
+							className="absolute top-20 left-0 border 
+							border-solid border-customDark bg-white w-80 p-4
+							shadow-2xl rounded-tr-[44px]
+							"
+						>
+							<div className="flex p-2 hover:bg-basic rounded-lg cursor-pointer">
+								<div className="flex justify-center items-center">
+									<TbDoorExit size={22} />
+								</div>
+								<div className="flex flex-col ml-4">
+									<div>그룹 삭제</div>
+									<div className="text-xs text-customGray">
+										관리자만 그룹을 삭제 할 수 있습니다
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+				</div>
+			</div>
+			<div className="p-4 mt-4">
+				<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
+					<div className="flex justify-center items-center">
+						<BsHouseDoor size={22} />
+					</div>
+					<div className="flex flex-col ml-4">
+						<div>커뮤니티 홈</div>
+					</div>
 				</div>
 			</div>
 
+			<Line />
+
 			<div className="p-4">
-				<div className="flex mt-12 p-2 hover:text-customOrange rounded-lg cursor-pointer">
+				<div
+					className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer"
+					onClick={() => setToggleSetting(!isToggleSetting)}
+				>
 					<div className="text-customGray font-medium hover:text-customOrange">
 						설정
 					</div>
 					<div className="ml-auto flex justify-center items-center">
-						<IoIosArrowUp size={22} />
+						{isToggleSetting ? (
+							<IoIosArrowUp size={22} />
+						) : (
+							<IoIosArrowDown size={22} />
+						)}
 					</div>
 				</div>
-				<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
-					<div className="flex justify-center items-center">
-						<FiSettings size={22} />
-					</div>
-					<div className="flex flex-col ml-4">
-						<div>그룹 설정</div>
-						<div className="text-xs text-customGray hover:text-customOrange">
-							그룹 정보 수정 등 관리
+				{isToggleSetting && (
+					<>
+						<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
+							<div className="flex justify-center items-center">
+								<FiSettings size={22} />
+							</div>
+							<div className="flex flex-col ml-4">
+								<div>그룹 설정</div>
+								<div className="text-xs text-customGray hover:text-customOrange">
+									그룹 정보 수정 등 관리
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
+						<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
+							<div className="flex justify-center items-center">
+								<FiSettings size={22} />
+							</div>
+							<div className="flex flex-col ml-4">
+								<div>그룹 설정</div>
+								<div className="text-xs text-customGray hover:text-customOrange">
+									그룹 정보 수정 등 관리
+								</div>
+							</div>
+						</div>
+					</>
+				)}
 			</div>
 		</div>
 	);
