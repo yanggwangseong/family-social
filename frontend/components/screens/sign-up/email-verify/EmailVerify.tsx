@@ -82,7 +82,7 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 
 						<CustomButton
 							type="submit"
-							className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full py-4 px-4 w-full"
+							className="mt-8 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full p-[10px] w-full"
 							disabled={!isValid}
 						>
 							확인

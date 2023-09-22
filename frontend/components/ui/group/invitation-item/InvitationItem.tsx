@@ -34,7 +34,7 @@ const InvitationItem: FC<InvitationItemProps> = ({
 					type="button"
 					className="mt-8 mb-4 bg-customDark text-customOrange 
 					font-bold border border-solid border-customDark 
-					rounded-full py-4 px-4 w-full hover:opacity-80"
+					rounded-full p-[10px] w-full hover:opacity-80"
 					onClick={() => onAcceptInvitation(data)}
 				>
 					수락
@@ -44,7 +44,7 @@ const InvitationItem: FC<InvitationItemProps> = ({
 					type="button"
 					className="mt-8 mb-4 bg-basic text-customDark 
 					font-bold border border-solid border-customDark 
-					rounded-full py-4 px-4 w-full hover:bg-gray-200"
+					rounded-full p-[10px] w-full hover:bg-gray-200"
 					onClick={() => onRejectInvitation(data)}
 				>
 					거절

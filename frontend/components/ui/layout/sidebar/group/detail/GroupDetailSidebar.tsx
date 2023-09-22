@@ -42,7 +42,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 						type="button"
 						className="bg-customOrange text-customDark 
 					font-bold border border-solid border-customDark 
-					rounded-full py-4 px-4 w-full
+					rounded-full p-[10px] w-full
 					hover:bg-orange-500
 					"
 						onClick={() => setOpenInvitation(!isOpenInvitation)}

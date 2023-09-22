@@ -9,10 +9,9 @@ const GroupProfile: FC<GroupProfileProps> = ({ group }) => {
 			<div>
 				<div className={styles.profile_img_container}>
 					<Image
-						className=""
 						width={40}
 						height={40}
-						src={'/images/profile/profile.png'}
+						src={'/images/banner/sm/group-base-sm.png'}
 						alt="img"
 					></Image>
 				</div>
