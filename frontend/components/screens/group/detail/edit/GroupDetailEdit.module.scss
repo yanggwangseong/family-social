@@ -58,6 +58,14 @@
 
 							.form_container {
 								@apply w-full;
+
+								.field_container {
+									@apply flex flex-col gap-6;
+								}
+
+								.btn_container {
+									@apply flex gap-5 mt-10;
+								}
 							}
 
 							.menu_description_container {

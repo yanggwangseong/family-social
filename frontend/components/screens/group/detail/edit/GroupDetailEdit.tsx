@@ -9,6 +9,7 @@ import { PiNotePencilLight } from 'react-icons/pi';
 import cn from 'classnames';
 import Field from '@/components/ui/field/Field';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
@@ -43,17 +44,20 @@ const GroupDetailEdit: FC = () => {
 										{isMode.mode && isMode.mode === 'information' ? (
 											<div className={styles.form_container}>
 												<form>
-													<div className="flex flex-col gap-7">
+													<div className={styles.field_container}>
+														{/* input 그룹이름 */}
 														<Field
 															fieldClass={'inline_input'}
 															labelText={'그룹 이름'}
 														></Field>
-														<Field
-															fieldClass={'inline_input'}
+
+														{/* textarea 그룹설명 */}
+														<FieldWithTextarea
+															fieldClass={'inline_textarea'}
 															labelText={'그룹 설명'}
-														></Field>
+														></FieldWithTextarea>
 													</div>
-													<div className="flex gap-5 mt-10">
+													<div className={styles.btn_container}>
 														<CustomButton
 															className="mt-8 mb-4 bg-white text-customDark 
 															font-bold border border-solid border-customDark 
