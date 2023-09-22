@@ -14,11 +14,18 @@ import { TbDoorExit } from 'react-icons/tb';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Link from 'next/link';
+import { ToggleMenu } from '@/components/ui/modal/toggle-modal.interface';
+import ToggleModal from '@/components/ui/modal/ToggleModal';
+import {
+	GroupSettingMenu,
+	InviteMenu,
+} from '@/components/ui/modal/toggle-menu.constants';
 
 const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
 	const [isOpenSetting, setOpenSetting] = useState<boolean>(false);
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
+
 	return (
 		<div className={styles.sidebar_container}>
 			<GroupProfile
@@ -28,16 +35,22 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					groupName: 'korea',
 				}}
 			/>
+
+			{/* 라인 */}
 			<Line />
-			<div className="mt-6 flex justify-center">
-				<div className="flex justify-center items-center">
+
+			<div className={styles.sidebar_member_container}>
+				<div className={styles.icon_container}>
 					<BsPersonFill size={24} color="#707070" />
 				</div>
-				<div className="ml-10 text-customGray">1명</div>
+				<div className={styles.member_text}>1명</div>
 			</div>
+
+			{/* 라인 */}
 			<Line />
+
 			<div className={styles.sidebar_btn_container}>
-				<div className="flex justify-center items-center w-4/5 relative">
+				<div className={styles.toggle_menu_btn_container}>
 					<CustomButton
 						type="button"
 						className="bg-customOrange text-customDark 
@@ -49,71 +62,22 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					>
 						+ 초대하기
 					</CustomButton>
-					{isOpenInvitation && (
-						<div
-							className="absolute top-20 left-0 border 
-							border-solid border-customDark bg-white w-80 p-4
-							shadow-2xl rounded-tr-[44px]
-							"
-						>
-							<div className="flex p-2 hover:bg-basic rounded-lg cursor-pointer">
-								<div className="flex justify-center items-center">
-									<BsTelephonePlus size={22} />
-								</div>
-								<div className="flex flex-col ml-4">
-									<div>전화번호로 초대하기</div>
-									<div className="text-xs text-customGray">
-										전화번호 통해서 검색하여 초대를 보냅니다
-									</div>
-								</div>
-							</div>
-							<div className="flex p-2 hover:bg-basic rounded-lg cursor-pointer">
-								<div className="flex justify-center items-center">
-									<BsLink45Deg size={22} />
-								</div>
-								<div className="flex flex-col ml-4">
-									<div>링크로 초대하기</div>
-									<div className="text-xs text-customGray">
-										링크를 통해서 초대 할 수 있습니다
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
+					{isOpenInvitation && <ToggleModal list={InviteMenu} />}
 				</div>
-				<div className="flex justify-center items-center ml-auto cursor-pointer relative">
+				<div className={styles.toggle_menu_icon_container}>
 					<BsThreeDots
 						size={22}
 						onClick={() => setOpenSetting(!isOpenSetting)}
 					/>
-					{isOpenSetting && (
-						<div
-							className="absolute top-20 left-0 border 
-							border-solid border-customDark bg-white w-80 p-4
-							shadow-2xl rounded-tr-[44px]
-							"
-						>
-							<div className="flex p-2 hover:bg-basic rounded-lg cursor-pointer">
-								<div className="flex justify-center items-center">
-									<TbDoorExit size={22} />
-								</div>
-								<div className="flex flex-col ml-4">
-									<div>그룹 삭제</div>
-									<div className="text-xs text-customGray">
-										관리자만 그룹을 삭제 할 수 있습니다
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
+					{isOpenSetting && <ToggleModal list={GroupSettingMenu} />}
 				</div>
 			</div>
-			<div className="p-4 mt-4">
-				<div className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer">
-					<div className="flex justify-center items-center">
+			<div className={styles.sidebar_home_btn_container}>
+				<div className={styles.home_menu_container}>
+					<div className={styles.icon_container}>
 						<BsHouseDoor size={22} />
 					</div>
-					<div className="flex flex-col ml-4">
+					<div className={styles.home_menu_text}>
 						<div>커뮤니티 홈</div>
 					</div>
 				</div>
@@ -121,15 +85,13 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 
 			<Line />
 
-			<div className="p-4">
+			<div className={styles.management_menu_container}>
 				<div
-					className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer"
+					className={styles.management_toggle_menu_container}
 					onClick={() => setToggleSetting(!isToggleSetting)}
 				>
-					<div className="text-customGray font-medium hover:text-customOrange">
-						관리자 도구
-					</div>
-					<div className="ml-auto flex justify-center items-center">
+					<div className={styles.menu_text}>관리자 도구</div>
+					<div className={styles.toggle_icon}>
 						{isToggleSetting ? (
 							<IoIosArrowUp size={22} />
 						) : (
@@ -140,17 +102,15 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 				{isToggleSetting && (
 					<>
 						<Link
-							className="flex p-2 hover:text-customOrange rounded-lg cursor-pointer"
+							className={styles.menu_item_container}
 							href={`/groups/${groupId}/edit`}
 						>
-							<div className="flex justify-center items-center">
+							<div className={styles.icon_container}>
 								<FiSettings size={22} />
 							</div>
-							<div className="flex flex-col ml-4">
+							<div className={styles.menu_container}>
 								<div>그룹 설정</div>
-								<div className="text-xs text-customGray hover:text-customOrange">
-									그룹 정보 수정 등 관리
-								</div>
+								<div className={styles.description}>그룹 정보 수정 등 관리</div>
 							</div>
 						</Link>
 					</>

@@ -1,12 +1,8 @@
 import React, { FC } from 'react';
 import styles from './ToggleModalItem.module.scss';
-import { ToggleModalItemProps } from './toggle-modal-item.interface';
+import { ToggleMenu } from '../toggle-modal.interface';
 
-const ToggleModalItem: FC<ToggleModalItemProps> = ({
-	Icon,
-	title,
-	description,
-}) => {
+const ToggleModalItem: FC<ToggleMenu> = ({ Icon, title, description }) => {
 	return (
 		<div className={styles.toggle_modal_item_container}>
 			<div className={styles.icon_container}>

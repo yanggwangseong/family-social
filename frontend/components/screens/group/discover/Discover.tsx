@@ -13,7 +13,7 @@ const Discover: FC = () => {
 				<div className={styles.contents_container}>
 					<GroupSidebar />
 					<div className={styles.main_contents_container}>
-						<div className={styles.top_title_contianer}>
+						<div className={styles.top_title_container}>
 							<div className={styles.top_title}>찾아보기</div>
 						</div>
 						{/* 그룹별 내가 올린 피드가 만약 없을경우 */}

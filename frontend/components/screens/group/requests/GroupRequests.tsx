@@ -25,7 +25,7 @@ const GroupRequests: FC = () => {
 				<div className={styles.contents_container}>
 					<GroupSidebar />
 					<div className={styles.main_contents_container}>
-						<div className={styles.top_title_contianer}>
+						<div className={styles.top_title_container}>
 							<div className={styles.top_title}>그룹 멤버 초대 요청</div>
 							<div className={styles.top_title_icon_container}>
 								<BsDot size={22} color="#707070"></BsDot>

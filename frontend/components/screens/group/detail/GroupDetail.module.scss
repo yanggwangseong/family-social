@@ -40,8 +40,12 @@
 				.banner_profile_contaienr {
 					@apply flex mt-6;
 
-					.banner_profile_right_contianer {
+					.banner_profile_right_contaienr {
 						@apply ml-auto;
+
+						.toggle_menu_container {
+							@apply flex justify-center items-center relative;
+						}
 					}
 				}
 			}

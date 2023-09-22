@@ -8,6 +8,9 @@ import Image from 'next/image';
 import Profile from '@/components/ui/profile/Profile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import ToggleModal from '@/components/ui/modal/ToggleModal';
+import { BsLink45Deg, BsTelephonePlus } from 'react-icons/bs';
+import { ToggleMenu } from '@/components/ui/modal/toggle-modal.interface';
+import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -35,8 +38,8 @@ const GroupDetail: FC = () => {
 								<div className={styles.banner_profile_contaienr}>
 									{/* 프로필 */}
 									<Profile />
-									<div className={styles.banner_profile_right_contianer}>
-										<div className="flex justify-center items-center relative">
+									<div className={styles.banner_profile_right_contaienr}>
+										<div className={styles.toggle_menu_container}>
 											<CustomButton
 												type="button"
 												className="bg-customOrange text-customDark 
@@ -50,7 +53,7 @@ const GroupDetail: FC = () => {
 											</CustomButton>
 											{isOpenInvitation && (
 												// toggle modal
-												<ToggleModal />
+												<ToggleModal list={InviteMenu} />
 											)}
 										</div>
 									</div>

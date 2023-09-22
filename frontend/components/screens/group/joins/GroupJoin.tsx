@@ -16,7 +16,7 @@ const GroupJoin: FC = () => {
 				<div className={styles.contents_container}>
 					<GroupSidebar />
 					<div className={styles.main_contents_container}>
-						<div className={styles.top_title_contianer}>
+						<div className={styles.top_title_container}>
 							<div className={styles.top_title}>가입한 모든 그룹</div>
 							<div className={styles.top_title_icon_container}>
 								<BsDot size={22} color="#707070"></BsDot>
@@ -63,7 +63,7 @@ const GroupJoin: FC = () => {
 							</div>
 						</div>
 						<Line />
-						<div className={styles.top_title_contianer}>
+						<div className={styles.top_title_container}>
 							<div className={styles.top_title}>관리 중인 그룹</div>
 							<div className={styles.top_title_icon_container}>
 								<BsDot size={22} color="#707070"></BsDot>
