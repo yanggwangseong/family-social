@@ -14,6 +14,7 @@ import axios from 'axios';
 import { CreateGroupFields } from './group-create.interface';
 import { GroupService } from '@/services/group/group.service';
 import { useRouter } from 'next/router';
+import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 
 const GroupCreate: FC = () => {
 	const router = useRouter();
@@ -102,18 +103,15 @@ const GroupCreate: FC = () => {
 									error={errors.groupName}
 								></Field>
 								<div className={styles.form_label}>그룹설명</div>
-								<div>
-									<textarea
-										className={styles.field_area}
-										{...register('groupDescription', {
-											maxLength: {
-												value: 1000,
-												message: '최대 1000자까지 가능합니다',
-											},
-										})}
-										placeholder="그룹명을 입력해주세요"
-									></textarea>
-								</div>
+								<FieldWithTextarea
+									{...register('groupDescription', {
+										maxLength: {
+											value: 1000,
+											message: '최대 1000자까지 가능합니다',
+										},
+									})}
+									placeholder="그룹설명을 입력해주세요"
+								></FieldWithTextarea>
 							</div>
 						</div>
 						<div className={styles.footer_wrap}>

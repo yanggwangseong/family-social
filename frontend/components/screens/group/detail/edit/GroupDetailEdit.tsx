@@ -6,6 +6,9 @@ import Header from '@/components/ui/header/Header';
 import GroupDetailSidebar from '@/components/ui/layout/sidebar/group/detail/GroupDetailSidebar';
 import Line from '@/components/ui/line/Line';
 import { PiNotePencilLight } from 'react-icons/pi';
+import cn from 'classnames';
+import Field from '@/components/ui/field/Field';
+import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
@@ -29,89 +32,124 @@ const GroupDetailEdit: FC = () => {
 					<div className={styles.main_contents_container}>
 						<div className={styles.detail_container}>
 							<div className={styles.detail_wrap}>
-								{isMode.mode && isMode.mode !== 'information' ? (
-									<div>disabled상태</div>
-								) : (
-									<div>
-										<div className={styles.detail_container_title}>
-											그룹 수정
-										</div>
-										<div className="flex mt-10">
-											{isMode.mode && isMode.mode === 'information' ? (
-												<div>
-													<form>
-														<div>폼</div>
-														<button
+								<div
+									className={cn(styles.group_setting_lst_menu_container, {
+										[styles.disabled]:
+											isMode.mode && isMode.mode !== 'information',
+									})}
+								>
+									<div className={styles.detail_container_title}>그룹 수정</div>
+									<div className={styles.menu_container}>
+										{isMode.mode && isMode.mode === 'information' ? (
+											<div className={styles.form_container}>
+												<form>
+													<div className="flex flex-col gap-7">
+														<Field
+															fieldClass={'inline_input'}
+															labelText={'그룹 이름'}
+														></Field>
+														<Field
+															fieldClass={'inline_input'}
+															labelText={'그룹 설명'}
+														></Field>
+													</div>
+													<div className="flex gap-5 mt-10">
+														<CustomButton
+															className="mt-8 mb-4 bg-white text-customDark 
+															font-bold border border-solid border-customDark 
+															rounded-full p-[10px] w-1/2 hover:opacity-80"
 															type="button"
 															onClick={() => handleEdit('reset')}
 														>
 															취소
-														</button>
-													</form>
+														</CustomButton>
+														<CustomButton
+															className="mt-8 mb-4 bg-customDark text-customOrange 
+															font-bold border border-solid border-customDark 
+															rounded-full p-[10px] w-1/2 hover:opacity-80"
+															type="button"
+															onClick={() => handleEdit('reset')}
+														>
+															저장
+														</CustomButton>
+													</div>
+												</form>
+											</div>
+										) : (
+											<div className={styles.menu_description_container}>
+												<div className={styles.menu_title}>
+													그룹 이름 및 설명
 												</div>
-											) : (
-												<div className="flex w-full">
-													<div>그룹 이름 및 설명</div>
-													<div
-														className="ml-auto cursor-pointer hover:text-customOrange"
-														onClick={() => handleEdit('information')}
-													>
-														<div className="flex">
-															<div className="flex justify-center items-center">
-																<PiNotePencilLight size={22} />
-															</div>
-															<div className="font-medium ml-2">편집</div>
+												<div
+													className={styles.edit_btn_container}
+													onClick={
+														!isMode.mode
+															? () => handleEdit('information')
+															: undefined
+													}
+												>
+													<div className={styles.btn_wrap}>
+														<div className={styles.icon_container}>
+															<PiNotePencilLight size={22} />
 														</div>
+														<div className={styles.btn_text}>편집</div>
 													</div>
 												</div>
-											)}
-										</div>
+											</div>
+										)}
 									</div>
-								)}
+								</div>
 
 								<Line />
-								{isMode.mode && isMode.mode !== 'visitMessage' ? (
-									<div>disabled상태</div>
-								) : (
-									<div>
-										<div className={styles.detail_container_title}>
-											새 멤버 소개
-										</div>
-										<div className="flex mt-10">
-											{isMode.mode && isMode.mode === 'visitMessage' ? (
-												<div>
-													<form>
-														<div>폼</div>
-														<button
-															type="button"
-															onClick={() => handleEdit('reset')}
-														>
-															취소
-														</button>
-													</form>
-												</div>
-											) : (
-												<div className="flex w-full">
-													<div>
-														그룹을 처음 방문한 새로운 멤버에게 표시할 메시지를
-														작성해보세요
-													</div>
-													<div
-														className="ml-auto cursor-pointer hover:text-customOrange"
-														onClick={() => handleEdit('visitMessage')}
-													>
-														<div className="flex">
-															<div className="flex justify-center items-center">
-																<PiNotePencilLight size={22} />
-															</div>
-															<div className="font-medium ml-2">편집</div>
-														</div>
-													</div>
-												</div>
-											)}
-										</div>
+
+								<div
+									className={cn(styles.group_setting_lst_menu_container, {
+										[styles.disabled]:
+											isMode.mode && isMode.mode !== 'visitMessage',
+									})}
+								>
+									<div className={styles.detail_container_title}>
+										새 멤버 소개
 									</div>
-								)}
+									<div className={styles.menu_container}>
+										{isMode.mode && isMode.mode === 'visitMessage' ? (
+											<div className={styles.form_container}>
+												<form>
+													<div>폼</div>
+													<button
+														type="button"
+														onClick={() => handleEdit('reset')}
+													>
+														취소
+													</button>
+												</form>
+											</div>
+										) : (
+											<div className={styles.menu_description_container}>
+												<div className={styles.menu_title}>
+													그룹을 처음 방문한 새로운 멤버에게 표시할 메시지를
+													작성해보세요
+												</div>
+												<div
+													className={styles.edit_btn_container}
+													onClick={
+														!isMode.mode
+															? () => handleEdit('visitMessage')
+															: undefined
+													}
+												>
+													<div className={styles.btn_wrap}>
+														<div className={styles.icon_container}>
+															<PiNotePencilLight size={22} />
+														</div>
+														<div className={styles.btn_text}>편집</div>
+													</div>
+												</div>
+											</div>
+										)}
+									</div>
+								</div>
+
 								<Line />
 							</div>
 						</div>

@@ -5,7 +5,15 @@ import { FieldType } from './field.interface';
 
 const Field = forwardRef<HTMLInputElement, FieldType>(
 	(
-		{ fieldClass = 'input', error, type = 'text', style, Icon, ...rest },
+		{
+			fieldClass = 'input',
+			labelText,
+			error,
+			type = 'text',
+			style,
+			Icon,
+			...rest
+		},
 		ref,
 	) => {
 		return (
@@ -21,6 +29,8 @@ const Field = forwardRef<HTMLInputElement, FieldType>(
 							<Icon />
 						</div>
 					)}
+
+					{labelText && <label>{labelText}</label>}
 					<input ref={ref} type={type} {...rest} />
 				</div>
 				{error && <div className={styles.error}>{error.message}</div>}
