@@ -111,6 +111,7 @@ const GroupCreate: FC = () => {
 										},
 									})}
 									placeholder="그룹설명을 입력해주세요"
+									error={errors.groupDescription}
 								></FieldWithTextarea>
 							</div>
 						</div>

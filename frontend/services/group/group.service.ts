@@ -13,4 +13,17 @@ export const GroupService = {
 
 		return data;
 	},
+
+	async updateGroup(
+		groupId: string,
+		groupName: string,
+		groupDescription: string,
+	): Promise<GroupResponse> {
+		const { data } = await axiosAPI.put<GroupResponse>(`/groups/${groupId}`, {
+			groupName,
+			groupDescription,
+		});
+
+		return data;
+	},
 };

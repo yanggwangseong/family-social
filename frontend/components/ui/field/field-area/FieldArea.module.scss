@@ -7,6 +7,10 @@
 
 	> textarea {
 		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+
+		&::placeholder {
+			@apply font-normal;
+		}
 	}
 }
 
@@ -16,6 +20,10 @@
 						rounded-2xl w-full py-2 px-4
 						focus:outline-none;
 	}
+}
+
+.error {
+	@apply text-customOrange;
 }
 
 .inline_textarea {

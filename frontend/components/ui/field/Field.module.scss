@@ -9,6 +9,10 @@
 
 	> input[type='text'] {
 		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+
+		&::placeholder {
+			@apply font-normal;
+		}
 	}
 }
 

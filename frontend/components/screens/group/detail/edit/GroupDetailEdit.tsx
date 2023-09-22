@@ -10,6 +10,13 @@ import cn from 'classnames';
 import Field from '@/components/ui/field/Field';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
+import { useMutation } from 'react-query';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { GroupService } from '@/services/group/group.service';
+import axios from 'axios';
+import { UpdateGroupFields } from './group-update.interface';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
@@ -22,6 +29,54 @@ const GroupDetailEdit: FC = () => {
 	const handleEdit = (mode: 'information' | 'visitMessage' | 'reset') => {
 		if (mode === 'reset') return setMode({ mode: '' });
 		setMode({ mode: mode });
+	};
+
+	const {
+		register,
+		formState: { errors, isValid },
+		handleSubmit,
+		reset,
+		getValues,
+		watch,
+	} = useForm<UpdateGroupFields>({
+		mode: 'onChange',
+	});
+
+	const { mutate: updateGroupSync } = useMutation(
+		['update-group'],
+		(data: UpdateGroupFields) =>
+			GroupService.updateGroup(groupId, data.groupName, data.groupDescription),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				console.log(data);
+				Loading.remove();
+				Report.success(
+					'성공',
+					`${data.groupName} 그룹을 수정에 성공 하였습니다.`,
+					'확인',
+					() => {
+						handleEdit('reset');
+					},
+				);
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const onSubmit: SubmitHandler<UpdateGroupFields> = data => {
+		updateGroupSync(data);
 	};
 
 	return (
@@ -44,18 +99,35 @@ const GroupDetailEdit: FC = () => {
 									<div className={styles.menu_container}>
 										{isMode.mode && isMode.mode === 'information' ? (
 											<div className={styles.form_container}>
-												<form>
+												<form onSubmit={handleSubmit(onSubmit)}>
 													<div className={styles.field_container}>
 														{/* input 그룹이름 */}
 														<Field
 															fieldClass={'inline_input'}
 															labelText={'그룹 이름'}
+															{...register('groupName', {
+																required: '그룹명 입력은 필수입니다!',
+																maxLength: {
+																	value: 60,
+																	message: '최대 60자까지 가능합니다',
+																},
+															})}
+															placeholder="그룹명을 입력해주세요"
+															error={errors.groupName}
 														></Field>
 
 														{/* textarea 그룹설명 */}
 														<FieldWithTextarea
 															fieldClass={'inline_textarea'}
 															labelText={'그룹 설명'}
+															{...register('groupDescription', {
+																maxLength: {
+																	value: 1000,
+																	message: '최대 1000자까지 가능합니다',
+																},
+															})}
+															placeholder="그룹설명을 입력해주세요"
+															error={errors.groupDescription}
 														></FieldWithTextarea>
 													</div>
 													<div className={styles.btn_container}>
@@ -72,8 +144,7 @@ const GroupDetailEdit: FC = () => {
 															className="mt-8 mb-4 bg-customDark text-customOrange 
 															font-bold border border-solid border-customDark 
 															rounded-full p-[10px] w-1/2 hover:opacity-80"
-															type="button"
-															onClick={() => handleEdit('reset')}
+															type="submit"
 														>
 															저장
 														</CustomButton>
