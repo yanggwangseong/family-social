@@ -44,10 +44,12 @@ export class GroupsService {
 	async updateGroup({
 		groupId,
 		groupName,
+		groupDescription,
 		memberId,
 	}: {
 		groupId: string;
 		groupName: string;
+		groupDescription?: string;
 		memberId: string;
 	}) {
 		// 그룹 유/무 체크
@@ -59,6 +61,7 @@ export class GroupsService {
 		return await this.groupsRepository.updateGroup({
 			groupId: groupId,
 			groupName: groupName,
+			groupDescription: groupDescription,
 		});
 	}
 

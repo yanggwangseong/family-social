@@ -26,7 +26,7 @@ const GroupDetail: FC = () => {
 				<div className={styles.contents_container}>
 					<GroupDetailSidebar groupId={groupId} />
 					<div className={styles.detail_container}>
-						<div>
+						<div className={styles.main}>
 							<div className={styles.banner_img_container}>
 								<Image
 									fill

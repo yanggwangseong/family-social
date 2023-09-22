@@ -26,25 +26,28 @@
 			@apply relative;
 			width: calc(100vw - 300px);
 
-			.banner_img_container {
-				@apply relative border-b border-solid border-customDark;
-				height: 400px;
-			}
-			.main_contents_container {
-				@screen md {
-					@apply mx-32;
-					width: 768px;
+			.main {
+				@apply h-full;
+				.banner_img_container {
+					@apply relative border-b border-solid border-customDark;
+					height: 400px;
 				}
-				@apply w-full;
+				.main_contents_container {
+					@screen md {
+						@apply mx-auto;
+						width: 768px;
+					}
+					@apply w-full;
 
-				.banner_profile_contaienr {
-					@apply flex mt-6;
+					.banner_profile_contaienr {
+						@apply flex mt-6;
 
-					.banner_profile_right_contaienr {
-						@apply ml-auto;
+						.banner_profile_right_contaienr {
+							@apply ml-auto;
 
-						.toggle_menu_container {
-							@apply flex justify-center items-center relative;
+							.toggle_menu_container {
+								@apply flex justify-center items-center relative;
+							}
 						}
 					}
 				}

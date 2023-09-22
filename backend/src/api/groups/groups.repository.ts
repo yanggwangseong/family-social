@@ -94,12 +94,17 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 	async updateGroup({
 		groupName,
+		groupDescription,
 		groupId,
 	}: {
 		groupName: string;
+		groupDescription?: string;
 		groupId: string;
 	}) {
-		await this.update({ id: groupId }, { groupName: groupName });
+		await this.update(
+			{ id: groupId },
+			{ groupName: groupName, groupDescription: groupDescription },
+		);
 		return await this.findOrFailGroupById({ groupId: groupId });
 	}
 

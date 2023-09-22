@@ -46,7 +46,8 @@ export class GroupsController {
 	 * @summary 유저가 속하는 Group생성
 	 *
 	 * @tag groups
-	 * @param groupName string
+	 * @param groupName 그룹 이름
+	 * @param groupDescription 그룹 설명
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -67,7 +68,8 @@ export class GroupsController {
 	 * @summary 그룹 정보 수정
 	 *
 	 * @tag groups
-	 * @param groupName string
+	 * @param groupName 그룹 이름
+	 * @param groupDescription 그룹 설명
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -81,6 +83,7 @@ export class GroupsController {
 		return await this.groupsService.updateGroup({
 			groupId: groupId,
 			groupName: dto.groupName,
+			groupDescription: dto.groupDescription,
 			memberId: sub,
 		});
 	}

@@ -23,6 +23,7 @@ const GroupDetailEdit: FC = () => {
 		if (mode === 'reset') return setMode({ mode: '' });
 		setMode({ mode: mode });
 	};
+
 	return (
 		<Format title={'group-detail'}>
 			<div className={styles.container}>
