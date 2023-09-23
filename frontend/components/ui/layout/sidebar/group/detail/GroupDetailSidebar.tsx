@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './GroupDetailSidebar.module.scss';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import {
@@ -26,6 +26,17 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isOpenSetting, setOpenSetting] = useState<boolean>(false);
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 
+	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
+	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
+
+	const handleCloseInvitationModal = () => {
+		setOpenInvitation(false);
+	};
+
+	const handleCloseSettingModal = () => {
+		setOpenSetting(false);
+	};
+
 	return (
 		<div className={styles.sidebar_container}>
 			<GroupProfile
@@ -50,7 +61,10 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 			<Line />
 
 			<div className={styles.sidebar_btn_container}>
-				<div className={styles.toggle_menu_btn_container}>
+				<div
+					className={styles.toggle_menu_btn_container}
+					ref={invitationModalWrapperRef}
+				>
 					<CustomButton
 						type="button"
 						className="bg-customOrange text-customDark 
@@ -58,18 +72,33 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					rounded-full p-[10px] w-full
 					hover:bg-orange-500
 					"
-						onClick={() => setOpenInvitation(!isOpenInvitation)}
+						onClick={() => setOpenInvitation(prev => !prev)}
 					>
 						+ 초대하기
 					</CustomButton>
-					{isOpenInvitation && <ToggleModal list={InviteMenu} />}
+					{isOpenInvitation && (
+						<ToggleModal
+							list={InviteMenu}
+							onClose={handleCloseInvitationModal}
+							modalWrapperRef={invitationModalWrapperRef}
+						/>
+					)}
 				</div>
-				<div className={styles.toggle_menu_icon_container}>
+				<div
+					className={styles.toggle_menu_icon_container}
+					ref={settingModalWrapperRef}
+				>
 					<BsThreeDots
 						size={22}
-						onClick={() => setOpenSetting(!isOpenSetting)}
+						onClick={() => setOpenSetting(prev => !prev)}
 					/>
-					{isOpenSetting && <ToggleModal list={GroupSettingMenu} />}
+					{isOpenSetting && (
+						<ToggleModal
+							list={GroupSettingMenu}
+							onClose={handleCloseSettingModal}
+							modalWrapperRef={settingModalWrapperRef}
+						/>
+					)}
 				</div>
 			</div>
 			<div className={styles.sidebar_home_btn_container}>

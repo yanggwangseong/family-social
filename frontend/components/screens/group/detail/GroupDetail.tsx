@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './GroupDetail.module.scss';
 import Format from '@/components/ui/layout/Format';
 import { useRouter } from 'next/router';
@@ -16,7 +16,12 @@ const GroupDetail: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
+	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
 	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
+
+	const handleCloseInvitationModal = () => {
+		setOpenInvitation(false);
+	};
 
 	return (
 		<Format title={'group-detail'}>
@@ -39,7 +44,10 @@ const GroupDetail: FC = () => {
 									{/* 프로필 */}
 									<Profile />
 									<div className={styles.banner_profile_right_contaienr}>
-										<div className={styles.toggle_menu_container}>
+										<div
+											className={styles.toggle_menu_container}
+											ref={invitationModalWrapperRef}
+										>
 											<CustomButton
 												type="button"
 												className="bg-customOrange text-customDark 
@@ -53,7 +61,11 @@ const GroupDetail: FC = () => {
 											</CustomButton>
 											{isOpenInvitation && (
 												// toggle modal
-												<ToggleModal list={InviteMenu} />
+												<ToggleModal
+													list={InviteMenu}
+													onClose={handleCloseInvitationModal}
+													modalWrapperRef={invitationModalWrapperRef}
+												/>
 											)}
 										</div>
 									</div>
