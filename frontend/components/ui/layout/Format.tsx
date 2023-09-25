@@ -7,7 +7,14 @@ const Format: FC<PropsWithChildren<IMeta>> = ({ children, ...meta }) => {
 	return (
 		<>
 			<Meta {...meta} />
-			<main className={styles.main}>{children}</main>
+			<main className={styles.main}>
+				{/* <div className={styles.modal_mask}>
+					<div className="w-96 h-96 bg-white border border-solid border-customDark">
+						<div>modal_title</div>
+					</div>
+				</div> */}
+				{children}
+			</main>
 		</>
 	);
 };
