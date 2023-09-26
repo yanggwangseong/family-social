@@ -8,8 +8,6 @@ import Image from 'next/image';
 import Profile from '@/components/ui/profile/Profile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import ToggleModal from '@/components/ui/modal/ToggleModal';
-import { BsLink45Deg, BsTelephonePlus } from 'react-icons/bs';
-import { ToggleMenu } from '@/components/ui/modal/toggle-modal.interface';
 import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
 
 const GroupDetail: FC = () => {
