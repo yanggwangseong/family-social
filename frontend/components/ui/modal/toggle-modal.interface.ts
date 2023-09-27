@@ -10,4 +10,5 @@ export interface ToggleMenu {
 	Icon: IconType;
 	title: string;
 	description: string;
+	onClose?: () => void;
 }

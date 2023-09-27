@@ -34,11 +34,13 @@ const ToggleModal: FC<ToggleModalProps> = ({
 	return (
 		<div className={styles.toggle_modal_container} ref={modalRef}>
 			{/* menu */}
-			{list.map(item => (
+			{list.map((item, index) => (
 				<ToggleModalItem
+					key={index}
 					Icon={item.Icon}
 					title={item.title}
 					description={item.description}
+					onClose={onClose}
 				/>
 			))}
 		</div>
