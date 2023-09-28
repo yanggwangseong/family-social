@@ -14,7 +14,6 @@ import { TbDoorExit } from 'react-icons/tb';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Link from 'next/link';
-import { ToggleMenu } from '@/components/ui/modal/toggle-modal.interface';
 import ToggleModal from '@/components/ui/modal/ToggleModal';
 import {
 	GroupSettingMenu,
