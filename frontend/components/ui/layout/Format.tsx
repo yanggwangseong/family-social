@@ -14,8 +14,14 @@ const Format: FC<PropsWithChildren<IMeta>> = ({ children, ...meta }) => {
 			<main className={styles.main}>
 				{isShowing && (
 					<div className={styles.modal_mask}>
-						<div className="w-[500px] h-[500px] bg-white border border-solid border-customDark p-6">
+						<div className="w-[500px] h-[500px] bg-white border border-solid border-customDark p-6 flex">
 							<div>modal_title</div>
+							<div
+								className="ml-auto font-bold text-lg cursor-pointer"
+								onClick={() => setIsShowing(false)}
+							>
+								x
+							</div>
 						</div>
 					</div>
 				)}
