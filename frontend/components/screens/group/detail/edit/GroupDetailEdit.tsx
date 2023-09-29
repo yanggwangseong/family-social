@@ -17,18 +17,17 @@ import { GroupService } from '@/services/group/group.service';
 import axios from 'axios';
 import { UpdateGroupFields } from './group-update.interface';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { EditMode, Union } from 'types';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
-	const [isMode, setMode] = useState<{ mode: string }>({
-		mode: '',
-	});
+	const [isMode, setMode] = useState<Union<typeof EditMode>>('');
 
-	const handleEdit = (mode: 'information' | 'visitMessage' | 'reset') => {
-		if (mode === 'reset') return setMode({ mode: '' });
-		setMode({ mode: mode });
+	const handleEdit = (mode: Union<typeof EditMode>) => {
+		if (mode === 'reset') return setMode('');
+		setMode(mode);
 	};
 
 	const {
@@ -91,13 +90,12 @@ const GroupDetailEdit: FC = () => {
 							<div className={styles.detail_wrap}>
 								<div
 									className={cn(styles.group_setting_lst_menu_container, {
-										[styles.disabled]:
-											isMode.mode && isMode.mode !== 'information',
+										[styles.disabled]: isMode && isMode !== 'information',
 									})}
 								>
 									<div className={styles.detail_container_title}>그룹 수정</div>
 									<div className={styles.menu_container}>
-										{isMode.mode && isMode.mode === 'information' ? (
+										{isMode && isMode === 'information' ? (
 											<div className={styles.form_container}>
 												<form onSubmit={handleSubmit(onSubmit)}>
 													<div className={styles.field_container}>
@@ -159,7 +157,7 @@ const GroupDetailEdit: FC = () => {
 												<div
 													className={styles.edit_btn_container}
 													onClick={
-														!isMode.mode
+														!isMode
 															? () => handleEdit('information')
 															: undefined
 													}
@@ -180,15 +178,14 @@ const GroupDetailEdit: FC = () => {
 
 								<div
 									className={cn(styles.group_setting_lst_menu_container, {
-										[styles.disabled]:
-											isMode.mode && isMode.mode !== 'visitMessage',
+										[styles.disabled]: isMode && isMode !== 'visitMessage',
 									})}
 								>
 									<div className={styles.detail_container_title}>
 										새 멤버 소개
 									</div>
 									<div className={styles.menu_container}>
-										{isMode.mode && isMode.mode === 'visitMessage' ? (
+										{isMode && isMode === 'visitMessage' ? (
 											<div className={styles.form_container}>
 												<form>
 													<div>폼</div>
@@ -209,7 +206,7 @@ const GroupDetailEdit: FC = () => {
 												<div
 													className={styles.edit_btn_container}
 													onClick={
-														!isMode.mode
+														!isMode
 															? () => handleEdit('visitMessage')
 															: undefined
 													}

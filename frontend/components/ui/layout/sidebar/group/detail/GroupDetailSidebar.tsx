@@ -29,11 +29,11 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 
 	const handleCloseInvitationModal = () => {
-		setOpenInvitation(false);
+		setOpenInvitation(!isOpenInvitation);
 	};
 
 	const handleCloseSettingModal = () => {
-		setOpenSetting(false);
+		setOpenSetting(!isOpenSetting);
 	};
 
 	return (
@@ -71,7 +71,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					rounded-full p-[10px] w-full
 					hover:bg-orange-500
 					"
-						onClick={() => setOpenInvitation(prev => !prev)}
+						onClick={handleCloseInvitationModal}
 					>
 						+ 초대하기
 					</CustomButton>
@@ -87,10 +87,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					className={styles.toggle_menu_icon_container}
 					ref={settingModalWrapperRef}
 				>
-					<BsThreeDots
-						size={22}
-						onClick={() => setOpenSetting(prev => !prev)}
-					/>
+					<BsThreeDots size={22} onClick={handleCloseSettingModal} />
 					{isOpenSetting && (
 						<ToggleModal
 							list={GroupSettingMenu}
