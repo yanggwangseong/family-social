@@ -20,6 +20,15 @@ type Union<T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>> =
 const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
 
+/**
+ * 보다 정확한 type추론을 위한 OmitStrict
+ * @name OmitStrict
+ * @example K를 제외한 T값
+ */
+type OmitStrict<T, K extends keyof T> = T extends any
+	? Pick<T, Exclude<keyof T, K>>
+	: never;
+
 export { EditMode };
 
-export type { Union };
+export type { Union, OmitStrict };
