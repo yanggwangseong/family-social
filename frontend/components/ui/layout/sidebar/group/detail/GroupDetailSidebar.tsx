@@ -20,6 +20,7 @@ import {
 	InviteMenu,
 } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
+import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 
 const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);

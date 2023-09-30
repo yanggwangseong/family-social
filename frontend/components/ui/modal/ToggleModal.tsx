@@ -13,6 +13,7 @@ const ToggleModal: FC<ToggleModalProps> = ({ list, onClose }) => {
 					Icon={item.Icon}
 					title={item.title}
 					description={item.description}
+					layer={item.layer}
 					onClose={onClose}
 				/>
 			))}
