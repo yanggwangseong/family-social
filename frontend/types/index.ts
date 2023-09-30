@@ -8,14 +8,14 @@
  * Union<typeof b>	// 'a' | 'b'
  *
  */
-type ValueType = string | number | boolean;
-
 type Union<T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>> =
 	T extends ReadonlyArray<ValueType>
 		? T[number]
 		: T extends { [k: string]: infer U }
 		? U
 		: never;
+
+type ValueType = string | number | boolean;
 
 const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
@@ -30,5 +30,4 @@ type OmitStrict<T, K extends keyof T> = T extends any
 	: never;
 
 export { EditMode };
-
 export type { Union, OmitStrict };

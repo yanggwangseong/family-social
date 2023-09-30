@@ -7,7 +7,7 @@ import { useRecoilState } from 'recoil';
 
 const Format: FC<PropsWithChildren<IMeta>> = ({ children, ...meta }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
-
+	const layerModalMode: 'emailInvitation' | 'linkInvation' = 'emailInvitation';
 	return (
 		<>
 			<Meta {...meta} />

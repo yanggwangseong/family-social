@@ -19,22 +19,22 @@ import {
 	GroupSettingMenu,
 	InviteMenu,
 } from '@/components/ui/modal/toggle-menu.constants';
+import { useModal } from '@/hooks/useModal';
 
 const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
-	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
-	const [isOpenSetting, setOpenSetting] = useState<boolean>(false);
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 
 	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
+	const {
+		isShowing: isOpenInvitation,
+		handleToggleModal: handleCloseInvitationModal,
+	} = useModal(invitationModalWrapperRef);
 
-	const handleCloseInvitationModal = () => {
-		setOpenInvitation(!isOpenInvitation);
-	};
-
-	const handleCloseSettingModal = () => {
-		setOpenSetting(!isOpenSetting);
-	};
+	const {
+		isShowing: isOpenSetting,
+		handleToggleModal: handleCloseSettingModal,
+	} = useModal(settingModalWrapperRef);
 
 	return (
 		<div className={styles.sidebar_container}>
@@ -79,7 +79,6 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 						<ToggleModal
 							list={InviteMenu}
 							onClose={handleCloseInvitationModal}
-							modalWrapperRef={invitationModalWrapperRef}
 						/>
 					)}
 				</div>
@@ -92,7 +91,6 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 						<ToggleModal
 							list={GroupSettingMenu}
 							onClose={handleCloseSettingModal}
-							modalWrapperRef={settingModalWrapperRef}
 						/>
 					)}
 				</div>

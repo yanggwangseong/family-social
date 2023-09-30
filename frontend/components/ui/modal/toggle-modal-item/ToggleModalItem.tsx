@@ -16,8 +16,8 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 			className={styles.toggle_modal_item_container}
 			onClick={() => {
 				if (onClose) {
-					setIsShowing(!isShowing);
-					onClose();
+					setIsShowing(!isShowing); // layer modal 보여주기
+					onClose(); //toggle modal 닫기
 				}
 			}}
 		>

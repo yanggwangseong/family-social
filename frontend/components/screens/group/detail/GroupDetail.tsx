@@ -9,17 +9,17 @@ import Profile from '@/components/ui/profile/Profile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import ToggleModal from '@/components/ui/modal/ToggleModal';
 import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
+import { useModal } from '@/hooks/useModal';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
 	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
-	const [isOpenInvitation, setOpenInvitation] = useState<boolean>(false);
-
-	const handleCloseInvitationModal = () => {
-		setOpenInvitation(false);
-	};
+	const {
+		isShowing: isOpenInvitation,
+		handleToggleModal: handleCloseInvitationModal,
+	} = useModal(invitationModalWrapperRef);
 
 	return (
 		<Format title={'group-detail'}>
@@ -53,7 +53,7 @@ const GroupDetail: FC = () => {
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
-												onClick={() => setOpenInvitation(!isOpenInvitation)}
+												onClick={handleCloseInvitationModal}
 											>
 												+ 초대하기
 											</CustomButton>
@@ -62,7 +62,6 @@ const GroupDetail: FC = () => {
 												<ToggleModal
 													list={InviteMenu}
 													onClose={handleCloseInvitationModal}
-													modalWrapperRef={invitationModalWrapperRef}
 												/>
 											)}
 										</div>

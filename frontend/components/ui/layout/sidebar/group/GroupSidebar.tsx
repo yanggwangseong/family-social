@@ -8,7 +8,6 @@ import {
 } from 'react-icons/ai';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import Menu from '../menu/Menu';
 
 const GroupSidebar: FC = () => {
