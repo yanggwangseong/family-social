@@ -12,17 +12,19 @@ const LayerModal: FC = () => {
 		<>
 			{isShowing && (
 				<div className={styles.modal_mask}>
-					<div className="w-[500px] h-[500px] bg-white border border-solid border-customDark p-6">
-						<div className="flex">
-							<div>modal_title</div>
+					<div className={styles.modal_container}>
+						<div className={styles.modal_top_container}>
+							<div className={styles.modal_title_wrap}>
+								{isLayer.modal_title}
+							</div>
 							<div
-								className="ml-auto font-bold text-lg cursor-pointer"
+								className={styles.modal_close_wrap}
 								onClick={() => setIsShowing(false)}
 							>
 								x
 							</div>
 						</div>
-						<LayerModalControll status={isLayer}></LayerModalControll>
+						<LayerModalControll status={isLayer.layer}></LayerModalControll>
 					</div>
 				</div>
 			)}

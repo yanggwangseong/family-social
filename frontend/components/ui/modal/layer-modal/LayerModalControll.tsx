@@ -2,10 +2,12 @@ import React, { FC } from 'react';
 import EmailInvite from './layer/EmailInvite';
 import LinkInvite from './layer/LinkInvite';
 import { LayerMode, Union } from 'types';
+import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
 
 const StatusLookUpTable = {
 	[LayerMode.ready]: EmailInvite,
 	[LayerMode.progress]: LinkInvite,
+	[LayerMode.groupDeleteConfirm]: GroupDeleteConfirm,
 };
 
 interface StatusProps {

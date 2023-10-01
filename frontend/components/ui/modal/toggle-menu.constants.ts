@@ -23,5 +23,6 @@ export const GroupSettingMenu: ToggleMenu[] = [
 		Icon: TbDoorExit,
 		title: '그룹 삭제',
 		description: '관리자만 그룹을 삭제 할 수 있습니다',
+		layer: LayerMode.groupDeleteConfirm,
 	},
 ];

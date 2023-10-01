@@ -19,7 +19,10 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 			onClick={() => {
 				if (onClose) {
 					setIsShowing(!isShowing); // layer modal 보여주기
-					if (layer) setIsLayer(layer); // layer modal 어떤 layer를 보여 줄건지
+					setIsLayer({
+						modal_title: title,
+						layer: layer,
+					}); // layer modal 어떤 layer를 보여 줄건지
 					onClose(); //toggle modal 닫기
 				}
 			}}

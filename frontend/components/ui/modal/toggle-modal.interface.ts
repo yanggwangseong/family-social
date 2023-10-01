@@ -10,6 +10,6 @@ export interface ToggleMenu {
 	Icon: IconType;
 	title: string;
 	description: string;
-	layer?: Union<typeof LayerMode>;
+	layer: Union<typeof LayerMode>;
 	onClose?: () => void;
 }

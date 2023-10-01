@@ -10,7 +10,6 @@ import {
 } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FiSettings } from 'react-icons/fi';
-import { TbDoorExit } from 'react-icons/tb';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Link from 'next/link';
@@ -20,7 +19,6 @@ import {
 	InviteMenu,
 } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
-import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 
 const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);

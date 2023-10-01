@@ -9,4 +9,20 @@
 	align-items: center;
 	justify-content: center;
 	z-index: 999; /* 모달이 다른 요소 위에 나타나도록 설정 */
+
+	.modal_container {
+		@apply w-[500px] bg-white border border-solid border-customDark p-6;
+
+		.modal_top_container {
+			@apply flex;
+
+			.modal_title_wrap {
+				@apply font-bold text-xl text-customDark;
+			}
+
+			.modal_close_wrap {
+				@apply ml-auto font-light text-xl cursor-pointer text-customDark;
+			}
+		}
+	}
 }

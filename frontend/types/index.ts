@@ -22,6 +22,7 @@ const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
 const LayerMode = {
 	ready: 'ready',
 	progress: 'progress',
+	groupDeleteConfirm: 'groupDeleteConfirm',
 } as const;
 
 /**
