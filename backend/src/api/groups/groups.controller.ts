@@ -17,28 +17,39 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupCreateReqDto } from '@/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
 import {
+	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
-	CreateMemberByGroupSwagger,
+	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
-	UpdateGroupMemberInvitationAcceptSwagger,
+	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { AcceptInvitationUpdateReqDto } from '@/dto/group/req/accept-invitation-update-req.dto';
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
+import { FamsService } from '../fams/fams.service';
+import { MembersService } from '../members/members.service';
+import { EntityConflictException } from '@/common/exception/service.exception';
+import { AcceptInvitationUpdateReqDto } from '@/dto/fam/req/accept-invitation-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('groups')
 @Controller('groups')
 export class GroupsController {
-	constructor(private readonly groupsService: GroupsService) {}
+	constructor(
+		private readonly groupsService: GroupsService,
+		private readonly famsService: FamsService,
+		private readonly membersService: MembersService,
+	) {}
+
+	// [TODO]: : [Get] groupId에 해당하는 그룹정보 가져오기
 
 	/**
 	 * @summary 유저가 속하는 Group생성
 	 *
 	 * @tag groups
-	 * @param groupName string
+	 * @param groupName 그룹 이름
+	 * @param groupDescription 그룹 설명
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -51,6 +62,7 @@ export class GroupsController {
 		return await this.groupsService.createGroup({
 			memberId: sub,
 			groupName: dto.groupName,
+			groupDescription: dto.groupDescription,
 		});
 	}
 
@@ -58,7 +70,8 @@ export class GroupsController {
 	 * @summary 그룹 정보 수정
 	 *
 	 * @tag groups
-	 * @param groupName string
+	 * @param groupName 그룹 이름
+	 * @param groupDescription 그룹 설명
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -72,6 +85,7 @@ export class GroupsController {
 		return await this.groupsService.updateGroup({
 			groupId: groupId,
 			groupName: dto.groupName,
+			groupDescription: dto.groupDescription,
 			memberId: sub,
 		});
 	}
@@ -100,41 +114,70 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *
 	 * @tag groups
-	 * @param memberId string
+	 * @param sub 인증된 유저 아이디
+	 * @param memberId 초대받은 특정 멤버의 아이디
+	 * @param groupId 초대받은 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 그룹에 초대된 멤버
+	 * @returns void
 	 */
-	@CreateMemberByGroupSwagger()
+	@CreateFamByMemberOfGroupSwagger()
 	@Post('/:groupId/members/:memberId/fams')
-	async createMemberByGroup(
+	async createFamByMemberOfGroup(
+		@CurrentUser('sub') sub: string,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 	) {
-		await this.groupsService.createMemberByGroup({
+		//자기 자신을 초대한지 체크
+		if (sub === memberId) {
+			throw EntityConflictException('자기 자신을 초대할 수 없습니다.');
+		}
+		// 그룹 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+		// 멤버 체크
+		await this.membersService.findMemberByIdOrThrow(memberId);
+
+		await this.famsService.createFamByMemberOfGroup({
 			memberId: memberId,
 			groupId: groupId,
 		});
 	}
 
 	/**
-	 * @summary 자신에게 온 그룹 초대 수락하기
+	 * @summary 그룹 초대 수락하기
 	 *
 	 * @tag groups
-	 * @param sub 로그인 인증된 멤버 아이디
+	 * @param sub 인증된 유저 아이디
+	 * @param groupId 초대받은 그룹 아이디
+	 * @param memberId 초대받은 멤버 아이디
 	 * @param famId 대상이 되는 fam 테이블의 레코드 아이디
 	 * @param invitationAccepted 초대 수락 여/부
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 그룹에 초대된 멤버
+	 * @returns void
 	 */
-	@UpdateGroupMemberInvitationAcceptSwagger()
+	@UpdateFamInvitationAcceptSwagger()
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
-	async groupMemberInvitationAccept(
+	async updateFamInvitationAccept(
 		@CurrentUser('sub') sub: string,
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
-		await this.groupsService.groupMemberInvitationAccept({
-			memberId: sub,
+		//초대 받은 멤버와 인증된 멤버와 같은지 체크
+		if (sub !== memberId) {
+			throw EntityConflictException('초대받은 멤버와 다른 사용자 입니다');
+		}
+
+		// 초대받은 유저인지 체크
+		await this.famsService.checkIfFamExists({
+			groupId: groupId,
+			memberId: memberId,
+			famId: famId,
+		});
+
+		return await this.famsService.updateFamInvitationAccept({
+			groupId: groupId,
+			memberId: memberId,
 			famId: famId,
 			invitationAccepted: dto.invitationAccepted,
 		});
@@ -144,25 +187,32 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 삭제
 	 *
 	 * @tag groups
-	 * @param sub 로그인 인증된 멤버 아이디
 	 * @param groupId 그룹 아이디
 	 * @param memberId  대상이 되는 멤버 아이디
 	 * @param famId  대상이 되는 fam 테이블의 레코드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
+	@DeleteFamByMemberOfGroupSwagger()
 	@Delete('/:groupId/members/:memberId/fams/:famId')
-	async groupMemberDelete(
-		@CurrentUser('sub') sub: string,
+	async deleteFamByMemberOfGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('memberId', ParseUUIDPipe) memberId: string,
 		@Param('famId', ParseUUIDPipe) famId: string,
 	) {
-		await this.groupsService.groupMemberDelete({
+		// fam에 존재하는지 확인
+		const fam = await this.famsService.checkIfFamExists({
 			groupId: groupId,
 			memberId: memberId,
 			famId: famId,
-			ownMemberId: sub,
 		});
+
+		await this.famsService.deleteFamByMemberOfGroup({
+			groupId: groupId,
+			memberId: memberId,
+			famId: famId,
+		});
+
+		return fam;
 	}
 }

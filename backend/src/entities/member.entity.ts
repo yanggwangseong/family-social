@@ -52,6 +52,9 @@ export class MemberEntity extends DefaultEntity {
 	@MinLength(10)
 	signupVerifyToken?: string;
 
+	@Column({ default: false, nullable: false }) // 최초 로그인 여부를 나타내는 플래그
+	isFirstLogin!: boolean;
+
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
 	@IsOptional()

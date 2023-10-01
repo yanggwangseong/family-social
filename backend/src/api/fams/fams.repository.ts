@@ -1,9 +1,12 @@
+import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
+import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 import { FamEntity } from '@/entities/fam.entity';
-import { IDeleteGroupArgs } from '@/types/args/group';
 import {
-	ICreateMemberGroupArgs,
-	IUpdateGroupMemberInvitationAccept,
-} from '@/types/args/member-group';
+	ICreateFamArgs,
+	IFindInvitationByFamArgs,
+	IUpdateFamInvitationAcceptArgs,
+} from '@/types/args/fam';
+import { IDeleteGroupArgs } from '@/types/args/group';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -32,6 +35,38 @@ export class FamsRepository extends Repository<FamEntity> {
 		return role;
 	}
 
+	async getInvitationsList({
+		memberId,
+	}: {
+		memberId: string;
+	}): Promise<[FamInvitationsResDto[], number]> {
+		const result = await this.repository.findAndCount({
+			where: {
+				memberId: memberId,
+				invitationAccepted: false,
+			},
+			select: {
+				id: true,
+				invitationAccepted: true,
+				group: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+				},
+				member: {
+					id: true,
+					username: true,
+				},
+			},
+			relations: {
+				group: true,
+				member: true,
+			},
+		});
+
+		return result;
+	}
+
 	async getMemberGroupCountByGroupId({ groupId }: { groupId: string }) {
 		const memberGroup = await this.repository.count({
 			where: {
@@ -43,49 +78,46 @@ export class FamsRepository extends Repository<FamEntity> {
 		return memberGroup;
 	}
 
-	async findMemberGroupById({
-		famId,
+	async findInvitationByFam({
+		groupId,
 		memberId,
-	}: {
-		famId: string;
-		memberId: string;
-	}) {
-		const memberGroup = await this.repository.findOne({
+		famId,
+	}: IFindInvitationByFamArgs): Promise<FamResDto | null> {
+		const fam = await this.repository.findOne({
 			where: {
 				id: famId,
+				groupId: groupId,
 				memberId: memberId,
 			},
 			select: {
 				id: true,
+				invitationAccepted: true,
 			},
 		});
 
-		return memberGroup;
+		return fam;
 	}
 
-	async findOrFailMemberGroupById({
-		memberGroupId,
-	}: {
-		memberGroupId: string;
-	}) {
-		const memberGroup = await this.repository.findOneOrFail({
+	async findOrFailFamById({ famId }: { famId: string }): Promise<FamResDto> {
+		const fam = await this.repository.findOneOrFail({
 			where: {
-				id: memberGroupId,
+				id: famId,
 			},
 			select: {
 				id: true,
+				invitationAccepted: true,
 			},
 		});
 
-		return memberGroup;
+		return fam;
 	}
 
-	async createMemberGroup({
+	async createFam({
 		memberId,
 		groupId,
 		role,
 		invitationAccepted,
-	}: ICreateMemberGroupArgs) {
+	}: ICreateFamArgs): Promise<FamResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			memberId: memberId,
@@ -96,18 +128,21 @@ export class FamsRepository extends Repository<FamEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailMemberGroupById({ memberGroupId: id });
+		return this.findOrFailFamById({ famId: id });
 	}
 
-	async updateGroupMemberInvitationAccept({
+	async updateFamInvitationAccept({
 		memberId,
 		famId,
 		invitationAccepted,
-	}: IUpdateGroupMemberInvitationAccept) {
+		groupId,
+	}: IUpdateFamInvitationAcceptArgs): Promise<FamResDto> {
 		await this.update(
-			{ id: famId, memberId: memberId },
+			{ id: famId, memberId: memberId, groupId: groupId },
 			{ invitationAccepted: invitationAccepted },
 		);
+
+		return this.findOrFailFamById({ famId: famId });
 	}
 
 	async deleteGroupAllMember({ groupId }: { groupId: string }) {
@@ -118,19 +153,19 @@ export class FamsRepository extends Repository<FamEntity> {
 		return !!affected;
 	}
 
-	async deleteGroupMemberByFamId({
+	async deleteFam({
 		groupId,
 		memberId,
 		famId,
-		ownMemberId,
 	}: {
 		groupId: string;
 		memberId: string;
 		famId: string;
-		ownMemberId: string;
 	}) {
 		const { affected } = await this.delete({
 			id: famId,
+			groupId: groupId,
+			memberId: memberId,
 		});
 
 		return !!affected;

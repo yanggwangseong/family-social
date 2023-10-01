@@ -1,0 +1,31 @@
+@mixin inline_textarea() {
+	@apply flex flex-col border border-solid border-customDark rounded-2xl py-2 px-5 w-full;
+
+	> label {
+		@apply text-xs;
+	}
+
+	> textarea {
+		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+
+		&::placeholder {
+			@apply font-normal;
+		}
+	}
+}
+
+.area {
+	> textarea {
+		@apply border border-solid border-customDark bg-basic 
+						rounded-2xl w-full py-2 px-4
+						focus:outline-none;
+	}
+}
+
+.error {
+	@apply text-customOrange;
+}
+
+.inline_textarea {
+	@include inline_textarea();
+}

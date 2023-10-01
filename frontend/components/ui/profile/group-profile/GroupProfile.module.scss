@@ -1,0 +1,23 @@
+.profile_container {
+	@apply flex p-3 rounded-lg cursor-pointer;
+
+	&:hover {
+		@apply text-customOrange;
+		.profile_img_container {
+			@apply border-customOrange;
+		}
+		.profile_description {
+			@apply text-customOrange;
+		}
+	}
+
+	.profile_img_container {
+		@apply border border-solid border-customDark mr-3;
+		width: 42px;
+		height: 42px;
+	}
+
+	.profile_description {
+		@apply text-sm text-customGray;
+	}
+}

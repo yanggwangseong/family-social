@@ -1,0 +1,11 @@
+.backspace_container {
+	@apply flex;
+
+	.icon_container {
+		@apply p-4 border border-solid border-customDark rounded-full;
+	}
+
+	.backspace_title {
+		@apply text-2xl font-bold flex justify-center items-center ml-7;
+	}
+}

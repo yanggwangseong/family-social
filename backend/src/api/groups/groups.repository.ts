@@ -30,11 +30,17 @@ export class GroupsRepository extends Repository<GroupEntity> {
 					role: 'main',
 				},
 			},
-			relations: ['groupByMemberGroups'],
+			relations: {
+				groupByMemberGroups: true,
+			},
 		});
 	}
 
-	async findGroupById({ groupId }: { groupId: string }) {
+	async findGroupById({
+		groupId,
+	}: {
+		groupId: string;
+	}): Promise<GroupResDto | null> {
 		const group = await this.repository.findOne({
 			where: {
 				id: groupId,
@@ -42,6 +48,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			select: {
 				id: true,
 				groupName: true,
+				groupDescription: true,
 			},
 		});
 
@@ -60,6 +67,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			select: {
 				id: true,
 				groupName: true,
+				groupDescription: true,
 			},
 		});
 
@@ -68,12 +76,15 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 	async createGroup({
 		groupName,
+		groupDescription,
 	}: {
 		groupName: string;
+		groupDescription?: string;
 	}): Promise<GroupResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			groupName: groupName,
+			groupDescription: groupDescription,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
@@ -83,12 +94,17 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 	async updateGroup({
 		groupName,
+		groupDescription,
 		groupId,
 	}: {
 		groupName: string;
+		groupDescription?: string;
 		groupId: string;
 	}) {
-		await this.update({ id: groupId }, { groupName: groupName });
+		await this.update(
+			{ id: groupId },
+			{ groupName: groupName, groupDescription: groupDescription },
+		);
 		return await this.findOrFailGroupById({ groupId: groupId });
 	}
 

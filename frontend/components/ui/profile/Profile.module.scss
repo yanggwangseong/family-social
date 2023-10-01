@@ -1,0 +1,12 @@
+.profile_container {
+	@apply flex;
+
+	.profile_img_container {
+		@apply border border-solid border-customDark rounded-full mr-3;
+		height: 42px;
+	}
+
+	.profile_role {
+		@apply text-sm text-customGray;
+	}
+}

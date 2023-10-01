@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
 import { GroupEntity } from './group.entity';
 
-export type Trole = 'main' | 'user';
+export type roleType = 'main' | 'user';
 
 @Entity({ name: 'fam' })
 export class FamEntity extends DefaultEntity {
@@ -15,7 +15,7 @@ export class FamEntity extends DefaultEntity {
 		nullable: false,
 		default: 'user',
 	})
-	role!: Trole;
+	role!: roleType;
 
 	@ApiProperty()
 	@IsNotEmpty()

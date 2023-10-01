@@ -1,0 +1,14 @@
+.toggle_modal_item_container {
+	@apply flex p-2 hover:bg-basic rounded-lg cursor-pointer;
+
+	.icon_container {
+		@apply flex justify-center items-center;
+	}
+	.menu_text_container {
+		@apply flex flex-col ml-4;
+
+		.menu_description {
+			@apply text-xs text-customGray;
+		}
+	}
+}

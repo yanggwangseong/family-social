@@ -1,0 +1,44 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
+
+		.detail_container {
+			@apply relative;
+			width: calc(100vw - 300px);
+
+			.main {
+				@apply h-full;
+				.banner_img_container {
+					@apply relative border-b border-solid border-customDark;
+					height: 400px;
+				}
+				.main_contents_container {
+					@screen md {
+						@apply mx-auto;
+						width: 768px;
+					}
+					@apply w-full;
+
+					.banner_profile_contaienr {
+						@apply flex mt-6;
+
+						.banner_profile_right_contaienr {
+							@apply ml-auto;
+
+							.toggle_menu_container {
+								@apply flex justify-center items-center relative;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
