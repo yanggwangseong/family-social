@@ -59,7 +59,7 @@ export class GroupsService {
 		groupName: string;
 		groupDescription?: string;
 		memberId: string;
-	}) {
+	}): Promise<GroupResDto> {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(groupId);
 
@@ -73,7 +73,7 @@ export class GroupsService {
 		});
 	}
 
-	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs) {
+	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs): Promise<void> {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
 

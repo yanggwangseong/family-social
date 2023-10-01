@@ -24,7 +24,6 @@ export const LoginMemberSwagger = () => {
 		}),
 		ApiOkResponse({
 			description: '멤버 로그인 성공',
-			type: MemberResDto,
 		}),
 		ApiConflictResponse({
 			description: ERROR_PASSWORD_MISMATCH,

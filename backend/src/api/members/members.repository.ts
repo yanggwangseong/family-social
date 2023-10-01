@@ -5,6 +5,7 @@ import { MemberEntity } from '@/entities/member.entity';
 import { ICreateMemberArgs, ILoginMemberArgs } from '@/types/args/member';
 import { v4 as uuidv4 } from 'uuid';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
+import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -21,12 +22,14 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}: {
 		memberId: string;
 		refreshToken: string;
-	}) {
+	}): Promise<MemberResDto | null> {
 		await this.update({ id: memberId }, { refreshToken: refreshToken });
 		return this.findMemberById({ memberId: memberId });
 	}
 
-	async signInUser({ email }: ILoginMemberArgs) {
+	async signInUser({
+		email,
+	}: ILoginMemberArgs): Promise<(MemberResDto & { password?: string }) | null> {
 		return await this.repository.findOne({
 			select: {
 				username: true,
@@ -39,7 +42,11 @@ export class MembersRepository extends Repository<MemberEntity> {
 		});
 	}
 
-	async findsignupVerifyTokenByEmail({ email }: { email: string }) {
+	async findsignupVerifyTokenByEmail({
+		email,
+	}: {
+		email: string;
+	}): Promise<VerifyEmailResDto | null> {
 		return await this.repository.findOne({
 			where: {
 				email: email,
@@ -69,7 +76,11 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return member;
 	}
 
-	async findRefreshTokenById({ memberId }: { memberId: string }) {
+	async findRefreshTokenById({
+		memberId,
+	}: {
+		memberId: string;
+	}): Promise<(MemberResDto & { refreshToken?: string }) | null> {
 		const member = await this.repository.findOne({
 			where: {
 				id: memberId,
@@ -103,7 +114,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	async createMember(
 		{ email, username, password, phoneNumber }: ICreateMemberArgs,
 		signupVerifyToken: string,
-	) {
+	): Promise<MemberResDto | null> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			email: email,

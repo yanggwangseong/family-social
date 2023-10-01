@@ -57,7 +57,7 @@ export class FamsService {
 		groupId: string;
 		memberId: string;
 		famId: string;
-	}) {
+	}): Promise<void> {
 		const status = await this.famsRepository.deleteFam({
 			groupId,
 			memberId,

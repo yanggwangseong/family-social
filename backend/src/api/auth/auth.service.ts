@@ -26,6 +26,7 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
+import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,7 @@ export class AuthService {
 		private readonly configService: ConfigService,
 	) {}
 
-	async signInUser(dto: ILoginMemberArgs) {
+	async signInUser(dto: ILoginMemberArgs): Promise<string[]> {
 		const member = await this.membersRepository.signInUser(dto);
 
 		if (!member) throw EntityNotFoundException(ERROR_EMAIL_NOT_FOUND);
@@ -57,7 +58,10 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	async clearCookieAndResetRefreshToken(res: Response, sub: string) {
+	async clearCookieAndResetRefreshToken(
+		res: Response,
+		sub: string,
+	): Promise<void> {
 		const accessTokenCookieName = this.configService.get<string>(
 			'ACCESS_TOKEN_COOKIE_NAME',
 		);
@@ -75,7 +79,7 @@ export class AuthService {
 		sub,
 		username,
 		refreshToken: refreshTokenArgs,
-	}: IRefreshTokenArgs) {
+	}: IRefreshTokenArgs): Promise<string[]> {
 		const member = await this.membersRepository.findRefreshTokenById({
 			memberId: sub,
 		});
@@ -121,7 +125,7 @@ export class AuthService {
 		return newMember;
 	}
 
-	async verifyEmail(dto: IVerifyEmailArgs) {
+	async verifyEmail(dto: IVerifyEmailArgs): Promise<VerifyEmailResDto> {
 		const memberByEmail =
 			await this.membersRepository.findsignupVerifyTokenByEmail({
 				email: dto.email,
@@ -141,7 +145,7 @@ export class AuthService {
 	private async sendSignUpEmailVerify(
 		email: string,
 		signupVerifyToken: string,
-	) {
+	): Promise<void> {
 		try {
 			await this.mailerService.sendMail({
 				to: email,
@@ -187,7 +191,9 @@ export class AuthService {
 		}
 	}
 
-	private async EncryptHashData<T extends string = string>(data: T) {
+	private async EncryptHashData<T extends string = string>(
+		data: T,
+	): Promise<string> {
 		const salt = await bcrypt.genSalt(10);
 
 		const hashData = await bcrypt.hash(data, salt);
@@ -197,7 +203,7 @@ export class AuthService {
 	private async CompareHashData<T extends string = string>(
 		userInput: T,
 		storedHash: T,
-	) {
+	): Promise<boolean> {
 		const compare = await bcrypt.compare(userInput, storedHash);
 		return compare;
 	}
@@ -236,7 +242,10 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	private async setCurrentRefreshToken(id: string, refreshToken: string) {
+	private async setCurrentRefreshToken(
+		id: string,
+		refreshToken: string,
+	): Promise<void> {
 		const currentHashedRefreshToken = refreshToken
 			? await this.EncryptHashData(refreshToken)
 			: '';
@@ -246,7 +255,7 @@ export class AuthService {
 		});
 	}
 
-	ResponseTokenInCookie({ type, token, res }: ITokenInCookieArgs) {
+	ResponseTokenInCookie({ type, token, res }: ITokenInCookieArgs): void {
 		const accessTokenCookieName = this.configService.get<string>(
 			'ACCESS_TOKEN_COOKIE_NAME',
 		);
