@@ -2,19 +2,29 @@ import {
 	ENTITY_CONFLICT,
 	ENTITY_NOT_FOUND,
 	ErrorCode,
-	INVALID_REQUEST_BODY,
+	BAD_REQUEST,
+	FORBIDDEN,
+	UNAUTHORIZED,
 } from '@/dto/error/error-code.dto';
+
+// UNAUTHORIZED SERVICE EXCEPTION
+export const UnAuthOrizedException = (message?: string): ServiceException => {
+	return new ServiceException(UNAUTHORIZED, message);
+};
+
+// FORBIDDEN SERVICE EXCEPTION
+export const ForBiddenException = (message?: string): ServiceException => {
+	return new ServiceException(FORBIDDEN, message);
+};
 
 // ENTITY NOT FOUND SERVICE EXCEPTION
 export const EntityNotFoundException = (message?: string): ServiceException => {
 	return new ServiceException(ENTITY_NOT_FOUND, message);
 };
 
-// INVALID REQUEST BODY SERVICE EXCEPTION
-export const InvalidRequestBodyException = (
-	message?: string,
-): ServiceException => {
-	return new ServiceException(INVALID_REQUEST_BODY, message);
+// BAD REQUEST SERVICE EXCEPTION
+export const BadRequestException = (message?: string): ServiceException => {
+	return new ServiceException(BAD_REQUEST, message);
 };
 
 // CONFLICT SERVICE EXCEPTION

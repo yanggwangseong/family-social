@@ -8,6 +8,15 @@ class ErrorCodeDTO {
 }
 export type ErrorCode = ErrorCodeDTO;
 
+// 401
+export const UNAUTHORIZED = new ErrorCodeDTO(
+	HttpStatus.UNAUTHORIZED,
+	'Unauthorized',
+);
+
+// 403
+export const FORBIDDEN = new ErrorCodeDTO(HttpStatus.FORBIDDEN, 'Forbidden');
+
 // 404
 export const ENTITY_NOT_FOUND = new ErrorCodeDTO(
 	HttpStatus.NOT_FOUND,
@@ -15,9 +24,9 @@ export const ENTITY_NOT_FOUND = new ErrorCodeDTO(
 );
 
 // 400
-export const INVALID_REQUEST_BODY = new ErrorCodeDTO(
+export const BAD_REQUEST = new ErrorCodeDTO(
 	HttpStatus.BAD_REQUEST,
-	'RequestBody is invalid',
+	'Bad Request',
 );
 
 // 409
