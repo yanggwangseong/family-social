@@ -7,6 +7,14 @@ import {
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { FamsRepository } from '../fams/fams.repository';
 import { GroupResDto } from '@/dto/group/res/group-res.dto';
+import {
+	ERROR_DELETE_GROUP,
+	ERROR_DELETE_GROUP_MEMBER,
+	ERROR_DELETE_GROUP_SELF_ONLY_ADMIN,
+	ERROR_DUPLICATE_GROUP_NAME,
+	ERROR_GROUP_NOT_FOUND,
+	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
+} from '@/constants/business-error';
 
 @Injectable()
 export class GroupsService {
@@ -77,7 +85,7 @@ export class GroupsService {
 
 		if (role.role !== 'main') {
 			//[TODO] 401 에러로 변경
-			throw EntityConflictException('그룹을 삭제 할 권한이 없습니다.');
+			throw EntityConflictException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
 		}
 
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
@@ -86,9 +94,7 @@ export class GroupsService {
 
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
 		if (count !== 1) {
-			throw EntityConflictException(
-				'그룹 삭제시 그룹에 관리자 본인만 있을 때 가능 합니다.',
-			);
+			throw EntityConflictException(ERROR_DELETE_GROUP_SELF_ONLY_ADMIN);
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
@@ -101,14 +107,9 @@ export class GroupsService {
 		]);
 
 		if (!GroupMemberStatus)
-			throw EntityConflictException(
-				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
-			);
+			throw EntityConflictException(ERROR_DELETE_GROUP_MEMBER);
 
-		if (!GroupStatus)
-			throw EntityConflictException(
-				'그룹을 삭제하던 도중 에러가 발생했습니다.',
-			);
+		if (!GroupStatus) throw EntityConflictException(ERROR_DELETE_GROUP);
 	}
 
 	private async checkDuplicateGroupName(
@@ -121,7 +122,7 @@ export class GroupsService {
 		});
 
 		if (count > 0) {
-			throw EntityConflictException('중복된 그룹 이름을 이미 가지고 있습니다.');
+			throw EntityConflictException(ERROR_DUPLICATE_GROUP_NAME);
 		}
 	}
 
@@ -131,7 +132,7 @@ export class GroupsService {
 		});
 
 		if (!group) {
-			throw EntityNotFoundException('그룹을 찾을 수 없습니다.');
+			throw EntityNotFoundException(ERROR_GROUP_NOT_FOUND);
 		}
 
 		return group;

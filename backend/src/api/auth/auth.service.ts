@@ -18,6 +18,14 @@ import { ConfigService } from '@nestjs/config';
 import { ITokenInCookieArgs } from '@/types/args/auth';
 import { CookieOptions, Response } from 'express';
 import { IRefreshTokenArgs } from '@/types/token';
+import {
+	ERROR_PASSWORD_MISMATCH,
+	ERROR_EMAIL_NOT_FOUND,
+	ERROR_USER_NOT_FOUND,
+	ERROR_TOKEN_MISMATCH,
+	ERROR_USER_ALREADY_EXISTS,
+	ERROR_EMAIL_VERIFY_CODE_EXISTS,
+} from '@/constants/business-error';
 
 @Injectable()
 export class AuthService {
@@ -31,16 +39,13 @@ export class AuthService {
 	async signInUser(dto: ILoginMemberArgs) {
 		const member = await this.membersRepository.signInUser(dto);
 
-		if (!member)
-			throw EntityNotFoundException(
-				'이메일에 해당하는 유저를 찾을 수 없습니다',
-			);
+		if (!member) throw EntityNotFoundException(ERROR_EMAIL_NOT_FOUND);
 		const passwordMatches = await this.CompareHashData<string>(
 			dto.password!,
 			member.password!,
 		);
 		if (!passwordMatches)
-			throw EntityConflictException('비밀번호가 일치 하지 않습니다.');
+			throw EntityConflictException(ERROR_PASSWORD_MISMATCH);
 
 		const [accessToken, refreshToken] = await this.signatureTokens(
 			member.id,
@@ -74,7 +79,7 @@ export class AuthService {
 		const member = await this.membersRepository.findRefreshTokenById({
 			memberId: sub,
 		});
-		if (!member) throw EntityNotFoundException('유저를 찾을 수 없습니다.');
+		if (!member) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
 		const refreshTokenMatches = await this.CompareHashData<string>(
 			refreshTokenArgs,
@@ -82,7 +87,7 @@ export class AuthService {
 		);
 
 		if (!refreshTokenMatches)
-			throw EntityConflictException('토큰 정보가 일치 하지 않습니다.');
+			throw EntityConflictException(ERROR_TOKEN_MISMATCH);
 
 		const [accessToken, refreshToken] = await this.signatureTokens(
 			sub,
@@ -98,10 +103,7 @@ export class AuthService {
 		const member = await this.membersRepository.findMemberByEmail({
 			email: dto.email,
 		});
-		if (member)
-			throw EntityConflictException(
-				'해당 이메일에 해당하는 유저가 존재 합니다.',
-			);
+		if (member) throw EntityConflictException(ERROR_USER_ALREADY_EXISTS);
 
 		const signupVerifyToken = generateRandomCode(10);
 		const newMember = await this.membersRepository.createMember(
@@ -111,8 +113,7 @@ export class AuthService {
 			},
 			await this.EncryptHashData<string>(signupVerifyToken),
 		);
-		if (!newMember)
-			throw EntityNotFoundException('생성한 유저를 찾을 수 없습니다.');
+		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
 		//유저 생성 성공 후 email 인증코드 전송.
 		await this.sendSignUpEmailVerify(dto.email, signupVerifyToken);
@@ -126,17 +127,14 @@ export class AuthService {
 				email: dto.email,
 			});
 
-		if (!memberByEmail)
-			throw EntityNotFoundException(
-				'이메일에 해당하는 유저를 찾을 수 없습니다',
-			);
+		if (!memberByEmail) throw EntityNotFoundException(ERROR_EMAIL_NOT_FOUND);
 
 		const verifyEmailMatches = await this.CompareHashData<string>(
 			dto.signupVerifyToken,
 			memberByEmail.signupVerifyToken!,
 		);
 		if (!verifyEmailMatches)
-			throw EntityConflictException('이메일 검증 코드가 일치 하지 않습니다.');
+			throw EntityConflictException(ERROR_EMAIL_VERIFY_CODE_EXISTS);
 		return memberByEmail;
 	}
 
