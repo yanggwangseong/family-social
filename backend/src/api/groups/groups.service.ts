@@ -4,7 +4,6 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
-import { IUpdateGroupMemberInvitationAccept } from '@/types/args/member-group';
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { FamsRepository } from '../fams/fams.repository';
 import { GroupResDto } from '@/dto/group/res/group-res.dto';
@@ -19,16 +18,21 @@ export class GroupsService {
 	async createGroup({
 		memberId,
 		groupName,
+		groupDescription,
 	}: {
 		memberId: string;
 		groupName: string;
+		groupDescription?: string;
 	}): Promise<GroupResDto> {
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
-		const group = await this.groupsRepository.createGroup({ groupName });
+		const group = await this.groupsRepository.createGroup({
+			groupName,
+			groupDescription,
+		});
 
-		await this.famsRepository.createMemberGroup({
+		await this.famsRepository.createFam({
 			memberId: memberId,
 			groupId: group.id,
 			role: 'main',
@@ -40,10 +44,12 @@ export class GroupsService {
 	async updateGroup({
 		groupId,
 		groupName,
+		groupDescription,
 		memberId,
 	}: {
 		groupId: string;
 		groupName: string;
+		groupDescription?: string;
 		memberId: string;
 	}) {
 		// 그룹 유/무 체크
@@ -55,17 +61,20 @@ export class GroupsService {
 		return await this.groupsRepository.updateGroup({
 			groupId: groupId,
 			groupName: groupName,
+			groupDescription: groupDescription,
 		});
 	}
 
 	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs) {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
+
 		// 해당 그룹의 권한이 main인지 체크
 		const role = await this.famsRepository.isMainRoleForMemberInGroup({
 			groupId: deleteGroupArgs.groupId,
 			memberId: deleteGroupArgs.memberId,
 		});
+
 		if (role.role !== 'main') {
 			//[TODO] 401 에러로 변경
 			throw EntityConflictException('그룹을 삭제 할 권한이 없습니다.');
@@ -74,6 +83,7 @@ export class GroupsService {
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
 			groupId: group.id,
 		});
+
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
 		if (count !== 1) {
 			throw EntityConflictException(
@@ -101,66 +111,6 @@ export class GroupsService {
 			);
 	}
 
-	async createMemberByGroup({
-		memberId,
-		groupId,
-	}: {
-		memberId: string;
-		groupId: string;
-	}) {
-		// 그룹 유/무 체크
-		const group = await this.findGroupByIdOrThrow(groupId);
-
-		await this.famsRepository.createMemberGroup({
-			memberId: memberId,
-			groupId: groupId,
-			role: 'user',
-			invitationAccepted: false,
-		});
-		//[TODO] 그룹 초대 notification
-	}
-
-	async groupMemberInvitationAccept(
-		updateGroupMemberInvitationAccept: IUpdateGroupMemberInvitationAccept,
-	) {
-		const group = await this.famsRepository.findMemberGroupById({
-			famId: updateGroupMemberInvitationAccept.famId,
-			memberId: updateGroupMemberInvitationAccept.memberId,
-		});
-		if (!group)
-			throw EntityNotFoundException('초대 받은 그룹을 찾을 수 없습니다.');
-
-		await this.famsRepository.updateGroupMemberInvitationAccept({
-			memberId: updateGroupMemberInvitationAccept.memberId,
-			famId: updateGroupMemberInvitationAccept.famId,
-			invitationAccepted: updateGroupMemberInvitationAccept.invitationAccepted,
-		});
-	}
-
-	async groupMemberDelete({
-		groupId,
-		memberId,
-		famId,
-		ownMemberId,
-	}: {
-		groupId: string;
-		famId: string;
-		ownMemberId: string;
-		memberId: string;
-	}) {
-		const status = await this.famsRepository.deleteGroupMemberByFamId({
-			groupId,
-			memberId,
-			famId,
-			ownMemberId,
-		});
-
-		if (!status)
-			throw EntityConflictException(
-				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
-			);
-	}
-
 	private async checkDuplicateGroupName(
 		memberId: string,
 		groupName: string,
@@ -175,7 +125,7 @@ export class GroupsService {
 		}
 	}
 
-	private async findGroupByIdOrThrow(groupId: string) {
+	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {
 		const group = await this.groupsRepository.findGroupById({
 			groupId,
 		});

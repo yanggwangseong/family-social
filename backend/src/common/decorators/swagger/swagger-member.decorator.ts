@@ -5,6 +5,7 @@ import {
 	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiResponse,
 } from '@nestjs/swagger';
@@ -14,7 +15,7 @@ export const LoginMemberSwagger = () => {
 		ApiOperation({
 			summary: '멤버 로그인',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '멤버 로그인 성공',
 			type: MemberResDto,
 		}),
@@ -50,7 +51,7 @@ export const VerifyEmailSwagger = () => {
 		ApiOperation({
 			summary: '이메일 인증코드 검증',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '이메일 인증 성공',
 			type: VerifyEmailResDto,
 		}),

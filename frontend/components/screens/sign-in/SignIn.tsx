@@ -12,7 +12,6 @@ import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
-import { axiosAPI } from 'api/axios';
 
 const SignIn: FC = () => {
 	const {
@@ -51,25 +50,7 @@ const SignIn: FC = () => {
 	);
 
 	const onSubmit: SubmitHandler<LoginFields> = data => {
-		console.log('NEXT_PUBLIC_COOKIE_KEY', process.env.NEXT_PUBLIC_COOKIE_KEY);
-		console.log('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
-
 		loginSync(data);
-	};
-
-	const handleClick = async () => {
-		try {
-			axiosAPI
-				.post('http://localhost:3000/api/auth/logout')
-				.then(data => console.log(data));
-			// axios
-			// 	.post('http://localhost:3000/api/auth/logout', '', {
-			// 		withCredentials: true,
-			// 	})
-			// 	.then(data => console.log(data));
-		} catch (error) {
-			console.log(error);
-		}
 	};
 
 	return (
@@ -82,7 +63,7 @@ const SignIn: FC = () => {
 							<div className={styles.signin__header_subtitle}>
 								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
 							</div>
-							<div className={styles.label_field}>Email</div>
+							<div className={styles.label_field}>이메일</div>
 							<Field
 								{...register('email', {
 									required: '이메일 입력은 필수입니다!',
@@ -115,15 +96,10 @@ const SignIn: FC = () => {
 						</div>
 						<div className={styles.footer_wrap}>
 							<CustomButton
-								type="button"
-								className="mt-8 mb-4 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full py-4 px-4 w-full"
-								onClick={handleClick}
-							>
-								로그아웃
-							</CustomButton>
-							<CustomButton
 								type="submit"
-								className="mt-8 mb-4 bg-customOrange text-customDark font-bold border border-solid border-customDark rounded-full py-4 px-4 w-full"
+								className="mt-8 mb-4 bg-customOrange text-customDark 
+								font-bold border border-solid border-customDark rounded-full 
+								p-[10px] w-full"
 								disabled={!isValid}
 							>
 								로그인

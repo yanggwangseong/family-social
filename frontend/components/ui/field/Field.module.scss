@@ -1,3 +1,22 @@
+/* input style */
+//인라인 라벨이 있는 input
+@mixin inline_input() {
+	@apply flex flex-col border border-solid border-customDark rounded-full py-2 px-5 w-full;
+
+	> label {
+		@apply text-xs;
+	}
+
+	> input[type='text'] {
+		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+
+		&::placeholder {
+			@apply font-normal;
+		}
+	}
+}
+
+// 기본 input 스타일
 .input {
 	@apply border border-solid border-customDark rounded-full py-1 px-5;
 	> input[type='text'],
@@ -9,6 +28,11 @@
 		}
 	}
 }
+
+.inline_input {
+	@include inline_input();
+}
+
 .error {
 	@apply text-customOrange;
 }

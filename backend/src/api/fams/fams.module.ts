@@ -9,6 +9,6 @@ import { FamsRepository } from './fams.repository';
 	imports: [TypeOrmModule.forFeature([FamEntity])],
 	controllers: [FamsController],
 	providers: [FamsService, FamsRepository],
-	exports: [],
+	exports: [FamsService],
 })
 export class FamsModule {}

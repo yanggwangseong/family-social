@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { MemberEntity } from '@/entities/member.entity';
 import { ICreateMemberArgs, ILoginMemberArgs } from '@/types/args/member';
 import { v4 as uuidv4 } from 'uuid';
+import { MemberResDto } from '@/dto/member/res/member-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -50,7 +51,11 @@ export class MembersRepository extends Repository<MemberEntity> {
 		});
 	}
 
-	async findMemberById({ memberId }: { memberId: string }) {
+	async findMemberById({
+		memberId,
+	}: {
+		memberId: string;
+	}): Promise<MemberResDto | null> {
 		const member = await this.repository.findOne({
 			where: {
 				id: memberId,
@@ -79,7 +84,11 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return member;
 	}
 
-	async findMemberByEmail({ email }: { email: string }) {
+	async findMemberByEmail({
+		email,
+	}: {
+		email: string;
+	}): Promise<MemberResDto | null> {
 		return this.repository.findOne({
 			where: {
 				email: email,

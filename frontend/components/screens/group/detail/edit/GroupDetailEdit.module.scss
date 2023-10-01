@@ -1,0 +1,96 @@
+.modal_mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(10, 10, 10, 0.27);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999; /* 모달이 다른 요소 위에 나타나도록 설정 */
+}
+
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
+
+		.main_contents_container {
+			@screen md {
+				@apply mx-32 mt-10 flex justify-center;
+				width: 768px;
+			}
+			@apply w-full;
+
+			.detail_container {
+				@apply w-full;
+				.detail_wrap {
+					@apply border border-solid border-customDark p-4 bg-white shadow-2xl;
+					min-height: 400px;
+					.detail_container_title {
+						@apply font-medium text-xl;
+					}
+
+					//list menu
+					.group_setting_lst_menu_container {
+						&.disabled {
+							.detail_container_title {
+								@apply text-customGray opacity-50;
+							}
+							.menu_title {
+								@apply text-customGray opacity-50;
+							}
+
+							.btn_wrap {
+								@apply text-customGray opacity-50 cursor-default;
+							}
+						}
+
+						.menu_container {
+							@apply flex mt-10;
+
+							.form_container {
+								@apply w-full;
+
+								.field_container {
+									@apply flex flex-col gap-6;
+								}
+
+								.btn_container {
+									@apply flex gap-5 mt-10;
+								}
+							}
+
+							.menu_description_container {
+								@apply flex w-full flex-row;
+
+								.edit_btn_container {
+									@apply ml-auto cursor-pointer hover:text-customOrange;
+
+									.btn_wrap {
+										@apply flex;
+
+										.icon_container {
+											@apply flex justify-center items-center;
+										}
+
+										.btn_text {
+											@apply font-medium ml-2;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+.sidebar_menu_container {
+	@apply flex mt-11 py-4 cursor-pointer;
+
+	&:hover {
+		> svg {
+			@apply fill-customOrange;
+		}
+	}
+	&.active {
+		> svg {
+			@apply fill-customOrange;
+		}
+		.sidebar_menu_text {
+			@apply text-customOrange;
+		}
+	}
+
+	.sidebar_menu_text {
+		@apply font-medium text-lg ml-10 flex justify-center items-center;
+	}
+}

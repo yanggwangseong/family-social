@@ -1,0 +1,12 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
+	}
+}

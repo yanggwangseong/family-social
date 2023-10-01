@@ -1,0 +1,40 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
+
+		.main_contents_container {
+			@screen md {
+				@apply mx-32 mt-10;
+				width: 768px;
+			}
+			@apply w-full;
+
+			.top_title_container {
+				@apply mb-10 flex;
+				.top_title {
+					@apply font-medium text-xl;
+				}
+			}
+
+			.lottie_container {
+				@screen md {
+					@apply w-full flex justify-center;
+				}
+
+				.lottie {
+					@apply w-1/2;
+				}
+			}
+			.found_title {
+				@apply font-bold text-center text-customGray;
+			}
+		}
+	}
+}

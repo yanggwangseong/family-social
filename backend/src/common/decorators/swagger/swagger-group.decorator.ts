@@ -1,9 +1,11 @@
+import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 import { GroupResDto } from '@/dto/group/res/group-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
 
@@ -12,7 +14,7 @@ export const DeleteGroupSwagger = () => {
 		ApiOperation({
 			summary: '특정 그룹 삭제',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '그룹 삭제 성공',
 		}),
 		ApiNotFoundResponse({
@@ -26,7 +28,7 @@ export const UpdateGroupSwagger = () => {
 		ApiOperation({
 			summary: '그룹 정보 수정',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '그룹 정보 수정 성공',
 			type: GroupResDto,
 		}),
@@ -54,7 +56,7 @@ export const CreateGroupSwagger = () => {
 	);
 };
 
-export const CreateMemberByGroupSwagger = () => {
+export const CreateFamByMemberOfGroupSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '그룹 멤버 생성',
@@ -63,18 +65,40 @@ export const CreateMemberByGroupSwagger = () => {
 			description: '그룹 멤버 생성 성공',
 		}),
 		ApiNotFoundResponse({
-			description: '그룹을 찾을 수 없습니다.',
+			description: '1. 그룹을 찾을 수 없습니다. \n2. 유저를 찾을 수 없습니다.',
+		}),
+		ApiConflictResponse({
+			description: '자기 자신을 초대할 수 없습니다.',
 		}),
 	);
 };
 
-export const UpdateGroupMemberInvitationAcceptSwagger = () => {
+export const UpdateFamInvitationAcceptSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '그룹 초대 수락 하기',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '그룹 초대 수락 성공',
+			type: FamResDto,
+		}),
+		ApiNotFoundResponse({
+			description: '초대 받은 그룹을 찾을 수 없습니다.',
+		}),
+		ApiConflictResponse({
+			description: '초대받은 멤버와 다른 사용자 입니다.',
+		}),
+	);
+};
+
+export const DeleteFamByMemberOfGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '그룹 멤버 삭제',
+		}),
+		ApiOkResponse({
+			description: '그룹 멤버 삭제 성공',
+			type: FamResDto,
 		}),
 		ApiNotFoundResponse({
 			description: '초대 받은 그룹을 찾을 수 없습니다.',
