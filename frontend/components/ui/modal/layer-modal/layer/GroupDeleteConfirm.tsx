@@ -62,6 +62,7 @@ const GroupDeleteConfirm: FC = () => {
 					className="mt-8 mb-4 bg-white text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px] w-full hover:bg-gray-200"
+					onClick={() => setIsShowing(false)}
 				>
 					취소
 				</CustomButton>
