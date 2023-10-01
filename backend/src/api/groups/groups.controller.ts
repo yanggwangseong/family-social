@@ -42,6 +42,8 @@ export class GroupsController {
 		private readonly membersService: MembersService,
 	) {}
 
+	// [TODO]: : [Get] groupId에 해당하는 그룹정보 가져오기
+
 	/**
 	 * @summary 유저가 속하는 Group생성
 	 *

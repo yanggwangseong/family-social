@@ -26,4 +26,8 @@ export const GroupService = {
 
 		return data;
 	},
+
+	async deleteGroup(groupId: string) {
+		const { data } = await axiosAPI.delete<void>(`/groups/${groupId}`);
+	},
 };
