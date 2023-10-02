@@ -34,3 +34,9 @@ export const ENTITY_CONFLICT = new ErrorCodeDTO(
 	HttpStatus.CONFLICT,
 	'Entity is CONFLICT',
 );
+
+// 422
+export const UNPROCESSABLE_ENTITY = new ErrorCodeDTO(
+	HttpStatus.UNPROCESSABLE_ENTITY,
+	'Unprocessable Entity',
+);

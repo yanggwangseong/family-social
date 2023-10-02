@@ -15,6 +15,8 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiResponse,
+	ApiUnauthorizedResponse,
+	ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 export const LoginMemberSwagger = () => {
@@ -25,7 +27,7 @@ export const LoginMemberSwagger = () => {
 		ApiOkResponse({
 			description: '멤버 로그인 성공',
 		}),
-		ApiConflictResponse({
+		ApiUnauthorizedResponse({
 			description: ERROR_PASSWORD_MISMATCH,
 		}),
 		ApiNotFoundResponse({
@@ -61,7 +63,7 @@ export const VerifyEmailSwagger = () => {
 			description: '이메일 인증 성공',
 			type: VerifyEmailResDto,
 		}),
-		ApiConflictResponse({
+		ApiUnprocessableEntityResponse({
 			description: ERROR_EMAIL_VERIFY_CODE_EXISTS,
 		}),
 		ApiNotFoundResponse({

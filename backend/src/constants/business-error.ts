@@ -32,3 +32,9 @@ export const ERROR_DUPLICATE_GROUP_NAME =
 	'중복된 그룹 이름을 이미 가지고 있습니다' as const;
 
 export const ERROR_GROUP_NOT_FOUND = '그룹을 찾을 수 없습니다' as const;
+
+export const ERROR_INVITED_MEMBER_NOT_FOUND =
+	'초대받은 멤버와 다른 사용자 입니다' as const;
+
+export const ERROR_CANNOT_INVITE_SELF =
+	'자기 자신을 초대할 수 없습니다' as const;

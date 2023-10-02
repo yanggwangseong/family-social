@@ -5,6 +5,7 @@ import {
 	BAD_REQUEST,
 	FORBIDDEN,
 	UNAUTHORIZED,
+	UNPROCESSABLE_ENTITY,
 } from '@/dto/error/error-code.dto';
 
 // UNAUTHORIZED SERVICE EXCEPTION
@@ -23,13 +24,20 @@ export const EntityNotFoundException = (message?: string): ServiceException => {
 };
 
 // BAD REQUEST SERVICE EXCEPTION
-export const BadRequestException = (message?: string): ServiceException => {
+export const BadRequestServiceException = (
+	message?: string,
+): ServiceException => {
 	return new ServiceException(BAD_REQUEST, message);
 };
 
 // CONFLICT SERVICE EXCEPTION
 export const EntityConflictException = (message?: string): ServiceException => {
 	return new ServiceException(ENTITY_CONFLICT, message);
+};
+
+// UNPROCESSABLE SERVICE EXCEPTION
+export const UnProcessAbleException = (message?: string): ServiceException => {
+	return new ServiceException(UNPROCESSABLE_ENTITY, message);
 };
 
 interface HttpExceptionResponse {

@@ -1,6 +1,8 @@
 import {
 	EntityConflictException,
 	EntityNotFoundException,
+	UnAuthOrizedException,
+	UnProcessAbleException,
 } from '@/common/exception/service.exception';
 import { Injectable } from '@nestjs/common';
 import {
@@ -45,8 +47,7 @@ export class AuthService {
 			dto.password!,
 			member.password!,
 		);
-		if (!passwordMatches)
-			throw EntityConflictException(ERROR_PASSWORD_MISMATCH);
+		if (!passwordMatches) throw UnAuthOrizedException(ERROR_PASSWORD_MISMATCH);
 
 		const [accessToken, refreshToken] = await this.signatureTokens(
 			member.id,
@@ -90,8 +91,7 @@ export class AuthService {
 			member.refreshToken!,
 		);
 
-		if (!refreshTokenMatches)
-			throw EntityConflictException(ERROR_TOKEN_MISMATCH);
+		if (!refreshTokenMatches) throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);
 
 		const [accessToken, refreshToken] = await this.signatureTokens(
 			sub,
@@ -138,7 +138,7 @@ export class AuthService {
 			memberByEmail.signupVerifyToken!,
 		);
 		if (!verifyEmailMatches)
-			throw EntityConflictException(ERROR_EMAIL_VERIFY_CODE_EXISTS);
+			throw UnProcessAbleException(ERROR_EMAIL_VERIFY_CODE_EXISTS);
 		return memberByEmail;
 	}
 

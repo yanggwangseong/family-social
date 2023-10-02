@@ -3,6 +3,8 @@ import { GroupsRepository } from './groups.repository';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
+	ForBiddenException,
+	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { FamsRepository } from '../fams/fams.repository';
@@ -84,8 +86,7 @@ export class GroupsService {
 		});
 
 		if (role.role !== 'main') {
-			//[TODO] 401 에러로 변경
-			throw EntityConflictException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
+			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
 		}
 
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
@@ -94,7 +95,7 @@ export class GroupsService {
 
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
 		if (count !== 1) {
-			throw EntityConflictException(ERROR_DELETE_GROUP_SELF_ONLY_ADMIN);
+			throw ForBiddenException(ERROR_DELETE_GROUP_SELF_ONLY_ADMIN);
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
