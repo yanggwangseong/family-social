@@ -21,7 +21,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 	}: {
 		memberId: string;
 		groupName: string;
-	}) {
+	}): Promise<number> {
 		return await this.repository.count({
 			where: {
 				groupName: groupName,
@@ -100,7 +100,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		groupName: string;
 		groupDescription?: string;
 		groupId: string;
-	}) {
+	}): Promise<GroupResDto> {
 		await this.update(
 			{ id: groupId },
 			{ groupName: groupName, groupDescription: groupDescription },
@@ -108,7 +108,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return await this.findOrFailGroupById({ groupId: groupId });
 	}
 
-	async deleteGroup({ groupId }: { groupId: string }) {
+	async deleteGroup({ groupId }: { groupId: string }): Promise<boolean> {
 		const { affected } = await this.delete({
 			id: groupId,
 		});

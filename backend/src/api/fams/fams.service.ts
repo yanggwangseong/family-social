@@ -10,6 +10,10 @@ import {
 } from '@/common/exception/service.exception';
 import { FamResDto } from '@/dto/fam/res/fam-res.dto';
 import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
+import {
+	ERROR_DELETE_GROUP_MEMBER,
+	ERROR_INVITED_GROUP_NOT_FOUND,
+} from '@/constants/business-error';
 
 @Injectable()
 export class FamsService {
@@ -53,17 +57,14 @@ export class FamsService {
 		groupId: string;
 		memberId: string;
 		famId: string;
-	}) {
+	}): Promise<void> {
 		const status = await this.famsRepository.deleteFam({
 			groupId,
 			memberId,
 			famId,
 		});
 
-		if (!status)
-			throw EntityConflictException(
-				'그룹멤버를 삭제하던 도중 에러가 발생했습니다.',
-			);
+		if (!status) throw EntityConflictException(ERROR_DELETE_GROUP_MEMBER);
 	}
 
 	async getInvitationsList({ memberId }: { memberId: string }): Promise<{
@@ -92,7 +93,7 @@ export class FamsService {
 		});
 
 		if (!fam) {
-			throw EntityNotFoundException('초대 받은 그룹을 찾을 수 없습니다.');
+			throw EntityNotFoundException(ERROR_INVITED_GROUP_NOT_FOUND);
 		}
 
 		return fam;

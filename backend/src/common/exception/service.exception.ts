@@ -2,24 +2,42 @@ import {
 	ENTITY_CONFLICT,
 	ENTITY_NOT_FOUND,
 	ErrorCode,
-	INVALID_REQUEST_BODY,
+	BAD_REQUEST,
+	FORBIDDEN,
+	UNAUTHORIZED,
+	UNPROCESSABLE_ENTITY,
 } from '@/dto/error/error-code.dto';
+
+// UNAUTHORIZED SERVICE EXCEPTION
+export const UnAuthOrizedException = (message?: string): ServiceException => {
+	return new ServiceException(UNAUTHORIZED, message);
+};
+
+// FORBIDDEN SERVICE EXCEPTION
+export const ForBiddenException = (message?: string): ServiceException => {
+	return new ServiceException(FORBIDDEN, message);
+};
 
 // ENTITY NOT FOUND SERVICE EXCEPTION
 export const EntityNotFoundException = (message?: string): ServiceException => {
 	return new ServiceException(ENTITY_NOT_FOUND, message);
 };
 
-// INVALID REQUEST BODY SERVICE EXCEPTION
-export const InvalidRequestBodyException = (
+// BAD REQUEST SERVICE EXCEPTION
+export const BadRequestServiceException = (
 	message?: string,
 ): ServiceException => {
-	return new ServiceException(INVALID_REQUEST_BODY, message);
+	return new ServiceException(BAD_REQUEST, message);
 };
 
 // CONFLICT SERVICE EXCEPTION
 export const EntityConflictException = (message?: string): ServiceException => {
 	return new ServiceException(ENTITY_CONFLICT, message);
+};
+
+// UNPROCESSABLE SERVICE EXCEPTION
+export const UnProcessAbleException = (message?: string): ServiceException => {
+	return new ServiceException(UNPROCESSABLE_ENTITY, message);
 };
 
 interface HttpExceptionResponse {
