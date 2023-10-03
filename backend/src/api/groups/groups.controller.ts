@@ -28,8 +28,15 @@ import { CurrentUser } from '@/common/decorators/user.decorator';
 import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
 import { FamsService } from '../fams/fams.service';
 import { MembersService } from '../members/members.service';
-import { EntityConflictException } from '@/common/exception/service.exception';
+import {
+	BadRequestServiceException,
+	EntityConflictException,
+} from '@/common/exception/service.exception';
 import { AcceptInvitationUpdateReqDto } from '@/dto/fam/req/accept-invitation-update-req.dto';
+import {
+	ERROR_CANNOT_INVITE_SELF,
+	ERROR_INVITED_MEMBER_NOT_FOUND,
+} from '@/constants/business-error';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -129,7 +136,7 @@ export class GroupsController {
 	) {
 		//자기 자신을 초대한지 체크
 		if (sub === memberId) {
-			throw EntityConflictException('자기 자신을 초대할 수 없습니다.');
+			throw BadRequestServiceException(ERROR_CANNOT_INVITE_SELF);
 		}
 		// 그룹 체크
 		await this.groupsService.findGroupByIdOrThrow(groupId);
@@ -165,7 +172,7 @@ export class GroupsController {
 	) {
 		//초대 받은 멤버와 인증된 멤버와 같은지 체크
 		if (sub !== memberId) {
-			throw EntityConflictException('초대받은 멤버와 다른 사용자 입니다');
+			throw BadRequestServiceException(ERROR_INVITED_MEMBER_NOT_FOUND);
 		}
 
 		// 초대받은 유저인지 체크

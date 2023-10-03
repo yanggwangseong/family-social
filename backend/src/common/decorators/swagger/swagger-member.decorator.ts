@@ -1,3 +1,10 @@
+import {
+	ERROR_PASSWORD_MISMATCH,
+	ERROR_EMAIL_NOT_FOUND,
+	ERROR_USER_NOT_FOUND,
+	ERROR_USER_ALREADY_EXISTS,
+	ERROR_EMAIL_VERIFY_CODE_EXISTS,
+} from '@/constants/business-error';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
 import { applyDecorators } from '@nestjs/common';
@@ -8,6 +15,8 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiResponse,
+	ApiUnauthorizedResponse,
+	ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 export const LoginMemberSwagger = () => {
@@ -17,13 +26,12 @@ export const LoginMemberSwagger = () => {
 		}),
 		ApiOkResponse({
 			description: '멤버 로그인 성공',
-			type: MemberResDto,
 		}),
-		ApiConflictResponse({
-			description: '비밀번호가 일치 하지 않습니다.',
+		ApiUnauthorizedResponse({
+			description: ERROR_PASSWORD_MISMATCH,
 		}),
 		ApiNotFoundResponse({
-			description: '이메일에 해당하는 유저를 찾을 수 없습니다.',
+			description: ERROR_EMAIL_NOT_FOUND,
 		}),
 	);
 };
@@ -38,10 +46,10 @@ export const CreateMemberSwagger = () => {
 			type: MemberResDto,
 		}),
 		ApiConflictResponse({
-			description: '이미 멤버가 존재함',
+			description: ERROR_USER_ALREADY_EXISTS,
 		}),
 		ApiNotFoundResponse({
-			description: '생성한 유저를 찾을 수 없습니다.',
+			description: ERROR_USER_NOT_FOUND,
 		}),
 	);
 };
@@ -55,11 +63,11 @@ export const VerifyEmailSwagger = () => {
 			description: '이메일 인증 성공',
 			type: VerifyEmailResDto,
 		}),
-		ApiConflictResponse({
-			description: '이메일 검증 코드가 일치 하지 않습니다',
+		ApiUnprocessableEntityResponse({
+			description: ERROR_EMAIL_VERIFY_CODE_EXISTS,
 		}),
 		ApiNotFoundResponse({
-			description: '이메일에 해당하는 유저를 찾을 수 없습니다.',
+			description: ERROR_EMAIL_NOT_FOUND,
 		}),
 	);
 };

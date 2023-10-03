@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MembersRepository } from './members.repository';
 import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
+import { ERROR_USER_NOT_FOUND } from '@/constants/business-error';
 
 @Injectable()
 export class MembersService {
@@ -13,7 +14,7 @@ export class MembersService {
 		});
 
 		if (!member) {
-			throw EntityNotFoundException('유저를 찾을 수 없습니다.');
+			throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 		}
 
 		return member;

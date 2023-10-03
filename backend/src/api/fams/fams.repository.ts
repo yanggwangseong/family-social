@@ -1,6 +1,6 @@
 import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/dto/fam/res/fam-res.dto';
-import { FamEntity } from '@/entities/fam.entity';
+import { FamEntity, roleType } from '@/entities/fam.entity';
 import {
 	ICreateFamArgs,
 	IFindInvitationByFamArgs,
@@ -21,7 +21,10 @@ export class FamsRepository extends Repository<FamEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async isMainRoleForMemberInGroup({ groupId, memberId }: IDeleteGroupArgs) {
+	async isMainRoleForMemberInGroup({
+		groupId,
+		memberId,
+	}: IDeleteGroupArgs): Promise<{ role: roleType }> {
 		const role = await this.repository.findOneOrFail({
 			select: {
 				role: true,
@@ -67,7 +70,11 @@ export class FamsRepository extends Repository<FamEntity> {
 		return result;
 	}
 
-	async getMemberGroupCountByGroupId({ groupId }: { groupId: string }) {
+	async getMemberGroupCountByGroupId({
+		groupId,
+	}: {
+		groupId: string;
+	}): Promise<number> {
 		const memberGroup = await this.repository.count({
 			where: {
 				groupId: groupId,
@@ -145,7 +152,11 @@ export class FamsRepository extends Repository<FamEntity> {
 		return this.findOrFailFamById({ famId: famId });
 	}
 
-	async deleteGroupAllMember({ groupId }: { groupId: string }) {
+	async deleteGroupAllMember({
+		groupId,
+	}: {
+		groupId: string;
+	}): Promise<boolean> {
 		const { affected } = await this.delete({
 			groupId: groupId,
 		});
@@ -161,7 +172,7 @@ export class FamsRepository extends Repository<FamEntity> {
 		groupId: string;
 		memberId: string;
 		famId: string;
-	}) {
+	}): Promise<boolean> {
 		const { affected } = await this.delete({
 			id: famId,
 			groupId: groupId,
