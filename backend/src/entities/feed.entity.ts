@@ -1,7 +1,8 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { LikeFeedEntity } from './fam-like-feed.entity';
 
 @Entity({ name: 'fam_feed' })
 export class FeedEntity extends DefaultEntity {
@@ -18,4 +19,7 @@ export class FeedEntity extends DefaultEntity {
 		nullable: false,
 	})
 	isPublic!: boolean;
+
+	@OneToMany(() => LikeFeedEntity, (lf) => lf.feed)
+	LikedByMembers?: LikeFeedEntity[];
 }
