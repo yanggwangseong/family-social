@@ -16,7 +16,7 @@ import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
-//@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @ApiTags('feeds')
 @Controller('feeds')
 export class FeedsController {

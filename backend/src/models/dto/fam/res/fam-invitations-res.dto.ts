@@ -1,6 +1,6 @@
-import { GroupResDto } from '@/dto/group/res/group-res.dto';
-import { MemberResDto } from '@/dto/member/res/member-res.dto';
-import { FamEntity } from '@/entities/fam.entity';
+import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { FamEntity } from '@/models/entities/fam.entity';
 import { ApiProperty, PickType } from '@nestjs/swagger';
 
 export class FamInvitationsResDto extends PickType(FamEntity, [

@@ -1,4 +1,4 @@
-import { roleType } from '@/entities/fam.entity';
+import { roleType } from '@/models/entities/fam.entity';
 
 export interface ICreateFamArgs {
 	memberId: string;

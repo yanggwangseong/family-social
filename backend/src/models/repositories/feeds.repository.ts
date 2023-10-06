@@ -1,4 +1,4 @@
-import { FeedEntity } from '@/entities/feed.entity';
+import { FeedEntity } from '@/models/entities/feed.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

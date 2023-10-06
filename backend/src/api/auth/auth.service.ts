@@ -10,9 +10,9 @@ import {
 	ILoginMemberArgs,
 	IVerifyEmailArgs,
 } from '@/types/args/member';
-import { MemberResDto } from '@/dto/member/res/member-res.dto';
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import * as bcrypt from 'bcryptjs';
-import { MembersRepository } from '../members/members.repository';
+import { MembersRepository } from '@/models/repositories/members.repository';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomCode } from '@/utils/generate-random-code';
 import { JwtService } from '@nestjs/jwt';
@@ -28,7 +28,7 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
-import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
+import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 
 @Injectable()
 export class AuthService {
