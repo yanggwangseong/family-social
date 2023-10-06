@@ -1,4 +1,4 @@
-import { FamEntity } from '@/entities/fam.entity';
+import { FamEntity } from '@/models/entities/fam.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FamsController } from './fams.controller';

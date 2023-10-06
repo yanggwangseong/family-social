@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { GroupEntity } from '@/entities/group.entity';
+import { GroupEntity } from '@/models/entities/group.entity';
 import { IDeleteGroupArgs } from '@/types/args/group';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 

@@ -1,4 +1,4 @@
-import { MemberEntity } from '@/entities/member.entity';
+import { MemberEntity } from '@/models/entities/member.entity';
 import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
