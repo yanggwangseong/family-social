@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MembersController } from './members.controller';
 import { MembersService } from './members.service';
-import { MembersRepository } from './members.repository';
+import { MembersRepository } from '@/models/repositories/members.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberEntity } from '@/entities/member.entity';
 

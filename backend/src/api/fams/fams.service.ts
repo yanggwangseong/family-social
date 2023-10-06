@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FamsRepository } from './fams.repository';
+import { FamsRepository } from '@/models/repositories/fams.repository';
 import {
 	IFindInvitationByFamArgs,
 	IUpdateFamInvitationAcceptArgs,

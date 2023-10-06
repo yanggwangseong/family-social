@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GroupsRepository } from './groups.repository';
+import { GroupsRepository } from '@/models/repositories/groups.repository';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -7,7 +7,7 @@ import {
 	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
 import { IDeleteGroupArgs } from '@/types/args/group';
-import { FamsRepository } from '../fams/fams.repository';
+import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupResDto } from '@/dto/group/res/group-res.dto';
 import {
 	ERROR_DELETE_GROUP,

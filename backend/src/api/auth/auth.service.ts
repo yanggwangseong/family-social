@@ -12,7 +12,7 @@ import {
 } from '@/types/args/member';
 import { MemberResDto } from '@/dto/member/res/member-res.dto';
 import * as bcrypt from 'bcryptjs';
-import { MembersRepository } from '../members/members.repository';
+import { MembersRepository } from '@/models/repositories/members.repository';
 import { MailerService } from '@nestjs-modules/mailer';
 import { generateRandomCode } from '@/utils/generate-random-code';
 import { JwtService } from '@nestjs/jwt';
