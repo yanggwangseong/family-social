@@ -39,8 +39,6 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		groupId,
 		memberId,
 	}: ICreateFeedArgs): Promise<FeedByIdResDto> {
-		console.log('groupId=', groupId);
-		console.log('groupId=', memberId);
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			contents: contents,

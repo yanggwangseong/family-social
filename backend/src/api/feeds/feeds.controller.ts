@@ -18,13 +18,17 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { CreateFeedSwagger } from '@/common/decorators/swagger/swagger-feed.decorator';
+import { MediasService } from '../medias/medias.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('feeds')
 @Controller('feeds')
 export class FeedsController {
-	constructor(private readonly feedsService: FeedsService) {}
+	constructor(
+		private readonly feedsService: FeedsService,
+		private readonly mediasService: MediasService,
+	) {}
 
 	/**
 	 * @summary 유저가 속하는 Group에서 feed 생성
@@ -43,12 +47,16 @@ export class FeedsController {
 		@Body() dto: FeedCreateReqDto,
 		@CurrentUser('sub') sub: string,
 	) {
-		return await this.feedsService.createFeed({
+		const feed = await this.feedsService.createFeed({
 			contents: dto.contents,
 			isPublic: dto.isPublic,
 			memberId: sub,
 			groupId: dto.groupId,
 		});
+
+		await this.mediasService.createFeedMedias(dto.medias, feed.id);
+
+		return feed;
 	}
 
 	@Post('/test')
