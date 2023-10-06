@@ -11,6 +11,7 @@ import {
 	MinLength,
 } from 'class-validator';
 import { FamEntity } from './fam.entity';
+import { LikeFeedEntity } from './fam-like-feed.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -69,4 +70,7 @@ export class MemberEntity extends DefaultEntity {
 
 	@OneToMany(() => FamEntity, (fa) => fa.member)
 	memberGroups?: FamEntity[];
+
+	@OneToMany(() => LikeFeedEntity, (lf) => lf.member)
+	memberLikesFeeds?: LikeFeedEntity[];
 }

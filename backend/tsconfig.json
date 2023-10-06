@@ -18,6 +18,7 @@
 		"noImplicitAny": true,
 		"noFallthroughCasesInSwitch": true,
 		"baseUrl": "./",
+		"esModuleInterop": true, // 추가
 		"paths": {
 			"@/*": ["src/*"],
 			"test/*": ["test/*"]
