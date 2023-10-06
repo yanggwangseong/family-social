@@ -8,8 +8,8 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
-import { FamResDto } from '@/dto/fam/res/fam-res.dto';
-import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
+import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
+import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import {
 	ERROR_DELETE_GROUP_MEMBER,
 	ERROR_INVITED_GROUP_NOT_FOUND,

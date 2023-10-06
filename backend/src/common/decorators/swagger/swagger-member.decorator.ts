@@ -5,8 +5,8 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
-import { MemberResDto } from '@/dto/member/res/member-res.dto';
-import { VerifyEmailResDto } from '@/dto/member/res/verify-email-res.dto';
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,

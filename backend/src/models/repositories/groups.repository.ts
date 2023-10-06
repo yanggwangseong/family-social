@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { GroupEntity } from '@/entities/group.entity';
 import { IDeleteGroupArgs } from '@/types/args/group';
-import { GroupResDto } from '@/dto/group/res/group-res.dto';
+import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
