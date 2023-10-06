@@ -23,11 +23,13 @@ export class FeedEntity extends DefaultEntity {
 	})
 	isPublic!: boolean;
 
+	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsUUID()
 	public readonly groupId!: string;
 
+	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsUUID()

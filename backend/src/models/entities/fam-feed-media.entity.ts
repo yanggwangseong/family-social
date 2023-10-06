@@ -28,6 +28,7 @@ export class FeedMediaEntity extends DefaultEntity {
 	@IsNumber()
 	position!: number;
 
+	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsUUID()
