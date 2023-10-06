@@ -2,9 +2,6 @@
 const nextConfig = {
 	reactStrictMode: true,
 	output: 'standalone',
-};
-
-module.exports = {
 	images: {
 		remotePatterns: [
 			{
@@ -16,5 +13,6 @@ module.exports = {
 			},
 		],
 	},
-	nextConfig,
 };
+
+module.exports = nextConfig;
