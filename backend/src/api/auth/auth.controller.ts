@@ -14,11 +14,11 @@ import {
 	LoginMemberSwagger,
 	VerifyEmailSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
-import { MemberCreateReqDto } from '@/dto/member/req/member-create-req.dto';
+import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MembersService } from '../members/members.service';
 import { AuthService } from './auth.service';
-import { VerifyEmailReqDto } from '@/dto/member/req/verify-email-req.dto';
-import { MemberLoginReqDto } from '@/dto/member/req/member-login-req.dto';
+import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
+import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
 import { Response } from 'express';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';

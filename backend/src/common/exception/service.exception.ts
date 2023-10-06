@@ -6,7 +6,7 @@ import {
 	FORBIDDEN,
 	UNAUTHORIZED,
 	UNPROCESSABLE_ENTITY,
-} from '@/dto/error/error-code.dto';
+} from '@/models/dto/error/error-code.dto';
 
 // UNAUTHORIZED SERVICE EXCEPTION
 export const UnAuthOrizedException = (message?: string): ServiceException => {

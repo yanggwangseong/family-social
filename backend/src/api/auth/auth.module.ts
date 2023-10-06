@@ -3,7 +3,7 @@ import { MembersModule } from '../members/members.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MemberEntity } from '@/entities/member.entity';
+import { MemberEntity } from '@/models/entities/member.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';

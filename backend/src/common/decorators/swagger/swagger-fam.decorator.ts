@@ -1,4 +1,4 @@
-import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
+import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 

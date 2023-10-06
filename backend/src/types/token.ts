@@ -1,4 +1,4 @@
-import { MemberEntity } from '@/entities/member.entity';
+import { MemberEntity } from '@/models/entities/member.entity';
 
 export interface TokenPayload extends Pick<MemberEntity, 'username'> {
 	sub: string;

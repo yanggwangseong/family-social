@@ -14,7 +14,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { GroupsService } from './groups.service';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { GroupCreateReqDto } from '@/dto/group/req/group-create-req.dto';
+import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -25,14 +25,14 @@ import {
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { GroupUpdateReqDto } from '@/dto/group/req/group-update-req.dto';
+import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { FamsService } from '../fams/fams.service';
 import { MembersService } from '../members/members.service';
 import {
 	BadRequestServiceException,
 	EntityConflictException,
 } from '@/common/exception/service.exception';
-import { AcceptInvitationUpdateReqDto } from '@/dto/fam/req/accept-invitation-update-req.dto';
+import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,

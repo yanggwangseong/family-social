@@ -10,8 +10,8 @@ import {
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 	ERROR_USER_NOT_FOUND,
 } from '@/constants/business-error';
-import { FamResDto } from '@/dto/fam/res/fam-res.dto';
-import { GroupResDto } from '@/dto/group/res/group-res.dto';
+import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
+import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,

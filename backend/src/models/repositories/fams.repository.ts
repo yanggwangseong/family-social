@@ -1,6 +1,6 @@
-import { FamInvitationsResDto } from '@/dto/fam/res/fam-invitations-res.dto';
-import { FamResDto } from '@/dto/fam/res/fam-res.dto';
-import { FamEntity, roleType } from '@/entities/fam.entity';
+import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
+import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
+import { FamEntity, roleType } from '@/models/entities/fam.entity';
 import {
 	ICreateFamArgs,
 	IFindInvitationByFamArgs,

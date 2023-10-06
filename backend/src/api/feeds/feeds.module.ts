@@ -3,7 +3,7 @@ import { FeedsController } from './feeds.controller';
 import { FeedsService } from './feeds.service';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FeedEntity } from '@/entities/feed.entity';
+import { FeedEntity } from '@/models/entities/feed.entity';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([FeedEntity])],
