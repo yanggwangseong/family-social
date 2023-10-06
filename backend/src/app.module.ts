@@ -10,6 +10,7 @@ import { MembersModule } from './api/members/members.module';
 import { AuthModule } from './api/auth/auth.module';
 import { GroupsModule } from './api/groups/groups.module';
 import { FamsModule } from './api/fams/fams.module';
+import { FeedsModule } from './api/feeds/feeds.module';
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import { FamsModule } from './api/fams/fams.module';
 		AuthModule,
 		GroupsModule,
 		FamsModule,
+		FeedsModule,
 	],
 	controllers: [],
 	providers: [],
