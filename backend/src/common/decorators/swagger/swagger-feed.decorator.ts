@@ -13,3 +13,14 @@ export const CreateFeedSwagger = () => {
 		}),
 	);
 };
+
+export const UpdateFeedSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '피드 수정',
+		}),
+		ApiCreatedResponse({
+			description: '피드 수정 성공',
+		}),
+	);
+};

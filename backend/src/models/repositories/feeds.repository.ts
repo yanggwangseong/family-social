@@ -1,5 +1,5 @@
 import { FeedEntity } from '@/models/entities/feed.entity';
-import { ICreateFeedArgs } from '@/types/args/feed';
+import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -50,5 +50,19 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		const id: string = insertResult.identifiers[0].id;
 
 		return this.findOrFailFeedById({ feedId: id });
+	}
+
+	async updateFeed({
+		feedId,
+		contents,
+		isPublic,
+		groupId,
+	}: IUpdateFeedArgs): Promise<FeedByIdResDto> {
+		await this.update(
+			{ id: feedId },
+			{ contents: contents, isPublic: isPublic, groupId: groupId },
+		);
+
+		return this.findOrFailFeedById({ feedId: feedId });
 	}
 }

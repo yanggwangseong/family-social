@@ -1,6 +1,6 @@
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
-import { ICreateFeedArgs } from '@/types/args/feed';
+import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -19,6 +19,15 @@ export class FeedsService {
 			isPublic,
 			groupId,
 			memberId,
+		});
+	}
+
+	async updateFeed({ feedId, contents, isPublic, groupId }: IUpdateFeedArgs) {
+		return await this.feedsRepository.updateFeed({
+			feedId,
+			contents,
+			isPublic,
+			groupId,
 		});
 	}
 }

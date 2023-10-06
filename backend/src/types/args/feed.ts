@@ -4,3 +4,7 @@ export interface ICreateFeedArgs {
 	groupId: string;
 	memberId: string;
 }
+
+export interface IUpdateFeedArgs extends Omit<ICreateFeedArgs, 'memberId'> {
+	feedId: string;
+}
