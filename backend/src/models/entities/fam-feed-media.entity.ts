@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { FeedEntity } from './feed.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -6,6 +6,12 @@ import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 
 @Entity({ name: 'fam_feed_media' })
 export class FeedMediaEntity extends DefaultEntity {
+	@PrimaryColumn('uuid')
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsUUID()
+	public readonly feedId!: string;
+
 	/**
 	 * 서버를 통해 한 번 전처리된 이미지
 	 * example is @link {https://folder/test.jpg}
@@ -27,12 +33,6 @@ export class FeedMediaEntity extends DefaultEntity {
 	@IsNotEmpty()
 	@IsNumber()
 	position!: number;
-
-	@Column({ type: 'uuid', nullable: false })
-	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
-	public readonly feedId!: string;
 
 	@ManyToOne((type) => FeedEntity, (feed) => feed.medias)
 	@JoinColumn({ name: 'feedId', referencedColumnName: 'id' })
