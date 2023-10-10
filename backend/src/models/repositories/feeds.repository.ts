@@ -38,7 +38,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		isPublic,
 		groupId,
 		memberId,
-	}: ICreateFeedArgs): Promise<FeedByIdResDto> {
+	}: Omit<ICreateFeedArgs, 'medias'>): Promise<FeedByIdResDto> {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			contents: contents,
@@ -66,6 +66,13 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		return this.findOrFailFeedById({ feedId: feedId });
 	}
 
+	async deleteFeed(feedId: string): Promise<boolean> {
+		const { affected } = await this.delete({
+			id: feedId,
+		});
+
+		return !!affected;
+	}
 	// [TODO] 여기 트랜잭션이 필요할것 같다. feed media를 먼저 삭제하고 feed를 삭제해야 하기 때문에
 	// feed media를 먼저 삭제하고, feed를 삭제하거나 할때 만약 에러가 나면 트랜잭션으로 롤백
 	// 문제 없으면 트랜잭션 커밋 미디어랑 피드삭제, 또한 그거 뿐만 아니라 둘다 정상적으로 삭제가 된다면, 해당 이미지를 s3에서도 삭제해준다.

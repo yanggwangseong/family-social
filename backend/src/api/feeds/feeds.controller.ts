@@ -59,9 +59,8 @@ export class FeedsController {
 			isPublic: dto.isPublic,
 			memberId: sub,
 			groupId: dto.groupId,
+			medias: dto.medias,
 		});
-
-		await this.mediasService.createFeedMedias(dto.medias, feed.id);
 
 		return feed;
 	}

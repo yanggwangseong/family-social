@@ -20,4 +20,8 @@ export class MediasService {
 	): Promise<[boolean, void]> {
 		return this.mediasRepository.updateFeedMedias(media, feedId);
 	}
+
+	async deleteFeedMediasByFeedId(feedId: string): Promise<boolean> {
+		return this.mediasRepository.deleteFeedMediasByFeedId(feedId);
+	}
 }
