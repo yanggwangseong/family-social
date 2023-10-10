@@ -25,11 +25,11 @@ import { CurrentUser } from '@/common/decorators/user.decorator';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import {
 	CreateFeedSwagger,
+	DeleteFeedSwagger,
 	UpdateFeedSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { MediasService } from '../medias/medias.service';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
-import { extractFilePathFromUrl } from '@/utils/extract-file-path';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -95,6 +95,15 @@ export class FeedsController {
 		});
 	}
 
+	/**
+	 * @summary feed 삭제
+	 *
+	 * @tag feeds
+	 * @param feedId   피드Id
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteFeedSwagger()
 	@Delete(':feedId')
 	async deleteFeed(@Param('feedId', ParseUUIDPipe) feedId: string) {
 		await this.feedsService.deleteFeed(feedId);

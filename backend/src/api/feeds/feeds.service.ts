@@ -12,6 +12,10 @@ import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedMediaEntity } from '@/models/entities/fam-feed-media.entity';
 import { extractFilePathFromUrl } from '@/utils/extract-file-path';
 import { DeleteS3Media } from '@/utils/upload-media';
+import {
+	ERROR_DELETE_FEED_OR_MEDIA,
+	ERROR_FILE_DIR_NOT_FOUND,
+} from '@/constants/business-error';
 
 @Injectable()
 export class FeedsService {
@@ -76,15 +80,12 @@ export class FeedsService {
 			]);
 
 			if (!mediaStatus || !feedStatus)
-				throw EntityConflictException(
-					'미디어 또는 피드를 삭제하는 도중 에러가 발생했습니다',
-				);
+				throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
 			const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
 			medias.map(async (media) => {
 				const fileName = extractFilePathFromUrl(media.url, 'feed');
-				if (!fileName)
-					throw EntityNotFoundException('파일 경로를 찾을 수 없습니다');
+				if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
 				await DeleteS3Media(fileName);
 			});
 
