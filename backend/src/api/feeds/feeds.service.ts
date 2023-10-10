@@ -4,9 +4,14 @@ import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { MediasService } from '../medias/medias.service';
-import { EntityConflictException } from '@/common/exception/service.exception';
+import {
+	EntityConflictException,
+	EntityNotFoundException,
+} from '@/common/exception/service.exception';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedMediaEntity } from '@/models/entities/fam-feed-media.entity';
+import { extractFilePathFromUrl } from '@/utils/extract-file-path';
+import { DeleteS3Media } from '@/utils/upload-media';
 
 @Injectable()
 export class FeedsService {
@@ -74,6 +79,14 @@ export class FeedsService {
 				throw EntityConflictException(
 					'미디어 또는 피드를 삭제하는 도중 에러가 발생했습니다',
 				);
+
+			const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
+			medias.map(async (media) => {
+				const fileName = extractFilePathFromUrl(media.url, 'feed');
+				if (!fileName)
+					throw EntityNotFoundException('파일 경로를 찾을 수 없습니다');
+				await DeleteS3Media(fileName);
+			});
 
 			await queryRunner.commitTransaction();
 			//s3에 미디어 파일들 삭제.

@@ -29,7 +29,7 @@ export class MediasService {
 		return this.mediasRepository.deleteFeedMediasByFeedId(feedId, manager);
 	}
 
-	async findMediaUrlByFeedId(feedId: string) {
+	async findMediaUrlByFeedId(feedId: string): Promise<{ url: string }[]> {
 		return await this.mediasRepository.findMediaUrlByFeedId(feedId);
 	}
 }

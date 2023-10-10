@@ -2,7 +2,7 @@ import { FeedEntity } from '@/models/entities/feed.entity';
 import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
 
@@ -66,7 +66,13 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		return this.findOrFailFeedById({ feedId: feedId });
 	}
 
-	async deleteFeed(feedId: string): Promise<boolean> {
+	async deleteFeed(feedId: string, manager?: EntityManager) {
+		if (manager) {
+			const { affected } = await manager.delete(FeedEntity, {
+				id: feedId,
+			});
+			return !!affected;
+		}
 		const { affected } = await this.delete({
 			id: feedId,
 		});

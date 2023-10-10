@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { FeedMediaEntity } from '../entities/fam-feed-media.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,11 +41,32 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 		return result;
 	}
 
-	async deleteFeedMediasByFeedId(feedId: string): Promise<boolean> {
+	async deleteFeedMediasByFeedId(
+		feedId: string,
+		manager?: EntityManager,
+	): Promise<boolean> {
+		if (manager) {
+			const { affected } = await manager.delete(FeedMediaEntity, {
+				feedId: feedId,
+			});
+			return !!affected;
+		}
+
 		const { affected } = await this.delete({
 			feedId: feedId,
 		});
 
 		return !!affected;
+	}
+
+	async findMediaUrlByFeedId(feedId: string): Promise<{ url: string }[]> {
+		return this.repository.find({
+			select: {
+				url: true,
+			},
+			where: {
+				feedId: feedId,
+			},
+		});
 	}
 }
