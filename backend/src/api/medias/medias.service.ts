@@ -2,6 +2,7 @@ import { MediaCreateReqDto } from '@/models/dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '@/models/dto/media/req/media-update-req-dto';
 import { MediasRepository } from '@/models/repositories/medias.repository';
 import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class MediasService {
@@ -21,7 +22,14 @@ export class MediasService {
 		return this.mediasRepository.updateFeedMedias(media, feedId);
 	}
 
-	async deleteFeedMediasByFeedId(feedId: string): Promise<boolean> {
-		return this.mediasRepository.deleteFeedMediasByFeedId(feedId);
+	async deleteFeedMediasByFeedId(
+		feedId: string,
+		manager: EntityManager,
+	): Promise<boolean> {
+		return this.mediasRepository.deleteFeedMediasByFeedId(feedId, manager);
+	}
+
+	async findMediaUrlByFeedId(feedId: string) {
+		return await this.mediasRepository.findMediaUrlByFeedId(feedId);
 	}
 }

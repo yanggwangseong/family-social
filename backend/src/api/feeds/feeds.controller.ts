@@ -4,6 +4,7 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import {
 	Body,
 	Controller,
+	Delete,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -15,7 +16,10 @@ import {
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FeedsService } from './feeds.service';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
-import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
+import {
+	CreateBodyImageMulterOptions,
+	DeleteS3Media,
+} from '@/utils/upload-media';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -25,6 +29,7 @@ import {
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { MediasService } from '../medias/medias.service';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { extractFilePathFromUrl } from '@/utils/extract-file-path';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -88,6 +93,11 @@ export class FeedsController {
 			feedId: feedId,
 			medias: dto.medias,
 		});
+	}
+
+	@Delete(':feedId')
+	async deleteFeed(@Param('feedId', ParseUUIDPipe) feedId: string) {
+		await this.feedsService.deleteFeed(feedId);
 	}
 
 	//[TODO] 수정시 기존에 있는 이미지와 같은 이름 이미지인지 확인 있는거면 업데이트 x

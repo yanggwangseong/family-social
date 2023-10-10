@@ -1,10 +1,12 @@
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { MediasService } from '../medias/medias.service';
 import { EntityConflictException } from '@/common/exception/service.exception';
+import { FeedEntity } from '@/models/entities/feed.entity';
+import { FeedMediaEntity } from '@/models/entities/fam-feed-media.entity';
 
 @Injectable()
 export class FeedsService {
@@ -60,11 +62,21 @@ export class FeedsService {
 		await queryRunner.startTransaction();
 
 		try {
-			const status = await this.mediasService.deleteFeedMediasByFeedId(feedId);
-			if (!status)
+			const [mediaStatus, feedStatus] = await Promise.all([
+				await this.mediasService.deleteFeedMediasByFeedId(
+					feedId,
+					queryRunner.manager,
+				),
+				await this.feedsRepository.deleteFeed(feedId, queryRunner.manager),
+			]);
+
+			if (!mediaStatus || !feedStatus)
 				throw EntityConflictException(
-					'미디어를 삭제하는 도중 에러가 발생했습니다',
+					'미디어 또는 피드를 삭제하는 도중 에러가 발생했습니다',
 				);
+
+			await queryRunner.commitTransaction();
+			//s3에 미디어 파일들 삭제.
 		} catch (error) {
 			await queryRunner.rollbackTransaction();
 			throw error;
