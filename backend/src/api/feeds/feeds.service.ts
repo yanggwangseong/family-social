@@ -21,7 +21,7 @@ export class FeedsService {
 		memberId,
 		medias,
 	}: ICreateFeedArgs): Promise<FeedByIdResDto> {
-		//[TODO] 이미지배열과, 피드 관련 정보 가져와서 feed repository에는 피드저장, midea repository에는 미디어들 저장
+		//[TODO] transaction 추가
 		const feed = await this.feedsRepository.createFeed({
 			contents,
 			isPublic,
@@ -34,13 +34,24 @@ export class FeedsService {
 		return feed;
 	}
 
-	async updateFeed({ feedId, contents, isPublic, groupId }: IUpdateFeedArgs) {
-		return await this.feedsRepository.updateFeed({
+	async updateFeed({
+		feedId,
+		contents,
+		isPublic,
+		groupId,
+		medias,
+	}: IUpdateFeedArgs) {
+		//[TODO] transaction 추가
+		const feed = await this.feedsRepository.updateFeed({
 			feedId,
 			contents,
 			isPublic,
 			groupId,
 		});
+
+		await this.mediasService.updateFeedMedias(medias, feedId);
+
+		return feed;
 	}
 
 	async deleteFeed(feedId: string) {

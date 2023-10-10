@@ -57,7 +57,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		contents,
 		isPublic,
 		groupId,
-	}: IUpdateFeedArgs): Promise<FeedByIdResDto> {
+	}: Omit<IUpdateFeedArgs, 'medias'>): Promise<FeedByIdResDto> {
 		await this.update(
 			{ id: feedId },
 			{ contents: contents, isPublic: isPublic, groupId: groupId },

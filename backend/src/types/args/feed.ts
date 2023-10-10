@@ -8,7 +8,6 @@ export interface ICreateFeedArgs {
 	medias: MediaCreateReqDto[];
 }
 
-export interface IUpdateFeedArgs
-	extends Omit<ICreateFeedArgs, 'memberId' | 'medias'> {
+export interface IUpdateFeedArgs extends Omit<ICreateFeedArgs, 'memberId'> {
 	feedId: string;
 }

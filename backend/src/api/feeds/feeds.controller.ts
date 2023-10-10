@@ -4,7 +4,6 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import {
 	Body,
 	Controller,
-	Get,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -87,9 +86,8 @@ export class FeedsController {
 			isPublic: dto.isPublic,
 			groupId: dto.groupId,
 			feedId: feedId,
+			medias: dto.medias,
 		});
-
-		await this.mediasService.updateFeedMedias(dto.medias, feedId);
 	}
 
 	//[TODO] 수정시 기존에 있는 이미지와 같은 이름 이미지인지 확인 있는거면 업데이트 x
