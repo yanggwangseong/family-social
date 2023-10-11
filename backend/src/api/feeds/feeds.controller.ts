@@ -5,6 +5,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	Get,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -40,6 +41,12 @@ export class FeedsController {
 		private readonly feedsService: FeedsService,
 		private readonly mediasService: MediasService,
 	) {}
+
+	@Get()
+	async findAllFeed() {
+		const page = 1;
+		return await this.feedsService.findAllFeed(page);
+	}
 
 	/**
 	 * @summary 유저가 속하는 Group에서 feed 생성

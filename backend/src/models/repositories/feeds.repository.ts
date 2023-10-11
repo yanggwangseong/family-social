@@ -15,6 +15,20 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async findAllFeed(take: number, skip: number) {
+		const query = this.repository
+			.createQueryBuilder('a')
+			.select('medias.position')
+
+			.leftJoin('a.medias', 'medias')
+			.innerJoin('a.group', 'group')
+			.innerJoin('a.member', 'member')
+			.offset(skip)
+			.limit(take);
+
+		return query.getMany();
+	}
+
 	async findOrFailFeedById({
 		feedId,
 	}: {

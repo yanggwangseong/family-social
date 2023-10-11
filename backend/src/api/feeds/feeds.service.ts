@@ -16,6 +16,7 @@ import {
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
+import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
 export class FeedsService {
@@ -24,6 +25,11 @@ export class FeedsService {
 		private readonly mediasService: MediasService,
 		private dataSource: DataSource,
 	) {}
+
+	async findAllFeed(page: number) {
+		const { take, skip } = getOffset(page);
+		return this.feedsRepository.findAllFeed(take, skip);
+	}
 
 	async createFeed({
 		contents,
