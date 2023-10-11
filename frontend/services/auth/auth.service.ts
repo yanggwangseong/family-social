@@ -1,5 +1,5 @@
 import { AuthResponse } from '@/shared/interfaces/auth.interface';
-import { axiosClassic } from 'api/axios';
+import { axiosAPI, axiosClassic } from 'api/axios';
 
 export const AuthService = {
 	async signIn(email: string, password: string) {
@@ -44,7 +44,7 @@ export const AuthService = {
 			formData.append('files', file);
 		}
 
-		const { data } = await axiosClassic.post<AuthResponse>(
+		const { data } = await axiosAPI.post<AuthResponse>(
 			'/feeds/test',
 			formData,
 			{

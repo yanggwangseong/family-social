@@ -1,6 +1,6 @@
 import multerS3 from 'multer-s3';
 import { Request } from 'express';
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -84,5 +84,13 @@ export class MulterBuilder {
 				return callback(null, encodeURI(`${this.resource}/${filename}`));
 			},
 		});
+	}
+
+	async setDeleteS3Media(key: string) {
+		const command = new DeleteObjectCommand({
+			Bucket: this.bucketName,
+			Key: key,
+		});
+		return await this.s3.send(command);
 	}
 }

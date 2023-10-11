@@ -31,13 +31,13 @@ export class FamEntity extends DefaultEntity {
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsUUID()
-	memberId!: string;
+	public readonly memberId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsUUID()
-	groupId!: string;
+	public readonly groupId!: string;
 
 	@ManyToOne((type) => MemberEntity, (member) => member.memberGroups)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })

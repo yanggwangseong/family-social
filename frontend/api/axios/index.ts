@@ -26,6 +26,7 @@ axiosClassic.interceptors.response.use((res: AxiosResponse) => {
 export const axiosAPI = (() => {
 	const axiosInstance = axios.create({
 		baseURL: API_URL,
+		withCredentials: true,
 	});
 
 	axiosInstance.interceptors.request.use(
