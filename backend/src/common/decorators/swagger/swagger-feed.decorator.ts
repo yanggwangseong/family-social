@@ -3,6 +3,7 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
+import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,
@@ -10,6 +11,18 @@ import {
 	ApiNotFoundResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+
+export const GetFeedsSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '피드 가져오기',
+		}),
+		ApiCreatedResponse({
+			description: '피드 조회 성공',
+			type: FeedResDto,
+		}),
+	);
+};
 
 export const CreateFeedSwagger = () => {
 	return applyDecorators(

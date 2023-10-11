@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
+import { FeedResDto } from '../dto/feed/res/feed-res.dto';
 
 @Injectable()
 export class FeedsRepository extends Repository<FeedEntity> {
@@ -15,12 +16,15 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async findAllFeed(take: number, skip: number) {
+	async findAllFeed(
+		take: number,
+		skip: number,
+	): Promise<Omit<FeedResDto, 'medias'>[]> {
 		const query = this.repository
 			.createQueryBuilder('a')
 			.select([
-				'a.contents AS "contents"',
 				'a.id AS "feedId"',
+				'a.contents AS "contents"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
 				'member.id AS "memberId"',

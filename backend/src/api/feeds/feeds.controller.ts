@@ -29,6 +29,7 @@ import {
 	CreateFeedSwagger,
 	DeleteFeedSwagger,
 	UpdateFeedSwagger,
+	GetFeedsSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 
@@ -47,6 +48,7 @@ export class FeedsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
+	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(@Query('page') page: number) {
 		return await this.feedsService.findAllFeed(page);

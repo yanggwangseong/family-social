@@ -17,6 +17,7 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { getOffset } from '@/utils/getOffset';
+import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 
 @Injectable()
 export class FeedsService {
@@ -26,7 +27,7 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findAllFeed(page: number) {
+	async findAllFeed(page: number): Promise<{ list: FeedResDto[] }> {
 		const { take, skip } = getOffset(page);
 		const list = await this.feedsRepository.findAllFeed(take, skip);
 
