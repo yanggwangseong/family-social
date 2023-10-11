@@ -18,15 +18,22 @@ export class FeedsRepository extends Repository<FeedEntity> {
 	async findAllFeed(take: number, skip: number) {
 		const query = this.repository
 			.createQueryBuilder('a')
-			.select('medias.position')
-
-			.leftJoin('a.medias', 'medias')
+			.select([
+				'a.contents AS "contents"',
+				'a.id AS "feedId"',
+				'group.id AS "groupId"',
+				'group.groupName AS "groupName"',
+				'member.id AS "memberId"',
+				'member.username AS "username"',
+			])
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
+			.where('a.isPublic = :isPublic', { isPublic: true })
+			.orderBy('a.updatedAt', 'ASC')
 			.offset(skip)
 			.limit(take);
 
-		return query.getMany();
+		return query.getRawMany();
 	}
 
 	async findOrFailFeedById({

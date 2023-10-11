@@ -59,13 +59,19 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 		return !!affected;
 	}
 
-	async findMediaUrlByFeedId(feedId: string): Promise<{ url: string }[]> {
+	async findMediaUrlByFeedId(
+		feedId: string,
+	): Promise<{ url: string; id: string }[]> {
 		return this.repository.find({
 			select: {
+				id: true,
 				url: true,
 			},
 			where: {
 				feedId: feedId,
+			},
+			order: {
+				position: 'ASC',
 			},
 		});
 	}

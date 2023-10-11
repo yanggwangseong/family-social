@@ -28,7 +28,25 @@ export class FeedsService {
 
 	async findAllFeed(page: number) {
 		const { take, skip } = getOffset(page);
-		return this.feedsRepository.findAllFeed(take, skip);
+		const list = await this.feedsRepository.findAllFeed(take, skip);
+
+		//[TODO comments 추후에 추가]
+		const mappedList = await Promise.all(
+			list.map(async (feed) => {
+				const medias = await this.mediasService.findMediaUrlByFeedId(
+					feed.feedId,
+				);
+
+				return {
+					...feed,
+					medias: medias,
+				};
+			}),
+		);
+
+		return {
+			list: mappedList,
+		};
 	}
 
 	async createFeed({

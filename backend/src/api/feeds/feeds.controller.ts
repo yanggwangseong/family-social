@@ -10,6 +10,7 @@ import {
 	ParseUUIDPipe,
 	Post,
 	Put,
+	Query,
 	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
@@ -29,7 +30,6 @@ import {
 	DeleteFeedSwagger,
 	UpdateFeedSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
-import { MediasService } from '../medias/medias.service';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -37,14 +37,18 @@ import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 @ApiTags('feeds')
 @Controller('feeds')
 export class FeedsController {
-	constructor(
-		private readonly feedsService: FeedsService,
-		private readonly mediasService: MediasService,
-	) {}
+	constructor(private readonly feedsService: FeedsService) {}
 
+	/**
+	 * @summary 유저가 속하는 Group에서 feed 생성
+	 *
+	 * @tag feeds
+	 * @param page 페이징을 위한 page 번호
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns feed
+	 */
 	@Get()
-	async findAllFeed() {
-		const page = 1;
+	async findAllFeed(@Query('page') page: number) {
 		return await this.feedsService.findAllFeed(page);
 	}
 
