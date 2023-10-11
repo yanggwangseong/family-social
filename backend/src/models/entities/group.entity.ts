@@ -3,6 +3,7 @@ import { DefaultEntity } from './common/default.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { FamEntity } from './fam.entity';
+import { FeedEntity } from './feed.entity';
 
 @Entity({ name: 'fam_group' })
 export class GroupEntity extends DefaultEntity {
@@ -28,4 +29,7 @@ export class GroupEntity extends DefaultEntity {
 
 	@OneToMany(() => FamEntity, (fa) => fa.group)
 	groupByMemberGroups?: FamEntity[];
+
+	@OneToMany(() => FeedEntity, (fd) => fd.group)
+	feedByGroups?: FeedEntity[];
 }

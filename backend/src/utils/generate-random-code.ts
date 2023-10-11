@@ -1,4 +1,4 @@
-export function generateRandomCode(length: number): string {
+export const generateRandomCode = (length: number): string => {
 	const ALPHANUMERIC: string =
 		'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -12,4 +12,4 @@ export function generateRandomCode(length: number): string {
 	}
 
 	return code;
-}
+};

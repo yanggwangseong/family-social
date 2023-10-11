@@ -35,3 +35,7 @@ export const CreateBodyImageMulterOptions = (): MulterOptions => {
 		limits: { fileSize: 1024 * 1024 * 20 },
 	};
 };
+
+export const DeleteS3Media = (key: string) => {
+	return new MulterBuilder().setDeleteS3Media(key);
+};
