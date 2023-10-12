@@ -13,7 +13,15 @@ const Feed: FC = () => {
 				<div className={styles.contents_container}>
 					<MainSidebar />
 					<div className={styles.detail_container}>
-						<div className={styles.main_contents_container}>ㅇㅇ</div>
+						<div className={styles.main_contents_container}>
+							<div className={styles.top_tab_menus}>
+								<div className={`${styles.tab_menu_item} ${styles.active}`}>
+									TOP
+								</div>
+								<div className={styles.tab_menu_item}>MY FEED</div>
+								<div className={styles.tab_menu_item}>ALL</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
