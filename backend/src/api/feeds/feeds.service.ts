@@ -18,12 +18,14 @@ import {
 } from '@/constants/business-error';
 import { getOffset } from '@/utils/getOffset';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 
 @Injectable()
 export class FeedsService {
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
+		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
 
@@ -48,6 +50,21 @@ export class FeedsService {
 		return {
 			list: mappedList,
 		};
+	}
+
+	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
+		const like = await this.likesFeedRepository.findMemberLikesFeed(
+			memberId,
+			feedId,
+		);
+
+		if (like) {
+			await this.likesFeedRepository.remove(like);
+		} else {
+			await this.likesFeedRepository.save({ memberId, feedId });
+		}
+
+		return !like;
 	}
 
 	async createFeed({
