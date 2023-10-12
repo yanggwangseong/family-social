@@ -20,6 +20,7 @@ const Feed: FC = () => {
 							<TabMenu />
 							<div className={styles.feed_container}>
 								<FeedItem />
+								<FeedItem />
 							</div>
 						</div>
 					</div>
