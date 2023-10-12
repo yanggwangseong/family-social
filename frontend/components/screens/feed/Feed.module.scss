@@ -1,0 +1,25 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+		height: calc(100vh - 80px);
+
+		.detail_container {
+			@apply relative;
+			width: calc(100vw - 300px);
+
+			.main_contents_container {
+				@screen md {
+					@apply mx-auto;
+					width: 768px;
+				}
+				@apply w-full h-full mt-8;
+			}
+		}
+	}
+}

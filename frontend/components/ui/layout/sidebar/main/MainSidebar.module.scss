@@ -1,0 +1,8 @@
+.sidebar_container {
+	@apply px-11 pt-3 border-r border-solid border-customDark h-full;
+	width: 300px;
+
+	.sidebar_btn_container {
+		@apply mt-16;
+	}
+}
