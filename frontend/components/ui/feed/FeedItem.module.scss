@@ -1,0 +1,39 @@
+.feed_card_container {
+	@apply border border-solid border-customDark;
+
+	.feed_card_top_container {
+		@apply p-4 flex;
+	}
+
+	.feed_description_container {
+		@apply px-4 pt-8 pb-6 text-sm;
+	}
+
+	.feed_media_container {
+		@apply w-full relative border-y border-solid border-customDark border-collapse;
+		height: 426px;
+	}
+
+	.feed_bottom_container {
+		@apply flex p-4 h-16;
+
+		.like_container {
+			@apply flex justify-center items-center;
+
+			.like_count {
+				@apply ml-2 font-medium;
+			}
+		}
+
+		.comments_link {
+			@apply ml-auto flex justify-center items-center font-medium cursor-pointer underline;
+		}
+
+		.lottie_container {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}

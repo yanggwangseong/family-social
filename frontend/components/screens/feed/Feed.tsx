@@ -3,6 +3,8 @@ import styles from './Feed.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
+import TabMenu from '@/components/ui/tab-menu/TabMenu';
+import FeedItem from '@/components/ui/feed/FeedItem';
 
 const Feed: FC = () => {
 	return (
@@ -14,12 +16,10 @@ const Feed: FC = () => {
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
-							<div className={styles.top_tab_menus}>
-								<div className={`${styles.tab_menu_item} ${styles.active}`}>
-									TOP
-								</div>
-								<div className={styles.tab_menu_item}>MY FEED</div>
-								<div className={styles.tab_menu_item}>ALL</div>
+							{/* 탭메뉴 */}
+							<TabMenu />
+							<div className={styles.feed_container}>
+								<FeedItem />
 							</div>
 						</div>
 					</div>
