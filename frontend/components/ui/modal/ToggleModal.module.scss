@@ -1,5 +1,5 @@
 .toggle_modal_container {
 	@apply absolute top-20 left-0 border 
     border-solid border-customDark bg-white w-80 p-4
-    shadow-2xl rounded-tr-[44px];
+    shadow-2xl rounded-tr-[44px] z-50;
 }

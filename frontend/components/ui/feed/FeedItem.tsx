@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
@@ -7,15 +7,34 @@ import heartAnimation from '@/assets/lottie/like.json';
 import { AiOutlineHeart } from 'react-icons/ai';
 import Link from 'next/link';
 import { BsThreeDots } from 'react-icons/bs';
+import { useModal } from '@/hooks/useModal';
+import ToggleModal from '../modal/ToggleModal';
+import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 
 const FeedItem: FC = () => {
 	const comments = 3;
+
+	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
+	const {
+		isShowing: isOpenSetting,
+		handleToggleModal: handleCloseSettingModal,
+	} = useModal(settingModalWrapperRef);
+
 	return (
 		<div className={styles.feed_card_container}>
 			<div className={styles.feed_card_top_container}>
 				<Profile></Profile>
-				<div className="ml-auto cursor-pointer">
-					<BsThreeDots size={24} />
+				<div
+					className="ml-auto cursor-pointer relative"
+					ref={settingModalWrapperRef}
+				>
+					<BsThreeDots size={24} onClick={handleCloseSettingModal} />
+					{isOpenSetting && (
+						<ToggleModal
+							list={FeedSettingMenu}
+							onClose={handleCloseSettingModal}
+						/>
+					)}
 				</div>
 			</div>
 			<div className={styles.feed_description_container}>

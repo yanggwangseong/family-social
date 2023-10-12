@@ -26,3 +26,13 @@ export const GroupSettingMenu: ToggleMenu[] = [
 		layer: LayerMode.groupDeleteConfirm,
 	},
 ];
+
+export const FeedSettingMenu: ToggleMenu[] = [
+	{
+		Icon: TbDoorExit,
+		title: '피드 삭제',
+		description:
+			'피드 작성자 또는 그룹 관리자만 해당 피드를 삭제 할 수 있습니다',
+		layer: LayerMode.groupDeleteConfirm,
+	},
+];
