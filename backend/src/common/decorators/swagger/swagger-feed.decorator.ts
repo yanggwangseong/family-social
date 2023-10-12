@@ -47,6 +47,18 @@ export const UpdateFeedSwagger = () => {
 	);
 };
 
+export const LikesFeedSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '피드 좋아요',
+		}),
+		ApiCreatedResponse({
+			description: '피드 좋아요',
+			type: Boolean,
+		}),
+	);
+};
+
 export const DeleteFeedSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
