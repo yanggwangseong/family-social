@@ -12,7 +12,7 @@
 
 		.detail_container {
 			@apply relative;
-			width: calc(100vw - 300px);
+			flex: 1;
 		}
 	}
 }
