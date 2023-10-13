@@ -1,10 +1,10 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
 import Lottie from 'lottie-react';
 import heartAnimation from '@/assets/lottie/like.json';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import Link from 'next/link';
 import { BsThreeDots } from 'react-icons/bs';
 import { useModal } from '@/hooks/useModal';
@@ -14,11 +14,29 @@ import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 const FeedItem: FC = () => {
 	const comments = 3;
 
+	const [isLike, setIsLike] = useState<boolean>(false);
+	const [isLottie, setIsLottie] = useState<boolean>(false);
+
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,
 		handleToggleModal: handleCloseSettingModal,
 	} = useModal(settingModalWrapperRef);
+
+	const handleLike = () => {
+		setIsLike(true);
+		setIsLottie(true);
+	};
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsLottie(false);
+		}, 2500);
+
+		return () => {
+			clearTimeout(timer);
+		};
+	}, [isLottie]);
 
 	return (
 		<div className={styles.feed_card_container}>
@@ -50,12 +68,29 @@ const FeedItem: FC = () => {
 			</div>
 			<div className={styles.feed_bottom_container}>
 				<div className={styles.like_container}>
-					<AiOutlineHeart size={28} />
+					{isLike ? (
+						<AiFillHeart
+							size={28}
+							color="#FB1F42"
+							className={styles.like_icon}
+						/>
+					) : (
+						<AiOutlineHeart
+							size={28}
+							className={styles.like_icon}
+							onClick={handleLike}
+						/>
+					)}
+
 					<div className={styles.like_count}>17</div>
 				</div>
-				{/* <div className={styles.lottie_container}>
-					<Lottie animationData={heartAnimation} loop={false} />
-				</div> */}
+				{isLottie && (
+					<div className={styles.modal_mask}>
+						<div className={styles.lottie_container}>
+							<Lottie animationData={heartAnimation} loop={false} />
+						</div>
+					</div>
+				)}
 				<Link className={styles.comments_link} href={'#'}>
 					{comments} comments
 				</Link>
