@@ -7,19 +7,21 @@ import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useInfiniteQuery } from 'react-query';
 import { FeedService } from '@/services/feed/feed.service';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
 
 const Feed: FC = () => {
-	const { data, fetchNextPage, isLoading, isError } = useInfiniteQuery(
-		['feeds'],
-		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
-		{
-			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.page !== allPosts[0].totalPage
-					? lastPage.page + 1
-					: undefined;
+	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
+		useInfiniteQuery(
+			['feeds'],
+			async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
+			{
+				getNextPageParam: (lastPage, allPosts) => {
+					return lastPage.page !== allPosts[0].totalPage
+						? lastPage.page + 1
+						: undefined;
+				},
 			},
-		},
-	);
+		);
 
 	const [observedPost, setObservedPost] = useState('');
 
@@ -75,7 +77,9 @@ const Feed: FC = () => {
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
 							<TabMenu />
+
 							<div className={styles.feed_container}>
+								{isLoading && <Skeleton />}
 								{data?.pages.map((page, pageIndex) => (
 									<React.Fragment key={pageIndex}>
 										{page.list.map(feed => (
@@ -84,8 +88,12 @@ const Feed: FC = () => {
 									</React.Fragment>
 								))}
 
-								{isLoading && (
-									<p className="text-lg text-center">Loading More...</p>
+								{isRefetching && (
+									<React.Fragment>
+										<Skeleton />
+										<Skeleton />
+										<Skeleton />
+									</React.Fragment>
 								)}
 							</div>
 						</div>
