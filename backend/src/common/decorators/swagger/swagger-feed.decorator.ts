@@ -3,7 +3,7 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
-import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,
@@ -19,7 +19,7 @@ export const GetFeedsSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '피드 조회 성공',
-			type: FeedResDto,
+			type: FeedGetAllResDto,
 		}),
 	);
 };
@@ -43,6 +43,18 @@ export const UpdateFeedSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '피드 수정 성공',
+		}),
+	);
+};
+
+export const LikesFeedSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '피드 좋아요',
+		}),
+		ApiCreatedResponse({
+			description: '피드 좋아요',
+			type: Boolean,
 		}),
 	);
 };

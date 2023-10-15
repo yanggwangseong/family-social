@@ -16,6 +16,7 @@ const config: Config = {
 				customOrange: '#e5855d',
 				customGray2427: 'rgba(10, 10, 10, 0.27)',
 				bgSplash: '#111111',
+				likeColor: '#FB1F42',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

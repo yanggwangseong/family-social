@@ -18,18 +18,21 @@ import {
 } from '@/constants/business-error';
 import { getOffset } from '@/utils/getOffset';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
+import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 
 @Injectable()
 export class FeedsService {
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
+		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
 
-	async findAllFeed(page: number): Promise<{ list: FeedResDto[] }> {
+	async findAllFeed(page: number): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
-		const list = await this.feedsRepository.findAllFeed(take, skip);
+		const { list, count } = await this.feedsRepository.findAllFeed(take, skip);
 
 		//[TODO comments 추후에 추가]
 		const mappedList = await Promise.all(
@@ -47,7 +50,24 @@ export class FeedsService {
 
 		return {
 			list: mappedList,
+			page: page,
+			totalPage: Math.ceil(count / take),
 		};
+	}
+
+	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
+		const like = await this.likesFeedRepository.findMemberLikesFeed(
+			memberId,
+			feedId,
+		);
+
+		if (like) {
+			await this.likesFeedRepository.remove(like);
+		} else {
+			await this.likesFeedRepository.save({ memberId, feedId });
+		}
+
+		return !like;
 	}
 
 	async createFeed({

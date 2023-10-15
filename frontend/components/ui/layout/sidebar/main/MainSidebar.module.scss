@@ -2,10 +2,6 @@
 	@apply px-11 pt-3 border-r border-solid border-customDark h-full sticky top-0 z-50;
 	width: 300px;
 
-	.sidebar_title {
-		@apply text-2xl font-medium mb-12;
-	}
-
 	.sidebar_btn_container {
 		@apply mt-16;
 	}

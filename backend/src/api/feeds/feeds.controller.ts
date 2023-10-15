@@ -30,6 +30,7 @@ import {
 	DeleteFeedSwagger,
 	UpdateFeedSwagger,
 	GetFeedsSwagger,
+	LikesFeedSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 
@@ -41,13 +42,14 @@ export class FeedsController {
 	constructor(private readonly feedsService: FeedsService) {}
 
 	/**
-	 * @summary 유저가 속하는 Group에서 feed 생성
+	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
 	 * @param page 페이징을 위한 page 번호
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
+	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(@Query('page') page: number) {
@@ -82,6 +84,10 @@ export class FeedsController {
 		return feed;
 	}
 
+	//[TODO] 수정시 기존에 있는 이미지와 같은 이름 이미지인지 확인 있는거면 업데이트 x
+	//		 그렇게 생각 했으나, 그냥 다지우고 다시 생성 하는게 깔끔할듯.
+	//		 contensts나 isPublic은 수정, groupId도 바뀔 수 있음.
+	// 커스텀 데코레이터로 해당 피드 올린사람이랑 sub 비교해서 다르면 마 니꺼 아니잖아 에러메세지.
 	/**
 	 * @summary feed 수정
 	 *
@@ -109,6 +115,24 @@ export class FeedsController {
 	}
 
 	/**
+	 * @summary feed 좋아요
+	 *
+	 * @tag feeds
+	 * @param sub  멤버 Id
+	 * @param feedId   피드Id
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns boolean
+	 */
+	@LikesFeedSwagger()
+	@Put(':feedId/likes')
+	async updateLikesFeedId(
+		@CurrentUser('sub') sub: string,
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+	) {
+		return await this.feedsService.updateLikesFeedId(sub, feedId);
+	}
+
+	/**
 	 * @summary feed 삭제
 	 *
 	 * @tag feeds
@@ -121,10 +145,6 @@ export class FeedsController {
 	async deleteFeed(@Param('feedId', ParseUUIDPipe) feedId: string) {
 		await this.feedsService.deleteFeed(feedId);
 	}
-
-	//[TODO] 수정시 기존에 있는 이미지와 같은 이름 이미지인지 확인 있는거면 업데이트 x
-	//		 contensts나 isPublic은 수정, groupId도 바뀔 수 있음.
-	// 커스텀 데코레이터로 해당 피드 올린사람이랑 sub 비교해서 다르면 마 니꺼 아니잖아 에러메세지.
 
 	@Post('/test')
 	@UseInterceptors(

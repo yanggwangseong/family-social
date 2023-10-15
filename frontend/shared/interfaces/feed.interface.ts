@@ -1,0 +1,17 @@
+import { MediaInfo } from './media.interface';
+
+export interface FeedsResponse {
+	list: FeedInfo[];
+	page: number;
+	totalPage: number;
+}
+
+export interface FeedInfo {
+	feedId: string;
+	contents: string;
+	groupId: string;
+	groupName: string;
+	memberId: string;
+	username: string;
+	medias: MediaInfo[];
+}

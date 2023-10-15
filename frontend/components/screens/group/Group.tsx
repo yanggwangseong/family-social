@@ -12,8 +12,10 @@ const Group: FC = () => {
 				<Header />
 				<div className={styles.contents_container}>
 					<GroupSidebar />
-					<div>contensts</div>
-					<div>rightside</div>
+					<div className={styles.detail_container}>
+						<div>contensts</div>
+						<div>rightside</div>
+					</div>
 				</div>
 			</div>
 		</Format>

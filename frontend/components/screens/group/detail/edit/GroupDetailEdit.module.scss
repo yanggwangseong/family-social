@@ -21,68 +21,74 @@
 	.contents_container {
 		@apply flex;
 		height: calc(100vh - 80px);
+		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
-		.main_contents_container {
-			@screen md {
-				@apply mx-32 mt-10 flex justify-center;
-				width: 768px;
-			}
-			@apply w-full;
+		.right_contents_container {
+			@apply relative;
+			flex: 1;
 
-			.detail_container {
+			.main_contents_container {
+				@screen md {
+					@apply mx-auto mt-10 flex justify-center;
+					width: 768px;
+				}
 				@apply w-full;
-				.detail_wrap {
-					@apply border border-solid border-customDark p-4 bg-white shadow-2xl;
-					min-height: 400px;
-					.detail_container_title {
-						@apply font-medium text-xl;
-					}
 
-					//list menu
-					.group_setting_lst_menu_container {
-						&.disabled {
-							.detail_container_title {
-								@apply text-customGray opacity-50;
-							}
-							.menu_title {
-								@apply text-customGray opacity-50;
-							}
-
-							.btn_wrap {
-								@apply text-customGray opacity-50 cursor-default;
-							}
+				.detail_container {
+					@apply w-full;
+					.detail_wrap {
+						@apply border border-solid border-customDark p-4 bg-white shadow-2xl;
+						min-height: 400px;
+						.detail_container_title {
+							@apply font-medium text-xl;
 						}
 
-						.menu_container {
-							@apply flex mt-10;
-
-							.form_container {
-								@apply w-full;
-
-								.field_container {
-									@apply flex flex-col gap-6;
+						//list menu
+						.group_setting_lst_menu_container {
+							&.disabled {
+								.detail_container_title {
+									@apply text-customGray opacity-50;
+								}
+								.menu_title {
+									@apply text-customGray opacity-50;
 								}
 
-								.btn_container {
-									@apply flex gap-5 mt-10;
+								.btn_wrap {
+									@apply text-customGray opacity-50 cursor-default;
 								}
 							}
 
-							.menu_description_container {
-								@apply flex w-full flex-row;
+							.menu_container {
+								@apply flex mt-10;
 
-								.edit_btn_container {
-									@apply ml-auto cursor-pointer hover:text-customOrange;
+								.form_container {
+									@apply w-full;
 
-									.btn_wrap {
-										@apply flex;
+									.field_container {
+										@apply flex flex-col gap-6;
+									}
 
-										.icon_container {
-											@apply flex justify-center items-center;
-										}
+									.btn_container {
+										@apply flex gap-5 mt-10;
+									}
+								}
 
-										.btn_text {
-											@apply font-medium ml-2;
+								.menu_description_container {
+									@apply flex w-full flex-row;
+
+									.edit_btn_container {
+										@apply ml-auto cursor-pointer hover:text-customOrange;
+
+										.btn_wrap {
+											@apply flex;
+
+											.icon_container {
+												@apply flex justify-center items-center;
+											}
+
+											.btn_text {
+												@apply font-medium ml-2;
+											}
 										}
 									}
 								}
