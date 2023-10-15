@@ -11,7 +11,7 @@ import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 
-const FeedItem: FC = () => {
+const FeedItem: FC<{ id: string }> = ({ id }) => {
 	const comments = 3;
 
 	const [isLike, setIsLike] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const FeedItem: FC = () => {
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setIsLottie(false);
-		}, 2500);
+		}, 1300);
 
 		return () => {
 			clearTimeout(timer);
@@ -39,7 +39,7 @@ const FeedItem: FC = () => {
 	}, [isLottie]);
 
 	return (
-		<div className={styles.feed_card_container}>
+		<div className={styles.feed_card_container} id={id}>
 			<div className={styles.feed_card_top_container}>
 				<Profile></Profile>
 				<div
