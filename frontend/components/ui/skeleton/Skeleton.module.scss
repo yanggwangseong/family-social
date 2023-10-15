@@ -1,0 +1,35 @@
+.skeleton_container {
+	@apply border border-customDark shadow rounded-md p-4 w-full mx-auto;
+
+	.main_wrap {
+		@apply animate-pulse flex space-x-4;
+
+		.skeleton_avatar {
+			@apply rounded-full bg-slate-200 h-10 w-10;
+		}
+
+		.skeleton_contents_container {
+			@apply flex-1 space-y-6 py-1;
+
+			.skeleton_line_one {
+				@apply h-2 bg-slate-200 rounded;
+			}
+
+			.skeleton_multi_container {
+				@apply space-y-3;
+
+				.wrap {
+					@apply grid grid-cols-3 gap-4;
+
+					.multi_line_two {
+						@apply h-2 bg-slate-200 rounded col-span-2;
+					}
+
+					.multi_line_one {
+						@apply h-2 bg-slate-200 rounded col-span-1;
+					}
+				}
+			}
+		}
+	}
+}

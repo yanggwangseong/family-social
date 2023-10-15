@@ -42,13 +42,14 @@ export class FeedsController {
 	constructor(private readonly feedsService: FeedsService) {}
 
 	/**
-	 * @summary 유저가 속하는 Group에서 feed 생성
+	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
 	 * @param page 페이징을 위한 page 번호
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
+	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(@Query('page') page: number) {

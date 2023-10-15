@@ -19,7 +19,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 	async findAllFeed(
 		take: number,
 		skip: number,
-	): Promise<Omit<FeedResDto, 'medias'>[]> {
+	): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
 		const query = this.repository
 			.createQueryBuilder('a')
 			.select([
@@ -37,7 +37,15 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.offset(skip)
 			.limit(take);
 
-		return query.getRawMany();
+		const [list, count] = await Promise.all([
+			query.getRawMany(),
+			query.getCount(),
+		]);
+
+		return {
+			list,
+			count,
+		};
 	}
 
 	async findOrFailFeedById({

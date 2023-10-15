@@ -19,6 +19,7 @@ import {
 import { getOffset } from '@/utils/getOffset';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
+import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 
 @Injectable()
 export class FeedsService {
@@ -29,9 +30,9 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findAllFeed(page: number): Promise<{ list: FeedResDto[] }> {
+	async findAllFeed(page: number): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
-		const list = await this.feedsRepository.findAllFeed(take, skip);
+		const { list, count } = await this.feedsRepository.findAllFeed(take, skip);
 
 		//[TODO comments 추후에 추가]
 		const mappedList = await Promise.all(
@@ -49,6 +50,8 @@ export class FeedsService {
 
 		return {
 			list: mappedList,
+			page: page,
+			totalPage: Math.ceil(count / take),
 		};
 	}
 

@@ -6,6 +6,10 @@
 		height: 42px;
 	}
 
+	.profile_username {
+		@apply font-bold;
+	}
+
 	.profile_role {
 		@apply text-sm text-customGray;
 	}
