@@ -91,9 +91,7 @@ const FeedItem: FC<{ id: string }> = ({ id }) => {
 						</div>
 					</div>
 				)}
-				<Link className={styles.comments_link} href={'#'}>
-					{comments} comments
-				</Link>
+				<div className={styles.comments_link}>{comments} comments</div>
 			</div>
 		</div>
 	);

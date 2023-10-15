@@ -64,8 +64,6 @@ const Feed: FC = () => {
 		observer.observe(element);
 	};
 
-	if (isLoading) return <h3>로딩중</h3>;
-
 	return (
 		<Format title={'feed'}>
 			<div className={styles.container}>
@@ -85,6 +83,10 @@ const Feed: FC = () => {
 										))}
 									</React.Fragment>
 								))}
+
+								{isLoading && (
+									<p className="text-lg text-center">Loading More...</p>
+								)}
 							</div>
 						</div>
 					</div>
