@@ -20,9 +20,10 @@ type ValueType = string | number | boolean;
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
 const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
 const LayerMode = {
-	ready: 'ready',
-	progress: 'progress',
+	linkInvite: 'linkInvite',
+	emailInvite: 'emailInvite',
 	groupDeleteConfirm: 'groupDeleteConfirm',
+	createFeed: 'createFeed',
 } as const;
 
 /**
