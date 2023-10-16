@@ -8,6 +8,7 @@ import FeedItem from '@/components/ui/feed/FeedItem';
 import { useInfiniteQuery } from 'react-query';
 import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
+import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 
 const Feed: FC = () => {
 	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
@@ -72,6 +73,7 @@ const Feed: FC = () => {
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
+					{/* 왼쪽 사이드바 */}
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
@@ -98,6 +100,8 @@ const Feed: FC = () => {
 							</div>
 						</div>
 					</div>
+					{/* 오른쪽 사이드바 */}
+					<RightSidebar />
 				</div>
 			</div>
 		</Format>
