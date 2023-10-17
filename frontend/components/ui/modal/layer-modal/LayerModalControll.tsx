@@ -3,7 +3,7 @@ import EmailInvite from './layer/EmailInvite';
 import LinkInvite from './layer/LinkInvite';
 import { LayerMode, Union } from 'types';
 import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
-import CreateFeed from './layer/CreateFeed';
+import CreateFeed from './layer/CreateFeed/CreateFeed';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
