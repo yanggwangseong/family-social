@@ -17,6 +17,7 @@ const CreateFeed: FC = () => {
 	const handleSelectedGroup = (groupId: string) => {
 		setIsSelectGroup(groupId);
 	};
+
 	return (
 		<div className="mt-10">
 			{isFeedPage === 'selectGroup' && (

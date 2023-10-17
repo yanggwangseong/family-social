@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	Get,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -21,6 +22,7 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
+	GetMemberBelongToGroupsSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
@@ -49,6 +51,20 @@ export class GroupsController {
 		private readonly membersService: MembersService,
 	) {}
 
+	/**
+	 * @summary 유저가 속한 모든 그룹 가져오기
+	 *
+	 * @tag groups
+	 * @param sub 인증된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹명
+	 */
+	@GetMemberBelongToGroupsSwagger()
+	@Get()
+	async getMemberBelongToGroups(@CurrentUser('sub') sub: string) {
+		return await this.groupsService.getMemberBelongToGroups(sub);
+	}
+
 	// [TODO]: : [Get] groupId에 해당하는 그룹정보 가져오기
 
 	/**
@@ -57,6 +73,7 @@ export class GroupsController {
 	 * @tag groups
 	 * @param groupName 그룹 이름
 	 * @param groupDescription 그룹 설명
+	 * @param sub 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -79,6 +96,7 @@ export class GroupsController {
 	 * @tag groups
 	 * @param groupName 그룹 이름
 	 * @param groupDescription 그룹 설명
+	 * @param sub 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -102,6 +120,7 @@ export class GroupsController {
 	 *
 	 * @tag groups
 	 * @param groupId string
+	 * @param sub 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */

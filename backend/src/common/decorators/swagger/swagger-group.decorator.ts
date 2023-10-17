@@ -11,6 +11,7 @@ import {
 	ERROR_USER_NOT_FOUND,
 } from '@/constants/business-error';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
+import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
@@ -23,6 +24,19 @@ import {
 	ApiOperation,
 	ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+export const GetMemberBelongToGroupsSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '유저가 속한 모든 그룹 가져오기',
+		}),
+		ApiOkResponse({
+			description: '그룹 가져오기',
+			type: BelongToGroupResDto,
+			isArray: true,
+		}),
+	);
+};
 
 export const DeleteGroupSwagger = () => {
 	return applyDecorators(
