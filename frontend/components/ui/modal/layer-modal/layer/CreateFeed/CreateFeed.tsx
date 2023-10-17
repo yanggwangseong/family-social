@@ -2,6 +2,8 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { FC, useState } from 'react';
 import styles from './CreateFeed.module.scss';
+import { useQuery } from 'react-query';
+import { GroupService } from '@/services/group/group.service';
 
 const CreateFeed: FC = () => {
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
@@ -18,51 +20,39 @@ const CreateFeed: FC = () => {
 		setIsSelectGroup(groupId);
 	};
 
+	const { data, isLoading } = useQuery(
+		['member-belong-to-groups'],
+		async () => await GroupService.getMemberBelongToGroups(),
+	);
+
+	if (isLoading) return <div>Loading</div>;
+	if (!data) return null;
+
 	return (
-		<div className="mt-10">
+		<div className={styles.create_feed_container}>
 			{isFeedPage === 'selectGroup' && (
 				<div>
 					<div className={styles.selectedGroup_title}>그룹선택</div>
-					<div className="flex flex-wrap overflow-y-auto h-72 mt-5 py-5">
-						<div className="w-full">
-							<GroupProfile
-								group={{
-									id: 'sdfsdf1',
-									groupDescription: 'ghggg',
-									groupName: 'sdfsdf',
-								}}
-								onSelectedGroup={handleSelectedGroup}
-								isSelecteGroup={isSelecteGroup}
-							/>
-						</div>
-						<div className="w-full">
-							<GroupProfile
-								group={{
-									id: 'sdfsdf2',
-									groupDescription: 'ghggg',
-									groupName: 'sdfsdf',
-								}}
-								onSelectedGroup={handleSelectedGroup}
-								isSelecteGroup={isSelecteGroup}
-							/>
-						</div>
-						<div className="w-full">
-							<GroupProfile
-								group={{
-									id: 'sdfsdf3',
-									groupDescription: 'ghggg',
-									groupName: 'sdfsdf',
-								}}
-								onSelectedGroup={handleSelectedGroup}
-								isSelecteGroup={isSelecteGroup}
-							/>
-						</div>
+					<div className={styles.selectedGroup_groups_container}>
+						{data.map(group => (
+							<div className={styles.group_card_wrap}>
+								<GroupProfile
+									group={{
+										id: group.group.id,
+										groupDescription: group.group.groupDescription,
+										groupName: group.group.groupName,
+									}}
+									onSelectedGroup={handleSelectedGroup}
+									isSelecteGroup={isSelecteGroup}
+								/>
+							</div>
+						))}
 					</div>
-					<div className="mt-5 font-light text-sm">
+					<div className={styles.selectedGroup_description}>
 						위의 그룹 리스트내에서 어떤 그룹에서 새 게시물을 작성할지 선택
 						해주세요.
 					</div>
-					<div className="flex w-full gap-5">
+					<div className={styles.selectedGroup_button_container}>
 						<CustomButton
 							type="button"
 							className="mt-8 mb-4 bg-customOrange text-customDark 
@@ -80,7 +70,7 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'uploadMedia' && (
 				<div>
 					<div className="mt-10">사진과 동영상을 업로드하세요.</div>
-					<div className="flex w-full gap-5">
+					<div className={styles.selectedGroup_button_container}>
 						<CustomButton
 							type="button"
 							className="mt-8 mb-4 bg-white text-customDark 
