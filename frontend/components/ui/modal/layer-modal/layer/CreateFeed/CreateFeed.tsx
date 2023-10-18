@@ -6,6 +6,15 @@ import { useQuery } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import { AuthService } from '@/services/auth/auth.service';
 import Image from 'next/image';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
+import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
+import Profile from '@/components/ui/profile/Profile';
+
+import { Navigation, Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react'; // basic
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const CreateFeed: FC = () => {
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
@@ -19,6 +28,7 @@ const CreateFeed: FC = () => {
 		const blobArrayImage: string[] = uploadedFiles.map(file =>
 			URL.createObjectURL(file),
 		);
+		resetImageUrl(); // 배열을 초기화 해준다.
 		setIsImageUrl(isImageUrl.concat(...blobArrayImage));
 		setIsFiles(uploadedFiles);
 		//const result = await AuthService.uploadfile(uploadedFiles);
@@ -57,13 +67,14 @@ const CreateFeed: FC = () => {
 		}
 	};
 
+	const resetImageUrl = () => {
+		setIsImageUrl([]);
+	};
+
 	const { data, isLoading } = useQuery(
 		['member-belong-to-groups'],
 		async () => await GroupService.getMemberBelongToGroups(),
 	);
-
-	if (isLoading) return <div>Loading</div>;
-	if (!data) return null;
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -71,19 +82,23 @@ const CreateFeed: FC = () => {
 				<div>
 					<div className={styles.selectedGroup_title}>그룹선택</div>
 					<div className={styles.selectedGroup_groups_container}>
-						{data.map(group => (
-							<div className={styles.group_card_wrap} key={group.id}>
-								<GroupProfile
-									group={{
-										id: group.group.id,
-										groupDescription: group.group.groupDescription,
-										groupName: group.group.groupName,
-									}}
-									onSelectedGroup={handleSelectedGroup}
-									isSelecteGroup={isSelecteGroup}
-								/>
-							</div>
-						))}
+						{isLoading || !data ? (
+							<Skeleton />
+						) : (
+							data.map(group => (
+								<div className={styles.group_card_wrap} key={group.id}>
+									<GroupProfile
+										group={{
+											id: group.group.id,
+											groupDescription: group.group.groupDescription,
+											groupName: group.group.groupName,
+										}}
+										onSelectedGroup={handleSelectedGroup}
+										isSelecteGroup={isSelecteGroup}
+									/>
+								</div>
+							))
+						)}
 					</div>
 					<div className={styles.selectedGroup_description}>
 						위의 그룹 리스트내에서 어떤 그룹에서 새 게시물을 작성할지 선택
@@ -135,16 +150,36 @@ const CreateFeed: FC = () => {
 
 			{isFeedPage === 'writeFeed' && (
 				<div>
-					<div>
-						{isImageUrl.map((url, index) => (
-							<Image
-								key={index}
-								width={300}
-								height={300}
-								src={url}
-								alt="image"
-							></Image>
-						))}
+					<Profile />
+					<div className="my-5">
+						<select>
+							<option>공개</option>
+							<option>비공개</option>
+						</select>
+					</div>
+					<FieldWithTextarea fieldClass="inline_textarea" />
+					<div className="mt-5">
+						<Swiper
+							className="w-full h-72 relative"
+							modules={[Navigation, Pagination, A11y]}
+							spaceBetween={50}
+							slidesPerView={1}
+							navigation
+							pagination={{ clickable: true }}
+							onSwiper={swiper => console.log(swiper)}
+							onSlideChange={() => console.log('slide change')}
+						>
+							{isImageUrl.map((url, index) => (
+								<SwiperSlide key={index}>
+									<Image
+										fill
+										src={url}
+										alt="image"
+										style={{ objectFit: 'contain' }}
+									></Image>
+								</SwiperSlide>
+							))}
+						</Swiper>
 					</div>
 
 					<div className={styles.selectedGroup_button_container}>
