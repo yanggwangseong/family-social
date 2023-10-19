@@ -15,3 +15,8 @@ export interface FeedInfo {
 	username: string;
 	medias: MediaInfo[];
 }
+
+export interface FeedByIdResponse {
+	id: string;
+	isPublic: boolean;
+}
