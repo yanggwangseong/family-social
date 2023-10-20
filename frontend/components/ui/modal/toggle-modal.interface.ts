@@ -1,9 +1,10 @@
 import { IconType } from 'react-icons';
-import { LayerMode, Union } from 'types';
+import { LayerMode, ToggleModalDerection, Union } from 'types';
 
 export interface ToggleModalProps {
 	list: ToggleMenu[];
 	onClose: () => void;
+	direction?: Union<typeof ToggleModalDerection>;
 }
 
 export interface ToggleMenu {

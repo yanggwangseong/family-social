@@ -1,16 +1,8 @@
-import React, {
-	FC,
-	MutableRefObject,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
+import React, { FC, useRef } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
-import Lottie, { LottieRefCurrentProps } from 'lottie-react';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import Link from 'next/link';
 import { BsThreeDots } from 'react-icons/bs';
 import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
@@ -39,6 +31,7 @@ const FeedItem: FC<FeedItemProps> = ({ id, isLike, onLike }) => {
 						<ToggleModal
 							list={FeedSettingMenu}
 							onClose={handleCloseSettingModal}
+							direction="right"
 						/>
 					)}
 				</div>
