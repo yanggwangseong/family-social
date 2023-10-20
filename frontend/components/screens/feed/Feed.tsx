@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './Feed.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
@@ -9,8 +9,18 @@ import { useInfiniteQuery } from 'react-query';
 import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
+import heartAnimation from '@/assets/lottie/like.json';
+import Lottie, { LottieRefCurrentProps } from 'lottie-react';
 
 const Feed: FC = () => {
+	const [isLottie, setIsLottie] = useState<boolean>(false);
+	const [isLike, setIsLike] = useState<boolean>(false);
+	const lottieRef = useRef<LottieRefCurrentProps>(null);
+	const handleLike = () => {
+		setIsLike(true);
+		setIsLottie(true);
+	};
+
 	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
 		useInfiniteQuery(
 			['feeds'],
@@ -47,6 +57,32 @@ const Feed: FC = () => {
 		return () => {};
 	}, [data]);
 
+	useEffect(() => {
+		if (lottieRef.current) {
+			lottieRef.current.pause();
+		}
+
+		const timer = setTimeout(() => {
+			setIsLottie(false);
+			if (lottieRef.current) {
+				console.log(lottieRef.current);
+				lottieRef.current.stop();
+				lottieRef.current.pause();
+				lottieRef.current.destroy();
+			}
+		}, 3000);
+
+		return () => {
+			clearTimeout(timer);
+			if (lottieRef.current) {
+				console.log(lottieRef.current);
+				lottieRef.current.stop();
+				lottieRef.current.pause();
+				lottieRef.current.destroy();
+			}
+		};
+	}, [isLottie]);
+
 	const observeElement = (element: HTMLElement | null) => {
 		if (!element) return;
 		// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
@@ -73,6 +109,18 @@ const Feed: FC = () => {
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
+					{isLottie ? (
+						<div className={styles.modal_mask}>
+							<div className={styles.lottie_container}>
+								<Lottie
+									animationData={heartAnimation}
+									loop={false}
+									lottieRef={lottieRef}
+								/>
+							</div>
+						</div>
+					) : null}
+
 					{/* 왼쪽 사이드바 */}
 					<MainSidebar />
 					<div className={styles.detail_container}>
@@ -85,7 +133,12 @@ const Feed: FC = () => {
 								{data?.pages.map((page, pageIndex) => (
 									<React.Fragment key={pageIndex}>
 										{page.list.map(feed => (
-											<FeedItem key={feed.feedId} id={feed.feedId} />
+											<FeedItem
+												key={feed.feedId}
+												id={feed.feedId}
+												isLike={isLike}
+												onLike={handleLike}
+											/>
 										))}
 									</React.Fragment>
 								))}
