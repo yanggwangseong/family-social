@@ -8,6 +8,7 @@ const ToggleModal: FC<ToggleModalProps> = ({
 	list,
 	onClose,
 	direction = 'left',
+	feedId,
 }) => {
 	return (
 		<div
@@ -26,6 +27,7 @@ const ToggleModal: FC<ToggleModalProps> = ({
 					description={item.description}
 					layer={item.layer}
 					onClose={onClose}
+					feedId={feedId}
 				/>
 			))}
 		</div>

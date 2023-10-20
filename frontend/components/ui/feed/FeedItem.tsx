@@ -32,6 +32,7 @@ const FeedItem: FC<FeedItemProps> = ({ id, isLike, onLike }) => {
 							list={FeedSettingMenu}
 							onClose={handleCloseSettingModal}
 							direction="right"
+							feedId={id}
 						/>
 					)}
 				</div>
