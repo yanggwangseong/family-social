@@ -11,6 +11,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { BelongToGroupResDto } from '../dto/group/res/belong-to-group.res.dto';
 
 @Injectable()
 export class FamsRepository extends Repository<FamEntity> {
@@ -19,6 +20,28 @@ export class FamsRepository extends Repository<FamEntity> {
 		private readonly repository: Repository<FamEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async getMemberBelongToGroups(
+		memberId: string,
+	): Promise<BelongToGroupResDto[]> {
+		return await this.repository.find({
+			select: {
+				id: true,
+				invitationAccepted: true,
+				group: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+				},
+			},
+			where: {
+				memberId: memberId,
+			},
+			relations: {
+				group: true,
+			},
+		});
 	}
 
 	async isMainRoleForMemberInGroup({

@@ -1,7 +1,18 @@
-import { GroupResponse } from '@/shared/interfaces/group.interface';
+import {
+	GroupResponse,
+	MemberBelongToGroupsResponse,
+} from '@/shared/interfaces/group.interface';
 import { axiosAPI } from 'api/axios';
 
 export const GroupService = {
+	async getMemberBelongToGroups(): Promise<MemberBelongToGroupsResponse[]> {
+		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(
+			'/groups',
+		);
+
+		return data;
+	},
+
 	async createGroup(
 		groupName: string,
 		groupDescription: string,

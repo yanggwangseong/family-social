@@ -13,7 +13,7 @@ export const modalAtom = atom({
 
 export const modalLayerAtom = atom<ModalLayerType>({
 	default: {
-		layer: 'progress',
+		layer: 'emailInvite',
 		modal_title: '',
 		modal_description: '',
 	},

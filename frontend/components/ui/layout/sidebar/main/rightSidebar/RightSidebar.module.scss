@@ -1,0 +1,6 @@
+.right_sidebar_container {
+	@screen 2xl {
+		@apply block;
+	}
+	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 p-4 hidden;
+}

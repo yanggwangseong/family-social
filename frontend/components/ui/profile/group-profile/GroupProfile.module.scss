@@ -1,5 +1,15 @@
 .profile_container {
-	@apply flex p-3 rounded-lg cursor-pointer;
+	@apply flex p-3 cursor-pointer relative;
+
+	&.isSelected {
+		@apply text-customOrange border border-solid border-customDark;
+		.profile_img_container {
+			@apply border-customOrange;
+		}
+		.profile_description {
+			@apply text-customOrange;
+		}
+	}
 
 	&:hover {
 		@apply text-customOrange;
@@ -19,5 +29,9 @@
 
 	.profile_description {
 		@apply text-sm text-customGray;
+	}
+
+	.group_selected_cancle {
+		@apply absolute top-1 right-1 text-customDark z-[90];
 	}
 }
