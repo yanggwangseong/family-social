@@ -3,6 +3,7 @@ import styles from './ToggleModalItem.module.scss';
 import { ToggleMenu } from '../toggle-modal.interface';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const ToggleModalItem: FC<ToggleMenu> = ({
 	Icon,
@@ -15,7 +16,8 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
-	const [isFeedId, setIsFeedId] = useState('');
+	const [, setIsFeedId] = useRecoilState(feedIdAtom);
+
 	return (
 		<div
 			className={styles.toggle_modal_item_container}

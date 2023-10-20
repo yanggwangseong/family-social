@@ -26,8 +26,11 @@ import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
+import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const CreateFeed: FC = () => {
+	const [isFeedId] = useRecoilState(feedIdAtom);
+
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
@@ -148,6 +151,11 @@ const CreateFeed: FC = () => {
 	const { data, isLoading } = useQuery(
 		['member-belong-to-groups'],
 		async () => await GroupService.getMemberBelongToGroups(),
+	);
+
+	const { data: feed, isLoading: feddLoading } = useQuery(
+		['get-feed-by-id'],
+		async () => await FeedService.getFeedById(isFeedId),
 	);
 
 	return (
