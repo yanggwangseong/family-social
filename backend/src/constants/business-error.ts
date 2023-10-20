@@ -43,3 +43,5 @@ export const ERROR_DELETE_FEED_OR_MEDIA =
 	'미디어 또는 피드를 삭제하는 도중 에러가 발생했습니다' as const;
 
 export const ERROR_FILE_DIR_NOT_FOUND = '파일 경로를 찾을 수 없습니다' as const;
+
+export const ERROR_FEED_NOT_FOUND = '피드를 찾을 수 없습니다' as const;

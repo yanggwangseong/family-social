@@ -6,6 +6,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '../dto/feed/res/feed-res.dto';
+import { FeedDetailResDto } from '../dto/feed/res/feed-detail-res.dto';
 
 @Injectable()
 export class FeedsRepository extends Repository<FeedEntity> {
@@ -14,6 +15,48 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		private readonly repository: Repository<FeedEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async findFeedById(feedId: string): Promise<FeedByIdResDto | null> {
+		return await this.repository.findOne({
+			where: {
+				id: feedId,
+			},
+			select: {
+				id: true,
+				isPublic: true,
+			},
+		});
+	}
+
+	async findFeedInfoById(
+		feedId: string,
+	): Promise<Omit<FeedDetailResDto, 'medias'>> {
+		const feed = await this.repository.findOneOrFail({
+			where: {
+				id: feedId,
+			},
+			select: {
+				id: true,
+				contents: true,
+				group: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+				},
+				member: {
+					id: true,
+					username: true,
+				},
+			},
+
+			relations: {
+				group: true,
+				member: true,
+			},
+		});
+
+		return feed;
 	}
 
 	async findAllFeed(

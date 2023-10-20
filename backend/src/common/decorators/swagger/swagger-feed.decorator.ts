@@ -1,8 +1,10 @@
 import {
 	ERROR_DELETE_FEED_OR_MEDIA,
+	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
+import { FeedDetailResDto } from '@/models/dto/feed/res/feed-detail-res.dto';
 import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
@@ -11,6 +13,21 @@ import {
 	ApiNotFoundResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+
+export const GetFeedDetailSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '단일 피드 가져오기',
+		}),
+		ApiCreatedResponse({
+			description: '피드 조회 성공',
+			type: FeedDetailResDto,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_FEED_NOT_FOUND,
+		}),
+	);
+};
 
 export const GetFeedsSwagger = () => {
 	return applyDecorators(
@@ -44,6 +61,9 @@ export const UpdateFeedSwagger = () => {
 		ApiCreatedResponse({
 			description: '피드 수정 성공',
 		}),
+		ApiNotFoundResponse({
+			description: ERROR_FEED_NOT_FOUND,
+		}),
 	);
 };
 
@@ -55,6 +75,9 @@ export const LikesFeedSwagger = () => {
 		ApiCreatedResponse({
 			description: '피드 좋아요',
 			type: Boolean,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_FEED_NOT_FOUND,
 		}),
 	);
 };
@@ -71,7 +94,7 @@ export const DeleteFeedSwagger = () => {
 			description: ERROR_DELETE_FEED_OR_MEDIA,
 		}),
 		ApiNotFoundResponse({
-			description: ERROR_FILE_DIR_NOT_FOUND,
+			description: `1. ${ERROR_FEED_NOT_FOUND} \n2. ${ERROR_FILE_DIR_NOT_FOUND}`,
 		}),
 	);
 };

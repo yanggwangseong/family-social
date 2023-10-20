@@ -33,8 +33,8 @@ export class FeedResDto {
 	username!: string;
 
 	@ApiProperty({
-		nullable: false,
+		nullable: true,
 		type: [MediaResDto],
 	})
-	medias!: MediaResDto[];
+	medias?: MediaResDto[];
 }
