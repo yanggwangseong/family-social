@@ -2,7 +2,7 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import styles from './CreateFeed.module.scss';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import Image from 'next/image';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
@@ -39,14 +39,23 @@ const CreateFeed: FC = () => {
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
 
+	const queryClient = useQueryClient();
+
 	const { data, isLoading } = useQuery(
 		['member-belong-to-groups'],
 		async () => await GroupService.getMemberBelongToGroups(),
 	);
 
-	const { data: feed, isLoading: feddLoading } = useQuery(
+	const {
+		data: feed,
+		isLoading: feddLoading,
+		remove,
+	} = useQuery(
 		['get-feed-by-id'],
 		async () => await FeedService.getFeedById(isFeedId),
+		{
+			enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
+		},
 	);
 
 	const {
@@ -133,12 +142,8 @@ const CreateFeed: FC = () => {
 	}, [isImageUrl]);
 
 	useEffect(() => {
-		if (feed) handleSelectedGroup(feed.groupId);
-
-		return () => {
-			// 컴포넌트가 언마운트 될 때 피드 아이디 초기화
-			setIsFeedId('');
-		};
+		if (!isFeedId) remove();
+		if (feed && !isLoading && isFeedId) handleSelectedGroup(feed.groupId);
 	}, [feed]);
 
 	// [TODO] 1. 그룹을 먼저 선택한다. (O)
@@ -166,8 +171,6 @@ const CreateFeed: FC = () => {
 			medias: medias,
 		});
 	};
-
-	if (!feed) return null;
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -249,7 +252,16 @@ const CreateFeed: FC = () => {
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<Profile />
 						<div className="my-5">
-							<select {...register('isPublic')}>
+							<select
+								{...register('isPublic')}
+								defaultValue={
+									feed?.isPublic
+										? feed.isPublic === true
+											? 'public'
+											: 'private'
+										: 'public'
+								}
+							>
 								<option value={'public'}>공개</option>
 								<option value={'private'}>비공개</option>
 							</select>
@@ -264,6 +276,7 @@ const CreateFeed: FC = () => {
 								},
 							})}
 							placeholder="피드 글을 작성 해보세요"
+							value={feed?.contents}
 							error={errors.contents}
 						/>
 						<div className="mt-5">

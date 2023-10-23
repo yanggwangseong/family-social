@@ -53,6 +53,7 @@ export class FeedsController {
 	@GetFeedDetailSwagger()
 	@Get(':feedId')
 	async findFeedById(@Param('feedId', ParseUUIDPipe) feedId: string) {
+		console.log('fuck1');
 		return await this.feedsService.findFeedInfoById(feedId);
 	}
 
@@ -68,6 +69,7 @@ export class FeedsController {
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(@Query('page') page: number) {
+		console.log('fuck2');
 		return await this.feedsService.findAllFeed(page);
 	}
 
