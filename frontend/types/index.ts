@@ -24,6 +24,7 @@ const LayerMode = {
 	emailInvite: 'emailInvite',
 	groupDeleteConfirm: 'groupDeleteConfirm',
 	createFeed: 'createFeed',
+	feedDeleteConfirm: 'feedDeleteConfirm',
 } as const;
 
 const ToggleModalDerection = ['left', 'right'] as const;

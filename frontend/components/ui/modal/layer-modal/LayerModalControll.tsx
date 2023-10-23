@@ -4,12 +4,14 @@ import LinkInvite from './layer/LinkInvite';
 import { LayerMode, Union } from 'types';
 import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
 import CreateFeed from './layer/CreateFeed/CreateFeed';
+import FeedDeleteConfirm from './layer/FeedDeleteConfirm';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
 	[LayerMode.linkInvite]: LinkInvite,
 	[LayerMode.groupDeleteConfirm]: GroupDeleteConfirm,
 	[LayerMode.createFeed]: CreateFeed,
+	[LayerMode.feedDeleteConfirm]: FeedDeleteConfirm,
 };
 
 interface StatusProps {
