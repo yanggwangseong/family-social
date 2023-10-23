@@ -42,6 +42,7 @@ export class FeedsService {
 			await this.feedsRepository.findFeedInfoById(feedId),
 			await this.mediasService.findMediaUrlByFeedId(feedId),
 		]);
+
 		return {
 			feedId: feed.id,
 			contents: feed.contents,

@@ -49,6 +49,14 @@ export const FeedService = {
 		return data;
 	},
 
+	async deleteFeed(feedId: string) {
+		const { data } = await axiosAPI.delete<FeedByIdResponse>(
+			`/feeds/${feedId}`,
+		);
+
+		return data;
+	},
+
 	async getFeedById(feedId: string) {
 		const { data } = await axiosAPI.get<FeedInfo>(`/feeds/${feedId}`);
 
