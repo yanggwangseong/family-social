@@ -9,7 +9,7 @@ import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
 
-const FeedItem: FC<FeedItemProps> = ({ id, isLike, onLike }) => {
+const FeedItem: FC<FeedItemProps> = ({ id, onLike }) => {
 	const comments = 3;
 
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
