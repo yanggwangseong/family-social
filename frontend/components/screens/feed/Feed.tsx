@@ -13,12 +13,20 @@ import heartAnimation from '@/assets/lottie/like.json';
 import Lottie, { LottieRefCurrentProps } from 'lottie-react';
 
 const Feed: FC = () => {
-	const [isLottie, setIsLottie] = useState<boolean>(false);
-	const [isLike, setIsLike] = useState<boolean>(false);
+	//const [isLottie, setIsLottie] = useState<boolean>(false);
+	//const [isLike, setIsLike] = useState<boolean>(false);
 	const lottieRef = useRef<LottieRefCurrentProps>(null);
+
 	const handleLike = () => {
-		setIsLike(true);
-		setIsLottie(true);
+		if (lottieRef.current) {
+			lottieRef.current.play();
+			if (lottieRef.current?.animationContainerRef.current) {
+				lottieRef.current.animationContainerRef.current.style.visibility =
+					'visible';
+			}
+		}
+		//setIsLike(true);
+		//setIsLottie(true);
 	};
 
 	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
@@ -58,30 +66,23 @@ const Feed: FC = () => {
 	}, [data]);
 
 	useEffect(() => {
-		if (lottieRef.current) {
-			lottieRef.current.pause();
+		if (lottieRef.current?.animationContainerRef.current) {
+			lottieRef.current.animationContainerRef.current.style.visibility =
+				'hidden';
 		}
+	});
 
-		const timer = setTimeout(() => {
-			setIsLottie(false);
-			if (lottieRef.current) {
-				console.log(lottieRef.current);
-				lottieRef.current.stop();
-				lottieRef.current.pause();
-				lottieRef.current.destroy();
+	const handleLottieComplete = () => {
+		if (lottieRef.current) {
+			lottieRef.current.stop();
+			if (lottieRef.current?.animationContainerRef.current) {
+				lottieRef.current.animationContainerRef.current.style.visibility =
+					'hidden';
 			}
-		}, 3000);
-
-		return () => {
-			clearTimeout(timer);
-			if (lottieRef.current) {
-				console.log(lottieRef.current);
-				lottieRef.current.stop();
-				lottieRef.current.pause();
-				lottieRef.current.destroy();
-			}
-		};
-	}, [isLottie]);
+			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
+			//lottieRef.current.animationContainerRef.current?.remove();
+		}
+	};
 
 	const observeElement = (element: HTMLElement | null) => {
 		if (!element) return;
@@ -109,17 +110,25 @@ const Feed: FC = () => {
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
-					{isLottie ? (
+					{/* {isLottie ? (
 						<div className={styles.modal_mask}>
 							<div className={styles.lottie_container}>
 								<Lottie
 									animationData={heartAnimation}
 									loop={false}
 									lottieRef={lottieRef}
+									onComplete={handleLottieComplete}
 								/>
 							</div>
 						</div>
-					) : null}
+					) : null} */}
+					<Lottie
+						className={styles.lottie_container}
+						animationData={heartAnimation}
+						loop={false}
+						lottieRef={lottieRef}
+						onComplete={handleLottieComplete}
+					/>
 
 					{/* 왼쪽 사이드바 */}
 					<MainSidebar />
@@ -136,7 +145,6 @@ const Feed: FC = () => {
 											<FeedItem
 												key={feed.feedId}
 												id={feed.feedId}
-												isLike={isLike}
 												onLike={handleLike}
 											/>
 										))}
