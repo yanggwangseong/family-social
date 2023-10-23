@@ -10,6 +10,45 @@ import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { FeedService } from '@/services/feed/feed.service';
 
 const FeedDeleteConfirm: FC = () => {
+	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
+
+	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+	const { mutate: deleteFeedSync } = useMutation(
+		['delete-group'],
+		() => FeedService.deleteFeed(isFeedId),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success(
+					'성공',
+					`피드를 삭제 하는데 성공 하였습니다.`,
+					'확인',
+					() => {
+						setIsFeedId('');
+						setIsShowing(false);
+					},
+				);
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const handleClick = () => {
+		deleteFeedSync();
+	};
+
 	return (
 		<div>
 			<div className="my-10 text-sm text-customGray">
