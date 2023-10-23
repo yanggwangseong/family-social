@@ -29,7 +29,7 @@ import { modalAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const CreateFeed: FC = () => {
-	const [isFeedId] = useRecoilState(feedIdAtom);
+	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
@@ -38,6 +38,16 @@ const CreateFeed: FC = () => {
 
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
+
+	const { data, isLoading } = useQuery(
+		['member-belong-to-groups'],
+		async () => await GroupService.getMemberBelongToGroups(),
+	);
+
+	const { data: feed, isLoading: feddLoading } = useQuery(
+		['get-feed-by-id'],
+		async () => await FeedService.getFeedById(isFeedId),
+	);
 
 	const {
 		register,
@@ -122,6 +132,15 @@ const CreateFeed: FC = () => {
 		};
 	}, [isImageUrl]);
 
+	useEffect(() => {
+		if (feed) handleSelectedGroup(feed.groupId);
+
+		return () => {
+			// 컴포넌트가 언마운트 될 때 피드 아이디 초기화
+			setIsFeedId('');
+		};
+	}, [feed]);
+
 	// [TODO] 1. 그룹을 먼저 선택한다. (O)
 	// [TODO] 2. 이미지 또는 미디어를 올린다.
 	// [TODO] 3. 피드 공개/비공개 선택 셀렉트박스 추가 피드 글 내용 작성.
@@ -148,15 +167,7 @@ const CreateFeed: FC = () => {
 		});
 	};
 
-	const { data, isLoading } = useQuery(
-		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
-	);
-
-	const { data: feed, isLoading: feddLoading } = useQuery(
-		['get-feed-by-id'],
-		async () => await FeedService.getFeedById(isFeedId),
-	);
+	if (!feed) return null;
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -238,7 +249,7 @@ const CreateFeed: FC = () => {
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<Profile />
 						<div className="my-5">
-							<select {...register('isPublic', {})}>
+							<select {...register('isPublic')}>
 								<option value={'public'}>공개</option>
 								<option value={'private'}>비공개</option>
 							</select>
