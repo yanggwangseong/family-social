@@ -14,3 +14,7 @@ export interface CreateFeedRequest {
 	groupId: string;
 	medias: CreateMediaType[];
 }
+
+export interface UpdateFeedRequest extends CreateFeedRequest {
+	feedId: string;
+}

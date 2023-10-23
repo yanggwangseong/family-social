@@ -20,6 +20,7 @@ import {
 	CreateFeedFields,
 	CreateFeedRequest,
 	CreateMediaType,
+	UpdateFeedRequest,
 } from './create-feed.interface';
 import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
@@ -104,6 +105,27 @@ const CreateFeed: FC = () => {
 		},
 	);
 
+	const { mutateAsync: updateFeedASync } = useMutation(
+		['update-feed'],
+		async (data: UpdateFeedRequest) => await FeedService.updateFeed(data),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `피드가 수정 되었습니다`, '확인', () => {
+					setIsShowing(false);
+				});
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
+		},
+	);
+
 	const createMedia = (url: string, position: number) => {
 		return {
 			url: url,
@@ -158,18 +180,33 @@ const CreateFeed: FC = () => {
 		setIsSelectGroup(groupId);
 	};
 
-	const onSubmit: SubmitHandler<CreateFeedFields> = async data => {
+	const onSubmit: SubmitHandler<CreateFeedFields> = async ({
+		contents,
+		isPublic,
+	}) => {
 		const uploadResult = await uploadFilesASync();
 		const medias: CreateMediaType[] = uploadResult.map((data, index) =>
 			createMedia(data, index),
 		);
 
-		await createFeedASync({
-			contents: data.contents,
-			isPublic: data.isPublic === 'public' ? true : false,
-			groupId: isSelecteGroup,
-			medias: medias,
-		});
+		if (!isFeedId) {
+			await createFeedASync({
+				contents: contents,
+				isPublic: isPublic === 'public' ? true : false,
+				groupId: isSelecteGroup,
+				medias: medias,
+			});
+		}
+
+		if (isFeedId) {
+			await updateFeedASync({
+				feedId: isFeedId,
+				contents: contents,
+				isPublic: isPublic === 'public' ? true : false,
+				groupId: isSelecteGroup,
+				medias: medias,
+			});
+		}
 	};
 
 	return (
@@ -276,7 +313,7 @@ const CreateFeed: FC = () => {
 								},
 							})}
 							placeholder="피드 글을 작성 해보세요"
-							value={feed?.contents}
+							defaultValue={feed?.contents}
 							error={errors.contents}
 						/>
 						<div className="mt-5">

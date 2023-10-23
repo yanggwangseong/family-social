@@ -53,7 +53,6 @@ export class FeedsController {
 	@GetFeedDetailSwagger()
 	@Get(':feedId')
 	async findFeedById(@Param('feedId', ParseUUIDPipe) feedId: string) {
-		console.log('fuck1');
 		return await this.feedsService.findFeedInfoById(feedId);
 	}
 
@@ -62,14 +61,17 @@ export class FeedsController {
 	 *
 	 * @tag feeds
 	 * @param page 페이징을 위한 page 번호
+	 * @param sub  	   멤버Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
 	@Get()
-	async findAllFeed(@Query('page') page: number) {
-		console.log('fuck2');
+	async findAllFeed(
+		@Query('page') page: number,
+		@CurrentUser('sub') sub: string,
+	) {
 		return await this.feedsService.findAllFeed(page);
 	}
 
