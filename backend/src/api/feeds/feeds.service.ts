@@ -14,6 +14,7 @@ import { extractFilePathFromUrl } from '@/utils/extract-file-path';
 import { DeleteS3Media } from '@/utils/upload-media';
 import {
 	ERROR_DELETE_FEED_OR_MEDIA,
+	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { getOffset } from '@/utils/getOffset';
@@ -29,6 +30,30 @@ export class FeedsService {
 		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
+
+	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
+		// 피드가 있는지 확인.
+		await this.findFeedByIdOrThrow(feedId);
+
+		//const feed = await this.feedsRepository.findFeedInfoById(feedId);
+		//const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
+
+		const [feed, medias] = await Promise.all([
+			await this.feedsRepository.findFeedInfoById(feedId),
+			await this.mediasService.findMediaUrlByFeedId(feedId),
+		]);
+
+		return {
+			feedId: feed.id,
+			contents: feed.contents,
+			isPublic: feed.isPublic,
+			groupId: feed.group.id,
+			groupName: feed.group.groupName,
+			memberId: feed.member.id,
+			username: feed.member.username,
+			medias: medias,
+		};
+	}
 
 	async findAllFeed(page: number): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
@@ -56,6 +81,9 @@ export class FeedsService {
 	}
 
 	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
+		// 피드가 있는지 확인.
+		await this.findFeedByIdOrThrow(feedId);
+
 		const like = await this.likesFeedRepository.findMemberLikesFeed(
 			memberId,
 			feedId,
@@ -97,6 +125,9 @@ export class FeedsService {
 		groupId,
 		medias,
 	}: IUpdateFeedArgs) {
+		// 피드가 있는지 확인.
+		await this.findFeedByIdOrThrow(feedId);
+
 		//[TODO] transaction 추가
 		const feed = await this.feedsRepository.updateFeed({
 			feedId,
@@ -111,6 +142,9 @@ export class FeedsService {
 	}
 
 	async deleteFeed(feedId: string) {
+		// 피드가 있는지 확인.
+		await this.findFeedByIdOrThrow(feedId);
+
 		const queryRunner = this.dataSource.createQueryRunner();
 		await queryRunner.connect();
 		await queryRunner.startTransaction();
@@ -142,5 +176,15 @@ export class FeedsService {
 		} finally {
 			await queryRunner.release();
 		}
+	}
+
+	async findFeedByIdOrThrow(feedId: string): Promise<FeedByIdResDto> {
+		const feed = await this.feedsRepository.findFeedById(feedId);
+
+		if (!feed) {
+			throw EntityNotFoundException(ERROR_FEED_NOT_FOUND);
+		}
+
+		return feed;
 	}
 }

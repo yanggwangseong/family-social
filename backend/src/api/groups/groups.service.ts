@@ -17,6 +17,7 @@ import {
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 } from '@/constants/business-error';
+import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 
 @Injectable()
 export class GroupsService {
@@ -24,6 +25,12 @@ export class GroupsService {
 		private readonly groupsRepository: GroupsRepository,
 		private readonly famsRepository: FamsRepository,
 	) {}
+
+	async getMemberBelongToGroups(
+		memberId: string,
+	): Promise<BelongToGroupResDto[]> {
+		return await this.famsRepository.getMemberBelongToGroups(memberId);
+	}
 
 	async createGroup({
 		memberId,

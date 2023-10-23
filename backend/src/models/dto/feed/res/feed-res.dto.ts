@@ -15,6 +15,11 @@ export class FeedResDto {
 	@ApiProperty({
 		nullable: false,
 	})
+	isPublic!: boolean;
+
+	@ApiProperty({
+		nullable: false,
+	})
 	groupId!: string;
 
 	@ApiProperty({
@@ -33,8 +38,8 @@ export class FeedResDto {
 	username!: string;
 
 	@ApiProperty({
-		nullable: false,
+		nullable: true,
 		type: [MediaResDto],
 	})
-	medias!: MediaResDto[];
+	medias?: MediaResDto[];
 }

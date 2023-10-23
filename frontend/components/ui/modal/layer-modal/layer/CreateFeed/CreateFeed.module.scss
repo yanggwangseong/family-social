@@ -1,0 +1,23 @@
+.create_feed_container {
+	@apply mt-10;
+}
+
+.selectedGroup_title {
+	@apply font-semibold text-lg;
+}
+
+.selectedGroup_groups_container {
+	@apply flex flex-wrap overflow-y-auto h-72 mt-5 py-5;
+
+	.group_card_wrap {
+		@apply w-full;
+	}
+}
+
+.selectedGroup_description {
+	@apply mt-5 font-light text-sm;
+}
+
+.selectedGroup_button_container {
+	@apply flex w-full gap-5;
+}

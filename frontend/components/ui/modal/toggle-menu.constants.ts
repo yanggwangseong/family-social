@@ -1,5 +1,6 @@
+import { AiOutlineDelete } from 'react-icons/ai';
 import { ToggleMenu } from './toggle-modal.interface';
-import { BsLink45Deg, BsSend } from 'react-icons/bs';
+import { BsLink45Deg, BsPencil, BsSend } from 'react-icons/bs';
 import { TbDoorExit } from 'react-icons/tb';
 import { LayerMode } from 'types';
 
@@ -8,13 +9,13 @@ export const InviteMenu: ToggleMenu[] = [
 		Icon: BsSend,
 		title: '이메일로 초대하기',
 		description: '사람들에게 이메일 초대를 보냅니다',
-		layer: LayerMode.ready,
+		layer: LayerMode.emailInvite,
 	},
 	{
 		Icon: BsLink45Deg,
 		title: '링크로 초대하기',
 		description: '링크를 통해서 초대 할 수 있습니다',
-		layer: LayerMode.progress,
+		layer: LayerMode.linkInvite,
 	},
 ];
 
@@ -29,10 +30,16 @@ export const GroupSettingMenu: ToggleMenu[] = [
 
 export const FeedSettingMenu: ToggleMenu[] = [
 	{
-		Icon: TbDoorExit,
+		Icon: AiOutlineDelete,
 		title: '피드 삭제',
 		description:
 			'피드 작성자 또는 그룹 관리자만 해당 피드를 삭제 할 수 있습니다',
-		layer: LayerMode.groupDeleteConfirm,
+		layer: LayerMode.feedDeleteConfirm,
+	},
+	{
+		Icon: BsPencil,
+		title: '피드 수정',
+		description: '피드를 수정 합니다',
+		layer: LayerMode.createFeed,
 	},
 ];

@@ -9,9 +9,15 @@ export interface FeedsResponse {
 export interface FeedInfo {
 	feedId: string;
 	contents: string;
+	isPublic: boolean;
 	groupId: string;
 	groupName: string;
 	memberId: string;
 	username: string;
 	medias: MediaInfo[];
+}
+
+export interface FeedByIdResponse {
+	id: string;
+	isPublic: boolean;
 }

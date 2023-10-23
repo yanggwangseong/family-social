@@ -20,10 +20,14 @@ type ValueType = string | number | boolean;
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
 const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
 const LayerMode = {
-	ready: 'ready',
-	progress: 'progress',
+	linkInvite: 'linkInvite',
+	emailInvite: 'emailInvite',
 	groupDeleteConfirm: 'groupDeleteConfirm',
+	createFeed: 'createFeed',
+	feedDeleteConfirm: 'feedDeleteConfirm',
 } as const;
+
+const ToggleModalDerection = ['left', 'right'] as const;
 
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
@@ -34,5 +38,5 @@ type OmitStrict<T, K extends keyof T> = T extends any
 	? Pick<T, Exclude<keyof T, K>>
 	: never;
 
-export { EditMode, LayerMode };
+export { EditMode, LayerMode, ToggleModalDerection };
 export type { Union, OmitStrict };

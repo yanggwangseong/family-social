@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ToggleModalItem.module.scss';
 import { ToggleMenu } from '../toggle-modal.interface';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const ToggleModalItem: FC<ToggleMenu> = ({
 	Icon,
@@ -10,9 +11,13 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 	description,
 	layer,
 	onClose,
+	feedId,
 }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+
+	const [, setIsFeedId] = useRecoilState(feedIdAtom);
+
 	return (
 		<div
 			className={styles.toggle_modal_item_container}
@@ -23,6 +28,7 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 						modal_title: title,
 						layer: layer,
 					}); // layer modal 어떤 layer를 보여 줄건지
+					feedId && setIsFeedId(feedId);
 					onClose(); //toggle modal 닫기
 				}
 			}}
