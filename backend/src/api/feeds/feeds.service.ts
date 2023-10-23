@@ -21,7 +21,6 @@ import { getOffset } from '@/utils/getOffset';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
-import { FeedDetailResDto } from '@/models/dto/feed/res/feed-detail-res.dto';
 
 @Injectable()
 export class FeedsService {
@@ -32,7 +31,7 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findFeedInfoById(feedId: string): Promise<FeedDetailResDto> {
+	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
 		// 피드가 있는지 확인.
 		await this.findFeedByIdOrThrow(feedId);
 
@@ -44,17 +43,12 @@ export class FeedsService {
 			await this.mediasService.findMediaUrlByFeedId(feedId),
 		]);
 		return {
-			id: feed.id,
+			feedId: feed.id,
 			contents: feed.contents,
-			group: {
-				id: feed.group.id,
-				groupName: feed.group.groupName,
-				groupDescription: feed.group.groupDescription,
-			},
-			member: {
-				id: feed.member.id,
-				username: feed.member.username,
-			},
+			groupId: feed.group.id,
+			groupName: feed.group.groupName,
+			memberId: feed.member.id,
+			username: feed.member.username,
 			medias: medias,
 		};
 	}

@@ -1,12 +1,15 @@
 import { FeedEntity } from '@/models/entities/feed.entity';
-import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
+import {
+	ICreateFeedArgs,
+	IGetFeedDeatilArgs,
+	IUpdateFeedArgs,
+} from '@/types/args/feed';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '../dto/feed/res/feed-res.dto';
-import { FeedDetailResDto } from '../dto/feed/res/feed-detail-res.dto';
 
 @Injectable()
 export class FeedsRepository extends Repository<FeedEntity> {
@@ -29,9 +32,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		});
 	}
 
-	async findFeedInfoById(
-		feedId: string,
-	): Promise<Omit<FeedDetailResDto, 'medias'>> {
+	async findFeedInfoById(feedId: string): Promise<IGetFeedDeatilArgs> {
 		const feed = await this.repository.findOneOrFail({
 			where: {
 				id: feedId,
