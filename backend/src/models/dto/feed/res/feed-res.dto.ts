@@ -15,6 +15,11 @@ export class FeedResDto {
 	@ApiProperty({
 		nullable: false,
 	})
+	isPublic!: boolean;
+
+	@ApiProperty({
+		nullable: false,
+	})
 	groupId!: string;
 
 	@ApiProperty({

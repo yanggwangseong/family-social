@@ -40,6 +40,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			select: {
 				id: true,
 				contents: true,
+				isPublic: true,
 				group: {
 					id: true,
 					groupName: true,
@@ -69,6 +70,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.select([
 				'a.id AS "feedId"',
 				'a.contents AS "contents"',
+				'a.isPublic AS "isPublic"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
 				'member.id AS "memberId"',

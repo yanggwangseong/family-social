@@ -16,7 +16,7 @@ export interface IUpdateFeedArgs extends Omit<ICreateFeedArgs, 'memberId'> {
 }
 
 export interface IGetFeedDeatilArgs
-	extends Pick<FeedEntity, 'id' | 'contents'> {
+	extends Pick<FeedEntity, 'id' | 'contents' | 'isPublic'> {
 	group: GroupResDto;
 	member: MemberResDto;
 }

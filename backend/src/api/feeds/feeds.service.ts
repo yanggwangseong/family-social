@@ -45,6 +45,7 @@ export class FeedsService {
 		return {
 			feedId: feed.id,
 			contents: feed.contents,
+			isPublic: feed.isPublic,
 			groupId: feed.group.id,
 			groupName: feed.group.groupName,
 			memberId: feed.member.id,
