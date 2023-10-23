@@ -1,6 +1,10 @@
-import { CreateFeedRequest } from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
+import {
+	CreateFeedRequest,
+	UpdateFeedRequest,
+} from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
 import {
 	FeedByIdResponse,
+	FeedInfo,
 	FeedsResponse,
 } from '@/shared/interfaces/feed.interface';
 import { axiosAPI } from 'api/axios';
@@ -24,6 +28,29 @@ export const FeedService = {
 			groupId: groupId,
 			medias: medias,
 		});
+
+		return data;
+	},
+
+	async updateFeed({
+		contents,
+		isPublic,
+		groupId,
+		medias,
+		feedId,
+	}: UpdateFeedRequest) {
+		const { data } = await axiosAPI.put<FeedByIdResponse>(`/feeds/${feedId}`, {
+			contents: contents,
+			isPublic: isPublic,
+			groupId: groupId,
+			medias: medias,
+		});
+
+		return data;
+	},
+
+	async getFeedById(feedId: string) {
+		const { data } = await axiosAPI.get<FeedInfo>(`/feeds/${feedId}`);
 
 		return data;
 	},

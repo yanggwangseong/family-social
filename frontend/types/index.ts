@@ -26,6 +26,8 @@ const LayerMode = {
 	createFeed: 'createFeed',
 } as const;
 
+const ToggleModalDerection = ['left', 'right'] as const;
+
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict
@@ -35,5 +37,5 @@ type OmitStrict<T, K extends keyof T> = T extends any
 	? Pick<T, Exclude<keyof T, K>>
 	: never;
 
-export { EditMode, LayerMode };
+export { EditMode, LayerMode, ToggleModalDerection };
 export type { Union, OmitStrict };

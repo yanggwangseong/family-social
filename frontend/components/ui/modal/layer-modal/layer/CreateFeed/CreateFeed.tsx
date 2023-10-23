@@ -2,7 +2,7 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import styles from './CreateFeed.module.scss';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import Image from 'next/image';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
@@ -20,14 +20,18 @@ import {
 	CreateFeedFields,
 	CreateFeedRequest,
 	CreateMediaType,
+	UpdateFeedRequest,
 } from './create-feed.interface';
 import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
+import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const CreateFeed: FC = () => {
+	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
+
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
@@ -35,6 +39,25 @@ const CreateFeed: FC = () => {
 
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
+
+	const queryClient = useQueryClient();
+
+	const { data, isLoading } = useQuery(
+		['member-belong-to-groups'],
+		async () => await GroupService.getMemberBelongToGroups(),
+	);
+
+	const {
+		data: feed,
+		isLoading: feddLoading,
+		remove,
+	} = useQuery(
+		['get-feed-by-id'],
+		async () => await FeedService.getFeedById(isFeedId),
+		{
+			enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
+		},
+	);
 
 	const {
 		register,
@@ -71,6 +94,27 @@ const CreateFeed: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 				Report.success('성공', `피드가 생성 되었습니다`, '확인', () => {
+					setIsShowing(false);
+				});
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
+		},
+	);
+
+	const { mutateAsync: updateFeedASync } = useMutation(
+		['update-feed'],
+		async (data: UpdateFeedRequest) => await FeedService.updateFeed(data),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `피드가 수정 되었습니다`, '확인', () => {
 					setIsShowing(false);
 				});
 			},
@@ -119,6 +163,11 @@ const CreateFeed: FC = () => {
 		};
 	}, [isImageUrl]);
 
+	useEffect(() => {
+		if (!isFeedId) remove();
+		if (feed && !isLoading && isFeedId) handleSelectedGroup(feed.groupId);
+	}, [feed]);
+
 	// [TODO] 1. 그룹을 먼저 선택한다. (O)
 	// [TODO] 2. 이미지 또는 미디어를 올린다.
 	// [TODO] 3. 피드 공개/비공개 선택 셀렉트박스 추가 피드 글 내용 작성.
@@ -131,24 +180,34 @@ const CreateFeed: FC = () => {
 		setIsSelectGroup(groupId);
 	};
 
-	const onSubmit: SubmitHandler<CreateFeedFields> = async data => {
+	const onSubmit: SubmitHandler<CreateFeedFields> = async ({
+		contents,
+		isPublic,
+	}) => {
 		const uploadResult = await uploadFilesASync();
 		const medias: CreateMediaType[] = uploadResult.map((data, index) =>
 			createMedia(data, index),
 		);
 
-		await createFeedASync({
-			contents: data.contents,
-			isPublic: data.isPublic === 'public' ? true : false,
-			groupId: isSelecteGroup,
-			medias: medias,
-		});
-	};
+		if (!isFeedId) {
+			await createFeedASync({
+				contents: contents,
+				isPublic: isPublic === 'public' ? true : false,
+				groupId: isSelecteGroup,
+				medias: medias,
+			});
+		}
 
-	const { data, isLoading } = useQuery(
-		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
-	);
+		if (isFeedId) {
+			await updateFeedASync({
+				feedId: isFeedId,
+				contents: contents,
+				isPublic: isPublic === 'public' ? true : false,
+				groupId: isSelecteGroup,
+				medias: medias,
+			});
+		}
+	};
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -230,7 +289,16 @@ const CreateFeed: FC = () => {
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<Profile />
 						<div className="my-5">
-							<select {...register('isPublic', {})}>
+							<select
+								{...register('isPublic')}
+								defaultValue={
+									feed?.isPublic
+										? feed.isPublic === true
+											? 'public'
+											: 'private'
+										: 'public'
+								}
+							>
 								<option value={'public'}>공개</option>
 								<option value={'private'}>비공개</option>
 							</select>
@@ -245,6 +313,7 @@ const CreateFeed: FC = () => {
 								},
 							})}
 							placeholder="피드 글을 작성 해보세요"
+							defaultValue={feed?.contents}
 							error={errors.contents}
 						/>
 						<div className="mt-5">

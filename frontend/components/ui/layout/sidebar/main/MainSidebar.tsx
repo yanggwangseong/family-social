@@ -7,10 +7,12 @@ import { MdOutlineManageAccounts } from 'react-icons/md';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
+import { feedIdAtom } from '@/atoms/feedIdAtom';
 
 const MainSidebar: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+	const [, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	const handleCreateFeed = () => {
 		setIsShowing(!isShowing); // layer modal 보여주기
@@ -18,6 +20,8 @@ const MainSidebar: FC = () => {
 			modal_title: '새 게시물 만들기',
 			layer: LayerMode.createFeed,
 		}); // layer modal 어떤 layer를 보여 줄건지
+
+		setIsFeedId(''); // 수정모드 아니게 feedId 전역변수 초기화
 	};
 
 	return (

@@ -31,6 +31,7 @@ import {
 	UpdateFeedSwagger,
 	GetFeedsSwagger,
 	LikesFeedSwagger,
+	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 
@@ -42,17 +43,35 @@ export class FeedsController {
 	constructor(private readonly feedsService: FeedsService) {}
 
 	/**
+	 * @summary 단일 피드를 가져옵니다
+	 *
+	 * @tag feeds
+	 * @param feedId 단일 피드를 조회하기 위한 피드 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns feed
+	 */
+	@GetFeedDetailSwagger()
+	@Get(':feedId')
+	async findFeedById(@Param('feedId', ParseUUIDPipe) feedId: string) {
+		return await this.feedsService.findFeedInfoById(feedId);
+	}
+
+	/**
 	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
 	 * @param page 페이징을 위한 page 번호
+	 * @param sub  	   멤버Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
 	@Get()
-	async findAllFeed(@Query('page') page: number) {
+	async findAllFeed(
+		@Query('page') page: number,
+		@CurrentUser('sub') sub: string,
+	) {
 		return await this.feedsService.findAllFeed(page);
 	}
 

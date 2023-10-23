@@ -1,5 +1,9 @@
 import { FeedEntity } from '@/models/entities/feed.entity';
-import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
+import {
+	ICreateFeedArgs,
+	IGetFeedDeatilArgs,
+	IUpdateFeedArgs,
+} from '@/types/args/feed';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -16,6 +20,47 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async findFeedById(feedId: string): Promise<FeedByIdResDto | null> {
+		return await this.repository.findOne({
+			where: {
+				id: feedId,
+			},
+			select: {
+				id: true,
+				isPublic: true,
+			},
+		});
+	}
+
+	async findFeedInfoById(feedId: string): Promise<IGetFeedDeatilArgs> {
+		const feed = await this.repository.findOneOrFail({
+			where: {
+				id: feedId,
+			},
+			select: {
+				id: true,
+				contents: true,
+				isPublic: true,
+				group: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+				},
+				member: {
+					id: true,
+					username: true,
+				},
+			},
+
+			relations: {
+				group: true,
+				member: true,
+			},
+		});
+
+		return feed;
+	}
+
 	async findAllFeed(
 		take: number,
 		skip: number,
@@ -25,6 +70,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.select([
 				'a.id AS "feedId"',
 				'a.contents AS "contents"',
+				'a.isPublic AS "isPublic"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
 				'member.id AS "memberId"',
