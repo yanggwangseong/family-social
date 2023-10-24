@@ -72,7 +72,7 @@ export class FeedsController {
 		@Query('page') page: number,
 		@CurrentUser('sub') sub: string,
 	) {
-		return await this.feedsService.findAllFeed(page);
+		return await this.feedsService.findAllFeed(page, sub);
 	}
 
 	/**

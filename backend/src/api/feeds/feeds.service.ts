@@ -55,9 +55,13 @@ export class FeedsService {
 		};
 	}
 
-	async findAllFeed(page: number): Promise<FeedGetAllResDto> {
+	async findAllFeed(page: number, memberId: string): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
-		const { list, count } = await this.feedsRepository.findAllFeed(take, skip);
+		const { list, count } = await this.feedsRepository.findAllFeed({
+			take,
+			skip,
+			memberId,
+		});
 
 		//[TODO comments 추후에 추가]
 		const mappedList = await Promise.all(
