@@ -39,6 +39,16 @@ export class FeedResDto {
 
 	@ApiProperty({
 		nullable: true,
+	})
+	myLike?: boolean;
+
+	@ApiProperty({
+		nullable: true,
+	})
+	sumLike?: number;
+
+	@ApiProperty({
+		nullable: true,
 		type: [MediaResDto],
 	})
 	medias?: MediaResDto[];

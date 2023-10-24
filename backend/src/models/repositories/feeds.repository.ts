@@ -10,6 +10,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '../dto/feed/res/feed-res.dto';
+import { LikeFeedEntity } from '../entities/fam-like-feed.entity';
 
 @Injectable()
 export class FeedsRepository extends Repository<FeedEntity> {
@@ -61,10 +62,15 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		return feed;
 	}
 
-	async findAllFeed(
-		take: number,
-		skip: number,
-	): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
+	async findAllFeed({
+		take,
+		skip,
+		memberId,
+	}: {
+		take: number;
+		skip: number;
+		memberId: string;
+	}): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
 		const query = this.repository
 			.createQueryBuilder('a')
 			.select([
@@ -76,6 +82,20 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'member.id AS "memberId"',
 				'member.username AS "username"',
 			])
+			.addSelect((qb) => {
+				return qb
+					.select('(CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END)::bool')
+					.from(LikeFeedEntity, 'lfa')
+					.where('lfa.feedId = a.id')
+					.andWhere('lfa.memberId = :memberId', { memberId })
+					.limit(1);
+			}, 'myLike')
+			.addSelect((qb) => {
+				return qb
+					.select('count(lf.feedId)')
+					.from(LikeFeedEntity, 'lf')
+					.where('lf.feedId = a.id');
+			}, 'sumLike')
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
 			.where('a.isPublic = :isPublic', { isPublic: true })

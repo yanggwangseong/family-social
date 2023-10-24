@@ -5,16 +5,20 @@ import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import FeedItem from '@/components/ui/feed/FeedItem';
-import { useInfiniteQuery } from 'react-query';
-import { FeedService } from '@/services/feed/feed.service';
+import { useInfiniteQuery, useMutation } from 'react-query';
+import { FeedService, sleep } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import heartAnimation from '@/assets/lottie/like.json';
 import Lottie, { LottieRefCurrentProps } from 'lottie-react';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import axios from 'axios';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const Feed: FC = () => {
-	//const [isLottie, setIsLottie] = useState<boolean>(false);
-	//const [isLike, setIsLike] = useState<boolean>(false);
+	const [isLottie, setIsLottie] = useState<boolean>(false);
+
 	const lottieRef = useRef<LottieRefCurrentProps>(null);
 
 	const handleLike = () => {
@@ -25,22 +29,64 @@ const Feed: FC = () => {
 					'visible';
 			}
 		}
-		//setIsLike(true);
-		//setIsLottie(true);
 	};
 
-	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
-		useInfiniteQuery(
-			['feeds'],
-			async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
-			{
-				getNextPageParam: (lastPage, allPosts) => {
-					return lastPage.page !== allPosts[0].totalPage
-						? lastPage.page + 1
-						: undefined;
-				},
+	const { mutate: feedLikeSync } = useMutation(
+		['feed-like'],
+		(data: { feedId: string; page: number }) =>
+			FeedService.updateLike(data.feedId),
+		{
+			onMutate: variable => {
+				//Loading.hourglass();
 			},
-		);
+			onSuccess(data, variable) {
+				const pageValue = variable.page;
+				if (data === true) {
+					setIsLottie(true);
+					Notify.success('좋아요를 누르셨습니다');
+				}
+				if (data === false) {
+					Notify.warning('좋아요를 취소하셨습니다');
+				}
+
+				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+
+				//Loading.remove();
+				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const {
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isError,
+		isRefetching,
+		refetch,
+	} = useInfiniteQuery(
+		['feeds'],
+		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
+		{
+			getNextPageParam: (lastPage, allPosts) => {
+				return lastPage.page !== allPosts[0].totalPage
+					? lastPage.page + 1
+					: undefined;
+			},
+		},
+	);
 
 	const [observedPost, setObservedPost] = useState('');
 
@@ -66,11 +112,21 @@ const Feed: FC = () => {
 	}, [data]);
 
 	useEffect(() => {
-		if (lottieRef.current?.animationContainerRef.current) {
-			lottieRef.current.animationContainerRef.current.style.visibility =
-				'hidden';
+		if (lottieRef.current) {
+			lottieRef.current.stop();
+			if (lottieRef.current?.animationContainerRef.current) {
+				lottieRef.current.animationContainerRef.current.style.visibility =
+					'hidden';
+			}
+			if (isLottie) {
+				lottieRef.current.play();
+				if (lottieRef.current?.animationContainerRef.current) {
+					lottieRef.current.animationContainerRef.current.style.visibility =
+						'visible';
+				}
+			}
 		}
-	});
+	}, [isLottie]);
 
 	const handleLottieComplete = () => {
 		if (lottieRef.current) {
@@ -79,6 +135,7 @@ const Feed: FC = () => {
 				lottieRef.current.animationContainerRef.current.style.visibility =
 					'hidden';
 			}
+			setIsLottie(false);
 			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
 			//lottieRef.current.animationContainerRef.current?.remove();
 		}
@@ -102,6 +159,10 @@ const Feed: FC = () => {
 		);
 		// 대상 요소의 관찰을 시작
 		observer.observe(element);
+	};
+
+	const handleUpdateLike = (feedId: string, page: number) => {
+		feedLikeSync({ feedId, page });
 	};
 
 	return (
@@ -145,7 +206,10 @@ const Feed: FC = () => {
 											<FeedItem
 												key={feed.feedId}
 												id={feed.feedId}
-												onLike={handleLike}
+												myLike={feed.myLike}
+												sumLike={feed.sumLike}
+												onLike={handleUpdateLike}
+												page={page.page}
 											/>
 										))}
 									</React.Fragment>
