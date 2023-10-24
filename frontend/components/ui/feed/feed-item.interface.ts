@@ -1,4 +1,4 @@
 export interface FeedItemProps {
 	id: string;
-	onLike: () => void;
+	onLike: (feedId: string) => void;
 }

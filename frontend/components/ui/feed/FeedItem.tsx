@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
@@ -12,11 +12,17 @@ import { FeedItemProps } from './feed-item.interface';
 const FeedItem: FC<FeedItemProps> = ({ id, onLike }) => {
 	const comments = 3;
 
+	const [isLike, setIsLike] = useState<boolean>(false);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,
 		handleToggleModal: handleCloseSettingModal,
 	} = useModal(settingModalWrapperRef);
+
+	const handleLike = () => {
+		onLike(id);
+		setIsLike(!isLike);
+	};
 
 	return (
 		<div className={styles.feed_card_container} id={id}>
@@ -50,24 +56,20 @@ const FeedItem: FC<FeedItemProps> = ({ id, onLike }) => {
 			</div>
 			<div className={styles.feed_bottom_container}>
 				<div className={styles.like_container}>
-					{/* {isLike ? (
+					{isLike ? (
 						<AiFillHeart
 							size={28}
 							color="#FB1F42"
 							className={styles.like_icon}
+							onClick={handleLike}
 						/>
 					) : (
 						<AiOutlineHeart
 							size={28}
 							className={styles.like_icon}
-							onClick={onLike}
+							onClick={handleLike}
 						/>
-					)} */}
-					<AiOutlineHeart
-						size={28}
-						className={styles.like_icon}
-						onClick={onLike}
-					/>
+					)}
 
 					<div className={styles.like_count}>17</div>
 				</div>

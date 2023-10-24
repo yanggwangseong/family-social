@@ -2,14 +2,16 @@ import {
 	CreateFeedRequest,
 	UpdateFeedRequest,
 } from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
+
 import {
 	FeedByIdResponse,
 	FeedInfo,
 	FeedsResponse,
 } from '@/shared/interfaces/feed.interface';
+
 import { axiosAPI } from 'api/axios';
 
-function sleep(ms: number) {
+export function sleep(ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -45,6 +47,12 @@ export const FeedService = {
 			groupId: groupId,
 			medias: medias,
 		});
+
+		return data;
+	},
+
+	async updateLike(feedId: string) {
+		const { data } = await axiosAPI.put(`/feeds/${feedId}/likes`);
 
 		return data;
 	},
