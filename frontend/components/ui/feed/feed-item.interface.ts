@@ -1,5 +1,7 @@
 export interface FeedItemProps {
 	id: string;
 	myLike?: boolean;
-	onLike: (feedId: string) => void;
+	sumLike?: number;
+	page: number;
+	onLike: (feedId: string, page: number) => void;
 }

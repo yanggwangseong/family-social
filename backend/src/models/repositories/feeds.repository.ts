@@ -90,6 +90,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 					.andWhere('lfa.memberId = :memberId', { memberId })
 					.limit(1);
 			}, 'myLike')
+			.addSelect((qb) => {
+				return qb
+					.select('count(lf.feedId)')
+					.from(LikeFeedEntity, 'lf')
+					.where('lf.feedId = a.id');
+			}, 'sumLike')
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
 			.where('a.isPublic = :isPublic', { isPublic: true })

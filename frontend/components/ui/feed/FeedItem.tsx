@@ -8,8 +8,15 @@ import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
+import { useQueryClient } from 'react-query';
 
-const FeedItem: FC<FeedItemProps> = ({ id, onLike, myLike }) => {
+const FeedItem: FC<FeedItemProps> = ({
+	id,
+	onLike,
+	myLike,
+	sumLike = 0,
+	page,
+}) => {
 	const comments = 3;
 
 	const [isLike, setIsLike] = useState<boolean>(myLike ? myLike : false);
@@ -20,7 +27,7 @@ const FeedItem: FC<FeedItemProps> = ({ id, onLike, myLike }) => {
 	} = useModal(settingModalWrapperRef);
 
 	const handleLike = () => {
-		onLike(id);
+		onLike(id, page);
 		setIsLike(!isLike);
 	};
 
@@ -71,7 +78,7 @@ const FeedItem: FC<FeedItemProps> = ({ id, onLike, myLike }) => {
 						/>
 					)}
 
-					<div className={styles.like_count}>17</div>
+					<div className={styles.like_count}>{sumLike}</div>
 				</div>
 
 				<div className={styles.comments_link}>{comments} comments</div>

@@ -17,7 +17,6 @@ export function sleep(ms: number) {
 
 export const FeedService = {
 	async getFeeds(page: number) {
-		await sleep(3000);
 		const { data } = await axiosAPI.get<FeedsResponse>(`/feeds?page=${page}`);
 
 		return data;

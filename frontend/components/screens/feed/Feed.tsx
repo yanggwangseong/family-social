@@ -14,6 +14,7 @@ import Lottie, { LottieRefCurrentProps } from 'lottie-react';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const Feed: FC = () => {
 	const [isLottie, setIsLottie] = useState<boolean>(false);
@@ -32,15 +33,24 @@ const Feed: FC = () => {
 
 	const { mutate: feedLikeSync } = useMutation(
 		['feed-like'],
-		(feedId: string) => FeedService.updateLike(feedId),
+		(data: { feedId: string; page: number }) =>
+			FeedService.updateLike(data.feedId),
 		{
 			onMutate: variable => {
 				//Loading.hourglass();
 			},
-			async onSuccess(data) {
-				if (data) {
+			onSuccess(data, variable) {
+				const pageValue = variable.page;
+				if (data === true) {
 					setIsLottie(true);
+					Notify.success('좋아요를 누르셨습니다');
 				}
+				if (data === false) {
+					Notify.warning('좋아요를 취소하셨습니다');
+				}
+
+				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+
 				//Loading.remove();
 				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
 				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
@@ -58,18 +68,25 @@ const Feed: FC = () => {
 		},
 	);
 
-	const { data, fetchNextPage, hasNextPage, isLoading, isError, isRefetching } =
-		useInfiniteQuery(
-			['feeds'],
-			async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
-			{
-				getNextPageParam: (lastPage, allPosts) => {
-					return lastPage.page !== allPosts[0].totalPage
-						? lastPage.page + 1
-						: undefined;
-				},
+	const {
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isError,
+		isRefetching,
+		refetch,
+	} = useInfiniteQuery(
+		['feeds'],
+		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
+		{
+			getNextPageParam: (lastPage, allPosts) => {
+				return lastPage.page !== allPosts[0].totalPage
+					? lastPage.page + 1
+					: undefined;
 			},
-		);
+		},
+	);
 
 	const [observedPost, setObservedPost] = useState('');
 
@@ -144,8 +161,8 @@ const Feed: FC = () => {
 		observer.observe(element);
 	};
 
-	const handleUpdateLike = (feedId: string) => {
-		feedLikeSync(feedId);
+	const handleUpdateLike = (feedId: string, page: number) => {
+		feedLikeSync({ feedId, page });
 	};
 
 	return (
@@ -190,7 +207,9 @@ const Feed: FC = () => {
 												key={feed.feedId}
 												id={feed.feedId}
 												myLike={feed.myLike}
+												sumLike={feed.sumLike}
 												onLike={handleUpdateLike}
+												page={page.page}
 											/>
 										))}
 									</React.Fragment>
