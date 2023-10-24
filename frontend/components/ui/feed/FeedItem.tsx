@@ -9,10 +9,10 @@ import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
 
-const FeedItem: FC<FeedItemProps> = ({ id, onLike }) => {
+const FeedItem: FC<FeedItemProps> = ({ id, onLike, myLike }) => {
 	const comments = 3;
 
-	const [isLike, setIsLike] = useState<boolean>(false);
+	const [isLike, setIsLike] = useState<boolean>(myLike ? myLike : false);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,

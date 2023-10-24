@@ -14,6 +14,7 @@ export interface FeedInfo {
 	groupName: string;
 	memberId: string;
 	username: string;
+	myLike?: boolean;
 	medias: MediaInfo[];
 }
 

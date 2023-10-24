@@ -189,6 +189,7 @@ const Feed: FC = () => {
 											<FeedItem
 												key={feed.feedId}
 												id={feed.feedId}
+												myLike={feed.myLike}
 												onLike={handleUpdateLike}
 											/>
 										))}
