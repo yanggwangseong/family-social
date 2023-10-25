@@ -36,6 +36,7 @@ import {
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 import {
 	CreateCommentSwagger,
+	DeleteCommentSwagger,
 	UpdateCommentSwagger,
 } from '@/common/decorators/swagger/swagger-comment.decorator';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
@@ -234,8 +235,7 @@ export class FeedsController {
 	@UpdateCommentSwagger()
 	@Put(':feedId/comments/:commentId')
 	async updateComment(
-		@Body()
-		dto: CommentUpdateReqDto,
+		@Body() dto: CommentUpdateReqDto,
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Param('commentId', ParseUUIDPipe) commentId: string,
 	) {
@@ -248,5 +248,28 @@ export class FeedsController {
 			commentId,
 			dto.commentContents,
 		);
+	}
+
+	/**
+	 * @summary 특정 댓글 삭제하기
+	 *
+	 * @tag comments
+	 * @param {string} feedId   			- 특정 feed의 Id
+	 * @param {string} commentId  	    	- 수정 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteCommentSwagger()
+	@Delete(':feedId/comments/:commentId')
+	async deleteComment(
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+		// 댓글이 존재 하는지 check;
+		await this.commentsService.findCommentByIdOrThrow(commentId);
+
+		return await this.commentsService.deleteComment(commentId);
 	}
 }

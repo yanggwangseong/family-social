@@ -1,5 +1,11 @@
-import { EntityNotFoundException } from '@/common/exception/service.exception';
-import { ERROR_COMMENT_NOT_FOUND } from '@/constants/business-error';
+import {
+	EntityConflictException,
+	EntityNotFoundException,
+} from '@/common/exception/service.exception';
+import {
+	ERROR_COMMENT_NOT_FOUND,
+	ERROR_DELETE_COMMENT,
+} from '@/constants/business-error';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
 import { ICreateCommentsArgs } from '@/types/args/comment';
@@ -37,11 +43,17 @@ export class CommentsService {
 		);
 	}
 
+	async deleteComment(commentId: string) {
+		const deleteStatus = await this.commentsRepository.deleteComment(commentId);
+
+		if (!deleteStatus) throw EntityConflictException(ERROR_DELETE_COMMENT);
+	}
+
 	async findCommentByIdOrThrow(commentId: string) {
-		const comment = this.commentsRepository.findOneBy({
+		const comment = await this.commentsRepository.findOneBy({
 			id: commentId,
 		});
-
+		console.log('comment', comment);
 		if (!comment) {
 			throw EntityNotFoundException(ERROR_COMMENT_NOT_FOUND);
 		}

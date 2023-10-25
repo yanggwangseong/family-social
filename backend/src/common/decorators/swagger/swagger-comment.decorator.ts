@@ -1,9 +1,11 @@
 import {
 	ERROR_COMMENT_NOT_FOUND,
+	ERROR_DELETE_COMMENT,
 	ERROR_FEED_NOT_FOUND,
 } from '@/constants/business-error';
 import { applyDecorators } from '@nestjs/common';
 import {
+	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
 	ApiOperation,
@@ -33,6 +35,23 @@ export const UpdateCommentSwagger = () => {
 		}),
 		ApiNotFoundResponse({
 			description: `1. ${ERROR_FEED_NOT_FOUND} \n2. ${ERROR_COMMENT_NOT_FOUND}`,
+		}),
+	);
+};
+
+export const DeleteCommentSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '댓글 삭제',
+		}),
+		ApiCreatedResponse({
+			description: '댓글 삭제 성공',
+		}),
+		ApiNotFoundResponse({
+			description: `1. ${ERROR_FEED_NOT_FOUND} \n2. ${ERROR_COMMENT_NOT_FOUND}`,
+		}),
+		ApiConflictResponse({
+			description: ERROR_DELETE_COMMENT,
 		}),
 	);
 };

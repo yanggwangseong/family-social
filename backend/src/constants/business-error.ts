@@ -47,3 +47,6 @@ export const ERROR_FILE_DIR_NOT_FOUND = '파일 경로를 찾을 수 없습니�
 export const ERROR_FEED_NOT_FOUND = '피드를 찾을 수 없습니다' as const;
 
 export const ERROR_COMMENT_NOT_FOUND = '댓글을 찾을 수 없습니다' as const;
+
+export const ERROR_DELETE_COMMENT =
+	'댓글을 삭제하는 도중 에러가 발생했습니다' as const;
