@@ -5,5 +5,4 @@ export class CommentCreateReqDto extends PickType(CommentEntity, [
 	'commentContents',
 	'replyId',
 	'parentId',
-	'feedId',
 ] as const) {}

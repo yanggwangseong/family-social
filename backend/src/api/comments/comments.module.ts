@@ -11,6 +11,6 @@ import { CommentsController } from './comments.controller';
 	imports: [TypeOrmModule.forFeature([CommentEntity, LikeCommentEntity])],
 	controllers: [CommentsController],
 	providers: [CommentsService, CommentsRepository, LikesCommentRepository],
-	exports: [],
+	exports: [CommentsService],
 })
 export class CommentsModule {}

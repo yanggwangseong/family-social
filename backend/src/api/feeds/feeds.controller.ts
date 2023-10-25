@@ -34,13 +34,19 @@ import {
 	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { CreateCommentSwagger } from '@/common/decorators/swagger/swagger-comment.decorator';
+import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
+import { CommentsService } from '../comments/comments.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('feeds')
 @Controller('feeds')
 export class FeedsController {
-	constructor(private readonly feedsService: FeedsService) {}
+	constructor(
+		private readonly feedsService: FeedsService,
+		private readonly commentsService: CommentsService,
+	) {}
 
 	/**
 	 * @summary 단일 피드를 가져옵니다
@@ -178,5 +184,33 @@ export class FeedsController {
 		}
 		const locations = files.map(({ location }) => location);
 		return locations;
+	}
+
+	/**
+	 * @summary 특정 feed에 댓글, 대댓글, 대대댓글 작성
+	 *
+	 * @tag comments
+	 * @param {string} dto.commentContents - 댓글의 글내용
+	 * @param {string} dto.replyId  - 실제 답글 단 댓글의 Id
+	 * @param {string} dto.parentId - 최초 부모격인 댓글 Id
+	 * @param {string} feedId   	- 특정 feed의 Id
+	 * @param {string} sub  	    - 멤버Id
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 피드id, 피드 공개/비공개
+	 */
+	@CreateCommentSwagger()
+	@Post(':feedId/comments')
+	async createComments(
+		@CurrentUser('sub') sub: string,
+		@Body() dto: CommentCreateReqDto,
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+	) {
+		return await this.commentsService.createComments({
+			commentContents: dto.commentContents,
+			replyId: dto.replyId,
+			parentId: dto.parentId,
+			feedId: feedId,
+			memberId: sub,
+		});
 	}
 }
