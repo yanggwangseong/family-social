@@ -1,7 +1,10 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { DefaultEntity } from './common/default.entity';
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { MemberEntity } from './member.entity';
+import { FeedEntity } from './feed.entity';
+import { LikeCommentEntity } from './fam-like-comment.entity';
 
 @Entity({ name: 'fam_comment' })
 export class CommentEntity extends DefaultEntity {
@@ -40,4 +43,23 @@ export class CommentEntity extends DefaultEntity {
 	@IsNotEmpty()
 	@IsUUID()
 	public readonly memberId!: string;
+
+	@ManyToOne(() => CommentEntity, (comment) => comment.childrenComments)
+	@JoinColumn({ name: 'parentId', referencedColumnName: 'id' })
+	parent?: CommentEntity;
+
+	@ManyToOne((type) => MemberEntity, (mb) => mb.memberCreateComments)
+	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
+	member!: MemberEntity;
+
+	@ManyToOne((type) => FeedEntity, (fd) => fd.comments)
+	@JoinColumn({ name: 'feedId', referencedColumnName: 'id' })
+	feed!: FeedEntity;
+
+	@OneToMany(() => CommentEntity, (comment) => comment.parent)
+	childrenComments?: CommentEntity[];
+
+	// comment-like
+	@OneToMany(() => LikeCommentEntity, (lcm) => lcm.comment)
+	LikedByComments?: LikeCommentEntity[];
 }

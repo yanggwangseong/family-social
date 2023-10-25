@@ -6,6 +6,7 @@ import { LikeFeedEntity } from './fam-like-feed.entity';
 import { FeedMediaEntity } from './fam-feed-media.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
+import { CommentEntity } from './comment.entity';
 
 @Entity({ name: 'fam_feed' })
 export class FeedEntity extends DefaultEntity {
@@ -48,4 +49,8 @@ export class FeedEntity extends DefaultEntity {
 	@ManyToOne((type) => MemberEntity, (mb) => mb.memberCreateFeeds)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
+
+	// comment
+	@OneToMany(() => CommentEntity, (cm) => cm.feed)
+	comments?: CommentEntity[];
 }
