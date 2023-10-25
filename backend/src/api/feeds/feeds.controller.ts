@@ -46,7 +46,7 @@ export class FeedsController {
 	 * @summary 단일 피드를 가져옵니다
 	 *
 	 * @tag feeds
-	 * @param feedId 단일 피드를 조회하기 위한 피드 아이디
+	 * @param {string} feedId - 단일 피드를 조회하기 위한 피드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -60,8 +60,8 @@ export class FeedsController {
 	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
-	 * @param page 페이징을 위한 page 번호
-	 * @param sub  	   멤버Id
+	 * @param {number} page - 페이징을 위한 page 번호
+	 * @param {string} sub  - 인증된 사용자의 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -79,10 +79,11 @@ export class FeedsController {
 	 * @summary 유저가 속하는 Group에서 feed 생성
 	 *
 	 * @tag feeds
-	 * @param contents 피드 글내용
-	 * @param isPublic 피드 공개/비공개
-	 * @param groupId  유저가 속하는 그룹 Id
-	 * @param sub  	   멤버Id
+	 * @param {string} 	dto.contents - 피드 글내용
+	 * @param {boolean} dto.isPublic - 피드 공개/비공개
+	 * @param {string} 	dto.groupId  - 유저가 속하는 그룹 Id
+	 * @param {MediaCreateReqDto[]} dto.medias - 미디어 파일들
+	 * @param {string}  sub  	   	 - 멤버Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 피드id, 피드 공개/비공개
 	 */
@@ -111,10 +112,11 @@ export class FeedsController {
 	 * @summary feed 수정
 	 *
 	 * @tag feeds
-	 * @param contents 피드 글내용
-	 * @param isPublic 피드 공개/비공개
-	 * @param groupId  유저가 속하는 그룹 Id
-	 * @param feedId   피드Id
+	 * @param {string} dto.contents - 피드 글내용
+	 * @param {boolean} dto.isPublic - 피드 공개/비공개
+	 * @param {string} dto.groupId  - 유저가 속하는 그룹 Id
+	 * @param {string} feedId   	- 피드Id
+	 * @param {MediaCreateReqDto[]} dto.medias - 미디어 파일들
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -137,8 +139,8 @@ export class FeedsController {
 	 * @summary feed 좋아요
 	 *
 	 * @tag feeds
-	 * @param sub  멤버 Id
-	 * @param feedId   피드Id
+	 * @param {string} sub  	- 멤버 Id
+	 * @param {string} feedId  	- 피드Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns boolean
 	 */
@@ -155,7 +157,7 @@ export class FeedsController {
 	 * @summary feed 삭제
 	 *
 	 * @tag feeds
-	 * @param feedId   피드Id
+	 * @param {string} feedId  - 피드Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
