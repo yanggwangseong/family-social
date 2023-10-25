@@ -14,7 +14,7 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async createComments({
+	async createComment({
 		commentContents,
 		replyId,
 		parentId,
@@ -29,5 +29,9 @@ export class CommentsRepository extends Repository<CommentEntity> {
 			feedId: feedId,
 			memberId: memberId,
 		});
+	}
+
+	async updateComment(commentId: string, commentContents: string) {
+		await this.update({ id: commentId }, { commentContents: commentContents });
 	}
 }

@@ -34,9 +34,13 @@ import {
 	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
-import { CreateCommentSwagger } from '@/common/decorators/swagger/swagger-comment.decorator';
+import {
+	CreateCommentSwagger,
+	UpdateCommentSwagger,
+} from '@/common/decorators/swagger/swagger-comment.decorator';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentsService } from '../comments/comments.service';
+import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -196,21 +200,53 @@ export class FeedsController {
 	 * @param {string} feedId   	- 특정 feed의 Id
 	 * @param {string} sub  	    - 멤버Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 피드id, 피드 공개/비공개
+	 * @returns void
 	 */
 	@CreateCommentSwagger()
 	@Post(':feedId/comments')
-	async createComments(
+	async createComment(
 		@CurrentUser('sub') sub: string,
 		@Body() dto: CommentCreateReqDto,
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 	) {
-		return await this.commentsService.createComments({
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+
+		return await this.commentsService.createComment({
 			commentContents: dto.commentContents,
 			replyId: dto.replyId,
 			parentId: dto.parentId,
 			feedId: feedId,
 			memberId: sub,
 		});
+	}
+
+	/**
+	 * @summary 특정 댓글 수정하기
+	 *
+	 * @tag comments
+	 * @param {string} dto.commentContents 	- 댓글의 글내용
+	 * @param {string} feedId   			- 특정 feed의 Id
+	 * @param {string} commentId  	    	- 수정 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@UpdateCommentSwagger()
+	@Put(':feedId/comments/:commentId')
+	async updateComment(
+		@Body()
+		dto: CommentUpdateReqDto,
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+		// 댓글이 존재 하는지 check;
+		await this.commentsService.findCommentByIdOrThrow(commentId);
+
+		return await this.commentsService.updateComment(
+			commentId,
+			dto.commentContents,
+		);
 	}
 }
