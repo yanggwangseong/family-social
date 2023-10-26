@@ -12,6 +12,7 @@ import { GroupsModule } from './api/groups/groups.module';
 import { FamsModule } from './api/fams/fams.module';
 import { FeedsModule } from './api/feeds/feeds.module';
 import { MediasModule } from './api/medias/medias.module';
+import { CommentsModule } from './api/comments/comments.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { MediasModule } from './api/medias/medias.module';
 		FamsModule,
 		FeedsModule,
 		MediasModule,
+		CommentsModule,
 	],
 	controllers: [],
 	providers: [],

@@ -7,11 +7,13 @@ import { FeedEntity } from '@/models/entities/feed.entity';
 import { MediasModule } from '../medias/medias.module';
 import { LikeFeedEntity } from '@/models/entities/fam-like-feed.entity';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
+import { CommentsModule } from '../comments/comments.module';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([FeedEntity, LikeFeedEntity]),
 		MediasModule,
+		CommentsModule,
 	],
 	controllers: [FeedsController],
 	providers: [FeedsService, FeedsRepository, LikesFeedRepository],

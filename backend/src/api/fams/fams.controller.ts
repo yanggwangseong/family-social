@@ -18,7 +18,7 @@ export class FamsController {
 	 * @summary 수락하지 않은 팸 초대 리스트를 조회
 	 *
 	 * @tag fams
-	 * @param sub 인증된 유저 아이디
+	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 팸 초대 리스트, 총 갯수
 	 */

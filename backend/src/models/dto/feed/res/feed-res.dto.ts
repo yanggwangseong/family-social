@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { MediaResDto } from '../../media/res/media-res.dto';
+import { CommentGetListsResDto } from '../../comments/res/comment-get-lists-res.dto';
 
 export class FeedResDto {
 	@ApiProperty({
@@ -47,9 +48,15 @@ export class FeedResDto {
 	})
 	sumLike?: number;
 
-	@ApiProperty({
+	@ApiPropertyOptional({
 		nullable: true,
 		type: [MediaResDto],
 	})
 	medias?: MediaResDto[];
+
+	@ApiPropertyOptional({
+		nullable: true,
+		type: [CommentGetListsResDto],
+	})
+	comments?: CommentGetListsResDto[];
 }
