@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommentEntity } from '../entities/comment.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { ICreateCommentsArgs } from '@/types/args/comment';
@@ -12,6 +12,39 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		private readonly repository: Repository<CommentEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async getCommentsByFeedId(feedId: string) {
+		return await this.repository.find({
+			select: {
+				id: true,
+				commentContents: true,
+				replyId: true,
+				parentId: true,
+				feedId: true,
+				updatedAt: true,
+				childrenComments: true,
+				member: {
+					id: true,
+					username: true,
+				},
+			},
+			where: {
+				parentId: IsNull(),
+				feedId: feedId,
+			},
+			relations: {
+				childrenComments: true,
+				member: true,
+				LikedByComments: true,
+			},
+			order: {
+				updatedAt: 'ASC',
+				childrenComments: {
+					updatedAt: 'ASC',
+				},
+			},
+		});
 	}
 
 	async createComment({

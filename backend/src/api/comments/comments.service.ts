@@ -20,6 +20,10 @@ export class CommentsService {
 		private dataSource: DataSource,
 	) {}
 
+	async getCommentsByFeedId(feedId: string) {
+		return await this.commentsRepository.getCommentsByFeedId(feedId);
+	}
+
 	async createComment({
 		commentContents,
 		replyId,
