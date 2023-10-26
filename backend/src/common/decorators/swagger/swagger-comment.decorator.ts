@@ -55,3 +55,18 @@ export const DeleteCommentSwagger = () => {
 		}),
 	);
 };
+
+export const LikesCommentSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '댓글 좋아요',
+		}),
+		ApiCreatedResponse({
+			description: '댓글 좋아요',
+			type: Boolean,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_COMMENT_NOT_FOUND,
+		}),
+	);
+};

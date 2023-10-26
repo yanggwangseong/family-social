@@ -11,4 +11,11 @@ export class LikesCommentRepository extends Repository<LikeCommentEntity> {
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
+
+	async findMemberLikesComment(memberId: string, commentId: string) {
+		return await this.repository.findOneBy({
+			memberId: memberId,
+			commentId: commentId,
+		});
+	}
 }
