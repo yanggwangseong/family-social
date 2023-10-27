@@ -37,6 +37,7 @@ import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 import {
 	CreateCommentSwagger,
 	DeleteCommentSwagger,
+	LikesCommentSwagger,
 	UpdateCommentSwagger,
 } from '@/common/decorators/swagger/swagger-comment.decorator';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
@@ -271,5 +272,23 @@ export class FeedsController {
 		await this.commentsService.findCommentByIdOrThrow(commentId);
 
 		return await this.commentsService.deleteComment(commentId);
+	}
+
+	/**
+	 * @summary comment 좋아요
+	 *
+	 * @tag comments
+	 * @param {string} sub  		 - 멤버 Id
+	 * @param {string} commentId  	 - 좋아요 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns boolean
+	 */
+	@LikesCommentSwagger()
+	@Put(':feedId/comments/:commentId/likes')
+	async updateLikesCommentId(
+		@CurrentUser('sub') sub: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		return await this.commentsService.updateLikesCommentId(sub, commentId);
 	}
 }

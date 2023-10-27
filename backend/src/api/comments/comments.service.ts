@@ -64,4 +64,25 @@ export class CommentsService {
 
 		return comment;
 	}
+
+	async updateLikesCommentId(
+		memberId: string,
+		commentId: string,
+	): Promise<boolean> {
+		// 댓글이 있는지 확인.
+		await this.findCommentByIdOrThrow(commentId);
+
+		const like = await this.likesCommentRepository.findMemberLikesComment(
+			memberId,
+			commentId,
+		);
+
+		if (like) {
+			await this.likesCommentRepository.remove(like);
+		} else {
+			await this.likesCommentRepository.save({ memberId, commentId });
+		}
+
+		return !like;
+	}
 }
