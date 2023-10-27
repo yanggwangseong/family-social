@@ -205,9 +205,7 @@ const Feed: FC = () => {
 										{page.list.map(feed => (
 											<FeedItem
 												key={feed.feedId}
-												id={feed.feedId}
-												myLike={feed.myLike}
-												sumLike={feed.sumLike}
+												feed={feed}
 												onLike={handleUpdateLike}
 												page={page.page}
 											/>

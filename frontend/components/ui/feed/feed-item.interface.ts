@@ -1,7 +1,7 @@
+import { FeedInfo } from '@/shared/interfaces/feed.interface';
+
 export interface FeedItemProps {
-	id: string;
-	myLike?: boolean;
-	sumLike?: number;
+	feed: FeedInfo;
 	page: number;
 	onLike: (feedId: string, page: number) => void;
 }

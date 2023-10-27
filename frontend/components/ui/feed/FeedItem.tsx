@@ -8,17 +8,14 @@ import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
+import Comments from './comment/Comments';
 
-const FeedItem: FC<FeedItemProps> = ({
-	id,
-	onLike,
-	myLike,
-	sumLike = 0,
-	page,
-}) => {
-	const comments = 3;
+const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
+	const [isLike, setIsLike] = useState<boolean>(
+		feed.myLike ? feed.myLike : false,
+	);
+	const [isToggleComments, setIsToggleComments] = useState<boolean>(false);
 
-	const [isLike, setIsLike] = useState<boolean>(myLike ? myLike : false);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,
@@ -26,62 +23,81 @@ const FeedItem: FC<FeedItemProps> = ({
 	} = useModal(settingModalWrapperRef);
 
 	const handleLike = () => {
-		onLike(id, page);
+		onLike(feed.feedId, page);
 		setIsLike(!isLike);
 	};
 
-	return (
-		<div className={styles.feed_card_container} id={id}>
-			<div className={styles.feed_card_top_container}>
-				<Profile></Profile>
-				<div
-					className="ml-auto cursor-pointer relative"
-					ref={settingModalWrapperRef}
-				>
-					<BsThreeDots size={24} onClick={handleCloseSettingModal} />
-					{isOpenSetting && (
-						<ToggleModal
-							list={FeedSettingMenu}
-							onClose={handleCloseSettingModal}
-							direction="right"
-							feedId={id}
-						/>
-					)}
-				</div>
-			</div>
-			<div className={styles.feed_description_container}>
-				엄마 아빠 수진이와 함께 캠핑을 갔습니다!
-			</div>
-			<div className={styles.feed_media_container}>
-				<Image
-					fill
-					src={'/images/banner/group-base.png'}
-					alt="banner"
-					priority={false}
-				></Image>
-			</div>
-			<div className={styles.feed_bottom_container}>
-				<div className={styles.like_container}>
-					{isLike ? (
-						<AiFillHeart
-							size={28}
-							color="#FB1F42"
-							className={styles.like_icon}
-							onClick={handleLike}
-						/>
-					) : (
-						<AiOutlineHeart
-							size={28}
-							className={styles.like_icon}
-							onClick={handleLike}
-						/>
-					)}
+	const handleToggleComments = () => {
+		setIsToggleComments(!isToggleComments);
+	};
 
-					<div className={styles.like_count}>{sumLike}</div>
+	return (
+		<>
+			<div>
+				<div className={styles.feed_card_container} id={feed.feedId}>
+					<div className={styles.feed_card_top_container}>
+						<Profile></Profile>
+						<div
+							className="ml-auto cursor-pointer relative"
+							ref={settingModalWrapperRef}
+						>
+							<BsThreeDots size={24} onClick={handleCloseSettingModal} />
+							{isOpenSetting && (
+								<ToggleModal
+									list={FeedSettingMenu}
+									onClose={handleCloseSettingModal}
+									direction="right"
+									feedId={feed.feedId}
+								/>
+							)}
+						</div>
+					</div>
+					<div className={styles.feed_description_container}>
+						엄마 아빠 수진이와 함께 캠핑을 갔습니다!
+					</div>
+					<div className={styles.feed_media_container}>
+						<Image
+							fill
+							src={'/images/banner/group-base.png'}
+							alt="banner"
+							priority={false}
+						></Image>
+					</div>
+					<div className={styles.feed_bottom_container}>
+						<div className={styles.like_container}>
+							{isLike ? (
+								<AiFillHeart
+									size={28}
+									color="#FB1F42"
+									className={styles.like_icon}
+									onClick={handleLike}
+								/>
+							) : (
+								<AiOutlineHeart
+									size={28}
+									className={styles.like_icon}
+									onClick={handleLike}
+								/>
+							)}
+
+							<div className={styles.like_count}>
+								{feed.sumLike ? feed.sumLike : 0}
+							</div>
+						</div>
+						<div
+							className={styles.comments_link}
+							onClick={() =>
+								feed.comments.length === 0 ? undefined : handleToggleComments()
+							}
+						>
+							{feed.comments.length} comments
+						</div>
+					</div>
 				</div>
-				<div className={styles.comments_link}>{comments} comments</div>
+				{/* 댓글 */}
+				{isToggleComments && <Comments comments={feed.comments} />}
 			</div>
-		</div>
+		</>
 	);
 };
 
