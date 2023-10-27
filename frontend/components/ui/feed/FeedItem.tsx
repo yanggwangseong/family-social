@@ -3,7 +3,8 @@ import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { BsThreeDots } from 'react-icons/bs';
+import { GoComment } from 'react-icons/go';
+import { BsBoxArrowUp, BsThreeDots } from 'react-icons/bs';
 import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
@@ -83,6 +84,12 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 							<div className={styles.like_count}>
 								{feed.sumLike ? feed.sumLike : 0}
 							</div>
+						</div>
+						<div className={styles.feed_icon_container}>
+							<GoComment className={styles.feed_icon} size={28} />
+						</div>
+						<div className={styles.feed_icon_container}>
+							<BsBoxArrowUp className={styles.feed_icon} size={28} />
 						</div>
 						<div
 							className={styles.comments_link}
