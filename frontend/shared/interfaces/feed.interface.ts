@@ -1,3 +1,4 @@
+import { CommentsResponse } from './comment.interface';
 import { MediaInfo } from './media.interface';
 
 export interface FeedsResponse {
@@ -17,6 +18,7 @@ export interface FeedInfo {
 	myLike?: boolean;
 	sumLike?: number;
 	medias: MediaInfo[];
+	comments: CommentsResponse[];
 }
 
 export interface FeedByIdResponse {

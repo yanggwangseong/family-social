@@ -8,7 +8,6 @@ import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
-import { useQueryClient } from 'react-query';
 
 const FeedItem: FC<FeedItemProps> = ({
 	id,
@@ -80,7 +79,6 @@ const FeedItem: FC<FeedItemProps> = ({
 
 					<div className={styles.like_count}>{sumLike}</div>
 				</div>
-
 				<div className={styles.comments_link}>{comments} comments</div>
 			</div>
 		</div>
