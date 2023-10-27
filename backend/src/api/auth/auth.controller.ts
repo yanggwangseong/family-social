@@ -38,8 +38,8 @@ export class AuthController {
 	 * @summary Local User 로그인
 	 *
 	 * @tag auth
-	 * @param email string
-	 * @param password string
+	 * @param {string} dto.email - 로그인을 위한 email
+	 * @param {string} dto.password - 로그인을 위한 pw
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 토큰
 	 */
@@ -66,7 +66,10 @@ export class AuthController {
 	 * @summary Local 로그인을 위한 User 생성
 	 *
 	 * @tag auth
-	 * @param MemberCreateReqDto 유저를 생성하기 위해 필요한 최소한의 값 정의
+	 * @param {string} dto.email - email
+	 * @param {string} dto.username - 유저 이름
+	 * @param {string} dto.password - 비밀번호
+	 * @param {string} dto.phoneNumber - 휴대폰번호
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 유저이름
 	 */
@@ -80,7 +83,8 @@ export class AuthController {
 	 * @summary Local User 생성 확인을 위한 email 검즘
 	 *
 	 * @tag auth
-	 * @param VerifyEmailReqDto 이메일 검증 하기 위해 필요한 최소한의 값 정의
+	 * @param {string} dto.email 이메일 검증 하기 위해 필요한 email
+	 * @param {string} dto.signupVerifyToken 이메일 검증 코드
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 유저이름
 	 */
@@ -94,6 +98,7 @@ export class AuthController {
 	 * @summary Local User 로그아웃
 	 *
 	 * @tag auth
+	 * @param {string} sub - 인증된 유저Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 쿠키삭제, refreshtoken 값 초기화
 	 */
@@ -110,6 +115,9 @@ export class AuthController {
 	 * @summary Local User refreshtoken 재발급 및 accesstoken 재발급
 	 *
 	 * @tag auth
+	 * @param {string} user.username - 인증된 사용자의 username
+	 * @param {string} user.sub - 인증된 사용자의 Id
+	 * @param {string} user.refreshToken - 인증된 사용자의 refreshToken
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 토큰
 	 */

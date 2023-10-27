@@ -34,19 +34,31 @@ import {
 	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import {
+	CreateCommentSwagger,
+	DeleteCommentSwagger,
+	LikesCommentSwagger,
+	UpdateCommentSwagger,
+} from '@/common/decorators/swagger/swagger-comment.decorator';
+import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
+import { CommentsService } from '../comments/comments.service';
+import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('feeds')
 @Controller('feeds')
 export class FeedsController {
-	constructor(private readonly feedsService: FeedsService) {}
+	constructor(
+		private readonly feedsService: FeedsService,
+		private readonly commentsService: CommentsService,
+	) {}
 
 	/**
 	 * @summary 단일 피드를 가져옵니다
 	 *
 	 * @tag feeds
-	 * @param feedId 단일 피드를 조회하기 위한 피드 아이디
+	 * @param {string} feedId - 단일 피드를 조회하기 위한 피드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -60,8 +72,8 @@ export class FeedsController {
 	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
-	 * @param page 페이징을 위한 page 번호
-	 * @param sub  	   멤버Id
+	 * @param {number} page - 페이징을 위한 page 번호
+	 * @param {string} sub  - 인증된 사용자의 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -72,17 +84,18 @@ export class FeedsController {
 		@Query('page') page: number,
 		@CurrentUser('sub') sub: string,
 	) {
-		return await this.feedsService.findAllFeed(page);
+		return await this.feedsService.findAllFeed(page, sub);
 	}
 
 	/**
 	 * @summary 유저가 속하는 Group에서 feed 생성
 	 *
 	 * @tag feeds
-	 * @param contents 피드 글내용
-	 * @param isPublic 피드 공개/비공개
-	 * @param groupId  유저가 속하는 그룹 Id
-	 * @param sub  	   멤버Id
+	 * @param {string} 	dto.contents - 피드 글내용
+	 * @param {boolean} dto.isPublic - 피드 공개/비공개
+	 * @param {string} 	dto.groupId  - 유저가 속하는 그룹 Id
+	 * @param {MediaCreateReqDto[]} dto.medias - 미디어 파일들
+	 * @param {string}  sub  	   	 - 멤버Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 피드id, 피드 공개/비공개
 	 */
@@ -111,10 +124,11 @@ export class FeedsController {
 	 * @summary feed 수정
 	 *
 	 * @tag feeds
-	 * @param contents 피드 글내용
-	 * @param isPublic 피드 공개/비공개
-	 * @param groupId  유저가 속하는 그룹 Id
-	 * @param feedId   피드Id
+	 * @param {string} dto.contents - 피드 글내용
+	 * @param {boolean} dto.isPublic - 피드 공개/비공개
+	 * @param {string} dto.groupId  - 유저가 속하는 그룹 Id
+	 * @param {string} feedId   	- 피드Id
+	 * @param {MediaCreateReqDto[]} dto.medias - 미디어 파일들
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -137,8 +151,8 @@ export class FeedsController {
 	 * @summary feed 좋아요
 	 *
 	 * @tag feeds
-	 * @param sub  멤버 Id
-	 * @param feedId   피드Id
+	 * @param {string} sub  	- 멤버 Id
+	 * @param {string} feedId  	- 피드Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns boolean
 	 */
@@ -155,7 +169,7 @@ export class FeedsController {
 	 * @summary feed 삭제
 	 *
 	 * @tag feeds
-	 * @param feedId   피드Id
+	 * @param {string} feedId  - 피드Id
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -176,5 +190,105 @@ export class FeedsController {
 		}
 		const locations = files.map(({ location }) => location);
 		return locations;
+	}
+
+	/**
+	 * @summary 특정 feed에 댓글, 대댓글, 대대댓글 작성
+	 *
+	 * @tag comments
+	 * @param {string} dto.commentContents - 댓글의 글내용
+	 * @param {string} dto.replyId  - 실제 답글 단 댓글의 Id
+	 * @param {string} dto.parentId - 최초 부모격인 댓글 Id
+	 * @param {string} feedId   	- 특정 feed의 Id
+	 * @param {string} sub  	    - 멤버Id
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@CreateCommentSwagger()
+	@Post(':feedId/comments')
+	async createComment(
+		@CurrentUser('sub') sub: string,
+		@Body() dto: CommentCreateReqDto,
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+	) {
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+
+		return await this.commentsService.createComment({
+			commentContents: dto.commentContents,
+			replyId: dto.replyId,
+			parentId: dto.parentId,
+			feedId: feedId,
+			memberId: sub,
+		});
+	}
+
+	/**
+	 * @summary 특정 댓글 수정하기
+	 *
+	 * @tag comments
+	 * @param {string} dto.commentContents 	- 댓글의 글내용
+	 * @param {string} feedId   			- 특정 feed의 Id
+	 * @param {string} commentId  	    	- 수정 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@UpdateCommentSwagger()
+	@Put(':feedId/comments/:commentId')
+	async updateComment(
+		@Body() dto: CommentUpdateReqDto,
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+		// 댓글이 존재 하는지 check;
+		await this.commentsService.findCommentByIdOrThrow(commentId);
+
+		return await this.commentsService.updateComment(
+			commentId,
+			dto.commentContents,
+		);
+	}
+
+	/**
+	 * @summary 특정 댓글 삭제하기
+	 *
+	 * @tag comments
+	 * @param {string} feedId   			- 특정 feed의 Id
+	 * @param {string} commentId  	    	- 수정 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteCommentSwagger()
+	@Delete(':feedId/comments/:commentId')
+	async deleteComment(
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		// 피드가 존재 하는지 check;
+		await this.feedsService.findFeedByIdOrThrow(feedId);
+		// 댓글이 존재 하는지 check;
+		await this.commentsService.findCommentByIdOrThrow(commentId);
+
+		return await this.commentsService.deleteComment(commentId);
+	}
+
+	/**
+	 * @summary comment 좋아요
+	 *
+	 * @tag comments
+	 * @param {string} sub  		 - 멤버 Id
+	 * @param {string} commentId  	 - 좋아요 할 댓글 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns boolean
+	 */
+	@LikesCommentSwagger()
+	@Put(':feedId/comments/:commentId/likes')
+	async updateLikesCommentId(
+		@CurrentUser('sub') sub: string,
+		@Param('commentId', ParseUUIDPipe) commentId: string,
+	) {
+		return await this.commentsService.updateLikesCommentId(sub, commentId);
 	}
 }

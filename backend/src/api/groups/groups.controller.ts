@@ -55,7 +55,7 @@ export class GroupsController {
 	 * @summary 유저가 속한 모든 그룹 가져오기
 	 *
 	 * @tag groups
-	 * @param sub 인증된 유저 아이디
+	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -71,9 +71,9 @@ export class GroupsController {
 	 * @summary 유저가 속하는 Group생성
 	 *
 	 * @tag groups
-	 * @param groupName 그룹 이름
-	 * @param groupDescription 그룹 설명
-	 * @param sub 인증된 유저 아이디
+	 * @param {string} dto.groupName - 그룹 이름
+	 * @param {string} dto.groupDescription - 그룹 설명
+	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -94,9 +94,10 @@ export class GroupsController {
 	 * @summary 그룹 정보 수정
 	 *
 	 * @tag groups
-	 * @param groupName 그룹 이름
-	 * @param groupDescription 그룹 설명
-	 * @param sub 인증된 유저 아이디
+	 * @param {string} dto.groupName - 그룹 이름
+	 * @param {string} dto.groupDescription - 그룹 설명
+	 * @param {string} groupId - 수정 할 그룹 아이디
+	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -119,8 +120,8 @@ export class GroupsController {
 	 * @summary 그룹 삭제
 	 *
 	 * @tag groups
-	 * @param groupId string
-	 * @param sub 인증된 유저 아이디
+	 * @param {string} groupId - 삭제 할 그룹 아이디
+	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -140,9 +141,9 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *
 	 * @tag groups
-	 * @param sub 인증된 유저 아이디
-	 * @param memberId 초대받은 특정 멤버의 아이디
-	 * @param groupId 초대받은 그룹 아이디
+	 * @param {string} sub - 인증된 유저 아이디
+	 * @param {string} memberId - 초대받은 특정 멤버의 아이디
+	 * @param {string} groupId - 초대받은 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -172,11 +173,11 @@ export class GroupsController {
 	 * @summary 그룹 초대 수락하기
 	 *
 	 * @tag groups
-	 * @param sub 인증된 유저 아이디
-	 * @param groupId 초대받은 그룹 아이디
-	 * @param memberId 초대받은 멤버 아이디
-	 * @param famId 대상이 되는 fam 테이블의 레코드 아이디
-	 * @param invitationAccepted 초대 수락 여/부
+	 * @param {string} sub - 인증된 유저 아이디
+	 * @param {string} groupId - 초대받은 그룹 아이디
+	 * @param {string} memberId - 초대받은 멤버 아이디
+	 * @param {string} famId - 대상이 되는 fam 테이블의 레코드 아이디
+	 * @param {boolean} dto.invitationAccepted - 초대 수락 여/부
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
@@ -213,9 +214,9 @@ export class GroupsController {
 	 * @summary 특정 그룹의 특정 멤버의 fam 삭제
 	 *
 	 * @tag groups
-	 * @param groupId 그룹 아이디
-	 * @param memberId  대상이 되는 멤버 아이디
-	 * @param famId  대상이 되는 fam 테이블의 레코드 아이디
+	 * @param {string} groupId 		- 그룹 아이디
+	 * @param {string} memberId  	- 대상이 되는 멤버 아이디
+	 * @param {string} famId  		- 대상이 되는 fam 테이블의 레코드 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */

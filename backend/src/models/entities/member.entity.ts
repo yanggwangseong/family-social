@@ -13,6 +13,8 @@ import {
 import { FamEntity } from './fam.entity';
 import { LikeFeedEntity } from './fam-like-feed.entity';
 import { FeedEntity } from './feed.entity';
+import { CommentEntity } from './comment.entity';
+import { LikeCommentEntity } from './fam-like-comment.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -77,4 +79,12 @@ export class MemberEntity extends DefaultEntity {
 
 	@OneToMany(() => FeedEntity, (fe) => fe.member)
 	memberCreateFeeds?: FeedEntity[];
+
+	// comment
+	@OneToMany(() => CommentEntity, (cm) => cm.member)
+	memberCreateComments?: CommentEntity[];
+
+	// comment-like
+	@OneToMany(() => LikeCommentEntity, (lkc) => lkc.member)
+	memberLikesComments?: LikeCommentEntity[];
 }

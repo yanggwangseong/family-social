@@ -5,3 +5,5 @@ export class MemberResDto extends PickType(MemberEntity, [
 	'username',
 	'id',
 ] as const) {}
+
+//userProfileUrl

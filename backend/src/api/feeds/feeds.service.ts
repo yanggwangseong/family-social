@@ -21,12 +21,14 @@ import { getOffset } from '@/utils/getOffset';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
+import { CommentsService } from '../comments/comments.service';
 
 @Injectable()
 export class FeedsService {
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
+		private readonly commentsService: CommentsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
@@ -55,20 +57,24 @@ export class FeedsService {
 		};
 	}
 
-	async findAllFeed(page: number): Promise<FeedGetAllResDto> {
+	async findAllFeed(page: number, memberId: string): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
-		const { list, count } = await this.feedsRepository.findAllFeed(take, skip);
+		const { list, count } = await this.feedsRepository.findAllFeed({
+			take,
+			skip,
+			memberId,
+		});
 
-		//[TODO comments 추후에 추가]
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {
-				const medias = await this.mediasService.findMediaUrlByFeedId(
+				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
 					feed.feedId,
 				);
 
 				return {
 					...feed,
 					medias: medias,
+					comments: comments,
 				};
 			}),
 		);
@@ -186,5 +192,12 @@ export class FeedsService {
 		}
 
 		return feed;
+	}
+
+	private async getMediaUrlAndCommentsByFeedId(feedId: string) {
+		return await Promise.all([
+			await this.mediasService.findMediaUrlByFeedId(feedId),
+			await this.commentsService.getCommentsByFeedId(feedId),
+		]);
 	}
 }
