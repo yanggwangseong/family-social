@@ -1,6 +1,9 @@
 .button {
 	box-shadow: 0 8px 20px 0 rgba(78, 96, 255, 0.16);
 }
+.shadowNone {
+	box-shadow: none;
+}
 .disabled {
 	@apply cursor-not-allowed opacity-50;
 }

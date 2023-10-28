@@ -15,7 +15,7 @@
 }
 
 @mixin hidden_border_textarea() {
-	@apply h-full;
+	@apply h-full flex-1;
 	> textarea {
 		@apply text-customDark text-sm focus:outline-none border-none bg-basic resize-none h-full w-full;
 	}
