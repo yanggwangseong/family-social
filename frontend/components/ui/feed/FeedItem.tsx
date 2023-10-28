@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';
@@ -16,6 +16,10 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 		feed.myLike ? feed.myLike : false,
 	);
 	const [isToggleComments, setIsToggleComments] = useState<boolean>(false);
+	const [isToggleCommentWrite, setIsToggleCommentWrite] =
+		useState<boolean>(false);
+
+	const commentTextAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
@@ -32,12 +36,24 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 		setIsToggleComments(!isToggleComments);
 	};
 
+	const handleToggleCommentWrite = () => {
+		if (!isToggleComments) setIsToggleComments(!isToggleComments);
+
+		setIsToggleCommentWrite(true);
+	};
+
+	useEffect(() => {
+		if (isToggleCommentWrite) commentTextAreaRef.current?.focus();
+
+		return () => {};
+	}, [isToggleCommentWrite]);
+
 	return (
 		<>
 			<div>
 				<div className={styles.feed_card_container} id={feed.feedId}>
 					<div className={styles.feed_card_top_container}>
-						<Profile></Profile>
+						<Profile username="양광성"></Profile>
 						<div
 							className="ml-auto cursor-pointer relative"
 							ref={settingModalWrapperRef}
@@ -85,7 +101,10 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 								{feed.sumLike ? feed.sumLike : 0}
 							</div>
 						</div>
-						<div className={styles.feed_icon_container}>
+						<div
+							className={styles.feed_icon_container}
+							onClick={handleToggleCommentWrite}
+						>
 							<GoComment className={styles.feed_icon} size={28} />
 						</div>
 						<div className={styles.feed_icon_container}>
@@ -102,7 +121,13 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 					</div>
 				</div>
 				{/* 댓글 */}
-				{isToggleComments && <Comments comments={feed.comments} />}
+				{isToggleComments && (
+					<Comments
+						comments={feed.comments}
+						isToggleCommentWrite={isToggleCommentWrite}
+						commentTextAreaRef={commentTextAreaRef}
+					/>
+				)}
 			</div>
 		</>
 	);

@@ -287,7 +287,7 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'writeFeed' && (
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-						<Profile />
+						<Profile username="양광성" role="관리자" />
 						<div className="my-5">
 							<select
 								{...register('isPublic')}

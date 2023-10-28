@@ -15,9 +15,9 @@
 	}
 
 	.profile_comment_username {
-		@apply text-sm font-medium;
+		@apply text-sm font-medium ml-4;
 	}
 	.profile_comment_contents {
-		@apply text-sm mt-3;
+		@apply text-sm mt-3 ml-4;
 	}
 }
