@@ -130,7 +130,7 @@ const Comments: FC<CommentsProps> = ({
 			)}
 
 			{comments.map(comment => (
-				<CommentItem key={comment.id} comment={comment} />
+				<CommentItem key={comment.id} comment={comment} depth={0} />
 			))}
 		</div>
 	);

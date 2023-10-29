@@ -12,3 +12,7 @@
 		@apply ml-auto;
 	}
 }
+
+.child_comment_container {
+	@apply ml-[70px] relative flex flex-col gap-6;
+}
