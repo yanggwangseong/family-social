@@ -19,8 +19,6 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 	const [isToggleCommentWrite, setIsToggleCommentWrite] =
 		useState<boolean>(false);
 
-	const commentTextAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,
@@ -41,12 +39,6 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 
 		setIsToggleCommentWrite(true);
 	};
-
-	useEffect(() => {
-		if (isToggleCommentWrite) commentTextAreaRef.current?.focus();
-
-		return () => {};
-	}, [isToggleCommentWrite]);
 
 	return (
 		<>
@@ -124,8 +116,8 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page }) => {
 				{isToggleComments && (
 					<Comments
 						comments={feed.comments}
+						feedId={feed.feedId}
 						isToggleCommentWrite={isToggleCommentWrite}
-						commentTextAreaRef={commentTextAreaRef}
 					/>
 				)}
 			</div>
