@@ -165,6 +165,10 @@ const Feed: FC = () => {
 		feedLikeSync({ feedId, page });
 	};
 
+	const handleRefetch = (pageValue: number) => {
+		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+	};
+
 	return (
 		<Format title={'feed'}>
 			<div className={styles.container}>
@@ -208,6 +212,7 @@ const Feed: FC = () => {
 												feed={feed}
 												onLike={handleUpdateLike}
 												page={page.page}
+												onRefetch={handleRefetch}
 											/>
 										))}
 									</React.Fragment>

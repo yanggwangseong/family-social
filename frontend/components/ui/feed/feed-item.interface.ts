@@ -4,4 +4,5 @@ export interface FeedItemProps {
 	feed: FeedInfo;
 	page: number;
 	onLike: (feedId: string, page: number) => void;
+	onRefetch: (pageValue: number) => void;
 }

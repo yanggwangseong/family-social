@@ -19,6 +19,7 @@ const Comments: FC<CommentsProps> = ({
 	comments,
 	feedId,
 	isToggleCommentWrite,
+	onCommentRefetch,
 }) => {
 	const [isEmoji, setIsEmoji] = useState<boolean>(false);
 
@@ -46,6 +47,7 @@ const Comments: FC<CommentsProps> = ({
 				Loading.remove();
 				Report.success('성공', `피드를 생성 하였습니다.`, '확인');
 				reset({ commentContents: '' });
+				onCommentRefetch();
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
