@@ -38,5 +38,18 @@ type OmitStrict<T, K extends keyof T> = T extends any
 	? Pick<T, Exclude<keyof T, K>>
 	: never;
 
+/**
+ * reverse 배열을 추론하는 타입
+ * @name Reverse
+ * @example
+ * type OriginalArray = [1,2,3,4,5];
+ * type ReversedArray = Reverse<OriginalArray>;
+ * 추론 값 : type ReversedArray = [5, 4, 3, 2, 1]
+ *
+ */
+type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
+	? [...Reverse<Rest>, F]
+	: [];
+
 export { EditMode, LayerMode, ToggleModalDerection };
-export type { Union, OmitStrict };
+export type { Union, OmitStrict, Reverse };
