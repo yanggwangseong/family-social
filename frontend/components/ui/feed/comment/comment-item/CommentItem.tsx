@@ -15,7 +15,11 @@ const CommentItem: FC<{
 	const [isReply, setIsReply] = useState<boolean>(false);
 
 	const replyId = comment.id;
-	const parentId = comment.parentId;
+	const parentId = comment.parentId ? comment.parentId : comment.id;
+
+	const handleCloseReply = () => {
+		setIsReply(false);
+	};
 	return (
 		<>
 			<div>
@@ -50,6 +54,7 @@ const CommentItem: FC<{
 						feedId={feedId}
 						replyId={replyId}
 						parentId={parentId}
+						handleCloseReply={handleCloseReply}
 					/>
 				</div>
 			)}

@@ -17,7 +17,8 @@ const CommentForm: FC<{
 	feedId: string;
 	parentId?: string;
 	replyId?: string;
-}> = ({ onCommentRefetch, feedId, parentId, replyId }) => {
+	handleCloseReply?: () => void;
+}> = ({ onCommentRefetch, feedId, parentId, replyId, handleCloseReply }) => {
 	const {
 		register,
 		formState: { errors, isValid, isDirty },
@@ -47,6 +48,7 @@ const CommentForm: FC<{
 				Report.success('성공', `댓글 작성 하였습니다.`, '확인');
 				reset({ commentContents: '' });
 				onCommentRefetch();
+				handleCloseReply && handleCloseReply();
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
