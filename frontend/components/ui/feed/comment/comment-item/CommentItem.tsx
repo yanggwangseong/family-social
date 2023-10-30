@@ -4,16 +4,18 @@ import Profile from '@/components/ui/profile/Profile';
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 import { BsDot } from 'react-icons/bs';
 import { AiOutlineHeart } from 'react-icons/ai';
-import { FaRegSmile } from 'react-icons/fa';
-import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
-import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import CommentForm from '@/components/ui/form/CommentForm';
 
-const CommentItem: FC<{ comment: CommentsResponse; depth: number }> = ({
-	comment,
-	depth,
-}) => {
+const CommentItem: FC<{
+	comment: CommentsResponse;
+	depth: number;
+	onCommentRefetch: () => void;
+	feedId: string;
+}> = ({ comment, depth, onCommentRefetch, feedId }) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
 
+	const replyId = comment.id;
+	const parentId = comment.parentId;
 	return (
 		<>
 			<div>
@@ -42,24 +44,13 @@ const CommentItem: FC<{ comment: CommentsResponse; depth: number }> = ({
 			</div>
 			{isReply && (
 				<div>
-					<div className="border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex">
-						<div className="mr-2 relative">
-							<FaRegSmile className={'cursor-pointer'} size={22} />
-						</div>
-						<FieldWithTextarea
-							fieldClass="hidden_border_textarea"
-							placeholder="댓글을 입력 하세요."
-						></FieldWithTextarea>
-						<div className="flex items-center justify-center">
-							<CustomButton
-								type="submit"
-								className="text-customOrange font-extrabold bg-basic text-sm"
-								shadowNone={true}
-							>
-								POST
-							</CustomButton>
-						</div>
-					</div>
+					{/* comment form */}
+					<CommentForm
+						onCommentRefetch={onCommentRefetch}
+						feedId={feedId}
+						replyId={replyId}
+						parentId={parentId}
+					/>
 				</div>
 			)}
 			{comment.childrenComments && (
@@ -69,6 +60,8 @@ const CommentItem: FC<{ comment: CommentsResponse; depth: number }> = ({
 							key={child.id}
 							comment={child}
 							depth={depth + 1}
+							onCommentRefetch={onCommentRefetch}
+							feedId={feedId}
 						></CommentItem>
 					))}
 				</div>

@@ -8,6 +8,8 @@ export const CommentService = {
 		replyId,
 		parentId,
 	}: CreateCommentRequest) {
+		console.log(replyId);
+		console.log(parentId);
 		const { data } = await axiosAPI.post<void>(`/feeds/${feedId}/comments`, {
 			commentContents: commentContents,
 			feedId: feedId,
