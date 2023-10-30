@@ -12,8 +12,8 @@ import { useMutation } from 'react-query';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
-import { OmitStrict } from 'types';
 import { CommentService } from '@/services/comment/comment.service';
+import { useEmoji } from '@/hooks/useEmoji';
 
 const Comments: FC<CommentsProps> = ({
 	comments,
@@ -21,8 +21,6 @@ const Comments: FC<CommentsProps> = ({
 	isToggleCommentWrite,
 	onCommentRefetch,
 }) => {
-	const [isEmoji, setIsEmoji] = useState<boolean>(false);
-
 	const {
 		register,
 		formState: { errors, isValid, isDirty },
@@ -35,6 +33,10 @@ const Comments: FC<CommentsProps> = ({
 	} = useForm<{ commentContents: string }>({
 		mode: 'onChange',
 	});
+
+	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } = useEmoji<{
+		commentContents: string;
+	}>(getValues, setValue);
 
 	const { mutate: createGroupSync } = useMutation(
 		['create-comment'],
@@ -62,15 +64,8 @@ const Comments: FC<CommentsProps> = ({
 		},
 	);
 
-	const handleEmojiView = () => {
-		setIsEmoji(!isEmoji);
-	};
-
 	const handleAddEmojiValue = (emojiData: EmojiClickData) => {
-		const currentComment = getValues('commentContents') || ''; // 현재 입력된 댓글을 가져옴
-
-		setValue('commentContents', currentComment + emojiData.emoji);
-		setIsEmoji(false);
+		handlesetValueAddEmoji(emojiData, 'commentContents');
 	};
 
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
