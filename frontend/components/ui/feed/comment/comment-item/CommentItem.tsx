@@ -26,6 +26,10 @@ const CommentItem: FC<{
 		setIsSeeMore(!isSeeMore);
 	};
 
+	const seeMoreText = isSeeMore
+		? '숨기기'
+		: `댓글 ${comment.childrenComments?.length}개 더보기`;
+
 	return (
 		<>
 			<div>
@@ -50,7 +54,7 @@ const CommentItem: FC<{
 								<BsDot size={22} color="#0a0a0a"></BsDot>
 							</div>
 							<div className={styles.comment_reply} onClick={handleSeeMore}>
-								댓글 {comment.childrenComments?.length} 더보기
+								{seeMoreText}
 							</div>
 						</>
 					)}
