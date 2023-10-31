@@ -47,6 +47,14 @@ const CommentItem: FC<{
 					>
 						답글
 					</div>
+					<div>
+						<BsDot size={22} color="#0a0a0a"></BsDot>
+					</div>
+					<div className={styles.comment_reply}>수정</div>
+					<div>
+						<BsDot size={22} color="#0a0a0a"></BsDot>
+					</div>
+					<div className={styles.comment_reply}>삭제</div>
 
 					{depth === 0 && comment.childrenComments?.length !== 0 && (
 						<>
@@ -58,6 +66,7 @@ const CommentItem: FC<{
 							</div>
 						</>
 					)}
+
 					<div className={styles.comment_like_container}>
 						<AiOutlineHeart size={28} className={styles.like_icon} />
 					</div>
