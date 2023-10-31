@@ -3,5 +3,6 @@ interface CommentFormProps {
 	feedId: string;
 	parentId?: string;
 	replyId?: string;
+	commentId: string;
 	handleCloseReply?: () => void;
 }

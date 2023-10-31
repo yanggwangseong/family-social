@@ -17,6 +17,7 @@ const CommentForm: FC<CommentFormProps> = ({
 	feedId,
 	parentId,
 	replyId,
+	commentId,
 	handleCloseReply,
 }) => {
 	const {
@@ -36,7 +37,7 @@ const CommentForm: FC<CommentFormProps> = ({
 		commentContents: string;
 	}>(getValues, setValue);
 
-	const { mutate: createGroupSync } = useMutation(
+	const { mutate: createCommentSync } = useMutation(
 		['create-comment'],
 		(data: CreateCommentRequest) => CommentService.createComment(data),
 		{
@@ -63,12 +64,37 @@ const CommentForm: FC<CommentFormProps> = ({
 		},
 	);
 
+	const { mutate: deleteCommentSync } = useMutation(
+		['delete-comment'],
+		() => CommentService.deleteComment(commentId, feedId),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `댓글을 삭제 하였습니다.`, '확인');
+				onCommentRefetch();
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
 	const handleAddEmojiValue = (emojiData: EmojiClickData) => {
 		handlesetValueAddEmoji(emojiData, 'commentContents');
 	};
 
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		createGroupSync({
+		createCommentSync({
 			commentContents: data.commentContents,
 			feedId: feedId,
 			parentId: parentId,

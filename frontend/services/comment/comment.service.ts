@@ -8,14 +8,20 @@ export const CommentService = {
 		replyId,
 		parentId,
 	}: CreateCommentRequest) {
-		console.log(replyId);
-		console.log(parentId);
 		const { data } = await axiosAPI.post<void>(`/feeds/${feedId}/comments`, {
 			commentContents: commentContents,
 			feedId: feedId,
 			replyId: replyId,
 			parentId: parentId,
 		});
+
+		return data;
+	},
+
+	async deleteComment(feedId: string, commentId: string) {
+		const { data } = await axiosAPI.delete<void>(
+			`/feeds/${feedId}/comments/${commentId}`,
+		);
 
 		return data;
 	},

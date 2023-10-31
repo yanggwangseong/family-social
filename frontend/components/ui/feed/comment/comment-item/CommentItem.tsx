@@ -80,6 +80,7 @@ const CommentItem: FC<{
 						feedId={feedId}
 						replyId={replyId}
 						parentId={parentId}
+						commentId={comment.id}
 						handleCloseReply={handleCloseReply}
 					/>
 				</div>
