@@ -7,7 +7,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { CreateCommentRequest } from '../feed/comment/comments-interface';
+import {
+	CreateCommentRequest,
+	UpdateCommentRequest,
+} from '../feed/comment/comments-interface';
 import { CommentService } from '@/services/comment/comment.service';
 import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
@@ -17,8 +20,11 @@ const CommentForm: FC<CommentFormProps> = ({
 	feedId,
 	parentId,
 	replyId,
+	isEdit,
 	commentId,
+	commentContents,
 	handleCloseReply,
+	handleEditComment,
 }) => {
 	const {
 		register,
@@ -64,6 +70,39 @@ const CommentForm: FC<CommentFormProps> = ({
 		},
 	);
 
+	const { mutate: updateCommentSync } = useMutation(
+		['update-comment'],
+		(data: UpdateCommentRequest) =>
+			CommentService.updateComment({
+				commentId,
+				feedId,
+				commentContents: data.commentContents,
+			}),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `댓글을 수정 하였습니다.`, '확인');
+				reset({ commentContents: '' });
+				onCommentRefetch();
+				handleCloseReply && handleCloseReply();
+				handleEditComment && handleEditComment();
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
 	const handleAddEmojiValue = (emojiData: EmojiClickData) => {
 		handlesetValueAddEmoji(emojiData, 'commentContents');
 	};
@@ -77,8 +116,12 @@ const CommentForm: FC<CommentFormProps> = ({
 		});
 	};
 
+	const onUpdateSubmit: SubmitHandler<{ commentContents: string }> = data => {
+		updateCommentSync(data);
+	};
+
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(isEdit ? onUpdateSubmit : onSubmit)}>
 			<div className="border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex">
 				<div className="mr-2 relative">
 					<FaRegSmile
@@ -107,6 +150,7 @@ const CommentForm: FC<CommentFormProps> = ({
 					})}
 					fieldClass="hidden_border_textarea"
 					placeholder="댓글을 입력 하세요."
+					defaultValue={commentContents}
 				></FieldWithTextarea>
 				<div className="flex items-center justify-center">
 					<CustomButton
@@ -114,7 +158,7 @@ const CommentForm: FC<CommentFormProps> = ({
 						className="text-customOrange font-extrabold bg-basic text-sm"
 						shadowNone={true}
 					>
-						POST
+						{isEdit ? `UPDATE` : `POST`}
 					</CustomButton>
 				</div>
 			</div>

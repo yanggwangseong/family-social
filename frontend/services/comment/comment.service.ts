@@ -18,6 +18,25 @@ export const CommentService = {
 		return data;
 	},
 
+	async updateComment({
+		feedId,
+		commentId,
+		commentContents,
+	}: {
+		feedId: string;
+		commentId?: string;
+		commentContents: string;
+	}) {
+		const { data } = await axiosAPI.put<void>(
+			`/feeds/${feedId}/comments/${commentId}`,
+			{
+				commentContents: commentContents,
+			},
+		);
+
+		return data;
+	},
+
 	async deleteComment({
 		feedId,
 		commentId,

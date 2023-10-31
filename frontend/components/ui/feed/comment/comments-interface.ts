@@ -13,3 +13,6 @@ export interface CreateCommentRequest {
 	parentId?: string;
 	feedId: string;
 }
+
+export interface UpdateCommentRequest
+	extends Pick<CreateCommentRequest, 'commentContents'> {}

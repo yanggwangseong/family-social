@@ -18,6 +18,7 @@ const CommentItem: FC<{
 }> = ({ comment, depth, onCommentRefetch, feedId }) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
 	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
+	const [isEdit, setIsEdit] = useState<boolean>(false);
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -47,6 +48,10 @@ const CommentItem: FC<{
 		}); // 삭제를 위해 commentId 전역 recoil 변수에 담기
 	};
 
+	const handleEditComment = () => {
+		setIsEdit(!isEdit);
+	};
+
 	const seeMoreText = isSeeMore
 		? '숨기기'
 		: `댓글 ${comment.childrenComments?.length}개 더보기`;
@@ -71,7 +76,9 @@ const CommentItem: FC<{
 					<div>
 						<BsDot size={22} color="#0a0a0a"></BsDot>
 					</div>
-					<div className={styles.comment_reply}>수정</div>
+					<div className={styles.comment_reply} onClick={handleEditComment}>
+						수정
+					</div>
 					<div>
 						<BsDot size={22} color="#0a0a0a"></BsDot>
 					</div>
@@ -95,6 +102,22 @@ const CommentItem: FC<{
 					</div>
 				</div>
 			</div>
+			{isEdit && (
+				<div>
+					{/* comment form */}
+					<CommentForm
+						onCommentRefetch={onCommentRefetch}
+						feedId={feedId}
+						replyId={replyId}
+						parentId={parentId}
+						commentId={comment.id}
+						isEdit={isEdit}
+						commentContents={comment.commentContents}
+						handleCloseReply={handleCloseReply}
+						handleEditComment={handleEditComment}
+					/>
+				</div>
+			)}
 			{isReply && (
 				<div>
 					{/* comment form */}

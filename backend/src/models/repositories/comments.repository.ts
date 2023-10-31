@@ -39,9 +39,9 @@ export class CommentsRepository extends Repository<CommentEntity> {
 				LikedByComments: true,
 			},
 			order: {
-				updatedAt: 'ASC',
+				createdAt: 'asc',
 				childrenComments: {
-					updatedAt: 'ASC',
+					createdAt: 'asc',
 				},
 			},
 		});
