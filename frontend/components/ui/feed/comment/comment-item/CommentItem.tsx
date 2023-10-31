@@ -5,6 +5,10 @@ import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 import { BsDot } from 'react-icons/bs';
 import { AiOutlineHeart } from 'react-icons/ai';
 import CommentForm from '@/components/ui/form/CommentForm';
+import { useRecoilState } from 'recoil';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { commentIdAtom } from '@/atoms/commentIdAtom';
+import { LayerMode } from 'types';
 
 const CommentItem: FC<{
 	comment: CommentsResponse;
@@ -15,6 +19,10 @@ const CommentItem: FC<{
 	const [isReply, setIsReply] = useState<boolean>(false);
 	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
 
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+	const [, setIsCommentId] = useRecoilState(commentIdAtom);
+
 	const replyId = comment.id;
 	const parentId = comment.parentId ? comment.parentId : comment.id;
 
@@ -24,6 +32,16 @@ const CommentItem: FC<{
 
 	const handleSeeMore = () => {
 		setIsSeeMore(!isSeeMore);
+	};
+
+	const handleDeleteComment = () => {
+		setIsShowing(!isShowing); // layer modal 보여주기
+		setIsLayer({
+			modal_title: '댓글 삭제',
+			layer: LayerMode.commentDeleteConfirm,
+		}); // layer modal 어떤 layer를 보여 줄건지
+
+		setIsCommentId(comment.id); // 삭제를 위해 commentId 전역 recoil 변수에 담기
 	};
 
 	const seeMoreText = isSeeMore
@@ -54,7 +72,9 @@ const CommentItem: FC<{
 					<div>
 						<BsDot size={22} color="#0a0a0a"></BsDot>
 					</div>
-					<div className={styles.comment_reply}>삭제</div>
+					<div className={styles.comment_reply} onClick={handleDeleteComment}>
+						삭제
+					</div>
 
 					{depth === 0 && comment.childrenComments?.length !== 0 && (
 						<>
