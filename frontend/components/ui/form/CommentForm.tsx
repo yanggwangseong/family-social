@@ -64,31 +64,6 @@ const CommentForm: FC<CommentFormProps> = ({
 		},
 	);
 
-	const { mutate: deleteCommentSync } = useMutation(
-		['delete-comment'],
-		() => CommentService.deleteComment(commentId, feedId),
-		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
-				Loading.remove();
-				Report.success('성공', `댓글을 삭제 하였습니다.`, '확인');
-				onCommentRefetch();
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
-		},
-	);
-
 	const handleAddEmojiValue = (emojiData: EmojiClickData) => {
 		handlesetValueAddEmoji(emojiData, 'commentContents');
 	};

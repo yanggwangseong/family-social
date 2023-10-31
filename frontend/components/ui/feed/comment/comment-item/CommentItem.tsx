@@ -7,8 +7,8 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import CommentForm from '@/components/ui/form/CommentForm';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
-import { commentIdAtom } from '@/atoms/commentIdAtom';
 import { LayerMode } from 'types';
+import { commentAtom } from '@/atoms/commentAtom';
 
 const CommentItem: FC<{
 	comment: CommentsResponse;
@@ -21,7 +21,7 @@ const CommentItem: FC<{
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
-	const [, setIsCommentId] = useRecoilState(commentIdAtom);
+	const [, setIsComment] = useRecoilState(commentAtom);
 
 	const replyId = comment.id;
 	const parentId = comment.parentId ? comment.parentId : comment.id;
@@ -41,7 +41,10 @@ const CommentItem: FC<{
 			layer: LayerMode.commentDeleteConfirm,
 		}); // layer modal 어떤 layer를 보여 줄건지
 
-		setIsCommentId(comment.id); // 삭제를 위해 commentId 전역 recoil 변수에 담기
+		setIsComment({
+			feedId: comment.feedId,
+			commentId: comment.id,
+		}); // 삭제를 위해 commentId 전역 recoil 변수에 담기
 	};
 
 	const seeMoreText = isSeeMore

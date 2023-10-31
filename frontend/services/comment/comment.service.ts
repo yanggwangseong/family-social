@@ -18,7 +18,13 @@ export const CommentService = {
 		return data;
 	},
 
-	async deleteComment(feedId: string, commentId: string) {
+	async deleteComment({
+		feedId,
+		commentId,
+	}: {
+		feedId: string;
+		commentId: string;
+	}) {
 		const { data } = await axiosAPI.delete<void>(
 			`/feeds/${feedId}/comments/${commentId}`,
 		);
