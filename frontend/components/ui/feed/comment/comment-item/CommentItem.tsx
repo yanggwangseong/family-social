@@ -13,6 +13,7 @@ const CommentItem: FC<{
 	feedId: string;
 }> = ({ comment, depth, onCommentRefetch, feedId }) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
+	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
 
 	const replyId = comment.id;
 	const parentId = comment.parentId ? comment.parentId : comment.id;
@@ -20,6 +21,11 @@ const CommentItem: FC<{
 	const handleCloseReply = () => {
 		setIsReply(false);
 	};
+
+	const handleSeeMore = () => {
+		setIsSeeMore(!isSeeMore);
+	};
+
 	return (
 		<>
 			<div>
@@ -37,10 +43,17 @@ const CommentItem: FC<{
 					>
 						답글
 					</div>
-					<div>
-						<BsDot size={22} color="#0a0a0a"></BsDot>
-					</div>
-					<div className={styles.comment_reply}>더보기</div>
+
+					{depth === 0 && comment.childrenComments?.length !== 0 && (
+						<>
+							<div>
+								<BsDot size={22} color="#0a0a0a"></BsDot>
+							</div>
+							<div className={styles.comment_reply} onClick={handleSeeMore}>
+								댓글 {comment.childrenComments?.length} 더보기
+							</div>
+						</>
+					)}
 					<div className={styles.comment_like_container}>
 						<AiOutlineHeart size={28} className={styles.like_icon} />
 					</div>
@@ -58,7 +71,7 @@ const CommentItem: FC<{
 					/>
 				</div>
 			)}
-			{comment.childrenComments && (
+			{comment.childrenComments && isSeeMore && (
 				<div className={styles.child_comment_container}>
 					{comment.childrenComments?.map(child => (
 						<CommentItem

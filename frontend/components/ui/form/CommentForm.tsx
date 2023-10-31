@@ -12,13 +12,13 @@ import { CommentService } from '@/services/comment/comment.service';
 import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
 
-const CommentForm: FC<{
-	onCommentRefetch: () => void;
-	feedId: string;
-	parentId?: string;
-	replyId?: string;
-	handleCloseReply?: () => void;
-}> = ({ onCommentRefetch, feedId, parentId, replyId, handleCloseReply }) => {
+const CommentForm: FC<CommentFormProps> = ({
+	onCommentRefetch,
+	feedId,
+	parentId,
+	replyId,
+	handleCloseReply,
+}) => {
 	const {
 		register,
 		formState: { errors, isValid, isDirty },
