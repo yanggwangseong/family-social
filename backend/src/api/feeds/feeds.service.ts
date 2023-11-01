@@ -69,6 +69,7 @@ export class FeedsService {
 			list.map(async (feed) => {
 				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
 					feed.feedId,
+					memberId,
 				);
 
 				return {
@@ -194,10 +195,13 @@ export class FeedsService {
 		return feed;
 	}
 
-	private async getMediaUrlAndCommentsByFeedId(feedId: string) {
+	private async getMediaUrlAndCommentsByFeedId(
+		feedId: string,
+		memberId: string,
+	) {
 		return await Promise.all([
 			await this.mediasService.findMediaUrlByFeedId(feedId),
-			await this.commentsService.getCommentsByFeedId(feedId),
+			await this.commentsService.getCommentsByFeedId(feedId, memberId),
 		]);
 	}
 }
