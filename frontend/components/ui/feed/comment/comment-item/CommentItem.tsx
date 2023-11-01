@@ -3,7 +3,7 @@ import styles from './CommentItem.module.scss';
 import Profile from '@/components/ui/profile/Profile';
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 import { BsDot } from 'react-icons/bs';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import CommentForm from '@/components/ui/form/CommentForm';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
@@ -16,11 +16,15 @@ const CommentItem: FC<{
 	depth: number;
 	feedId: string;
 	onCommentRefetch: () => void;
-	onLikeComment: () => void;
+	onLikeComment: (commentId: string) => void;
 }> = ({ comment, depth, onCommentRefetch, feedId, onLikeComment }) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
 	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
+
+	const [isLike, setIsLike] = useState<boolean>(
+		comment.myLikeByComment ? comment.myLikeByComment : false,
+	);
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -28,6 +32,11 @@ const CommentItem: FC<{
 
 	const replyId = comment.id;
 	const parentId = comment.parentId ? comment.parentId : comment.id;
+
+	const handleLikeComment = () => {
+		onLikeComment(comment.id);
+		setIsLike(!isLike);
+	};
 
 	const handleCloseReply = () => {
 		setIsReply(false);
@@ -100,11 +109,24 @@ const CommentItem: FC<{
 					)}
 
 					<div className={styles.comment_like_container}>
-						<AiOutlineHeart
-							size={28}
-							className={styles.like_icon}
-							onClick={onLikeComment}
-						/>
+						{isLike ? (
+							<AiFillHeart
+								size={28}
+								color="#FB1F42"
+								className={styles.like_icon}
+								onClick={handleLikeComment}
+							/>
+						) : (
+							<AiOutlineHeart
+								size={28}
+								className={styles.like_icon}
+								onClick={handleLikeComment}
+							/>
+						)}
+
+						<div className={styles.like_count}>
+							{comment.sumLikeByComment ? comment.sumLikeByComment : 0}
+						</div>
 					</div>
 				</div>
 			</div>
