@@ -15,21 +15,20 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { useLottieLike } from '@/hooks/useLottieLike';
 
 const Feed: FC = () => {
-	const [isLottie, setIsLottie] = useState<boolean>(false);
+	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
-	const lottieRef = useRef<LottieRefCurrentProps>(null);
-
-	const handleLike = () => {
-		if (lottieRef.current) {
-			lottieRef.current.play();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'visible';
-			}
-		}
-	};
+	// const handleLike = () => {
+	// 	if (lottieRef.current) {
+	// 		lottieRef.current.play();
+	// 		if (lottieRef.current?.animationContainerRef.current) {
+	// 			lottieRef.current.animationContainerRef.current.style.visibility =
+	// 				'visible';
+	// 		}
+	// 	}
+	// };
 
 	const { mutate: feedLikeSync } = useMutation(
 		['feed-like'],
@@ -110,36 +109,6 @@ const Feed: FC = () => {
 		}
 		return () => {};
 	}, [data]);
-
-	useEffect(() => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			if (isLottie) {
-				lottieRef.current.play();
-				if (lottieRef.current?.animationContainerRef.current) {
-					lottieRef.current.animationContainerRef.current.style.visibility =
-						'visible';
-				}
-			}
-		}
-	}, [isLottie]);
-
-	const handleLottieComplete = () => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			setIsLottie(false);
-			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
-			//lottieRef.current.animationContainerRef.current?.remove();
-		}
-	};
 
 	const observeElement = (element: HTMLElement | null) => {
 		if (!element) return;
