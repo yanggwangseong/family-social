@@ -17,6 +17,7 @@ import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import LottieLike from '@/components/ui/lottie/LottieLike';
+import { CommentService } from '@/services/comment/comment.service';
 
 const Feed: FC = () => {
 	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
@@ -35,6 +36,43 @@ const Feed: FC = () => {
 		['feed-like'],
 		(data: { feedId: string; page: number }) =>
 			FeedService.updateLike(data.feedId),
+		{
+			onMutate: variable => {
+				//Loading.hourglass();
+			},
+			onSuccess(data, variable) {
+				const pageValue = variable.page;
+				if (data === true) {
+					setIsLottie(true);
+					Notify.success('좋아요를 누르셨습니다');
+				}
+				if (data === false) {
+					Notify.warning('좋아요를 취소하셨습니다');
+				}
+
+				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+
+				//Loading.remove();
+				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const { mutate: commentLikeSync } = useMutation(
+		['comment-like'],
+		(data: { feedId: string; commentId: string; page: number }) =>
+			CommentService.updateLike(data.feedId, data.commentId),
 		{
 			onMutate: variable => {
 				//Loading.hourglass();
@@ -139,8 +177,12 @@ const Feed: FC = () => {
 		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 	};
 
-	const handleLikeComment = () => {
-		setIsLottie(true);
+	const handleLikeComment = (
+		feedId: string,
+		commentId: string,
+		page: number,
+	) => {
+		commentLikeSync({ feedId, commentId, page });
 	};
 
 	return (

@@ -50,6 +50,10 @@ const FeedItem: FC<FeedItemProps> = ({
 		onRefetch(page);
 	};
 
+	const handleLikeComment = (commentId: string) => {
+		onLikeComment(feed.feedId, commentId, page);
+	};
+
 	return (
 		<>
 			<div>
@@ -129,7 +133,7 @@ const FeedItem: FC<FeedItemProps> = ({
 						feedId={feed.feedId}
 						isToggleCommentWrite={isToggleCommentWrite}
 						onCommentRefetch={handleCommentRefetch}
-						onLikeComment={onLikeComment}
+						onLikeComment={handleLikeComment}
 					/>
 				)}
 			</div>

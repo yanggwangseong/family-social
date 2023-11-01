@@ -50,4 +50,12 @@ export const CommentService = {
 
 		return data;
 	},
+
+	async updateLike(feedId: string, commentId: string) {
+		const { data } = await axiosAPI.put(
+			`/feeds/${feedId}/comments/${commentId}/likes`,
+		);
+
+		return data;
+	},
 };

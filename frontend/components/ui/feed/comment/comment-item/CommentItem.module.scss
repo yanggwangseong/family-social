@@ -9,7 +9,11 @@
 	}
 
 	.comment_like_container {
-		@apply ml-auto cursor-pointer;
+		@apply ml-auto cursor-pointer flex;
+
+		.like_count {
+			@apply ml-2 font-medium;
+		}
 	}
 }
 
