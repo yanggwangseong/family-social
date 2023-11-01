@@ -11,7 +11,13 @@ import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
 import Comments from './comment/Comments';
 
-const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page, onRefetch }) => {
+const FeedItem: FC<FeedItemProps> = ({
+	feed,
+	onLike,
+	page,
+	onRefetch,
+	onLikeComment,
+}) => {
 	const [isLike, setIsLike] = useState<boolean>(
 		feed.myLike ? feed.myLike : false,
 	);
@@ -123,6 +129,7 @@ const FeedItem: FC<FeedItemProps> = ({ feed, onLike, page, onRefetch }) => {
 						feedId={feed.feedId}
 						isToggleCommentWrite={isToggleCommentWrite}
 						onCommentRefetch={handleCommentRefetch}
+						onLikeComment={onLikeComment}
 					/>
 				)}
 			</div>

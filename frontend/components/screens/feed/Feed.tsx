@@ -139,6 +139,10 @@ const Feed: FC = () => {
 		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 	};
 
+	const handleLikeComment = () => {
+		setIsLottie(true);
+	};
+
 	return (
 		<Format title={'feed'}>
 			<div className={styles.container}>
@@ -188,6 +192,7 @@ const Feed: FC = () => {
 												onLike={handleUpdateLike}
 												page={page.page}
 												onRefetch={handleRefetch}
+												onLikeComment={handleLikeComment}
 											/>
 										))}
 									</React.Fragment>

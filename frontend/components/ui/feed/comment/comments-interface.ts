@@ -5,6 +5,7 @@ export interface CommentsProps {
 	feedId: string;
 	isToggleCommentWrite: boolean;
 	onCommentRefetch: () => void;
+	onLikeComment: () => void;
 }
 
 export interface CreateCommentRequest {

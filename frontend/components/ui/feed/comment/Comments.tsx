@@ -10,6 +10,7 @@ const Comments: FC<CommentsProps> = ({
 	feedId,
 	isToggleCommentWrite,
 	onCommentRefetch,
+	onLikeComment,
 }) => {
 	return (
 		<div className={styles.comment_container}>
@@ -31,6 +32,7 @@ const Comments: FC<CommentsProps> = ({
 					depth={0}
 					onCommentRefetch={onCommentRefetch}
 					feedId={feedId}
+					onLikeComment={onLikeComment}
 				/>
 			))}
 		</div>

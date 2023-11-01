@@ -9,13 +9,15 @@ import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { commentAtom } from '@/atoms/commentAtom';
+import { useLottieLike } from '@/hooks/useLottieLike';
 
 const CommentItem: FC<{
 	comment: CommentsResponse;
 	depth: number;
-	onCommentRefetch: () => void;
 	feedId: string;
-}> = ({ comment, depth, onCommentRefetch, feedId }) => {
+	onCommentRefetch: () => void;
+	onLikeComment: () => void;
+}> = ({ comment, depth, onCommentRefetch, feedId, onLikeComment }) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
 	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -98,7 +100,11 @@ const CommentItem: FC<{
 					)}
 
 					<div className={styles.comment_like_container}>
-						<AiOutlineHeart size={28} className={styles.like_icon} />
+						<AiOutlineHeart
+							size={28}
+							className={styles.like_icon}
+							onClick={onLikeComment}
+						/>
 					</div>
 				</div>
 			</div>
@@ -138,8 +144,9 @@ const CommentItem: FC<{
 							key={child.id}
 							comment={child}
 							depth={depth + 1}
-							onCommentRefetch={onCommentRefetch}
 							feedId={feedId}
+							onCommentRefetch={onCommentRefetch}
+							onLikeComment={onLikeComment}
 						></CommentItem>
 					))}
 				</div>
