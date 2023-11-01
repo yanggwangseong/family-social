@@ -16,6 +16,7 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { useLottieLike } from '@/hooks/useLottieLike';
+import LottieLike from '@/components/ui/lottie/LottieLike';
 
 const Feed: FC = () => {
 	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
@@ -156,12 +157,17 @@ const Feed: FC = () => {
 							</div>
 						</div>
 					) : null} */}
-					<Lottie
+
+					{/* <Lottie
 						className={styles.lottie_container}
 						animationData={heartAnimation}
 						loop={false}
 						lottieRef={lottieRef}
 						onComplete={handleLottieComplete}
+					/> */}
+					<LottieLike
+						lottieRef={lottieRef}
+						onLottieComplete={handleLottieComplete}
 					/>
 
 					{/* 왼쪽 사이드바 */}
