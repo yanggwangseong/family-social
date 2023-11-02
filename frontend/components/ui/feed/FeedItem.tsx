@@ -10,6 +10,11 @@ import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
 import Comments from './comment/Comments';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react'; // basic
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -80,12 +85,31 @@ const FeedItem: FC<FeedItemProps> = ({
 						{feed.contents}
 					</div>
 					<div className={styles.feed_media_container}>
-						<Image
+						<Swiper
+							className="w-full h-full relative"
+							modules={[Navigation, Pagination, A11y]}
+							spaceBetween={50}
+							slidesPerView={1}
+							navigation
+							pagination={{ clickable: true }}
+						>
+							{feed.medias.map((media, index) => (
+								<SwiperSlide key={index}>
+									<Image
+										fill
+										src={media.url}
+										alt="image"
+										style={{ objectFit: 'contain' }}
+									></Image>
+								</SwiperSlide>
+							))}
+						</Swiper>
+						{/* <Image
 							fill
 							src={'/images/banner/group-base.png'}
 							alt="banner"
 							priority={false}
-						></Image>
+						></Image> */}
 					</div>
 					<div className={styles.feed_bottom_container}>
 						<div className={styles.like_container}>

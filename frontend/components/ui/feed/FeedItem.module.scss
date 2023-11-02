@@ -10,8 +10,8 @@
 	}
 
 	.feed_media_container {
-		@apply w-full relative border-y border-solid border-customDark border-collapse;
-		height: 426px;
+		@apply w-full relative border-y border-solid border-customDark border-collapse bg-white;
+		height: 520px;
 	}
 
 	.feed_bottom_container {
