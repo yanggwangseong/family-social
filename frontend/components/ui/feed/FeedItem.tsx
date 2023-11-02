@@ -53,6 +53,7 @@ const FeedItem: FC<FeedItemProps> = ({
 	const handleLikeComment = (commentId: string) => {
 		onLikeComment(feed.feedId, commentId, page);
 	};
+	console.log(feed.contents);
 
 	return (
 		<>
@@ -76,7 +77,7 @@ const FeedItem: FC<FeedItemProps> = ({
 						</div>
 					</div>
 					<div className={styles.feed_description_container}>
-						엄마 아빠 수진이와 함께 캠핑을 갔습니다!
+						{feed.contents}
 					</div>
 					<div className={styles.feed_media_container}>
 						<Image

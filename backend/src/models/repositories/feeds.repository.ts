@@ -99,7 +99,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
 			.where('a.isPublic = :isPublic', { isPublic: true })
-			.orderBy('a.updatedAt', 'ASC')
+			.orderBy('a.updatedAt', 'DESC')
 			.offset(skip)
 			.limit(take);
 
