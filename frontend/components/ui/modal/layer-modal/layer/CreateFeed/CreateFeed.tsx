@@ -28,6 +28,10 @@ import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
+import { useEmoji } from '@/hooks/useEmoji';
+import { FaRegSmile } from 'react-icons/fa';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import Line from '@/components/ui/line/Line';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -65,10 +69,14 @@ const CreateFeed: FC = () => {
 		handleSubmit,
 		reset,
 		getValues,
+		setValue,
 		watch,
 	} = useForm<CreateFeedFields>({
 		mode: 'onChange',
 	});
+
+	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
+		useEmoji<CreateFeedFields>(getValues, setValue);
 
 	const { mutateAsync: uploadFilesASync } = useMutation(
 		['upload-file'],
@@ -125,6 +133,10 @@ const CreateFeed: FC = () => {
 			},
 		},
 	);
+
+	const handleAddEmojiValue = (emojiData: EmojiClickData) => {
+		handlesetValueAddEmoji(emojiData, 'contents');
+	};
 
 	const createMedia = (url: string, position: number) => {
 		return {
@@ -303,19 +315,21 @@ const CreateFeed: FC = () => {
 								<option value={'private'}>비공개</option>
 							</select>
 						</div>
-						<FieldWithTextarea
-							fieldClass="inline_textarea"
-							{...register('contents', {
-								required: '피드 글을 작성해주세요!',
-								maxLength: {
-									value: 2000,
-									message: '최대 2000자까지 가능합니다',
-								},
-							})}
-							placeholder="피드 글을 작성 해보세요"
-							defaultValue={feed?.contents}
-							error={errors.contents}
-						/>
+						<div>
+							<FieldWithTextarea
+								fieldClass="inline_textarea"
+								{...register('contents', {
+									required: '피드 글을 작성해주세요!',
+									maxLength: {
+										value: 2000,
+										message: '최대 2000자까지 가능합니다',
+									},
+								})}
+								placeholder="피드 글을 작성 해보세요"
+								defaultValue={feed?.contents}
+								error={errors.contents}
+							/>
+						</div>
 						<div className="mt-5">
 							<Swiper
 								className="w-full h-72 relative"
@@ -340,8 +354,10 @@ const CreateFeed: FC = () => {
 							</Swiper>
 						</div>
 
+						<Line />
+
 						<div className={styles.selectedGroup_button_container}>
-							<CustomButton
+							{/* <CustomButton
 								type="button"
 								className="mt-8 mb-4 bg-white text-customDark 
 										font-bold border border-solid border-customDark 
@@ -349,13 +365,31 @@ const CreateFeed: FC = () => {
 								onClick={() => handleChangePage('uploadMedia')}
 							>
 								이전
-							</CustomButton>
+							</CustomButton> */}
+							<div className="mr-2 relative flex justify-center items-center">
+								<FaRegSmile
+									className={'cursor-pointer'}
+									size={28}
+									onClick={handleEmojiView}
+								/>
+								{isEmoji && (
+									<div className=" absolute z-10 -top-[420px] left-0">
+										<EmojiPicker
+											height={400}
+											autoFocusSearch={false}
+											searchDisabled={true}
+											skinTonesDisabled={true}
+											onEmojiClick={handleAddEmojiValue}
+										/>
+									</div>
+								)}
+							</div>
 							<CustomButton
 								type="submit"
-								className="mt-8 mb-4 bg-customOrange text-customDark 
+								className="ml-auto bg-customOrange text-customDark 
 								font-bold border border-solid border-customDark 
 								rounded-full p-[10px]
-								w-full hover:bg-orange-500
+								w-1/2 hover:bg-orange-500
 								"
 								disabled={!isValid}
 							>

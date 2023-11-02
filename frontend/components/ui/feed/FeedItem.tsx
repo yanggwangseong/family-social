@@ -95,12 +95,7 @@ const FeedItem: FC<FeedItemProps> = ({
 						>
 							{feed.medias.map((media, index) => (
 								<SwiperSlide key={index}>
-									<Image
-										fill
-										src={media.url}
-										alt="image"
-										style={{ objectFit: 'contain' }}
-									></Image>
+									<Image fill src={media.url} alt="image"></Image>
 								</SwiperSlide>
 							))}
 						</Swiper>
