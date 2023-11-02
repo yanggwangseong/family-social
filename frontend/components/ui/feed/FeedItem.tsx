@@ -58,7 +58,6 @@ const FeedItem: FC<FeedItemProps> = ({
 	const handleLikeComment = (commentId: string) => {
 		onLikeComment(feed.feedId, commentId, page);
 	};
-	console.log(feed.contents);
 
 	return (
 		<>
@@ -95,7 +94,12 @@ const FeedItem: FC<FeedItemProps> = ({
 						>
 							{feed.medias.map((media, index) => (
 								<SwiperSlide key={index}>
-									<Image fill src={media.url} alt="image"></Image>
+									<Image
+										fill
+										src={media.url}
+										alt="image"
+										style={{ objectFit: 'inherit' }}
+									></Image>
 								</SwiperSlide>
 							))}
 						</Swiper>

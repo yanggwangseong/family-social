@@ -1,6 +1,6 @@
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './CreateFeed.module.scss';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
@@ -32,6 +32,7 @@ import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
+import { AiOutlineClose } from 'react-icons/ai';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -43,6 +44,8 @@ const CreateFeed: FC = () => {
 
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
+
+	const [isUplaod, setIsUpload] = useState<boolean>(false);
 
 	const queryClient = useQueryClient();
 
@@ -157,11 +160,20 @@ const CreateFeed: FC = () => {
 		resetImageUrl(); // 배열을 초기화 해준다.
 		setIsImageUrl(blobArrayImage);
 		setIsFiles(uploadedFiles);
+		setIsUpload(true);
 		//const result = await AuthService.uploadfile(uploadedFiles);
 		//console.log(result);
 		// const files = uploadedFiles.map(file => ({
 		// 	file,
 		// }));
+	};
+	const handleExcludeMedia = (key: number) => {
+		setIsFiles(isFiles.filter((file, index) => index !== key));
+		const blobArrayImage: string[] = isFiles.map(file =>
+			URL.createObjectURL(file),
+		);
+		console.log(isImageUrl);
+		setIsImageUrl(blobArrayImage);
 	};
 
 	useEffect(() => {
@@ -169,6 +181,7 @@ const CreateFeed: FC = () => {
 			// 컴포넌트가 언마운트될 때 URL을 제거
 			if (isImageUrl) {
 				isImageUrl.map(url => {
+					console.log('호출!!!', url);
 					URL.revokeObjectURL(url);
 				});
 			}
@@ -221,6 +234,9 @@ const CreateFeed: FC = () => {
 		}
 	};
 
+	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
+	const dragRef = useRef<HTMLLabelElement | null>(null);
+
 	return (
 		<div className={styles.create_feed_container}>
 			{isFeedPage === 'selectGroup' && (
@@ -266,8 +282,69 @@ const CreateFeed: FC = () => {
 			)}
 			{isFeedPage === 'uploadMedia' && (
 				<div>
-					<div className="mt-10">사진과 동영상을 업로드하세요.</div>
-					<input type="file" multiple={true} onChange={handleAddDocuments} />
+					{isUplaod ? (
+						<div className="w-full flex flex-wrap">
+							{/* {isImageUrl.map((url, index) => (
+								<div key={index} className="w-1/2">
+									<div className="relative h-40 border border-solid border-customDark">
+										<Image
+											fill
+											src={url}
+											alt="image"
+											style={{ objectFit: 'contain' }}
+										/>
+									</div>
+								</div>
+								
+							))} */}
+							<Swiper
+								className="w-full h-[420px] relative border border-solid border-customDark cursor-pointer"
+								modules={[Navigation, Pagination, A11y]}
+								spaceBetween={50}
+								slidesPerView={1}
+								navigation
+								pagination={{ clickable: true }}
+								onSwiper={swiper => console.log(swiper)}
+								onSlideChange={() => console.log('slide change')}
+							>
+								{isImageUrl.map((url, index) => (
+									<SwiperSlide key={index} className="relative">
+										<Image
+											fill
+											src={url}
+											alt="image"
+											style={{ objectFit: 'inherit' }}
+										></Image>
+										<div
+											className="absolute bg-customOrange top-5 right-5 border 
+										border-solid border-customDark rounded-full p-2"
+											onClick={() => handleExcludeMedia(index)}
+										>
+											<AiOutlineClose size={24} color="#0a0a0a" />
+										</div>
+									</SwiperSlide>
+								))}
+							</Swiper>
+						</div>
+					) : (
+						<>
+							<div className="mt-10">사진과 동영상을 업로드하세요.</div>
+							<div className={styles.DragDrop}>
+								<input
+									type="file"
+									multiple={true}
+									id="fileUpload"
+									style={{ display: 'none' }}
+									onChange={handleAddDocuments}
+								/>
+
+								<label htmlFor="fileUpload" ref={dragRef}>
+									<div>여기 클릭!</div>
+								</label>
+							</div>
+						</>
+					)}
+
 					<div className={styles.selectedGroup_button_container}>
 						<CustomButton
 							type="button"

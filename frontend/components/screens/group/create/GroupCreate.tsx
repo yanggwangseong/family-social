@@ -39,7 +39,6 @@ const GroupCreate: FC = () => {
 				Loading.hourglass();
 			},
 			onSuccess(data) {
-				console.log(data);
 				Loading.remove();
 				Report.success(
 					'성공',
