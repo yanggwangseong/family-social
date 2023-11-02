@@ -15,26 +15,64 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { useLottieLike } from '@/hooks/useLottieLike';
+import LottieLike from '@/components/ui/lottie/LottieLike';
+import { CommentService } from '@/services/comment/comment.service';
 
 const Feed: FC = () => {
-	const [isLottie, setIsLottie] = useState<boolean>(false);
+	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
-	const lottieRef = useRef<LottieRefCurrentProps>(null);
-
-	const handleLike = () => {
-		if (lottieRef.current) {
-			lottieRef.current.play();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'visible';
-			}
-		}
-	};
+	// const handleLike = () => {
+	// 	if (lottieRef.current) {
+	// 		lottieRef.current.play();
+	// 		if (lottieRef.current?.animationContainerRef.current) {
+	// 			lottieRef.current.animationContainerRef.current.style.visibility =
+	// 				'visible';
+	// 		}
+	// 	}
+	// };
 
 	const { mutate: feedLikeSync } = useMutation(
 		['feed-like'],
 		(data: { feedId: string; page: number }) =>
 			FeedService.updateLike(data.feedId),
+		{
+			onMutate: variable => {
+				//Loading.hourglass();
+			},
+			onSuccess(data, variable) {
+				const pageValue = variable.page;
+				if (data === true) {
+					setIsLottie(true);
+					Notify.success('좋아요를 누르셨습니다');
+				}
+				if (data === false) {
+					Notify.warning('좋아요를 취소하셨습니다');
+				}
+
+				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+
+				//Loading.remove();
+				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const { mutate: commentLikeSync } = useMutation(
+		['comment-like'],
+		(data: { feedId: string; commentId: string; page: number }) =>
+			CommentService.updateLike(data.feedId, data.commentId),
 		{
 			onMutate: variable => {
 				//Loading.hourglass();
@@ -111,36 +149,6 @@ const Feed: FC = () => {
 		return () => {};
 	}, [data]);
 
-	useEffect(() => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			if (isLottie) {
-				lottieRef.current.play();
-				if (lottieRef.current?.animationContainerRef.current) {
-					lottieRef.current.animationContainerRef.current.style.visibility =
-						'visible';
-				}
-			}
-		}
-	}, [isLottie]);
-
-	const handleLottieComplete = () => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			setIsLottie(false);
-			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
-			//lottieRef.current.animationContainerRef.current?.remove();
-		}
-	};
-
 	const observeElement = (element: HTMLElement | null) => {
 		if (!element) return;
 		// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
@@ -165,6 +173,18 @@ const Feed: FC = () => {
 		feedLikeSync({ feedId, page });
 	};
 
+	const handleRefetch = (pageValue: number) => {
+		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+	};
+
+	const handleLikeComment = (
+		feedId: string,
+		commentId: string,
+		page: number,
+	) => {
+		commentLikeSync({ feedId, commentId, page });
+	};
+
 	return (
 		<Format title={'feed'}>
 			<div className={styles.container}>
@@ -183,12 +203,17 @@ const Feed: FC = () => {
 							</div>
 						</div>
 					) : null} */}
-					<Lottie
+
+					{/* <Lottie
 						className={styles.lottie_container}
 						animationData={heartAnimation}
 						loop={false}
 						lottieRef={lottieRef}
 						onComplete={handleLottieComplete}
+					/> */}
+					<LottieLike
+						lottieRef={lottieRef}
+						onLottieComplete={handleLottieComplete}
 					/>
 
 					{/* 왼쪽 사이드바 */}
@@ -205,11 +230,11 @@ const Feed: FC = () => {
 										{page.list.map(feed => (
 											<FeedItem
 												key={feed.feedId}
-												id={feed.feedId}
-												myLike={feed.myLike}
-												sumLike={feed.sumLike}
+												feed={feed}
 												onLike={handleUpdateLike}
 												page={page.page}
+												onRefetch={handleRefetch}
+												onLikeComment={handleLikeComment}
 											/>
 										))}
 									</React.Fragment>

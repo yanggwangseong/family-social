@@ -40,7 +40,7 @@ const GroupDetail: FC = () => {
 							<div className={styles.main_contents_container}>
 								<div className={styles.banner_profile_contaienr}>
 									{/* 프로필 */}
-									<Profile />
+									<Profile username="양광성" role="관리자" />
 									<div className={styles.banner_profile_right_contaienr}>
 										<div
 											className={styles.toggle_menu_container}

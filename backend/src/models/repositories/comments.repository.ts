@@ -14,6 +14,28 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async getUserIdAndNameByCommentId(commentId: string) {
+		const comment = await this.repository.findOneOrFail({
+			select: {
+				member: {
+					id: true,
+					username: true,
+				},
+			},
+			where: {
+				id: commentId,
+			},
+			relations: {
+				member: true,
+			},
+		});
+
+		return {
+			id: comment.member.id,
+			username: comment.member.username,
+		};
+	}
+
 	async getCommentsByFeedId(feedId: string) {
 		return await this.repository.find({
 			select: {
@@ -39,9 +61,9 @@ export class CommentsRepository extends Repository<CommentEntity> {
 				LikedByComments: true,
 			},
 			order: {
-				updatedAt: 'ASC',
+				createdAt: 'asc',
 				childrenComments: {
-					updatedAt: 'ASC',
+					createdAt: 'asc',
 				},
 			},
 		});

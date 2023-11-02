@@ -5,6 +5,7 @@ import { LayerMode, Union } from 'types';
 import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
 import CreateFeed from './layer/CreateFeed/CreateFeed';
 import FeedDeleteConfirm from './layer/FeedDeleteConfirm';
+import CommentDeleteConfirm from './layer/CommentDeleteConfirm';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -12,6 +13,7 @@ const StatusLookUpTable = {
 	[LayerMode.groupDeleteConfirm]: GroupDeleteConfirm,
 	[LayerMode.createFeed]: CreateFeed,
 	[LayerMode.feedDeleteConfirm]: FeedDeleteConfirm,
+	[LayerMode.commentDeleteConfirm]: CommentDeleteConfirm,
 };
 
 interface StatusProps {

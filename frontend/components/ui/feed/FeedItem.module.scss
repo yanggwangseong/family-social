@@ -15,7 +15,7 @@
 	}
 
 	.feed_bottom_container {
-		@apply flex p-4 h-16;
+		@apply flex p-4 h-16 gap-8;
 
 		.like_container {
 			@apply flex justify-center items-center;
@@ -26,6 +26,14 @@
 
 			.like_count {
 				@apply ml-2 font-medium;
+			}
+		}
+
+		.feed_icon_container {
+			@apply flex justify-center items-center;
+
+			.feed_icon {
+				@apply cursor-pointer;
 			}
 		}
 

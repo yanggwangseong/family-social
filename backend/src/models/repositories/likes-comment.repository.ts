@@ -18,4 +18,16 @@ export class LikesCommentRepository extends Repository<LikeCommentEntity> {
 			commentId: commentId,
 		});
 	}
+
+	async getLikedByComments(commentId: string) {
+		return await this.repository.find({
+			select: {
+				memberId: true,
+				commentId: true,
+			},
+			where: {
+				commentId,
+			},
+		});
+	}
 }
