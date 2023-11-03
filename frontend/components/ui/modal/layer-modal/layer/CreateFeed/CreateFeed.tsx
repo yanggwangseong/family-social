@@ -47,6 +47,8 @@ const CreateFeed: FC = () => {
 
 	const [isUplaod, setIsUpload] = useState<boolean>(false);
 
+	const [isPublic, setIsPublic] = useState<boolean>(true);
+
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery(
@@ -208,6 +210,10 @@ const CreateFeed: FC = () => {
 
 	const handleSelectedGroup = (groupId: string) => {
 		setIsSelectGroup(groupId);
+	};
+
+	const handleChageIsPublic = (status: boolean) => {
+		setIsPublic(status);
 	};
 
 	const onSubmit: SubmitHandler<CreateFeedFields> = async ({
@@ -381,7 +387,16 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'writeFeed' && (
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-						<Profile username="양광성" isPublic="public" />
+						<Profile
+							username="양광성"
+							isPublic={
+								feed?.isPublic
+									? feed.isPublic === true
+										? 'public'
+										: 'private'
+									: 'public'
+							}
+						/>
 						<div className="my-5">
 							<select
 								{...register('isPublic')}
