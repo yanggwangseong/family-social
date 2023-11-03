@@ -12,9 +12,10 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react'; // basic
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Swiper as SwiperCore } from 'swiper/types';
+//import 'swiper/css';
+//import 'swiper/css/navigation';
+//import 'swiper/css/pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	CreateFeedFields,
@@ -34,6 +35,7 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Union, feedPublicSelectOptions } from 'types';
+import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -251,6 +253,9 @@ const CreateFeed: FC = () => {
 
 	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
 	const dragRef = useRef<HTMLLabelElement | null>(null);
+	const navigationPrevRef = React.useRef(null);
+	const navigationNextRef = React.useRef(null);
+	const swiperRef = useRef<SwiperCore>();
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -314,11 +319,30 @@ const CreateFeed: FC = () => {
 							))} */}
 							<Swiper
 								className="w-full h-[420px] relative border border-solid border-customDark cursor-pointer"
-								modules={[Navigation, Pagination, A11y]}
+								modules={[Navigation, A11y]}
 								spaceBetween={50}
 								slidesPerView={1}
-								navigation
-								pagination={{ clickable: true }}
+								navigation={{
+									prevEl: navigationPrevRef.current,
+									nextEl: navigationNextRef.current,
+								}}
+								onBeforeInit={swiper => {
+									swiperRef.current = swiper;
+								}}
+								// pagination={{
+								// 	el: paginationRef.current,
+								// 	clickable: true,
+								// 	renderBullet: function (index: number, className: string) {
+								// 		console.log('clss=', className);
+								// 		return (
+								// 			'<span class="' +
+								// 			className +
+								// 			'">' +
+								// 			(index + 1) +
+								// 			'</span>'
+								// 		);
+								// 	},
+								// }}
 								onSwiper={swiper => console.log(swiper)}
 								onSlideChange={() => console.log('slide change')}
 							>
@@ -336,6 +360,20 @@ const CreateFeed: FC = () => {
 											onClick={() => handleExcludeMedia(index)}
 										>
 											<AiOutlineClose size={24} color="#0a0a0a" />
+										</div>
+										<div
+											className={styles.swiper_button_next}
+											ref={navigationPrevRef}
+											onClick={() => swiperRef.current?.slideNext()}
+										>
+											<CgArrowRight size={24} />
+										</div>
+										<div
+											className={styles.swiper_button_prev}
+											ref={navigationNextRef}
+											onClick={() => swiperRef.current?.slidePrev()}
+										>
+											<CgArrowLeft size={24} />
 										</div>
 									</SwiperSlide>
 								))}
