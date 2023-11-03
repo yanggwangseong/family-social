@@ -1,7 +1,9 @@
 import React, { FC, useState } from 'react';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineCheck, AiOutlineEye } from 'react-icons/ai';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { Union, feedPublicSelectOptions } from 'types';
+import styles from './FeedPublicSelect.module.scss';
+import cn from 'classnames';
 
 const FeedPublicSelect: FC<{
 	isPublic: Union<typeof feedPublicSelectOptions>;
@@ -21,16 +23,12 @@ const FeedPublicSelect: FC<{
 	};
 
 	return (
-		<div className="relative">
-			<div
-				className="flex w-36 mt-1 px-2 py-1 border 
-border-solid border-customDark rounded-full cursor-pointer"
-				onClick={handleSelectToggle}
-			>
+		<div className={styles.public_select_container}>
+			<div className={styles.toggle_container} onClick={handleSelectToggle}>
 				<div>
 					<AiOutlineEye size={22} />
 				</div>
-				<div className="font-bold text-sm mx-4 grow">
+				<div className={styles.option_text}>
 					{isPublic === 'public' ? '공개' : '비공개'}
 				</div>
 				<div>
@@ -42,27 +40,38 @@ border-solid border-customDark rounded-full cursor-pointer"
 				</div>
 			</div>
 			{isSelectToggle && (
-				<div
-					className="absolute p-4 bg-white z-20 left-0 top-9 w-[300px] border 
-    border-solid border-customDark rounded-tr-[44px] shadow-lg"
-				>
-					<div className="flex pb-5">
+				<div className={styles.select_layer_modal_container}>
+					<div className={styles.modal_title_container}>
 						<div>
 							<AiOutlineEye size={22} />
 						</div>
-						<div className="text-sm ml-2">피드를 공개/비공개 설정</div>
+						<div className={styles.modal_title}>피드를 공개/비공개 설정</div>
 					</div>
 					<div
-						className="text-sm py-5 cursor-pointer"
+						className={cn(styles.select_item, {
+							[styles.active]: isPublic === 'public',
+						})}
 						onClick={() => handleChageIsPublic('public')}
 					>
 						공개
+						{isPublic === 'public' && (
+							<div className={styles.icon_container}>
+								<AiOutlineCheck size={14} color="#e5855d" />
+							</div>
+						)}
 					</div>
 					<div
-						className="text-sm py-5 cursor-pointer"
+						className={cn(styles.select_item, {
+							[styles.active]: isPublic === 'private',
+						})}
 						onClick={() => handleChageIsPublic('private')}
 					>
 						비공개
+						{isPublic === 'private' && (
+							<div className={styles.icon_container}>
+								<AiOutlineCheck size={14} color="#e5855d" />
+							</div>
+						)}
 					</div>
 				</div>
 			)}
