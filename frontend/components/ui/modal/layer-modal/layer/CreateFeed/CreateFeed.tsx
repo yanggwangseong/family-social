@@ -381,7 +381,7 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'writeFeed' && (
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-						<Profile username="양광성" role="관리자" />
+						<Profile username="양광성" isPublic="public" />
 						<div className="my-5">
 							<select
 								{...register('isPublic')}
@@ -453,6 +453,7 @@ const CreateFeed: FC = () => {
 									className={'cursor-pointer'}
 									size={28}
 									onClick={handleEmojiView}
+									color="#0a0a0a"
 								/>
 								{isEmoji && (
 									<div className=" absolute z-10 -top-[420px] left-0">

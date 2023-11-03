@@ -7,7 +7,8 @@ const Profile: FC<{
 	profileImage?: string;
 	username?: string;
 	role?: string;
-}> = ({ commentContents, profileImage, username, role }) => {
+	isPublic?: 'public' | 'private';
+}> = ({ commentContents, profileImage, username, role, isPublic }) => {
 	return (
 		<div className={styles.profile_container}>
 			<div className={styles.profile_img_container}>
@@ -30,6 +31,7 @@ const Profile: FC<{
 				)}
 
 				{username && <div className={styles.profile_username}>양광성</div>}
+				{isPublic && <div>커스텀 셀렉트박스</div>}
 				{role && <div className={styles.profile_role}>관리자</div>}
 			</div>
 		</div>
