@@ -33,6 +33,7 @@ import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
 import { AiOutlineClose } from 'react-icons/ai';
+import { Union, feedPublicSelectOptions } from 'types';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -46,8 +47,6 @@ const CreateFeed: FC = () => {
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
 
 	const [isUplaod, setIsUpload] = useState<boolean>(false);
-
-	const [isPublic, setIsPublic] = useState<boolean>(true);
 
 	const queryClient = useQueryClient();
 
@@ -66,6 +65,12 @@ const CreateFeed: FC = () => {
 		{
 			enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
 		},
+	);
+
+	const [isPublic, setIsPublic] = useState<
+		Union<typeof feedPublicSelectOptions>
+	>(
+		feed?.isPublic ? (feed.isPublic === true ? 'public' : 'private') : 'public',
 	);
 
 	const {
@@ -212,14 +217,13 @@ const CreateFeed: FC = () => {
 		setIsSelectGroup(groupId);
 	};
 
-	const handleChageIsPublic = (status: boolean) => {
+	const handleChageIsPublic = (
+		status: Union<typeof feedPublicSelectOptions>,
+	) => {
 		setIsPublic(status);
 	};
 
-	const onSubmit: SubmitHandler<CreateFeedFields> = async ({
-		contents,
-		isPublic,
-	}) => {
+	const onSubmit: SubmitHandler<CreateFeedFields> = async ({ contents }) => {
 		const uploadResult = await uploadFilesASync();
 		const medias: CreateMediaType[] = uploadResult.map((data, index) =>
 			createMedia(data, index),
@@ -389,15 +393,10 @@ const CreateFeed: FC = () => {
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<Profile
 							username="양광성"
-							isPublic={
-								feed?.isPublic
-									? feed.isPublic === true
-										? 'public'
-										: 'private'
-									: 'public'
-							}
+							isPublic={isPublic}
+							onChageIsPublic={handleChageIsPublic}
 						/>
-						<div className="my-5">
+						{/* <div className="my-5">
 							<select
 								{...register('isPublic')}
 								defaultValue={
@@ -411,8 +410,8 @@ const CreateFeed: FC = () => {
 								<option value={'public'}>공개</option>
 								<option value={'private'}>비공개</option>
 							</select>
-						</div>
-						<div>
+						</div> */}
+						<div className="mt-5">
 							<FieldWithTextarea
 								fieldClass="inline_textarea"
 								{...register('contents', {
