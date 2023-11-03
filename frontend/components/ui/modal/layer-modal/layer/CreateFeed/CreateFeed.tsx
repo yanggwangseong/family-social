@@ -154,11 +154,11 @@ const CreateFeed: FC = () => {
 
 	const handleAddDocuments = async (event: ChangeEvent<HTMLInputElement>) => {
 		const uploadedFiles: File[] = Array.from(event.target.files || []);
-		const blobArrayImage: string[] = uploadedFiles.map(file =>
-			URL.createObjectURL(file),
-		);
-		resetImageUrl(); // 배열을 초기화 해준다.
-		setIsImageUrl(blobArrayImage);
+		// const blobArrayImage: string[] = uploadedFiles.map(file =>
+		// 	URL.createObjectURL(file),
+		// );
+		// resetImageUrl(); // 배열을 초기화 해준다.
+		// setIsImageUrl(blobArrayImage);
 		setIsFiles(uploadedFiles);
 		setIsUpload(true);
 		//const result = await AuthService.uploadfile(uploadedFiles);
@@ -169,12 +169,17 @@ const CreateFeed: FC = () => {
 	};
 	const handleExcludeMedia = (key: number) => {
 		setIsFiles(isFiles.filter((file, index) => index !== key));
-		const blobArrayImage: string[] = isFiles.map(file =>
-			URL.createObjectURL(file),
-		);
-		console.log(isImageUrl);
-		setIsImageUrl(blobArrayImage);
 	};
+
+	useEffect(() => {
+		if (isFiles) {
+			const blobArrayImage: string[] = isFiles.map(file =>
+				URL.createObjectURL(file),
+			);
+			console.log(isImageUrl); // useEffect가 이전에 있던 놈들을 URL.revokeObjectURL 해주는데 url이 filter로 새로 만들어진 url과 같아서 계속 revoke됨
+			setIsImageUrl(blobArrayImage);
+		}
+	}, [isFiles]);
 
 	useEffect(() => {
 		return () => {
