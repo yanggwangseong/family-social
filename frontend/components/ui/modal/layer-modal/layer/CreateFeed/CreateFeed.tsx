@@ -176,7 +176,7 @@ const CreateFeed: FC = () => {
 			const blobArrayImage: string[] = isFiles.map(file =>
 				URL.createObjectURL(file),
 			);
-			console.log(isImageUrl); // useEffect가 이전에 있던 놈들을 URL.revokeObjectURL 해주는데 url이 filter로 새로 만들어진 url과 같아서 계속 revoke됨
+			//console.log(isImageUrl); // useEffect가 이전에 있던 놈들을 URL.revokeObjectURL 해주는데 url이 filter로 새로 만들어진 url과 같아서 계속 revoke됨
 			setIsImageUrl(blobArrayImage);
 		}
 	}, [isFiles]);
@@ -334,7 +334,7 @@ const CreateFeed: FC = () => {
 					) : (
 						<>
 							<div className="mt-10">사진과 동영상을 업로드하세요.</div>
-							<div className={styles.DragDrop}>
+							<div className={styles.drag_drop}>
 								<input
 									type="file"
 									multiple={true}

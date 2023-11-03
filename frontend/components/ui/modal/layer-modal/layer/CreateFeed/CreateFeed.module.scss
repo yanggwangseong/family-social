@@ -31,9 +31,13 @@
 	align-items: center;
 }
 
-.DragDrop {
-	@apply border border-solid border-customDark rounded-lg my-4;
+.drag_drop {
+	@apply border border-solid border-customDark rounded-lg my-4 p-2;
 	width: 100%;
 	height: 200px;
 	@include alignCenter();
+
+	> label {
+		@apply w-full h-full flex justify-center items-center bg-customOrange text-customDark font-semibold rounded-lg;
+	}
 }
