@@ -429,11 +429,22 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'writeFeed' && (
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-						<Profile
-							username="양광성"
-							isPublic={isPublic}
-							onChageIsPublic={handleChageIsPublic}
-						/>
+						<div className="flex">
+							<Profile
+								username="양광성"
+								isPublic={isPublic}
+								onChageIsPublic={handleChageIsPublic}
+							/>
+							<div className="ml-auto -mt-3">
+								<GroupProfile
+									group={{
+										id: 'sdfsdf',
+										groupDescription: '양씨 가족의 그룹입니다',
+										groupName: '양씨네가족',
+									}}
+								/>
+							</div>
+						</div>
 						{/* <div className="my-5">
 							<select
 								{...register('isPublic')}
