@@ -67,7 +67,7 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 					<div className={styles.signin__header_subtitle}>
 						이메일을 확인하려면 아래에 입력 하세요.
 					</div>
-					<div className="mt-10">
+					<div className={styles.signin__email_description}>
 						코드가 포함된 이메일을 {email}(으)로 보냈습니다.
 					</div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>

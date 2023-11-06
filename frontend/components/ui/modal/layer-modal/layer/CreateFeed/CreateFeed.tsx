@@ -285,7 +285,7 @@ const CreateFeed: FC = () => {
 						위의 그룹 리스트내에서 어떤 그룹에서 새 게시물을 작성할지 선택
 						해주세요.
 					</div>
-					<div className={styles.selectedGroup_button_container}>
+					<div className={styles.button_container}>
 						<CustomButton
 							type="button"
 							className="mt-8 mb-4 bg-customOrange text-customDark 
@@ -303,7 +303,7 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'uploadMedia' && (
 				<div>
 					{isUplaod ? (
-						<div className="w-full flex flex-wrap">
+						<div className={styles.uploaded_container}>
 							{/* {isImageUrl.map((url, index) => (
 								<div key={index} className="w-1/2">
 									<div className="relative h-40 border border-solid border-customDark">
@@ -318,7 +318,7 @@ const CreateFeed: FC = () => {
 								
 							))} */}
 							<Swiper
-								className="w-full h-[420px] relative border border-solid border-customDark cursor-pointer"
+								className={styles.uploaded_swiper}
 								modules={[Navigation, A11y]}
 								spaceBetween={50}
 								slidesPerView={1}
@@ -347,7 +347,10 @@ const CreateFeed: FC = () => {
 								onSlideChange={() => console.log('slide change')}
 							>
 								{isImageUrl.map((url, index) => (
-									<SwiperSlide key={index} className="relative">
+									<SwiperSlide
+										key={index}
+										className={styles.uploaded_swiper_slide}
+									>
 										<Image
 											fill
 											src={url}
@@ -355,8 +358,7 @@ const CreateFeed: FC = () => {
 											style={{ objectFit: 'inherit' }}
 										></Image>
 										<div
-											className="absolute bg-customOrange top-5 right-5 border 
-										border-solid border-customDark rounded-full p-2"
+											className={styles.uploaded_close}
 											onClick={() => handleExcludeMedia(index)}
 										>
 											<AiOutlineClose size={24} color="#0a0a0a" />
@@ -381,7 +383,9 @@ const CreateFeed: FC = () => {
 						</div>
 					) : (
 						<>
-							<div className="mt-10">사진과 동영상을 업로드하세요.</div>
+							<div className={styles.upload_title}>
+								사진과 동영상을 업로드하세요.
+							</div>
 							<div className={styles.drag_drop}>
 								<input
 									type="file"
@@ -398,7 +402,7 @@ const CreateFeed: FC = () => {
 						</>
 					)}
 
-					<div className={styles.selectedGroup_button_container}>
+					<div className={styles.button_container}>
 						<CustomButton
 							type="button"
 							className="mt-8 mb-4 bg-white text-customDark 
@@ -429,13 +433,13 @@ const CreateFeed: FC = () => {
 			{isFeedPage === 'writeFeed' && (
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-						<div className="flex">
+						<div className={styles.form_top_wrap}>
 							<Profile
 								username="양광성"
 								isPublic={isPublic}
 								onChageIsPublic={handleChageIsPublic}
 							/>
-							<div className="ml-auto -mt-3">
+							<div className={styles.form_top_group_container}>
 								<GroupProfile
 									group={{
 										id: 'sdfsdf',
@@ -460,7 +464,7 @@ const CreateFeed: FC = () => {
 								<option value={'private'}>비공개</option>
 							</select>
 						</div> */}
-						<div className="mt-5">
+						<div className={styles.form_field_container}>
 							<FieldWithTextarea
 								fieldClass="inline_textarea"
 								{...register('contents', {
@@ -475,9 +479,9 @@ const CreateFeed: FC = () => {
 								error={errors.contents}
 							/>
 						</div>
-						<div className="mt-5">
+						<div className={styles.form_swiper_container}>
 							<Swiper
-								className="w-full h-72 relative"
+								className={styles.swiper}
 								modules={[Navigation, Pagination, A11y]}
 								spaceBetween={50}
 								slidesPerView={1}
@@ -501,7 +505,7 @@ const CreateFeed: FC = () => {
 
 						<Line />
 
-						<div className={styles.selectedGroup_button_container}>
+						<div className={styles.button_container}>
 							{/* <CustomButton
 								type="button"
 								className="mt-8 mb-4 bg-white text-customDark 
@@ -511,15 +515,15 @@ const CreateFeed: FC = () => {
 							>
 								이전
 							</CustomButton> */}
-							<div className="mr-2 relative flex justify-center items-center">
+							<div className={styles.emoji_container}>
 								<FaRegSmile
-									className={'cursor-pointer'}
+									className={styles.emoji_icon}
 									size={28}
 									onClick={handleEmojiView}
 									color="#0a0a0a"
 								/>
 								{isEmoji && (
-									<div className=" absolute z-10 -top-[420px] left-0">
+									<div className={styles.emoji_view_container}>
 										<EmojiPicker
 											height={400}
 											autoFocusSearch={false}

@@ -14,6 +14,7 @@ import {
 import { CommentService } from '@/services/comment/comment.service';
 import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
+import styles from './CommentForm.module.scss';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -122,15 +123,15 @@ const CommentForm: FC<CommentFormProps> = ({
 
 	return (
 		<form onSubmit={handleSubmit(isEdit ? onUpdateSubmit : onSubmit)}>
-			<div className="border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex">
-				<div className="mr-2 relative">
+			<div className={styles.comment_form_container}>
+				<div className={styles.comment_emoji_container}>
 					<FaRegSmile
 						className={'cursor-pointer'}
 						size={22}
 						onClick={handleEmojiView}
 					/>
 					{isEmoji && (
-						<div className=" absolute z-10 -top-[420px]">
+						<div className={styles.emoji_view_container}>
 							<EmojiPicker
 								height={400}
 								autoFocusSearch={false}
@@ -152,7 +153,7 @@ const CommentForm: FC<CommentFormProps> = ({
 					placeholder="댓글을 입력 하세요."
 					defaultValue={commentContents}
 				></FieldWithTextarea>
-				<div className="flex items-center justify-center">
+				<div className={styles.comment_btn_container}>
 					<CustomButton
 						type="submit"
 						className="text-customOrange font-extrabold bg-basic text-sm"

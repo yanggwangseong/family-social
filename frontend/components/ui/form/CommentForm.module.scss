@@ -1,0 +1,15 @@
+.comment_form_container {
+	@apply border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex;
+
+	.comment_emoji_container {
+		@apply mr-2 relative;
+
+		.emoji_view_container {
+			@apply absolute z-10 -top-[420px];
+		}
+	}
+
+	.comment_btn_container {
+		@apply flex items-center justify-center;
+	}
+}

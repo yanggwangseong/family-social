@@ -72,7 +72,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_card_top_container}>
 						<Profile username="양광성"></Profile>
 						<div
-							className="ml-auto cursor-pointer relative"
+							className={styles.feed_card_setting_container}
 							ref={settingModalWrapperRef}
 						>
 							<BsThreeDots size={24} onClick={handleCloseSettingModal} />
@@ -91,7 +91,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					</div>
 					<div className={styles.feed_media_container}>
 						<Swiper
-							className="w-full h-full relative"
+							className={styles.feed_media_wrap}
 							modules={[Navigation, A11y]}
 							spaceBetween={50}
 							slidesPerView={1}
@@ -104,7 +104,7 @@ const FeedItem: FC<FeedItemProps> = ({
 							}}
 						>
 							{feed.medias.map((media, index) => (
-								<SwiperSlide key={index} className="relative">
+								<SwiperSlide key={index} className={styles.swiper_container}>
 									<Image
 										fill
 										src={media.url}

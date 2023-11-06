@@ -3,6 +3,10 @@
 
 	.feed_card_top_container {
 		@apply p-4 flex;
+
+		.feed_card_setting_container {
+			@apply ml-auto cursor-pointer relative;
+		}
 	}
 
 	.feed_description_container {
@@ -10,8 +14,26 @@
 	}
 
 	.feed_media_container {
-		@apply w-full relative border-y border-solid border-customDark border-collapse bg-white;
+		@apply w-full relative border-y border-solid border-customDark border-collapse bg-white cursor-pointer;
 		height: 426px;
+
+		.feed_media_wrap {
+			@apply w-full h-full relative;
+
+			.swiper_container {
+				@apply relative;
+
+				.swiper_button_prev {
+					@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+				.swiper_button_next {
+					@apply absolute right-5 
+					z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+			}
+		}
 	}
 
 	.feed_bottom_container {
@@ -41,14 +63,4 @@
 			@apply ml-auto flex justify-center items-center font-medium cursor-pointer underline;
 		}
 	}
-}
-
-.swiper_button_prev {
-	@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
-	bg-customOrange rounded-full p-2;
-}
-.swiper_button_next {
-	@apply absolute right-5 
-	z-50 top-1/2 border border-solid border-customDark
-	bg-customOrange rounded-full p-2;
 }
