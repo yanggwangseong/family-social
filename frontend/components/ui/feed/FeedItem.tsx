@@ -61,6 +61,10 @@ const FeedItem: FC<FeedItemProps> = ({
 		onLikeComment(feed.feedId, commentId, page);
 	};
 
+	const handleMedias = () => {
+		console.log('click');
+	};
+
 	const navigationPrevRef = React.useRef(null);
 	const navigationNextRef = React.useRef(null);
 	const swiperRef = useRef<SwiperCore>();
@@ -89,7 +93,13 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_description_container}>
 						{feed.contents}
 					</div>
-					<div className={styles.feed_media_container}>
+					<div
+						className={styles.feed_media_container}
+						onClick={e => {
+							e.stopPropagation(); // 이벤트 버블링 중지
+							handleMedias();
+						}}
+					>
 						<Swiper
 							className={styles.feed_media_wrap}
 							modules={[Navigation, A11y]}

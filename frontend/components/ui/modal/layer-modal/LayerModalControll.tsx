@@ -6,6 +6,7 @@ import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
 import CreateFeed from './layer/CreateFeed/CreateFeed';
 import FeedDeleteConfirm from './layer/FeedDeleteConfirm';
 import CommentDeleteConfirm from './layer/CommentDeleteConfirm';
+import MediaLayer from './layer/MediaLayer/MediaLayer';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -14,6 +15,7 @@ const StatusLookUpTable = {
 	[LayerMode.createFeed]: CreateFeed,
 	[LayerMode.feedDeleteConfirm]: FeedDeleteConfirm,
 	[LayerMode.commentDeleteConfirm]: CommentDeleteConfirm,
+	[LayerMode.mediaLayerModal]: MediaLayer,
 };
 
 interface StatusProps {
