@@ -42,3 +42,13 @@
 		}
 	}
 }
+
+.swiper_button_prev {
+	@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
+	bg-customOrange rounded-full p-2;
+}
+.swiper_button_next {
+	@apply absolute right-5 
+	z-50 top-1/2 border border-solid border-customDark
+	bg-customOrange rounded-full p-2;
+}

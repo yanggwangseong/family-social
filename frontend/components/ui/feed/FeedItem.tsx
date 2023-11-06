@@ -12,9 +12,11 @@ import { FeedItemProps } from './feed-item.interface';
 import Comments from './comment/Comments';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react'; // basic
+import { Swiper as SwiperCore } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -59,6 +61,10 @@ const FeedItem: FC<FeedItemProps> = ({
 		onLikeComment(feed.feedId, commentId, page);
 	};
 
+	const navigationPrevRef = React.useRef(null);
+	const navigationNextRef = React.useRef(null);
+	const swiperRef = useRef<SwiperCore>();
+
 	return (
 		<>
 			<div>
@@ -86,20 +92,39 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_media_container}>
 						<Swiper
 							className="w-full h-full relative"
-							modules={[Navigation, Pagination, A11y]}
+							modules={[Navigation, A11y]}
 							spaceBetween={50}
 							slidesPerView={1}
-							navigation
-							pagination={{ clickable: true }}
+							navigation={{
+								prevEl: navigationPrevRef.current,
+								nextEl: navigationNextRef.current,
+							}}
+							onBeforeInit={swiper => {
+								swiperRef.current = swiper;
+							}}
 						>
 							{feed.medias.map((media, index) => (
-								<SwiperSlide key={index}>
+								<SwiperSlide key={index} className="relative">
 									<Image
 										fill
 										src={media.url}
 										alt="image"
 										style={{ objectFit: 'inherit' }}
 									></Image>
+									<div
+										className={styles.swiper_button_next}
+										ref={navigationPrevRef}
+										onClick={() => swiperRef.current?.slideNext()}
+									>
+										<CgArrowRight size={24} />
+									</div>
+									<div
+										className={styles.swiper_button_prev}
+										ref={navigationNextRef}
+										onClick={() => swiperRef.current?.slidePrev()}
+									>
+										<CgArrowLeft size={24} />
+									</div>
 								</SwiperSlide>
 							))}
 						</Swiper>
