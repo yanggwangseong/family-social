@@ -79,6 +79,9 @@ const FeedItem: FC<FeedItemProps> = ({
 
 	const navigationPrevRef = React.useRef(null);
 	const navigationNextRef = React.useRef(null);
+
+	const pageNationRef = React.useRef(null);
+
 	const swiperRef = useRef<SwiperCore>();
 
 	return (
@@ -111,13 +114,27 @@ const FeedItem: FC<FeedItemProps> = ({
 					>
 						<Swiper
 							className={styles.feed_media_wrap}
-							modules={[Navigation, A11y]}
+							modules={[Navigation, Pagination, A11y]}
 							spaceBetween={50}
 							slidesPerView={1}
 							navigation={{
 								prevEl: navigationPrevRef.current,
 								nextEl: navigationNextRef.current,
 							}}
+							pagination={
+								{
+									//el: pageNationRef.current,
+									//clickable: true,
+									// renderBullet: function (index, className) {
+									// 	console.log(className);
+									// 	return (
+									// 		`<div class=${styles[className]}><span>` +
+									// 		index +
+									// 		'</span></div>'
+									// 	);
+									// },
+								}
+							}
 							onBeforeInit={swiper => {
 								swiperRef.current = swiper;
 							}}
@@ -154,7 +171,12 @@ const FeedItem: FC<FeedItemProps> = ({
 									</div>
 								</SwiperSlide>
 							))}
+							{/* <div
+								className="bottom-0 absolute w-56 h-56 bg-white z-50 flex justify-between"
+								ref={pageNationRef}
+							></div> */}
 						</Swiper>
+
 						{/* <Image
 							fill
 							src={'/images/banner/group-base.png'}

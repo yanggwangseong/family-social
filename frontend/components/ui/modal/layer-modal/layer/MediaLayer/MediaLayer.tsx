@@ -6,7 +6,7 @@ import {
 	mediasLayerModalAtomType,
 } from '@/atoms/mediasLayerModalAtom';
 import { useRecoilState } from 'recoil';
-import { Navigation, A11y } from 'swiper/modules';
+import { Navigation, A11y, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react'; // basic
 import { Swiper as SwiperCore } from 'swiper/types';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
@@ -26,7 +26,6 @@ const MediaLayer: FC = () => {
 	const navigationNextRef = React.useRef(null);
 	const swiperRef = useRef<SwiperCore>();
 
-	//useEffect(() => {}, [swiperRef]);
 	return (
 		<>
 			{layer.isShowing && (
@@ -37,12 +36,15 @@ const MediaLayer: FC = () => {
 					<div className={styles.modal_container}>
 						<Swiper
 							className={styles.swiper_container}
-							modules={[Navigation, A11y]}
+							modules={[Navigation, Pagination, A11y]}
 							spaceBetween={50}
 							slidesPerView={1}
 							navigation={{
 								prevEl: navigationPrevRef.current,
 								nextEl: navigationNextRef.current,
+							}}
+							pagination={{
+								clickable: true,
 							}}
 							onBeforeInit={swiper => {
 								swiperRef.current = swiper;

@@ -319,7 +319,7 @@ const CreateFeed: FC = () => {
 							))} */}
 							<Swiper
 								className={styles.uploaded_swiper}
-								modules={[Navigation, A11y]}
+								modules={[Navigation, Pagination, A11y]}
 								spaceBetween={50}
 								slidesPerView={1}
 								navigation={{
@@ -328,6 +328,9 @@ const CreateFeed: FC = () => {
 								}}
 								onBeforeInit={swiper => {
 									swiperRef.current = swiper;
+								}}
+								pagination={{
+									clickable: true,
 								}}
 								// pagination={{
 								// 	el: paginationRef.current,
