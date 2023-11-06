@@ -17,6 +17,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+import { useRecoilState } from 'recoil';
+import {
+	mediasLayerModalAtom,
+	mediasLayerModalAtomType,
+} from '@/atoms/mediasLayerModalAtom';
+import { MediaInfo } from '@/shared/interfaces/media.interface';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -25,6 +31,9 @@ const FeedItem: FC<FeedItemProps> = ({
 	onRefetch,
 	onLikeComment,
 }) => {
+	const [layer, setLayer] =
+		useRecoilState<mediasLayerModalAtomType>(mediasLayerModalAtom);
+
 	const [isLike, setIsLike] = useState<boolean>(
 		feed.myLike ? feed.myLike : false,
 	);
@@ -61,8 +70,11 @@ const FeedItem: FC<FeedItemProps> = ({
 		onLikeComment(feed.feedId, commentId, page);
 	};
 
-	const handleMedias = () => {
-		console.log('click');
+	const handleMedias = (medias: MediaInfo[]) => {
+		setLayer({
+			isShowing: !layer.isShowing,
+			medias,
+		});
 	};
 
 	const navigationPrevRef = React.useRef(null);
@@ -95,10 +107,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					</div>
 					<div
 						className={styles.feed_media_container}
-						onClick={e => {
-							e.stopPropagation(); // 이벤트 버블링 중지
-							handleMedias();
-						}}
+						onClick={() => handleMedias(feed.medias)}
 					>
 						<Swiper
 							className={styles.feed_media_wrap}
@@ -124,14 +133,22 @@ const FeedItem: FC<FeedItemProps> = ({
 									<div
 										className={styles.swiper_button_next}
 										ref={navigationPrevRef}
-										onClick={() => swiperRef.current?.slideNext()}
+										onClick={e => {
+											e.stopPropagation(); // 이벤트 버블링 중지
+											swiperRef.current?.slideNext();
+										}}
+										//onClick={() => swiperRef.current?.slideNext()}
 									>
 										<CgArrowRight size={24} />
 									</div>
 									<div
 										className={styles.swiper_button_prev}
 										ref={navigationNextRef}
-										onClick={() => swiperRef.current?.slidePrev()}
+										onClick={e => {
+											e.stopPropagation(); // 이벤트 버블링 중지
+											swiperRef.current?.slidePrev();
+										}}
+										//onClick={() => swiperRef.current?.slidePrev()}
 									>
 										<CgArrowLeft size={24} />
 									</div>
