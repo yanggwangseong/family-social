@@ -39,15 +39,15 @@ const MediaLayer: FC = () => {
 							modules={[Navigation, Pagination, A11y]}
 							spaceBetween={50}
 							slidesPerView={1}
-							navigation={{
-								prevEl: navigationPrevRef.current,
-								nextEl: navigationNextRef.current,
-							}}
 							pagination={{
 								clickable: true,
 							}}
 							onBeforeInit={swiper => {
 								swiperRef.current = swiper;
+							}}
+							navigation={{
+								prevEl: navigationPrevRef.current,
+								nextEl: navigationNextRef.current,
 							}}
 						>
 							{layer.medias.map((media, index) => (
@@ -58,6 +58,7 @@ const MediaLayer: FC = () => {
 										alt="image"
 										style={{ objectFit: 'inherit' }}
 									></Image>
+
 									<div
 										className={styles.swiper_button_next}
 										ref={navigationPrevRef}
@@ -68,6 +69,7 @@ const MediaLayer: FC = () => {
 									>
 										<CgArrowRight size={24} />
 									</div>
+
 									<div
 										className={styles.swiper_button_prev}
 										ref={navigationNextRef}

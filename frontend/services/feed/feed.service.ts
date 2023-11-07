@@ -16,8 +16,10 @@ export function sleep(ms: number) {
 }
 
 export const FeedService = {
-	async getFeeds(page: number) {
-		const { data } = await axiosAPI.get<FeedsResponse>(`/feeds?page=${page}`);
+	async getFeeds(page: number, options: 'TOP' | 'MYFEED' | 'ALL' = 'TOP') {
+		const { data } = await axiosAPI.get<FeedsResponse>(
+			`/feeds?page=${page}&options=${options}`,
+		);
 
 		return data;
 	},
