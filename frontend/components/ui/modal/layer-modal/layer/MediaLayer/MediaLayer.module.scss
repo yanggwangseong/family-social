@@ -12,7 +12,7 @@
 
 	.modal_close_wrap {
 		@apply w-12 h-12 font-light text-xl cursor-pointer text-customDark absolute 
-		top-5 right-[10%] py-2 px-4 border border-solid border-customDark bg-white rounded-full text-center;
+		top-5 right-[10%] py-2 px-4 border border-solid border-customDark bg-customOrange rounded-full text-center;
 	}
 
 	.modal_container {

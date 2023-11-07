@@ -81,10 +81,11 @@ export class FeedsController {
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(
+		@Query('options') options: 'TOP' | 'MYFEED' | 'ALL',
 		@Query('page') page: number,
 		@CurrentUser('sub') sub: string,
 	) {
-		return await this.feedsService.findAllFeed(page, sub);
+		return await this.feedsService.findAllFeed(page, sub, options);
 	}
 
 	/**

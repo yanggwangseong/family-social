@@ -6,7 +6,7 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useInfiniteQuery, useMutation } from 'react-query';
-import { FeedService, sleep } from '@/services/feed/feed.service';
+import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import heartAnimation from '@/assets/lottie/like.json';

@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
 
-const TabMenu: FC<{ options: 'TOP' | 'MYFEED' | 'ALL' }> = ({
-	options = 'TOP',
-}) => {
+const TabMenu: FC<{
+	options: 'TOP' | 'MYFEED' | 'ALL';
+}> = ({ options = 'TOP' }) => {
+	const router = useRouter();
+
 	return (
 		<div className={styles.top_tab_menus}>
 			<Link
