@@ -11,3 +11,10 @@ export interface ICreateMemberArgs {
 export interface IVerifyEmailArgs extends Pick<ICreateMemberArgs, 'email'> {
 	signupVerifyToken: string;
 }
+
+export interface IUpdateMemberArgs {
+	memberId: string;
+	username: string;
+	phoneNumber: string;
+	profileImage: string;
+}
