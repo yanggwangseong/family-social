@@ -23,7 +23,10 @@ import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { UpdateMemberProfileSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { CreateMemberProfileImageMulterOptions } from '@/utils/upload-media';
+import {
+	CreateMemberCoverImageMulterOptions,
+	CreateMemberProfileImageMulterOptions,
+} from '@/utils/upload-media';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -66,7 +69,20 @@ export class MembersController {
 		FilesInterceptor('files', 1, CreateMemberProfileImageMulterOptions()),
 	)
 	@ApiConsumes('multipart/form-data')
-	async upload(@UploadedFiles() files: Express.MulterS3.File[]) {
+	async uploadProfile(@UploadedFiles() files: Express.MulterS3.File[]) {
+		if (!files?.length) {
+			throw BadRequestServiceException(`파일이 없습니다.`);
+		}
+		const locations = files.map(({ location }) => location);
+		return locations;
+	}
+
+	@Post('/uploads/cover-image')
+	@UseInterceptors(
+		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
+	)
+	@ApiConsumes('multipart/form-data')
+	async uploadCoverImage(@UploadedFiles() files: Express.MulterS3.File[]) {
 		if (!files?.length) {
 			throw BadRequestServiceException(`파일이 없습니다.`);
 		}

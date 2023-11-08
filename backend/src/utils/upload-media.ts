@@ -48,6 +48,18 @@ export const CreateMemberProfileImageMulterOptions = (): MulterOptions => {
 	};
 };
 
+export const CreateMemberCoverImageMulterOptions = (): MulterOptions => {
+	return {
+		fileFilter: fileFilter('image'),
+		storage: new MulterBuilder()
+			.allowImageMimeTypes()
+			.setResource('member')
+			.setPath('cover-image')
+			.build(),
+		limits: { fileSize: 1024 * 1024 * 20 },
+	};
+};
+
 export const DeleteS3Media = (key: string) => {
 	return new MulterBuilder().setDeleteS3Media(key);
 };
