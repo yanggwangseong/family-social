@@ -13,6 +13,9 @@ export const ERROR_PASSWORD_MISMATCH = '비밀번호가 일치하지 않습니�
 
 export const ERROR_TOKEN_MISMATCH = '토큰 정보가 일치하지 않습니다' as const;
 
+export const ERROR_AUTHORIZATION_MEMBER =
+	'멤버에 대한 권한이 없습니다.' as const;
+
 export const ERROR_DELETE_GROUP_MEMBER =
 	'그룹멤버를 삭제하던 도중 에러가 발생했습니다' as const;
 

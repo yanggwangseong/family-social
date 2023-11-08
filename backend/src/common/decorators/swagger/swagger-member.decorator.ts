@@ -4,6 +4,7 @@ import {
 	ERROR_USER_NOT_FOUND,
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
+	ERROR_AUTHORIZATION_MEMBER,
 } from '@/constants/business-error';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
@@ -50,6 +51,20 @@ export const CreateMemberSwagger = () => {
 		}),
 		ApiNotFoundResponse({
 			description: ERROR_USER_NOT_FOUND,
+		}),
+	);
+};
+
+export const UpdateMemberProfileSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '멤버 프로필 수정',
+		}),
+		ApiCreatedResponse({
+			description: '멤버 프로필 수정 성공',
+		}),
+		ApiUnauthorizedResponse({
+			description: ERROR_AUTHORIZATION_MEMBER,
 		}),
 	);
 };
