@@ -36,6 +36,16 @@ const Account: FC = () => {
 										alt="img"
 									></Image>
 								</div>
+								<div className="ml-auto">
+									<div
+										className="text-sm text-customDark font-bold px-5 
+                                    py-2 border border-solid border-customDark rounded-full
+                                    hover:bg-customOrange cursor-pointer
+                                    "
+									>
+										프로필 수정
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
