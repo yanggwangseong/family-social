@@ -25,7 +25,7 @@ export const useEmoji = <T extends FieldValues>(
 		const currentComment = (getValues(valueKey) + emojiData.emoji) as PathValue<
 			T,
 			FieldPath<T>
-		>; // 현재 입력된 댓글과 emoji를 합쳐줌.
+		>; // 현재 입력된 text-feild와 emoji를 합쳐줌.
 
 		setValue(valueKey, currentComment);
 		handleEmojiView();

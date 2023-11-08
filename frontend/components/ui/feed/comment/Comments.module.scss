@@ -1,3 +1,10 @@
 .comment_container {
 	@apply border-r border-l border-b border-solid border-customDark px-4 py-8 flex flex-col gap-6 relative;
+
+	.comment_write_container {
+		@apply my-2 flex;
+	}
+	.comment_write_form {
+		@apply flex-1;
+	}
 }

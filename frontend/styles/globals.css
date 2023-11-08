@@ -9,6 +9,13 @@
 	@apply text-base;
 }
 
+:root {
+	--swiper-pagination-bullet-border-radius: 100%;
+	--swiper-pagination-bullet-width: 12px;
+	--swiper-pagination-bullet-height: 12px;
+	--swiper-pagination-bullet-horizontal-gap: 10px;
+	--swiper-pagination-color: #e5855d;
+}
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

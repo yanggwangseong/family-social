@@ -15,10 +15,10 @@ const Comments: FC<CommentsProps> = ({
 	return (
 		<div className={styles.comment_container}>
 			{isToggleCommentWrite && (
-				<div className="my-2 flex">
+				<div className={styles.comment_write_container}>
 					{/* 프로필 */}
 					<Profile />
-					<div className="flex-1">
+					<div className={styles.comment_write_form}>
 						{/* comment form */}
 						<CommentForm onCommentRefetch={onCommentRefetch} feedId={feedId} />
 					</div>

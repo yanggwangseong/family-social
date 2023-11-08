@@ -28,6 +28,10 @@
 				@apply text-customGray text-base mt-4;
 			}
 
+			.signin__email_description {
+				@apply mt-10;
+			}
+
 			.form {
 				.form_label {
 					@apply text-customDark mt-4 mb-2;

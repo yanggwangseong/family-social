@@ -138,7 +138,7 @@ export class CommentsService {
 		const comment = await this.commentsRepository.findOneBy({
 			id: commentId,
 		});
-		console.log('comment', comment);
+
 		if (!comment) {
 			throw EntityNotFoundException(ERROR_COMMENT_NOT_FOUND);
 		}

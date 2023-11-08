@@ -11,7 +11,7 @@ const Menu: FC<MenuProps> = ({ link, Icon, menu }) => {
 	return (
 		<Link
 			className={cn(styles.sidebar_menu_container, {
-				[styles.active]: link === router.asPath,
+				[styles.active]: link === router.pathname,
 			})}
 			href={link}
 		>

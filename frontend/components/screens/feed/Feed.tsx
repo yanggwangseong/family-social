@@ -6,7 +6,7 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useInfiniteQuery, useMutation } from 'react-query';
-import { FeedService, sleep } from '@/services/feed/feed.service';
+import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import heartAnimation from '@/assets/lottie/like.json';
@@ -18,8 +18,12 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { CommentService } from '@/services/comment/comment.service';
+import { useRouter } from 'next/router';
 
 const Feed: FC = () => {
+	const router = useRouter();
+	const query = router.query as { options: 'TOP' | 'MYFEED' | 'ALL' };
+
 	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
 	// const handleLike = () => {
@@ -116,7 +120,8 @@ const Feed: FC = () => {
 		refetch,
 	} = useInfiniteQuery(
 		['feeds'],
-		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
+		async ({ pageParam = 1 }) =>
+			await FeedService.getFeeds(pageParam, query.options),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
 				return lastPage.page !== allPosts[0].totalPage
@@ -221,7 +226,7 @@ const Feed: FC = () => {
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
-							<TabMenu />
+							<TabMenu options={query.options} />
 
 							<div className={styles.feed_container}>
 								{isLoading && <Skeleton />}
