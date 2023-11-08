@@ -47,6 +47,10 @@ const Account: FC = () => {
 									</div>
 								</div>
 							</div>
+							<div className="mt-6">
+								<div className="text-2xl text-customDark font-bold">양광성</div>
+								<div className="text-customGray text-sm mt-2">@양광성</div>
+							</div>
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
