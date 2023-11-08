@@ -59,6 +59,36 @@ export class MemberEntity extends DefaultEntity {
 	@Column({ default: false, nullable: false }) // 최초 로그인 여부를 나타내는 플래그
 	isFirstLogin!: boolean;
 
+	/**
+	 * 서버를 통해 한 번 전처리된 이미지
+	 * example is @link {https://folder/test.jpg}
+	 *
+	 * @minLength 4
+	 * @maxLength 2048
+	 */
+	@Column('varchar', { length: 2048, nullable: true })
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsString()
+	@MinLength(4)
+	@MaxLength(2048)
+	profileImage!: string;
+
+	/**
+	 * 서버를 통해 한 번 전처리된 이미지
+	 * example is @link {https://folder/test.jpg}
+	 *
+	 * @minLength 4
+	 * @maxLength 2048
+	 */
+	@Column('varchar', { length: 2048, nullable: true })
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsString()
+	@MinLength(4)
+	@MaxLength(2048)
+	coverImage!: string;
+
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
 	@IsOptional()
