@@ -26,6 +26,7 @@ const LayerMode = {
 	createFeed: 'createFeed',
 	feedDeleteConfirm: 'feedDeleteConfirm',
 	commentDeleteConfirm: 'commentDeleteConfirm',
+	logoutConfirm: 'logoutConfirm',
 } as const;
 
 const ToggleModalDerection = ['left', 'right'] as const;

@@ -8,7 +8,22 @@ import Image from 'next/image';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import { accountTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { useRecoilState } from 'recoil';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { LayerMode } from 'types';
+
 const Account: FC = () => {
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+
+	const handleLogOut = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '로그 아웃',
+			layer: LayerMode.logoutConfirm,
+		});
+	};
+
 	return (
 		<Format title={'account'}>
 			<div className={styles.container}>
@@ -51,6 +66,7 @@ const Account: FC = () => {
                                     py-2 border border-solid border-customDark rounded-full
                                     cursor-pointer flex gap-2 bg-customOrange
                                     "
+										onClick={handleLogOut}
 									>
 										<IoLogOutOutline size={24} />
 										로그아웃
