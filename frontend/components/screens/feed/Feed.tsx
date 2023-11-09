@@ -19,6 +19,7 @@ import { useLottieLike } from '@/hooks/useLottieLike';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { CommentService } from '@/services/comment/comment.service';
 import { useRouter } from 'next/router';
+import { feedTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 
 const Feed: FC = () => {
 	const router = useRouter();
@@ -226,7 +227,7 @@ const Feed: FC = () => {
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
-							<TabMenu options={query.options} />
+							<TabMenu list={feedTabMenus} options={query.options} />
 
 							<div className={styles.feed_container}>
 								{isLoading && <Skeleton />}

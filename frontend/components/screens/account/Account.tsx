@@ -5,7 +5,8 @@ import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import Image from 'next/image';
-import Profile from '@/components/ui/profile/Profile';
+import TabMenu from '@/components/ui/tab-menu/TabMenu';
+import { accountTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 
 const Account: FC = () => {
 	return (
@@ -50,6 +51,9 @@ const Account: FC = () => {
 							<div className="mt-6">
 								<div className="text-2xl text-customDark font-bold">양광성</div>
 								<div className="text-customGray text-sm mt-2">@양광성</div>
+							</div>
+							<div className="mt-7">
+								<TabMenu list={accountTabMenus} options={'MYFEED'}></TabMenu>
 							</div>
 						</div>
 					</div>
