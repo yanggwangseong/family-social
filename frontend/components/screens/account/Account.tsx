@@ -24,6 +24,14 @@ const Account: FC = () => {
 		});
 	};
 
+	const handleEditProfile = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '프로필 수정',
+			layer: LayerMode.editProfile,
+		});
+	};
+
 	return (
 		<Format title={'account'}>
 			<div className={styles.container}>
@@ -58,6 +66,7 @@ const Account: FC = () => {
                                     py-2 border border-solid border-customDark rounded-full
                                     hover:bg-customOrange cursor-pointer
                                     "
+										onClick={handleEditProfile}
 									>
 										프로필 수정
 									</div>
