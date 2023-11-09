@@ -7,7 +7,7 @@ import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/Right
 import Image from 'next/image';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import { accountTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
-
+import { IoLogOutOutline } from 'react-icons/io5';
 const Account: FC = () => {
 	return (
 		<Format title={'account'}>
@@ -37,7 +37,7 @@ const Account: FC = () => {
 										alt="img"
 									></Image>
 								</div>
-								<div className="ml-auto">
+								<div className="ml-auto flex flex-row gap-2">
 									<div
 										className="text-sm text-customDark font-bold px-5 
                                     py-2 border border-solid border-customDark rounded-full
@@ -45,6 +45,15 @@ const Account: FC = () => {
                                     "
 									>
 										프로필 수정
+									</div>
+									<div
+										className="text-sm text-customDark font-bold px-5 
+                                    py-2 border border-solid border-customDark rounded-full
+                                    cursor-pointer flex gap-2 bg-customOrange
+                                    "
+									>
+										<IoLogOutOutline size={24} />
+										로그아웃
 									</div>
 								</div>
 							</div>
