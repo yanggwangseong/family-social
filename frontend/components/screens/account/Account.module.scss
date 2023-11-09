@@ -14,12 +14,53 @@
 			@apply relative;
 			flex: 1;
 
+			//banner-image
+			.banner_container {
+				@apply w-full h-[200px] relative border-b border-solid border-customDark;
+			}
+
 			.main_contents_container {
 				@screen md {
 					@apply mx-auto;
 					width: 768px;
 				}
 				@apply w-full h-full mt-8;
+
+				.account_top_container {
+					@apply flex;
+
+					//profile-image
+					.profile_image_container {
+						@apply -mt-20 relative z-10 border border-solid border-customDark w-[120px] h-[120px] rounded-full;
+
+						.profile_image {
+							@apply rounded-full cursor-pointer;
+						}
+					}
+
+					//top_btn
+					.top_btn_container {
+						@apply ml-auto flex flex-row gap-2;
+					}
+				}
+
+				//title username
+				.account_title_container {
+					@apply mt-6;
+
+					.username {
+						@apply text-2xl text-customDark font-bold;
+					}
+
+					.mention {
+						@apply text-customGray text-sm mt-2;
+					}
+				}
+
+				//tab-menu
+				.tab_menu_container {
+					@apply mt-7;
+				}
 			}
 		}
 	}

@@ -6,7 +6,11 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthFields } from './sign-up.interface';
 import { useMutation } from 'react-query';
 import Field from '@/components/ui/field/Field';
-import { validEmail, validPassword } from './sign-up.constants';
+import {
+	validEmail,
+	validPassword,
+	validPhoneNumber,
+} from './sign-up.constants';
 import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
@@ -142,6 +146,10 @@ const SignUp: FC = () => {
 										minLength: {
 											value: 11,
 											message: '전화번호는 11자리 입니다.',
+										},
+										pattern: {
+											value: validPhoneNumber,
+											message: '휴대폰번호 형식을 확인해주세요!',
 										},
 									})}
 									maxLength={11}
