@@ -13,8 +13,9 @@ const TabMenu: FC<{
 
 	return (
 		<div className={styles.top_tab_menus}>
-			{list.map(item => (
+			{list.map((item, index) => (
 				<Link
+					key={index}
 					className={cn(styles.tab_menu_item, {
 						[styles.active]: options === item.options,
 					})}

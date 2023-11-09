@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './EditProfile.module.scss';
 import Image from 'next/image';
 import { GoPencil } from 'react-icons/go';
@@ -7,6 +7,7 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useForm } from 'react-hook-form';
 import { EditProfileFields } from './edit-profile.interface';
 import { validPhoneNumber } from '@/components/screens/sign-up/sign-up.constants';
+import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
 
 const EditProfile: FC = () => {
 	const {
@@ -20,19 +21,26 @@ const EditProfile: FC = () => {
 		mode: 'onChange',
 	});
 
+	const [uploadImage, setUploadImage] = useState<string | null>(null);
+	const handleUploadImage = (image: string) => setUploadImage(image);
+
 	return (
 		<div className={styles.edit_profile_container}>
 			<div className={styles.profile_img_container}>
-				<Image
-					className={styles.profile_img}
-					width={120}
-					height={120}
-					src={'/images/profile/profile.png'}
-					alt="img"
-				></Image>
-				<div className={styles.profile_img_icon_container}>
-					<GoPencil size={18} color="#0a0a0a" />
-				</div>
+				<ImageCropper aspectRatio={1 / 1} onCrop={handleUploadImage}>
+					<div className="relative w-[120px] h-[120px]">
+						<Image
+							className={styles.profile_img}
+							width={120}
+							height={120}
+							src={'/images/profile/profile.png'}
+							alt="img"
+						></Image>
+						<div className={styles.profile_img_icon_container}>
+							<GoPencil size={18} color="#0a0a0a" />
+						</div>
+					</div>
+				</ImageCropper>
 			</div>
 			<div className={styles.field_container}>
 				<Field
