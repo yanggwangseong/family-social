@@ -1,12 +1,48 @@
 import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { AuthService } from '@/services/auth/auth.service';
 import React, { FC } from 'react';
+import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const LogOutConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+	const router = useRouter();
 
-	const handleClick = () => {};
+	const { mutate: logoutSync } = useMutation(
+		['logout'],
+		() => AuthService.logout(),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `로그아웃 되었습니다.`, '확인', () => {
+					setIsShowing(false);
+					router.push('/signin');
+				});
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const handleClick = () => {
+		logoutSync();
+	};
 	return (
 		<div>
 			<div className="my-10 text-sm text-customGray">
