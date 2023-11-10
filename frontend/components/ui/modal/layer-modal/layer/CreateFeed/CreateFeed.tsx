@@ -13,9 +13,9 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react'; // basic
 import { Swiper as SwiperCore } from 'swiper/types';
-//import 'swiper/css';
-//import 'swiper/css/navigation';
-//import 'swiper/css/pagination';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	CreateFeedFields,

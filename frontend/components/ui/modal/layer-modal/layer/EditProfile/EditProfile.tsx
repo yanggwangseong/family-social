@@ -8,6 +8,9 @@ import { useForm } from 'react-hook-form';
 import { EditProfileFields } from './edit-profile.interface';
 import { validPhoneNumber } from '@/components/screens/sign-up/sign-up.constants';
 import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
+import { blobToFile } from '@/utils/file';
+import { useMutation } from 'react-query';
+import { MediaService } from '@/services/media/media.service';
 
 const EditProfile: FC = () => {
 	const {
@@ -21,12 +24,36 @@ const EditProfile: FC = () => {
 		mode: 'onChange',
 	});
 
-	const [uploadImage, setUploadImage] = useState<string | null>(null);
-	const handleUploadImage = (image: string) => setUploadImage(image);
+	// const { mutateAsync: uploadFilesASync } = useMutation(
+	// 	['upload-file'],
+	// 	async () => await MediaService.uploadfile(isFiles),
+	// 	{
+	// 		onMutate: variable => {},
+	// 		onSuccess(data: string[]) {},
+	// 		onError(error) {
+	// 			if (axios.isAxiosError(error)) {
+	// 				Report.warning('실패', `${error.response?.data.message}`, '확인');
+	// 			}
+	// 		},
+	// 	},
+	// );
+
+	const [isFiles, setIsFiles] = useState<File>();
+	const [uploadImage, setUploadImage] = useState<{
+		image: Blob | null;
+		fileName: string;
+	}>({ image: null, fileName: '' });
+
+	const handleUploadImage = (image: Blob, fileName: string) =>
+		setUploadImage({ image, fileName });
 
 	useEffect(() => {
-		console.log(uploadImage);
+		if (uploadImage.image) {
+			const file = blobToFile(uploadImage.image, uploadImage.fileName);
+			setIsFiles(isFiles);
+		}
 	}, [uploadImage]);
+
 	return (
 		<div className={styles.edit_profile_container}>
 			<div className={styles.contents_wrap}>
@@ -78,9 +105,6 @@ const EditProfile: FC = () => {
 						placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
 						error={errors.phoneNumber}
 					></Field>
-					{uploadImage && (
-						<Image src={uploadImage} width={120} height={120} alt="img" />
-					)}
 				</div>
 			</div>
 

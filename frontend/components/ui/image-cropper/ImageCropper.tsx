@@ -5,7 +5,7 @@ import CustomButton from '../button/custom-button/CustomButton';
 import styles from './ImageCropper.module.scss';
 
 interface PropsType {
-	onCrop: (image: string) => void;
+	onCrop: (image: Blob, fileName: string) => void;
 	aspectRatio: number;
 	children: React.ReactNode;
 }
@@ -15,6 +15,7 @@ const ImageCropper: FC<PropsType> = ({ children, aspectRatio, onCrop }) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const cropperRef = useRef<ReactCropperElement>(null);
 	const [image, setImage] = useState<null | string>(null);
+	const [isFileName, setIsFileName] = useState<string>('');
 
 	const handleChildrenClick = () => {
 		if (inputRef.current) inputRef.current.click();
@@ -27,6 +28,8 @@ const ImageCropper: FC<PropsType> = ({ children, aspectRatio, onCrop }) => {
 
 		if (!files) return;
 
+		setIsFileName(files[0].name);
+
 		const reader = new FileReader();
 		reader.onload = () => {
 			setImage(reader.result as string);
@@ -36,7 +39,11 @@ const ImageCropper: FC<PropsType> = ({ children, aspectRatio, onCrop }) => {
 
 	const getCropData = () => {
 		if (typeof cropperRef.current?.cropper !== 'undefined') {
-			onCrop(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+			cropperRef.current?.cropper.getCroppedCanvas().toBlob(blob => {
+				if (blob) {
+					onCrop(blob, isFileName);
+				}
+			});
 			setImage(null);
 		}
 	};
