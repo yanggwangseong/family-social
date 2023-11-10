@@ -11,6 +11,8 @@ import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
 import { blobToFile } from '@/utils/file';
 import { useMutation } from 'react-query';
 import { MediaService } from '@/services/media/media.service';
+import axios from 'axios';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 
 const EditProfile: FC = () => {
 	const {
@@ -24,19 +26,19 @@ const EditProfile: FC = () => {
 		mode: 'onChange',
 	});
 
-	// const { mutateAsync: uploadFilesASync } = useMutation(
-	// 	['upload-file'],
-	// 	async () => await MediaService.uploadfile(isFiles),
-	// 	{
-	// 		onMutate: variable => {},
-	// 		onSuccess(data: string[]) {},
-	// 		onError(error) {
-	// 			if (axios.isAxiosError(error)) {
-	// 				Report.warning('실패', `${error.response?.data.message}`, '확인');
-	// 			}
-	// 		},
-	// 	},
-	// );
+	const { mutateAsync: profileImageUploadASync } = useMutation(
+		['profile-image-upload'],
+		async (file: File) => await MediaService.uploadProfileImage(file),
+		{
+			onMutate: variable => {},
+			onSuccess(data: string[]) {},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
+		},
+	);
 
 	const [isFiles, setIsFiles] = useState<File>();
 	const [uploadImage, setUploadImage] = useState<{
@@ -50,9 +52,16 @@ const EditProfile: FC = () => {
 	useEffect(() => {
 		if (uploadImage.image) {
 			const file = blobToFile(uploadImage.image, uploadImage.fileName);
-			setIsFiles(isFiles);
+			setIsFiles(file);
 		}
 	}, [uploadImage]);
+
+	const handleImageUpload = async () => {
+		if (isFiles) {
+			const file = await profileImageUploadASync(isFiles);
+			console.log(file);
+		}
+	};
 
 	return (
 		<div className={styles.edit_profile_container}>
@@ -111,10 +120,11 @@ const EditProfile: FC = () => {
 			<CustomButton
 				type="button"
 				className="mt-8 bg-customOrange text-customDark 
-            font-bold border border-solid border-customDark 
-            rounded-full p-[10px]
-            w-full hover:bg-orange-500
-            "
+				font-bold border border-solid border-customDark 
+				rounded-full p-[10px]
+				w-full hover:bg-orange-500
+				"
+				onClick={handleImageUpload}
 			>
 				수정하기
 			</CustomButton>
