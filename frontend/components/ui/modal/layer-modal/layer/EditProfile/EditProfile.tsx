@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './EditProfile.module.scss';
 import Image from 'next/image';
 import { GoPencil } from 'react-icons/go';
@@ -24,57 +24,66 @@ const EditProfile: FC = () => {
 	const [uploadImage, setUploadImage] = useState<string | null>(null);
 	const handleUploadImage = (image: string) => setUploadImage(image);
 
+	useEffect(() => {
+		console.log(uploadImage);
+	}, [uploadImage]);
 	return (
 		<div className={styles.edit_profile_container}>
-			<div className={styles.profile_img_container}>
-				<ImageCropper aspectRatio={1 / 1} onCrop={handleUploadImage}>
-					<div className="relative w-[120px] h-[120px]">
-						<Image
-							className={styles.profile_img}
-							width={120}
-							height={120}
-							src={'/images/profile/profile.png'}
-							alt="img"
-						></Image>
-						<div className={styles.profile_img_icon_container}>
-							<GoPencil size={18} color="#0a0a0a" />
+			<div className={styles.contents_wrap}>
+				<div className={styles.profile_img_container}>
+					<ImageCropper aspectRatio={1 / 1} onCrop={handleUploadImage}>
+						<div className={styles.image_wrap}>
+							<Image
+								className={styles.profile_img}
+								width={120}
+								height={120}
+								src={'/images/profile/profile.png'}
+								alt="img"
+							></Image>
+							<div className={styles.profile_img_icon_container}>
+								<GoPencil size={18} color="#0a0a0a" />
+							</div>
 						</div>
-					</div>
-				</ImageCropper>
+					</ImageCropper>
+				</div>
+				<div className={styles.field_container}>
+					<Field
+						fieldClass={'inline_input'}
+						labelText={'이름'}
+						{...register('username', {
+							required: '이름은 필수입니다!',
+							minLength: {
+								value: 2,
+								message: '최소 이름은 2자 이상입니다.',
+							},
+						})}
+						placeholder="이름을 입력 해주세요!"
+						error={errors.username}
+					></Field>
+					<Field
+						fieldClass={'inline_input'}
+						labelText={'휴대폰번호'}
+						{...register('phoneNumber', {
+							required: '전화번호는 필수입니다',
+							minLength: {
+								value: 11,
+								message: '전화번호는 11자리 입니다.',
+							},
+							pattern: {
+								value: validPhoneNumber,
+								message: '휴대폰번호 형식을 확인해주세요!',
+							},
+						})}
+						maxLength={11}
+						placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
+						error={errors.phoneNumber}
+					></Field>
+					{uploadImage && (
+						<Image src={uploadImage} width={120} height={120} alt="img" />
+					)}
+				</div>
 			</div>
-			<div className={styles.field_container}>
-				<Field
-					fieldClass={'inline_input'}
-					labelText={'이름'}
-					{...register('username', {
-						required: '이름은 필수입니다!',
-						minLength: {
-							value: 2,
-							message: '최소 이름은 2자 이상입니다.',
-						},
-					})}
-					placeholder="이름을 입력 해주세요!"
-					error={errors.username}
-				></Field>
-				<Field
-					fieldClass={'inline_input'}
-					labelText={'휴대폰번호'}
-					{...register('phoneNumber', {
-						required: '전화번호는 필수입니다',
-						minLength: {
-							value: 11,
-							message: '전화번호는 11자리 입니다.',
-						},
-						pattern: {
-							value: validPhoneNumber,
-							message: '휴대폰번호 형식을 확인해주세요!',
-						},
-					})}
-					maxLength={11}
-					placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
-					error={errors.phoneNumber}
-				></Field>
-			</div>
+
 			<CustomButton
 				type="button"
 				className="mt-8 bg-customOrange text-customDark 

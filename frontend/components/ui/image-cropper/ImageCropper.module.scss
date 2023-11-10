@@ -1,0 +1,20 @@
+.child_container {
+	@apply inline-block w-[120px] cursor-pointer;
+}
+
+.img_container {
+	@apply h-[500px] w-full absolute top-0 left-0 bg-white;
+
+	.img_cropper_container {
+		@apply w-full h-[400px];
+	}
+
+	.footer_wrap {
+		@apply mt-10 flex;
+
+		//botton-container
+		.botton_container {
+			@apply ml-auto flex w-full gap-5;
+		}
+	}
+}
