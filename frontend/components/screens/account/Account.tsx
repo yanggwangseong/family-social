@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import MyFeed from '../feed/my-feed/MyFeed';
 
 const Account: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
