@@ -13,10 +13,14 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import MyFeed from '../feed/my-feed/MyFeed';
+import LottieLike from '@/components/ui/lottie/LottieLike';
+import { useLottieLike } from '@/hooks/useLottieLike';
 
 const Account: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+
+	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
 	const handleLogOut = () => {
 		setIsShowing(!isShowing);
@@ -40,6 +44,10 @@ const Account: FC = () => {
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
+					<LottieLike
+						lottieRef={lottieRef}
+						onLottieComplete={handleLottieComplete}
+					/>
 					{/* 왼쪽 사이드바 */}
 					<MainSidebar />
 					<div className={styles.detail_container}>
@@ -91,6 +99,7 @@ const Account: FC = () => {
 							</div>
 							<div className={styles.tab_menu_container}>
 								<TabMenu list={accountTabMenus} options={'MYFEED'}></TabMenu>
+								<MyFeed handleIsLottie={handleIsLottie} />
 							</div>
 						</div>
 					</div>

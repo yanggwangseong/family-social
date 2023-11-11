@@ -4,11 +4,12 @@ import { useInfiniteQuery } from 'react-query';
 import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import FeedItem from '@/components/ui/feed/FeedItem';
+import { useFeedLike } from '@/hooks/useFeedLike';
+import { useCommentLike } from '@/hooks/useCommentLike';
 
 const MyFeed: FC<{
-	onLike: (feedId: string, page: number) => void;
-	onLikeComment: (feedId: string, commentId: string, page: number) => void;
-}> = ({ onLike, onLikeComment }) => {
+	handleIsLottie: (status: boolean) => void;
+}> = ({ handleIsLottie }) => {
 	const {
 		data,
 		fetchNextPage,
@@ -77,6 +78,13 @@ const MyFeed: FC<{
 		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 	};
 
+	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
+
+	const { handleLikeComment } = useCommentLike({
+		handleRefetch,
+		handleIsLottie,
+	});
+
 	return (
 		<div className={styles.feed_container}>
 			{isLoading && <Skeleton />}
@@ -86,10 +94,10 @@ const MyFeed: FC<{
 						<FeedItem
 							key={feed.feedId}
 							feed={feed}
-							onLike={onLike}
+							onLike={handleUpdateLike}
 							page={page.page}
 							onRefetch={handleRefetch}
-							onLikeComment={onLikeComment}
+							onLikeComment={handleLikeComment}
 						/>
 					))}
 				</React.Fragment>

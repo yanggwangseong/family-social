@@ -239,10 +239,7 @@ const Feed: FC = () => {
 							{/* 탭메뉴 */}
 							<TabMenu list={feedTabMenus} options={query.options} />
 							{query.options === 'MYFEED' ? (
-								<MyFeed
-									onLike={handleUpdateLike}
-									onLikeComment={handleLikeComment}
-								/>
+								<MyFeed handleIsLottie={handleIsLottie} />
 							) : (
 								<div className={styles.feed_container}>
 									{isLoading && <Skeleton />}
