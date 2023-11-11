@@ -30,14 +30,18 @@ export const useLottieLike = () => {
 				lottieRef.current.animationContainerRef.current.style.visibility =
 					'hidden';
 			}
-			setIsLottie(false);
+			handleIsLottie(false);
 			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
 			//lottieRef.current.animationContainerRef.current?.remove();
 		}
 	};
 
+	const handleIsLottie = (status: boolean) => {
+		setIsLottie(status);
+	};
+
 	return {
-		setIsLottie,
+		handleIsLottie,
 		isLottie,
 		lottieRef,
 		handleLottieComplete,
