@@ -20,12 +20,14 @@ import LottieLike from '@/components/ui/lottie/LottieLike';
 import { CommentService } from '@/services/comment/comment.service';
 import { useRouter } from 'next/router';
 import { feedTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import MyFeed from './my-feed/MyFeed';
+import { useFeedLike } from '@/hooks/useFeedLike';
 
 const Feed: FC = () => {
 	const router = useRouter();
 	const query = router.query as { options: 'TOP' | 'MYFEED' | 'ALL' };
 
-	const { setIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
+	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
 	// const handleLike = () => {
 	// 	if (lottieRef.current) {
@@ -37,42 +39,42 @@ const Feed: FC = () => {
 	// 	}
 	// };
 
-	const { mutate: feedLikeSync } = useMutation(
-		['feed-like'],
-		(data: { feedId: string; page: number }) =>
-			FeedService.updateLike(data.feedId),
-		{
-			onMutate: variable => {
-				//Loading.hourglass();
-			},
-			onSuccess(data, variable) {
-				const pageValue = variable.page;
-				if (data === true) {
-					setIsLottie(true);
-					Notify.success('좋아요를 누르셨습니다');
-				}
-				if (data === false) {
-					Notify.warning('좋아요를 취소하셨습니다');
-				}
+	// const { mutate: feedLikeSync } = useMutation(
+	// 	['feed-like'],
+	// 	(data: { feedId: string; page: number }) =>
+	// 		FeedService.updateLike(data.feedId),
+	// 	{
+	// 		onMutate: variable => {
+	// 			//Loading.hourglass();
+	// 		},
+	// 		onSuccess(data, variable) {
+	// 			const pageValue = variable.page;
+	// 			if (data === true) {
+	// 				handleIsLottie(true);
+	// 				Notify.success('좋아요를 누르셨습니다');
+	// 			}
+	// 			if (data === false) {
+	// 				Notify.warning('좋아요를 취소하셨습니다');
+	// 			}
 
-				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+	// 			refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 
-				//Loading.remove();
-				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
-				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
-		},
-	);
+	// 			//Loading.remove();
+	// 			//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+	// 			//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+	// 		},
+	// 		onError(error) {
+	// 			if (axios.isAxiosError(error)) {
+	// 				Report.warning(
+	// 					'실패',
+	// 					`${error.response?.data.message}`,
+	// 					'확인',
+	// 					() => Loading.remove(),
+	// 				);
+	// 			}
+	// 		},
+	// 	},
+	// );
 
 	const { mutate: commentLikeSync } = useMutation(
 		['comment-like'],
@@ -85,7 +87,7 @@ const Feed: FC = () => {
 			onSuccess(data, variable) {
 				const pageValue = variable.page;
 				if (data === true) {
-					setIsLottie(true);
+					handleIsLottie(true);
 					Notify.success('좋아요를 누르셨습니다');
 				}
 				if (data === false) {
@@ -175,13 +177,15 @@ const Feed: FC = () => {
 		observer.observe(element);
 	};
 
-	const handleUpdateLike = (feedId: string, page: number) => {
-		feedLikeSync({ feedId, page });
-	};
+	// const handleUpdateLike = (feedId: string, page: number) => {
+	// 	feedLikeSync({ feedId, page });
+	// };
 
 	const handleRefetch = (pageValue: number) => {
 		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 	};
+
+	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
 
 	const handleLikeComment = (
 		feedId: string,
@@ -228,32 +232,38 @@ const Feed: FC = () => {
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
 							<TabMenu list={feedTabMenus} options={query.options} />
+							{query.options === 'MYFEED' ? (
+								<MyFeed
+									onLike={handleUpdateLike}
+									onLikeComment={handleLikeComment}
+								/>
+							) : (
+								<div className={styles.feed_container}>
+									{isLoading && <Skeleton />}
+									{data?.pages.map((page, pageIndex) => (
+										<React.Fragment key={pageIndex}>
+											{page.list.map(feed => (
+												<FeedItem
+													key={feed.feedId}
+													feed={feed}
+													onLike={handleUpdateLike}
+													page={page.page}
+													onRefetch={handleRefetch}
+													onLikeComment={handleLikeComment}
+												/>
+											))}
+										</React.Fragment>
+									))}
 
-							<div className={styles.feed_container}>
-								{isLoading && <Skeleton />}
-								{data?.pages.map((page, pageIndex) => (
-									<React.Fragment key={pageIndex}>
-										{page.list.map(feed => (
-											<FeedItem
-												key={feed.feedId}
-												feed={feed}
-												onLike={handleUpdateLike}
-												page={page.page}
-												onRefetch={handleRefetch}
-												onLikeComment={handleLikeComment}
-											/>
-										))}
-									</React.Fragment>
-								))}
-
-								{isRefetching && (
-									<React.Fragment>
-										<Skeleton />
-										<Skeleton />
-										<Skeleton />
-									</React.Fragment>
-								)}
-							</div>
+									{isRefetching && (
+										<React.Fragment>
+											<Skeleton />
+											<Skeleton />
+											<Skeleton />
+										</React.Fragment>
+									)}
+								</div>
+							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
