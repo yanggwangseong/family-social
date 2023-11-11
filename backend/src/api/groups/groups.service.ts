@@ -18,6 +18,7 @@ import {
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 } from '@/constants/business-error';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
+import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 
 @Injectable()
 export class GroupsService {
@@ -26,7 +27,9 @@ export class GroupsService {
 		private readonly famsRepository: FamsRepository,
 	) {}
 
-	async getMemberListBelongToGroup(groupId: string) {
+	async getMemberListBelongToGroup(
+		groupId: string,
+	): Promise<GroupMembersResDto[]> {
 		return await this.famsRepository.getMemberListBelongToGroup(groupId);
 	}
 
