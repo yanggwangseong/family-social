@@ -142,8 +142,7 @@ export class GroupsController {
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		//[TODO] 해당 그룹에 로그인한 유저가 속하는 사람인지 체크해야됨.
-		return await this.groupsService.getMemberListBelongToGroup(groupId);
+		return await this.groupsService.getMemberListBelongToGroup(groupId, sub);
 	}
 
 	/**

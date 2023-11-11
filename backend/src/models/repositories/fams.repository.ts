@@ -72,8 +72,8 @@ export class FamsRepository extends Repository<FamEntity> {
 	async isMainRoleForMemberInGroup({
 		groupId,
 		memberId,
-	}: IDeleteGroupArgs): Promise<{ role: roleType }> {
-		const role = await this.repository.findOneOrFail({
+	}: IDeleteGroupArgs): Promise<{ role: roleType } | null> {
+		const role = await this.repository.findOne({
 			select: {
 				role: true,
 			},
