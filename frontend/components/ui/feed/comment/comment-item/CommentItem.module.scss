@@ -1,0 +1,22 @@
+.comment_card_bottom_container {
+	@apply flex ml-[70px] mt-3 gap-3;
+
+	.comment_published {
+		@apply text-sm text-customGray;
+	}
+	.comment_reply {
+		@apply text-sm font-semibold cursor-pointer;
+	}
+
+	.comment_like_container {
+		@apply ml-auto cursor-pointer flex;
+
+		.like_count {
+			@apply ml-2 font-medium;
+		}
+	}
+}
+
+.child_comment_container {
+	@apply ml-[70px] relative flex flex-col gap-6;
+}

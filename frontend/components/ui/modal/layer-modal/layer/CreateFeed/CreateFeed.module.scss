@@ -1,23 +1,109 @@
 .create_feed_container {
 	@apply mt-10;
-}
 
-.selectedGroup_title {
-	@apply font-semibold text-lg;
-}
+	.selectedGroup_title {
+		@apply font-semibold text-lg;
+	}
 
-.selectedGroup_groups_container {
-	@apply flex flex-wrap overflow-y-auto h-72 mt-5 py-5;
+	.selectedGroup_groups_container {
+		@apply flex flex-wrap overflow-y-auto h-72 mt-5 py-5;
 
-	.group_card_wrap {
-		@apply w-full;
+		.group_card_wrap {
+			@apply w-full;
+		}
+	}
+
+	.selectedGroup_description {
+		@apply mt-5 font-light text-sm;
+	}
+
+	.button_container {
+		@apply flex w-full gap-5;
+
+		.emoji_container {
+			@apply mr-2 relative flex justify-center items-center;
+
+			.emoji_icon {
+				@apply cursor-pointer;
+			}
+
+			.emoji_view_container {
+				@apply absolute z-10 -top-[420px] left-0;
+			}
+		}
+	}
+
+	.uploaded_container {
+		@apply w-full flex flex-wrap;
+
+		.uploaded_swiper {
+			@apply w-full h-[420px] relative border border-solid border-customDark;
+
+			.uploaded_swiper_slide {
+				@apply relative;
+
+				.uploaded_close {
+					@apply absolute bg-customOrange top-5 right-5 border 
+					border-solid border-customDark rounded-full p-2 cursor-pointer;
+				}
+
+				.swiper_button_prev {
+					@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+
+				.swiper_button_next {
+					@apply absolute right-5 
+					z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+			}
+		}
+	}
+
+	.upload_title {
+		@apply mt-10;
+	}
+
+	.form {
+		.form_top_wrap {
+			@apply flex;
+
+			.form_top_group_container {
+				@apply ml-auto -mt-3;
+			}
+		}
+
+		.form_field_container {
+			@apply mt-5;
+		}
+
+		.form_swiper_container {
+			@apply mt-5;
+
+			.swiper {
+				@apply w-full h-72 relative;
+			}
+		}
 	}
 }
 
-.selectedGroup_description {
-	@apply mt-5 font-light text-sm;
+@mixin alignCenter() {
+	display: flex;
+	display: -webkit-flex;
+	flex-direction: column;
+	-ms-flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
-.selectedGroup_button_container {
-	@apply flex w-full gap-5;
+.drag_drop {
+	@apply border border-solid border-customDark rounded-lg my-4 p-2;
+	width: 100%;
+	height: 200px;
+	@include alignCenter();
+
+	> label {
+		@apply w-full h-full flex justify-center items-center bg-customOrange text-customDark font-semibold rounded-lg;
+	}
 }

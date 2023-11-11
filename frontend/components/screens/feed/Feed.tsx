@@ -6,7 +6,7 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useInfiniteQuery, useMutation } from 'react-query';
-import { FeedService, sleep } from '@/services/feed/feed.service';
+import { FeedService } from '@/services/feed/feed.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import heartAnimation from '@/assets/lottie/like.json';
@@ -15,58 +15,104 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { useLottieLike } from '@/hooks/useLottieLike';
+import LottieLike from '@/components/ui/lottie/LottieLike';
+import { CommentService } from '@/services/comment/comment.service';
+import { useRouter } from 'next/router';
+import { feedTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import MyFeed from './my-feed/MyFeed';
+import { useFeedLike } from '@/hooks/useFeedLike';
+import { useCommentLike } from '@/hooks/useCommentLike';
 
 const Feed: FC = () => {
-	const [isLottie, setIsLottie] = useState<boolean>(false);
+	const router = useRouter();
+	const query = router.query as { options: 'TOP' | 'MYFEED' | 'ALL' };
 
-	const lottieRef = useRef<LottieRefCurrentProps>(null);
+	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
-	const handleLike = () => {
-		if (lottieRef.current) {
-			lottieRef.current.play();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'visible';
-			}
-		}
-	};
+	// const handleLike = () => {
+	// 	if (lottieRef.current) {
+	// 		lottieRef.current.play();
+	// 		if (lottieRef.current?.animationContainerRef.current) {
+	// 			lottieRef.current.animationContainerRef.current.style.visibility =
+	// 				'visible';
+	// 		}
+	// 	}
+	// };
 
-	const { mutate: feedLikeSync } = useMutation(
-		['feed-like'],
-		(data: { feedId: string; page: number }) =>
-			FeedService.updateLike(data.feedId),
-		{
-			onMutate: variable => {
-				//Loading.hourglass();
-			},
-			onSuccess(data, variable) {
-				const pageValue = variable.page;
-				if (data === true) {
-					setIsLottie(true);
-					Notify.success('좋아요를 누르셨습니다');
-				}
-				if (data === false) {
-					Notify.warning('좋아요를 취소하셨습니다');
-				}
+	// const { mutate: feedLikeSync } = useMutation(
+	// 	['feed-like'],
+	// 	(data: { feedId: string; page: number }) =>
+	// 		FeedService.updateLike(data.feedId),
+	// 	{
+	// 		onMutate: variable => {
+	// 			//Loading.hourglass();
+	// 		},
+	// 		onSuccess(data, variable) {
+	// 			const pageValue = variable.page;
+	// 			if (data === true) {
+	// 				handleIsLottie(true);
+	// 				Notify.success('좋아요를 누르셨습니다');
+	// 			}
+	// 			if (data === false) {
+	// 				Notify.warning('좋아요를 취소하셨습니다');
+	// 			}
 
-				refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+	// 			refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 
-				//Loading.remove();
-				//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
-				//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
-		},
-	);
+	// 			//Loading.remove();
+	// 			//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+	// 			//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+	// 		},
+	// 		onError(error) {
+	// 			if (axios.isAxiosError(error)) {
+	// 				Report.warning(
+	// 					'실패',
+	// 					`${error.response?.data.message}`,
+	// 					'확인',
+	// 					() => Loading.remove(),
+	// 				);
+	// 			}
+	// 		},
+	// 	},
+	// );
+
+	// const { mutate: commentLikeSync } = useMutation(
+	// 	['comment-like'],
+	// 	(data: { feedId: string; commentId: string; page: number }) =>
+	// 		CommentService.updateLike(data.feedId, data.commentId),
+	// 	{
+	// 		onMutate: variable => {
+	// 			//Loading.hourglass();
+	// 		},
+	// 		onSuccess(data, variable) {
+	// 			const pageValue = variable.page;
+	// 			if (data === true) {
+	// 				handleIsLottie(true);
+	// 				Notify.success('좋아요를 누르셨습니다');
+	// 			}
+	// 			if (data === false) {
+	// 				Notify.warning('좋아요를 취소하셨습니다');
+	// 			}
+
+	// 			refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+
+	// 			//Loading.remove();
+	// 			//if (data) Report.success('성공', `좋아요를 성공 하였습니다`, '확인');
+	// 			//Report.success('성공', `좋아요를 취소 하였습니다`, '확인');
+	// 		},
+	// 		onError(error) {
+	// 			if (axios.isAxiosError(error)) {
+	// 				Report.warning(
+	// 					'실패',
+	// 					`${error.response?.data.message}`,
+	// 					'확인',
+	// 					() => Loading.remove(),
+	// 				);
+	// 			}
+	// 		},
+	// 	},
+	// );
 
 	const {
 		data,
@@ -78,7 +124,8 @@ const Feed: FC = () => {
 		refetch,
 	} = useInfiniteQuery(
 		['feeds'],
-		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam),
+		async ({ pageParam = 1 }) =>
+			await FeedService.getFeeds(pageParam, query.options),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
 				return lastPage.page !== allPosts[0].totalPage
@@ -111,36 +158,6 @@ const Feed: FC = () => {
 		return () => {};
 	}, [data]);
 
-	useEffect(() => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			if (isLottie) {
-				lottieRef.current.play();
-				if (lottieRef.current?.animationContainerRef.current) {
-					lottieRef.current.animationContainerRef.current.style.visibility =
-						'visible';
-				}
-			}
-		}
-	}, [isLottie]);
-
-	const handleLottieComplete = () => {
-		if (lottieRef.current) {
-			lottieRef.current.stop();
-			if (lottieRef.current?.animationContainerRef.current) {
-				lottieRef.current.animationContainerRef.current.style.visibility =
-					'hidden';
-			}
-			setIsLottie(false);
-			//lottieRef.current.animationContainerRef.current?.style.visibility = 'hidden'
-			//lottieRef.current.animationContainerRef.current?.remove();
-		}
-	};
-
 	const observeElement = (element: HTMLElement | null) => {
 		if (!element) return;
 		// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
@@ -161,9 +178,28 @@ const Feed: FC = () => {
 		observer.observe(element);
 	};
 
-	const handleUpdateLike = (feedId: string, page: number) => {
-		feedLikeSync({ feedId, page });
+	// const handleUpdateLike = (feedId: string, page: number) => {
+	// 	feedLikeSync({ feedId, page });
+	// };
+
+	const handleRefetch = (pageValue: number) => {
+		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
 	};
+
+	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
+
+	const { handleLikeComment } = useCommentLike({
+		handleRefetch,
+		handleIsLottie,
+	});
+
+	// const handleLikeComment = (
+	// 	feedId: string,
+	// 	commentId: string,
+	// 	page: number,
+	// ) => {
+	// 	commentLikeSync({ feedId, commentId, page });
+	// };
 
 	return (
 		<Format title={'feed'}>
@@ -183,12 +219,17 @@ const Feed: FC = () => {
 							</div>
 						</div>
 					) : null} */}
-					<Lottie
+
+					{/* <Lottie
 						className={styles.lottie_container}
 						animationData={heartAnimation}
 						loop={false}
 						lottieRef={lottieRef}
 						onComplete={handleLottieComplete}
+					/> */}
+					<LottieLike
+						lottieRef={lottieRef}
+						onLottieComplete={handleLottieComplete}
 					/>
 
 					{/* 왼쪽 사이드바 */}
@@ -196,33 +237,36 @@ const Feed: FC = () => {
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
-							<TabMenu />
+							<TabMenu list={feedTabMenus} options={query.options} />
+							{query.options === 'MYFEED' ? (
+								<MyFeed handleIsLottie={handleIsLottie} />
+							) : (
+								<div className={styles.feed_container}>
+									{isLoading && <Skeleton />}
+									{data?.pages.map((page, pageIndex) => (
+										<React.Fragment key={pageIndex}>
+											{page.list.map(feed => (
+												<FeedItem
+													key={feed.feedId}
+													feed={feed}
+													onLike={handleUpdateLike}
+													page={page.page}
+													onRefetch={handleRefetch}
+													onLikeComment={handleLikeComment}
+												/>
+											))}
+										</React.Fragment>
+									))}
 
-							<div className={styles.feed_container}>
-								{isLoading && <Skeleton />}
-								{data?.pages.map((page, pageIndex) => (
-									<React.Fragment key={pageIndex}>
-										{page.list.map(feed => (
-											<FeedItem
-												key={feed.feedId}
-												id={feed.feedId}
-												myLike={feed.myLike}
-												sumLike={feed.sumLike}
-												onLike={handleUpdateLike}
-												page={page.page}
-											/>
-										))}
-									</React.Fragment>
-								))}
-
-								{isRefetching && (
-									<React.Fragment>
-										<Skeleton />
-										<Skeleton />
-										<Skeleton />
-									</React.Fragment>
-								)}
-							</div>
+									{isRefetching && (
+										<React.Fragment>
+											<Skeleton />
+											<Skeleton />
+											<Skeleton />
+										</React.Fragment>
+									)}
+								</div>
+							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}

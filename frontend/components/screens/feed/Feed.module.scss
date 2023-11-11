@@ -46,32 +46,32 @@
 		// 		transform: translate(-50%, -50%);
 		// 	}
 		// }
-		.lottie_container {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			z-index: 100;
+		// .lottie_container {
+		// 	position: fixed;
+		// 	top: 0;
+		// 	left: 0;
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	display: flex;
+		// 	align-items: center;
+		// 	justify-content: center;
+		// 	z-index: 100;
 
-			&::before,
-			&::after {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background-color: rgba(10, 10, 10, 0.27);
-			}
+		// 	&::before,
+		// 	&::after {
+		// 		content: '';
+		// 		position: absolute;
+		// 		top: 0;
+		// 		left: 0;
+		// 		width: 100%;
+		// 		height: 100%;
+		// 		background-color: rgba(10, 10, 10, 0.27);
+		// 	}
 
-			&::after {
-				transform: translateY(-50%);
-				height: 0%;
-			}
-		}
+		// 	&::after {
+		// 		transform: translateY(-50%);
+		// 		height: 0%;
+		// 	}
+		// }
 	}
 }

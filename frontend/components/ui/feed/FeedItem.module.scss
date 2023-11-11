@@ -3,19 +3,41 @@
 
 	.feed_card_top_container {
 		@apply p-4 flex;
+
+		.feed_card_setting_container {
+			@apply ml-auto cursor-pointer relative;
+		}
 	}
 
 	.feed_description_container {
-		@apply px-4 pt-8 pb-6 text-sm;
+		@apply px-4 pt-8 pb-6 text-sm whitespace-pre;
 	}
 
 	.feed_media_container {
-		@apply w-full relative border-y border-solid border-customDark border-collapse;
+		@apply w-full relative border-y border-solid border-customDark border-collapse bg-white cursor-pointer;
 		height: 426px;
+
+		.feed_media_wrap {
+			@apply w-full h-full relative;
+
+			.swiper_container {
+				@apply relative;
+
+				.swiper_button_prev {
+					@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+				.swiper_button_next {
+					@apply absolute right-5 
+					z-50 top-1/2 border border-solid border-customDark
+					bg-customOrange rounded-full p-2 cursor-pointer;
+				}
+			}
+		}
 	}
 
 	.feed_bottom_container {
-		@apply flex p-4 h-16;
+		@apply flex p-4 h-16 gap-8;
 
 		.like_container {
 			@apply flex justify-center items-center;
@@ -29,8 +51,31 @@
 			}
 		}
 
+		.feed_icon_container {
+			@apply flex justify-center items-center;
+
+			.feed_icon {
+				@apply cursor-pointer;
+			}
+		}
+
 		.comments_link {
 			@apply ml-auto flex justify-center items-center font-medium cursor-pointer underline;
 		}
 	}
+}
+
+.swiper-pagination-bullet {
+	width: 12px;
+	height: 12px;
+	background: transparent;
+	border: 1px solid pink;
+	opacity: 1;
+}
+.swiper-pagination-bullet-active {
+	width: 40px;
+	transition: width 0.5s;
+	border-radius: 5px;
+	background: pink;
+	border: 1px solid transparent;
 }

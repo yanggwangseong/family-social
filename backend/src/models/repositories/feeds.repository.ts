@@ -66,10 +66,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		take,
 		skip,
 		memberId,
+		options,
 	}: {
 		take: number;
 		skip: number;
 		memberId: string;
+		options: 'TOP' | 'MYFEED' | 'ALL';
 	}): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
 		const query = this.repository
 			.createQueryBuilder('a')
@@ -98,10 +100,15 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			}, 'sumLike')
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
-			.where('a.isPublic = :isPublic', { isPublic: true })
-			.orderBy('a.updatedAt', 'ASC')
+			.orderBy('a.updatedAt', 'DESC')
 			.offset(skip)
 			.limit(take);
+
+		if (options === 'MYFEED') {
+			query.where('a.memberId = :memberId', { memberId });
+		} else {
+			query.where('a.isPublic = :isPublic', { isPublic: true });
+		}
 
 		const [list, count] = await Promise.all([
 			query.getRawMany(),

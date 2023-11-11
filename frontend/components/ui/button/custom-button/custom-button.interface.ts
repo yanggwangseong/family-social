@@ -1,4 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
 
 export interface CustomButtonType
-	extends ButtonHTMLAttributes<HTMLButtonElement> {}
+	extends ButtonHTMLAttributes<HTMLButtonElement> {
+	shadowNone?: boolean;
+}

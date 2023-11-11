@@ -7,12 +7,14 @@ const CustomButton: FC<PropsWithChildren<CustomButtonType>> = ({
 	children,
 	className,
 	disabled,
+	shadowNone,
 	...rest
 }) => {
 	return (
 		<button
 			className={cn(styles.button, className, {
 				[styles.disabled]: disabled,
+				[styles.shadowNone]: shadowNone,
 			})}
 			{...rest}
 		>

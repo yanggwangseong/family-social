@@ -14,6 +14,13 @@
 	}
 }
 
+@mixin hidden_border_textarea() {
+	@apply h-full flex-1;
+	> textarea {
+		@apply text-customDark text-sm focus:outline-none border-none bg-basic resize-none h-full w-full;
+	}
+}
+
 .area {
 	> textarea {
 		@apply border border-solid border-customDark bg-basic 
@@ -28,4 +35,8 @@
 
 .inline_textarea {
 	@include inline_textarea();
+}
+
+.hidden_border_textarea {
+	@include hidden_border_textarea();
 }

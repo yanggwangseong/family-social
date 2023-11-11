@@ -25,6 +25,11 @@ export const AuthService = {
 		return data;
 	},
 
+	async logout() {
+		const { data } = await axiosAPI.post('/auth/logout');
+		return data;
+	},
+
 	async emailVerify(emailVerifyCode: string, email: string) {
 		const { data } = await axiosClassic.post<AuthResponse>(
 			'/auth/email-verify',

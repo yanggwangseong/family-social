@@ -39,7 +39,6 @@ const GroupCreate: FC = () => {
 				Loading.hourglass();
 			},
 			onSuccess(data) {
-				console.log(data);
 				Loading.remove();
 				Report.success(
 					'성공',
@@ -85,7 +84,7 @@ const GroupCreate: FC = () => {
 
 							{/* 프로필 */}
 							<div className={styles.form_container}>
-								<Profile />
+								<Profile username="양광성" role="관리자" />
 							</div>
 
 							{/* 작성폼 */}

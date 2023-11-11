@@ -57,18 +57,24 @@ export class FeedsService {
 		};
 	}
 
-	async findAllFeed(page: number, memberId: string): Promise<FeedGetAllResDto> {
+	async findAllFeed(
+		page: number,
+		memberId: string,
+		options: 'TOP' | 'MYFEED' | 'ALL',
+	): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset(page);
 		const { list, count } = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
 			memberId,
+			options,
 		});
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {
 				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
 					feed.feedId,
+					memberId,
 				);
 
 				return {
@@ -194,10 +200,13 @@ export class FeedsService {
 		return feed;
 	}
 
-	private async getMediaUrlAndCommentsByFeedId(feedId: string) {
+	private async getMediaUrlAndCommentsByFeedId(
+		feedId: string,
+		memberId: string,
+	) {
 		return await Promise.all([
 			await this.mediasService.findMediaUrlByFeedId(feedId),
-			await this.commentsService.getCommentsByFeedId(feedId),
+			await this.commentsService.getCommentsByFeedId(feedId, memberId),
 		]);
 	}
 }

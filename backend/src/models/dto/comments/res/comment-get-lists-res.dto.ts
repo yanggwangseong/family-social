@@ -31,6 +31,7 @@ export class CommentGetListsResDto extends PickType(CommentEntity, [
 	member!: MemberResDto;
 
 	@ApiPropertyOptional({
+		isArray: true,
 		nullable: true,
 		type: () => [ChildrenCommentsResDtoSwagger],
 	})
