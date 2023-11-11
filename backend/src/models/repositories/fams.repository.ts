@@ -22,6 +22,27 @@ export class FamsRepository extends Repository<FamEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async getMemberListBelongToGroup(groupId: string) {
+		return await this.repository.find({
+			select: {
+				id: true,
+				invitationAccepted: true,
+				role: true,
+				member: {
+					id: true,
+					profileImage: true,
+					username: true,
+				},
+			},
+			where: {
+				groupId: groupId,
+			},
+			relations: {
+				member: true,
+			},
+		});
+	}
+
 	async getMemberBelongToGroups(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {

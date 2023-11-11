@@ -137,6 +137,15 @@ export class GroupsController {
 		});
 	}
 
+	@Get('/:groupId/members')
+	async getMemberListBelongToGroup(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		//[TODO] 해당 그룹에 로그인한 유저가 속하는 사람인지 체크해야됨.
+		return await this.groupsService.getMemberListBelongToGroup(groupId);
+	}
+
 	/**
 	 * @summary 특정 그룹의 특정 멤버의 fam 생성
 	 *

@@ -26,6 +26,10 @@ export class GroupsService {
 		private readonly famsRepository: FamsRepository,
 	) {}
 
+	async getMemberListBelongToGroup(groupId: string) {
+		return await this.famsRepository.getMemberListBelongToGroup(groupId);
+	}
+
 	async getMemberBelongToGroups(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {
