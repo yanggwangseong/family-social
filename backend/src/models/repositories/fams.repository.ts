@@ -37,6 +37,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			},
 			where: {
 				memberId: memberId,
+				invitationAccepted: true,
 			},
 			relations: {
 				group: true,
