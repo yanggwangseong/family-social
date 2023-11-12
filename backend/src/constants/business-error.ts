@@ -23,10 +23,13 @@ export const ERROR_INVITED_GROUP_NOT_FOUND =
 	'초대 받은 그룹을 찾을 수 없습니다' as const;
 
 export const ERROR_NO_PERMISSION_TO_DELETE_GROUP =
-	'그룹을 삭제 할 권한이 없습니다';
+	'그룹을 삭제 할 권한이 없습니다' as const;
+
+export const ERROR_NO_PERMISSTION_TO_GROUP =
+	'그룹에 접근 할 권한이 없습니다.' as const;
 
 export const ERROR_DELETE_GROUP_SELF_ONLY_ADMIN =
-	'그룹 삭제시 그룹에 관리자 본인만 있을 때 가능 합니다';
+	'그룹 삭제시 그룹에 관리자 본인만 있을 때 가능 합니다' as const;
 
 export const ERROR_DELETE_GROUP =
 	'그룹을 삭제하던 도중 에러가 발생했습니다' as const;

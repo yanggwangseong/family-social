@@ -7,6 +7,7 @@ import {
 	ParseUUIDPipe,
 	Post,
 	Put,
+	Query,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -23,6 +24,7 @@ import {
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
 	GetMemberBelongToGroupsSwagger,
+	GetMemberListBelongToGroupSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
@@ -134,6 +136,32 @@ export class GroupsController {
 		return await this.groupsService.deleteGroup({
 			groupId: groupId,
 			memberId: sub,
+		});
+	}
+
+	/**
+	 * @summary 유저가 속한 특정 그룹의 멤버 리스트 가져오기
+	 *
+	 * @tag groups
+	 * @param {string} sub 		- 인증된 유저 아이디
+	 * @param {string} groupId 	- 특정 그룹 아이디
+	 * @param {number} page 	- 페이징을 위한 page 번호
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹명
+	 */
+	@GetMemberListBelongToGroupSwagger()
+	@Get('/:groupId/members')
+	async getMemberListBelongToGroup(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Query('page') page: number,
+		@CurrentUser('sub') sub: string,
+	) {
+		const limit = 10;
+		return await this.groupsService.getMemberListBelongToGroup({
+			groupId,
+			memberId: sub,
+			page,
+			limit,
 		});
 	}
 

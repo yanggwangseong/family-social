@@ -6,7 +6,10 @@ import {
 	ForBiddenException,
 	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
-import { IDeleteGroupArgs } from '@/types/args/group';
+import {
+	IDeleteGroupArgs,
+	IMembersBelongToGroupArgs,
+} from '@/types/args/group';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import {
@@ -16,8 +19,11 @@ import {
 	ERROR_DUPLICATE_GROUP_NAME,
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
+	ERROR_NO_PERMISSTION_TO_GROUP,
 } from '@/constants/business-error';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
+import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
+import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
 export class GroupsService {
@@ -25,6 +31,24 @@ export class GroupsService {
 		private readonly groupsRepository: GroupsRepository,
 		private readonly famsRepository: FamsRepository,
 	) {}
+
+	async getMemberListBelongToGroup({
+		groupId,
+		memberId,
+		page,
+		limit,
+	}: IMembersBelongToGroupArgs): Promise<GroupMembersResDto[]> {
+		// 해당 그룹에 속한지 체크
+		await this.checkRoleOfGroupExists(groupId, memberId);
+
+		const { take, skip } = getOffset({ page, limit });
+
+		return await this.famsRepository.getMemberListBelongToGroup({
+			groupId,
+			take,
+			skip,
+		});
+	}
 
 	async getMemberBelongToGroups(
 		memberId: string,
@@ -86,12 +110,11 @@ export class GroupsService {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
 
+		const role = await this.checkRoleOfGroupExists(
+			deleteGroupArgs.groupId,
+			deleteGroupArgs.memberId,
+		);
 		// 해당 그룹의 권한이 main인지 체크
-		const role = await this.famsRepository.isMainRoleForMemberInGroup({
-			groupId: deleteGroupArgs.groupId,
-			memberId: deleteGroupArgs.memberId,
-		});
-
 		if (role.role !== 'main') {
 			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
 		}
@@ -132,6 +155,20 @@ export class GroupsService {
 		if (count > 0) {
 			throw EntityConflictException(ERROR_DUPLICATE_GROUP_NAME);
 		}
+	}
+
+	private async checkRoleOfGroupExists(groupId: string, memberId: string) {
+		const role = await this.famsRepository.isMainRoleForMemberInGroup({
+			groupId: groupId,
+			memberId: memberId,
+		});
+
+		// 해당 그룹에 로그인한 유저가 속하는 사람인지 체크
+		if (!role) {
+			throw ForBiddenException(ERROR_NO_PERMISSTION_TO_GROUP);
+		}
+
+		return role;
 	}
 
 	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {

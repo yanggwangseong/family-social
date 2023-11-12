@@ -8,10 +8,12 @@ import {
 	ERROR_INVITED_GROUP_NOT_FOUND,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
+	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_USER_NOT_FOUND,
 } from '@/constants/business-error';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
+import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
@@ -24,6 +26,22 @@ import {
 	ApiOperation,
 	ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+export const GetMemberListBelongToGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '유저가 속한 특정 그룹의 멤버 리스트 가져오기',
+		}),
+		ApiOkResponse({
+			description: '그룹의 멤버 리스트 가져오기',
+			type: GroupMembersResDto,
+			isArray: true,
+		}),
+		ApiForbiddenResponse({
+			description: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
+		}),
+	);
+};
 
 export const GetMemberBelongToGroupsSwagger = () => {
 	return applyDecorators(
