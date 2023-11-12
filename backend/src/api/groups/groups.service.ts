@@ -6,7 +6,10 @@ import {
 	ForBiddenException,
 	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
-import { IDeleteGroupArgs } from '@/types/args/group';
+import {
+	IDeleteGroupArgs,
+	IMembersBelongToGroupArgs,
+} from '@/types/args/group';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import {
@@ -20,6 +23,7 @@ import {
 } from '@/constants/business-error';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
+import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
 export class GroupsService {
@@ -28,14 +32,22 @@ export class GroupsService {
 		private readonly famsRepository: FamsRepository,
 	) {}
 
-	async getMemberListBelongToGroup(
-		groupId: string,
-		memberId: string,
-	): Promise<GroupMembersResDto[]> {
+	async getMemberListBelongToGroup({
+		groupId,
+		memberId,
+		page,
+		limit,
+	}: IMembersBelongToGroupArgs): Promise<GroupMembersResDto[]> {
 		// 해당 그룹에 속한지 체크
 		await this.checkRoleOfGroupExists(groupId, memberId);
 
-		return await this.famsRepository.getMemberListBelongToGroup(groupId);
+		const { take, skip } = getOffset({ page, limit });
+
+		return await this.famsRepository.getMemberListBelongToGroup({
+			groupId,
+			take,
+			skip,
+		});
 	}
 
 	async getMemberBelongToGroups(

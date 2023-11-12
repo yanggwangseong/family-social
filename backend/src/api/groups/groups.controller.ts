@@ -7,6 +7,7 @@ import {
 	ParseUUIDPipe,
 	Post,
 	Put,
+	Query,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -144,6 +145,7 @@ export class GroupsController {
 	 * @tag groups
 	 * @param {string} sub 		- 인증된 유저 아이디
 	 * @param {string} groupId 	- 특정 그룹 아이디
+	 * @param {number} page 	- 페이징을 위한 page 번호
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
 	 */
@@ -151,9 +153,16 @@ export class GroupsController {
 	@Get('/:groupId/members')
 	async getMemberListBelongToGroup(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Query('page') page: number,
 		@CurrentUser('sub') sub: string,
 	) {
-		return await this.groupsService.getMemberListBelongToGroup(groupId, sub);
+		const limit = 10;
+		return await this.groupsService.getMemberListBelongToGroup({
+			groupId,
+			memberId: sub,
+			page,
+			limit,
+		});
 	}
 
 	/**
