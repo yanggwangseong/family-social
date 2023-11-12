@@ -62,7 +62,7 @@ export class FeedsService {
 		memberId: string,
 		options: 'TOP' | 'MYFEED' | 'ALL',
 	): Promise<FeedGetAllResDto> {
-		const { take, skip } = getOffset(page);
+		const { take, skip } = getOffset({ page });
 		const { list, count } = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
