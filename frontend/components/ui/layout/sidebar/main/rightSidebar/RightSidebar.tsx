@@ -3,26 +3,47 @@ import styles from './RightSidebar.module.scss';
 import cn from 'classnames';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import Profile from '@/components/ui/profile/Profile';
+import { Union, rightSideTabMenus } from 'types';
 
 const RightSidebar: FC = () => {
-	const [isMenu, setIsMenu] = useState<boolean>(true);
+	const [isMenu, setIsMenu] =
+		useState<Union<typeof rightSideTabMenus>>('members');
+
+	const handleChangeTabMenu = (item: Union<typeof rightSideTabMenus>) => {
+		setIsMenu(item);
+	};
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div className={styles.side_top_container}>
 				<div className={styles.top_tab_menu}>
 					<div
 						className={cn(styles.top_tab_menu_item, {
-							[styles.active]: !!isMenu,
+							[styles.active]: isMenu === 'members',
 						})}
+						onClick={() => handleChangeTabMenu('members')}
 					>
 						멤버
 					</div>
 				</div>
 				<div className={styles.top_tab_menu}>
-					<div className={styles.top_tab_menu_item}>그룹</div>
+					<div
+						className={cn(styles.top_tab_menu_item, {
+							[styles.active]: isMenu === 'groups',
+						})}
+						onClick={() => handleChangeTabMenu('groups')}
+					>
+						그룹
+					</div>
 				</div>
 				<div className={styles.top_tab_menu}>
-					<div className={styles.top_tab_menu_item}>즐겨찾기</div>
+					<div
+						className={cn(styles.top_tab_menu_item, {
+							[styles.active]: isMenu === 'favorites',
+						})}
+						onClick={() => handleChangeTabMenu('favorites')}
+					>
+						즐겨찾기
+					</div>
 				</div>
 			</div>
 			<div className={styles.group_profile_container}>
@@ -35,12 +56,8 @@ const RightSidebar: FC = () => {
 				></GroupProfile>
 			</div>
 			<div className={styles.list_container}>
-				<div>
-					<Profile username={'양광성'} role={'관리자'}></Profile>
-				</div>
-				<div>
-					<Profile username={'양우성'} role={'멤버'}></Profile>
-				</div>
+				<Profile username={'양광성'} role={'관리자'}></Profile>
+				<Profile username={'양우성'} role={'멤버'}></Profile>
 			</div>
 		</div>
 	);

@@ -9,7 +9,6 @@ export class GroupMembersResDto extends PickType(FamEntity, [
 ] as const) {
 	@ApiProperty({
 		nullable: false,
-		type: [MemberProfileImageResDto],
 	})
 	member!: MemberProfileImageResDto;
 }

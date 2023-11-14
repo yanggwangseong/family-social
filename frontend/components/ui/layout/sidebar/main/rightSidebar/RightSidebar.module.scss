@@ -11,7 +11,7 @@
 		.top_tab_menu {
 			@apply mx-2 my-2 relative;
 			.top_tab_menu_item {
-				@apply text-sm font-medium px-2;
+				@apply text-sm font-medium px-2 cursor-pointer;
 
 				&.active {
 					&::after {
