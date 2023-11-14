@@ -4,6 +4,7 @@
 	}
 	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 block;
 
+	//side_bar_tab_menu
 	.side_top_container {
 		@apply flex border-b border-solid border-customDark;
 
@@ -27,5 +28,13 @@
 				}
 			}
 		}
+	}
+
+	.group_profile_container {
+		@apply p-1 border-b border-solid border-customDark;
+	}
+	//list_container
+	.list_container {
+		@apply my-6 mx-4 flex flex-col gap-8;
 	}
 }
