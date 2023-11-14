@@ -24,6 +24,11 @@ const RightSidebar: FC = () => {
 		async () => await MemberService.getMembersBelongToGroup(groupId),
 	);
 
+	const { data: groupList, isLoading: groupLoading } = useQuery(
+		['member-belong-to-groups'],
+		async () => await GroupService.getMemberBelongToGroups(),
+	);
+
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div className={styles.side_top_container}>
@@ -67,19 +72,39 @@ const RightSidebar: FC = () => {
 					}}
 				></GroupProfile>
 			</div>
-			{isLoading || !data ? (
-				<Skeleton />
-			) : (
-				<div className={styles.list_container}>
-					{data.map((item, index) => (
-						<Profile
-							key={index}
-							username={item.member.username}
-							role={item.role}
-						/>
-					))}
-				</div>
-			)}
+
+			{isMenu === 'members' &&
+				(isLoading || !data ? (
+					<Skeleton />
+				) : (
+					<div className={styles.list_container}>
+						{data.map((item, index) => (
+							<Profile
+								key={index}
+								username={item.member.username}
+								role={item.role}
+							/>
+						))}
+					</div>
+				))}
+
+			{isMenu === 'groups' &&
+				(groupLoading || !groupList ? (
+					<Skeleton />
+				) : (
+					<div className={styles.list_container}>
+						{groupList.map((item, index) => (
+							<GroupProfile
+								key={index}
+								group={{
+									id: item.group.id,
+									groupDescription: '양씨네 가족입니다',
+									groupName: '양씨네가족',
+								}}
+							></GroupProfile>
+						))}
+					</div>
+				))}
 		</div>
 	);
 };
