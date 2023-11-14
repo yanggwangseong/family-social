@@ -63,29 +63,31 @@ const RightSidebar: FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className={styles.group_profile_container}>
-				<GroupProfile
-					group={{
-						id: 'sdfsdf',
-						groupDescription: '양씨네 가족입니다',
-						groupName: '양씨네가족',
-					}}
-				></GroupProfile>
-			</div>
 
 			{isMenu === 'members' &&
 				(isLoading || !data ? (
 					<Skeleton />
 				) : (
-					<div className={styles.list_container}>
-						{data.map((item, index) => (
-							<Profile
-								key={index}
-								username={item.member.username}
-								role={item.role}
-							/>
-						))}
-					</div>
+					<>
+						<div className={styles.group_profile_container}>
+							<GroupProfile
+								group={{
+									id: 'sdfsdf',
+									groupDescription: '양씨네 가족입니다',
+									groupName: '양씨네가족',
+								}}
+							></GroupProfile>
+						</div>
+						<div className={styles.list_container}>
+							{data.map((item, index) => (
+								<Profile
+									key={index}
+									username={item.member.username}
+									role={item.role}
+								/>
+							))}
+						</div>
+					</>
 				))}
 
 			{isMenu === 'groups' &&
