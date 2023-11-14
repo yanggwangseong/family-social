@@ -4,14 +4,26 @@ import cn from 'classnames';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import Profile from '@/components/ui/profile/Profile';
 import { Union, rightSideTabMenus } from 'types';
+import { useQuery } from 'react-query';
+import { MemberService } from '@/services/member/member.service';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
+import { GroupService } from '@/services/group/group.service';
 
 const RightSidebar: FC = () => {
+	const groupId = '75aca3da-1dac-48ef-84b8-cdf1be8fe37d';
+
 	const [isMenu, setIsMenu] =
 		useState<Union<typeof rightSideTabMenus>>('members');
 
 	const handleChangeTabMenu = (item: Union<typeof rightSideTabMenus>) => {
 		setIsMenu(item);
 	};
+
+	const { data, isLoading } = useQuery(
+		['get-members'],
+		async () => await MemberService.getMembersBelongToGroup(groupId),
+	);
+
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div className={styles.side_top_container}>
@@ -55,10 +67,19 @@ const RightSidebar: FC = () => {
 					}}
 				></GroupProfile>
 			</div>
-			<div className={styles.list_container}>
-				<Profile username={'양광성'} role={'관리자'}></Profile>
-				<Profile username={'양우성'} role={'멤버'}></Profile>
-			</div>
+			{isLoading || !data ? (
+				<Skeleton />
+			) : (
+				<div className={styles.list_container}>
+					{data.map((item, index) => (
+						<Profile
+							key={index}
+							username={item.member.username}
+							role={item.role}
+						/>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };
