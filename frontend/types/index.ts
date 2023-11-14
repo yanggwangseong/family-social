@@ -32,6 +32,7 @@ const LayerMode = {
 
 const ToggleModalDerection = ['left', 'right'] as const;
 const feedPublicSelectOptions = ['public', 'private'] as const;
+const rightSideTabMenus = ['members', 'groups', 'favorites'] as const;
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict
@@ -54,5 +55,11 @@ type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
 	? [...Reverse<Rest>, F]
 	: [];
 
-export { EditMode, LayerMode, ToggleModalDerection, feedPublicSelectOptions };
+export {
+	EditMode,
+	LayerMode,
+	ToggleModalDerection,
+	feedPublicSelectOptions,
+	rightSideTabMenus,
+};
 export type { Union, OmitStrict, Reverse };
