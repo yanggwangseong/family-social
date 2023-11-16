@@ -17,7 +17,7 @@ export class ToursController {
 	@Get()
 	async findAll() {
 		const { data } = await firstValueFrom(
-			this.httpService.get('https://jsonplaceholder.typicode.com/posts').pipe(
+			this.httpService.get('http://apis.data.go.kr/B551011/KorService1').pipe(
 				catchError((error: AxiosError) => {
 					throw 'An error happened!';
 				}),
