@@ -6,24 +6,20 @@ import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
+import { ToursService } from './tours.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 //@UseGuards(AccessTokenGuard)
 @ApiTags('tours')
 @Controller('tours')
 export class ToursController {
-	constructor(private readonly httpService: HttpService) {}
+	constructor(
+		private readonly httpService: HttpService,
+		private readonly toursService: ToursService,
+	) {}
 
 	@Get()
 	async findAll() {
-		const { data } = await firstValueFrom(
-			this.httpService.get('http://apis.data.go.kr/B551011/KorService1').pipe(
-				catchError((error: AxiosError) => {
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return await this.toursService.findAll();
 	}
 }
