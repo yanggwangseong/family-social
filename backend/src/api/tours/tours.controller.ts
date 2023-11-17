@@ -2,7 +2,13 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Query,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
@@ -21,5 +27,18 @@ export class ToursController {
 	@Get()
 	async findAll() {
 		return await this.toursService.findAll();
+	}
+
+	@Get('/area')
+	async getHttpTourApiAreaCodes(
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+		@Query('areaCode') areaCode: number,
+	) {
+		return await this.toursService.getHttpTourApiAreaCodes({
+			numOfRows,
+			pageNo,
+			areaCode,
+		});
 	}
 }
