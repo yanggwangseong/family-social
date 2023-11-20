@@ -132,4 +132,18 @@ export class ToursController {
 			contentTypeId,
 		});
 	}
+
+	//contentId에 해당하는 관광정보에 매핑되는 이미지 정보 조회 (없을 수 도 있다.)
+	@Get('/:contentId/Images')
+	async getHttpTourApiImagesByCotentId(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+	) {
+		return await this.toursService.getHttpTourApiImagesByCotentId({
+			contentId,
+			numOfRows,
+			pageNo,
+		});
+	}
 }

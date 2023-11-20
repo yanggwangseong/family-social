@@ -257,4 +257,39 @@ export class ToursService {
 
 		return data;
 	}
+
+	async getHttpTourApiImagesByCotentId({
+		contentId,
+		numOfRows,
+		pageNo,
+	}: {
+		contentId: string;
+		numOfRows: number;
+		pageNo: number;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+		};
+
+		const imageYN = 'Y'; // 이미지조회1 : Y=콘텐츠이미지조회 N=”음식점”타입의음식메뉴이미지
+		const subImageYN = 'Y'; // 이미지조회2 : Y=원본,썸네일이미지조회,공공누리 저작권유형정보조회 N=Null
+
+		let httpServiceUrl = `${this.endPoint}/KorService1/detailImage1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
+		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
 }
