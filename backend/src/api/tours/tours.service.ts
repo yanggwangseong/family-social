@@ -326,4 +326,40 @@ export class ToursService {
 
 		return data;
 	}
+
+	async getHttpTourApiSearch({
+		numOfRows,
+		pageNo,
+		keyword,
+	}: {
+		numOfRows: number;
+		pageNo: number;
+		keyword: string;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+		};
+
+		const listYN = 'Y';
+		const arrange = 'A';
+		const contentTypeId = 12;
+
+		let httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
+		&listYN=${listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
 }

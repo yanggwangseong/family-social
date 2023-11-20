@@ -160,4 +160,18 @@ export class ToursController {
 			eventStartDate,
 		});
 	}
+
+	//키워드 검색
+	@Get('/search/:keyword')
+	async getHttpTourApiSearch(
+		@Param('keyword') keyword: string,
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+	) {
+		return await this.toursService.getHttpTourApiSearch({
+			keyword,
+			numOfRows,
+			pageNo,
+		});
+	}
 }
