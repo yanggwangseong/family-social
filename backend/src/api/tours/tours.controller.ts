@@ -85,6 +85,22 @@ export class ToursController {
 		});
 	}
 
+	// 타입별 공통 기본정보
+	@Get('/:contentId/common-information')
+	async getHttpTourApiCommonInformation(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+		@Query('contentTypeId') contentTypeId: string,
+	) {
+		return await this.toursService.getHttpTourApiCommonInformation({
+			contentId,
+			numOfRows,
+			pageNo,
+			contentTypeId,
+		});
+	}
+
 	// 간단한 소개정보 쉬는날, 개장기간 등 내역
 	@Get('/:contentId/introduction')
 	async getHttpTourApiIntroduction(

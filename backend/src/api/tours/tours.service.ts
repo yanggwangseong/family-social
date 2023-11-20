@@ -213,4 +213,48 @@ export class ToursService {
 
 		return data;
 	}
+
+	async getHttpTourApiCommonInformation({
+		contentId,
+		numOfRows,
+		pageNo,
+		contentTypeId,
+	}: {
+		contentId: string;
+		numOfRows: number;
+		pageNo: number;
+		contentTypeId: string;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+			defaultYN: 'Y', // 기본정보조회여부( Y,N )
+			firstImageYN: 'Y', // 원본, 썸네일대표 이미지, 이미지 공공누리유형정보 조회여부( Y,N )
+			areacodeYN: 'Y', // 지역코드, 시군구코드조회여부( Y,N )
+			catcodeYN: 'Y', // 대,중,소분류코드조회여부( Y,N )
+			addrinfoYN: 'Y', // 주소, 상세주소조회여부( Y,N )
+			mapinfoYN: 'Y', // 좌표X, Y 조회여부( Y,N )
+			overviewYN: 'Y', // 콘텐츠개요조회여부( Y,N )
+		};
+
+		let httpServiceUrl = `${this.endPoint}/KorService1/detailCommon1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
+		&contentTypeId=${contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}&contentId=${contentId}
+		&defaultYN=${config.defaultYN}&firstImageYN=${config.firstImageYN}&areacodeYN=${config.areacodeYN}
+		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
+		`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
 }
