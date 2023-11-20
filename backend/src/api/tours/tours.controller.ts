@@ -85,6 +85,7 @@ export class ToursController {
 		});
 	}
 
+	// 간단한 소개정보 쉬는날, 개장기간 등 내역
 	@Get('/:contentId/introduction')
 	async getHttpTourApiIntroduction(
 		@Param('contentId') contentId: string,
@@ -93,6 +94,22 @@ export class ToursController {
 		@Query('contentTypeId') contentTypeId: string,
 	) {
 		return await this.toursService.getHttpTourApiIntroduction({
+			contentId,
+			numOfRows,
+			pageNo,
+			contentTypeId,
+		});
+	}
+
+	//위의 정보 말고도 부가설명이라고,해서 추가 정보를 제공해주는것
+	@Get('/:contentId/additional-explanation')
+	async getHttpTourApiAdditionalExplanation(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+		@Query('contentTypeId') contentTypeId: string,
+	) {
+		return await this.toursService.getHttpTourApiAdditionalExplanation({
 			contentId,
 			numOfRows,
 			pageNo,
