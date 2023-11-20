@@ -83,4 +83,35 @@ export class ToursService {
 
 		return data;
 	}
+
+	async getHttpTourApiServiceCategories({
+		numOfRows,
+		pageNo,
+	}: {
+		numOfRows: number;
+		pageNo: number;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+			contentTypeId: 12,
+		};
+
+		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
+		&contentTypeId=${config.contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
 }

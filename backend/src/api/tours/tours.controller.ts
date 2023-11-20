@@ -41,4 +41,15 @@ export class ToursController {
 			areaCode,
 		});
 	}
+
+	@Get('/service-categories')
+	async getHttpTourApiServiceCategories(
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+	) {
+		return await this.toursService.getHttpTourApiServiceCategories({
+			numOfRows,
+			pageNo,
+		});
+	}
 }
