@@ -14,32 +14,58 @@ export class ToursService {
 	private readonly endPoint =
 		this.configService.get<string>('TOUR_API_END_POINT');
 
-	async findAll() {
+	async findAll({
+		arrange,
+		contentTypeId,
+		areaCode,
+		sigunguCode,
+		numOfRows,
+		pageNo,
+		cat1,
+		cat2,
+		cat3,
+	}: {
+		arrange: string;
+		contentTypeId: number;
+		areaCode: number;
+		sigunguCode: number;
+		numOfRows: number;
+		pageNo: number;
+		cat1: string;
+		cat2: string;
+		cat3: string;
+	}) {
 		const config = {
 			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
-			numOfRows: 10,
-			pageNo: 1,
+			//numOfRows: 10,
+			//pageNo: 1,
 			MobileOS: 'ETC',
 			MobileApp: 'FAM',
 			_type: 'json',
 			listYN: 'Y',
-			arrange: 'A',
-			contentTypeId: 12,
-			areaCode: 1,
-			sigunguCode: 1,
+			//arrange: 'A',
+			//contentTypeId: 12,
+			//areaCode: 1,
+			//sigunguCode: 1,
 		};
 
+		let httpServiceUrl = `${this.endPoint}/KorService1/areaBasedList1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
+		&MobileApp=${config.MobileApp}&_type=${config._type}&listYN=${config.listYN}
+		&arrange=${arrange}&contentTypeId=${contentTypeId}
+		&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+
+		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
+		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
+		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
+
 		const { data } = await firstValueFrom(
-			this.httpService
-				.get(
-					`${this.endPoint}/KorService1/areaBasedList1?serviceKey=${config.serviceKey}&numOfRows=${config.numOfRows}&pageNo=${config.pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}&listYN=${config.listYN}&arrange=${config.arrange}&contentTypeId=${config.contentTypeId}&areaCode=${config.areaCode}&sigunguCode=${config.sigunguCode}`,
-				)
-				.pipe(
-					catchError((error: AxiosError) => {
-						console.log(error);
-						throw 'An error happened!';
-					}),
-				),
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
 		);
 
 		return data;
@@ -98,6 +124,9 @@ export class ToursService {
 			_type: 'json',
 			contentTypeId: 12,
 		};
+		// cat1 대분류코드
+		// cat2 중분류코드
+		// cat3 소분류코드
 
 		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
