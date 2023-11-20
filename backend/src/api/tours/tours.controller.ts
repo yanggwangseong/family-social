@@ -146,4 +146,18 @@ export class ToursController {
 			pageNo,
 		});
 	}
+
+	//행사정보조회 행사 시작일에 따른 행사 정보 조회
+	@Get('/festival')
+	async getHttpTourApiFestivalSchedule(
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+		@Query('eventStartDate') eventStartDate: string,
+	) {
+		return await this.toursService.getHttpTourApiFestivalSchedule({
+			numOfRows,
+			pageNo,
+			eventStartDate,
+		});
+	}
 }

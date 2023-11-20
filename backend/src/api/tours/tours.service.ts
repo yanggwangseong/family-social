@@ -292,4 +292,38 @@ export class ToursService {
 
 		return data;
 	}
+
+	async getHttpTourApiFestivalSchedule({
+		numOfRows,
+		pageNo,
+		eventStartDate,
+	}: {
+		numOfRows: number;
+		pageNo: number;
+		eventStartDate: string;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+		};
+
+		const listYN = 'Y';
+		const arrange = 'A';
+		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
+		&listYN=${listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
 }
