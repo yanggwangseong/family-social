@@ -26,7 +26,7 @@ export class ToursService {
 		cat3,
 	}: {
 		arrange: string;
-		contentTypeId: number;
+		contentTypeId: string;
 		areaCode: number;
 		sigunguCode: number;
 		numOfRows: number;
@@ -131,6 +131,41 @@ export class ToursService {
 		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
 		&contentTypeId=${config.contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}`;
+
+		const { data } = await firstValueFrom(
+			this.httpService.get(httpServiceUrl).pipe(
+				catchError((error: AxiosError) => {
+					console.log(error);
+					throw 'An error happened!';
+				}),
+			),
+		);
+
+		return data;
+	}
+
+	async getHttpTourApiIntroduction({
+		contentId,
+		numOfRows,
+		pageNo,
+		contentTypeId,
+	}: {
+		contentId: string;
+		numOfRows: number;
+		pageNo: number;
+		contentTypeId: string;
+	}) {
+		const config = {
+			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
+			MobileOS: 'ETC',
+			MobileApp: 'FAM',
+			_type: 'json',
+			//contentTypeId: 12,
+		};
+
+		let httpServiceUrl = `${this.endPoint}/KorService1/detailIntro1?serviceKey=${config.serviceKey}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
+		&contentTypeId=${contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}&contentId=${contentId}`;
 
 		const { data } = await firstValueFrom(
 			this.httpService.get(httpServiceUrl).pipe(

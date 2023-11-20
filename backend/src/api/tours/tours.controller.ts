@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import {
 	Controller,
 	Get,
+	Param,
 	Query,
 	UseGuards,
 	UseInterceptors,
@@ -38,7 +39,7 @@ export class ToursController {
 	@Get()
 	async findAll(
 		@Query('arrange') arrange: string,
-		@Query('contentTypeId') contentTypeId: number,
+		@Query('contentTypeId') contentTypeId: string,
 		@Query('areaCode') areaCode: number,
 		@Query('sigunguCode') sigunguCode: number,
 		@Query('numOfRows') numOfRows: number,
@@ -81,6 +82,21 @@ export class ToursController {
 		return await this.toursService.getHttpTourApiServiceCategories({
 			numOfRows,
 			pageNo,
+		});
+	}
+
+	@Get('/:contentId/introduction')
+	async getHttpTourApiIntroduction(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: number,
+		@Query('pageNo') pageNo: number,
+		@Query('contentTypeId') contentTypeId: string,
+	) {
+		return await this.toursService.getHttpTourApiIntroduction({
+			contentId,
+			numOfRows,
+			pageNo,
+			contentTypeId,
 		});
 	}
 }
