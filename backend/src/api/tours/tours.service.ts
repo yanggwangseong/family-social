@@ -13,6 +13,7 @@ export class ToursService {
 
 	private readonly endPoint =
 		this.configService.get<string>('TOUR_API_END_POINT');
+	private readonly listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
 
 	async findAll({
 		arrange,
@@ -37,21 +38,14 @@ export class ToursService {
 	}) {
 		const config = {
 			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
-			//numOfRows: 10,
-			//pageNo: 1,
 			MobileOS: 'ETC',
 			MobileApp: 'FAM',
 			_type: 'json',
-			listYN: 'Y',
-			//arrange: 'A',
-			//contentTypeId: 12,
-			//areaCode: 1,
-			//sigunguCode: 1,
 		};
 
 		let httpServiceUrl = `${this.endPoint}/KorService1/areaBasedList1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
-		&MobileApp=${config.MobileApp}&_type=${config._type}&listYN=${config.listYN}
+		&MobileApp=${config.MobileApp}&_type=${config._type}&listYN=${this.listYN}
 		&arrange=${arrange}&contentTypeId=${contentTypeId}
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
 
@@ -93,24 +87,36 @@ export class ToursService {
 	async getHttpTourApiServiceCategories({
 		numOfRows,
 		pageNo,
+		contentTypeId,
+		cat1,
+		cat2,
+		cat3,
 	}: {
 		numOfRows: number;
 		pageNo: number;
+		contentTypeId: string;
+		cat1: string;
+		cat2: string;
+		cat3: string;
 	}) {
 		const config = {
 			serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
 			MobileOS: 'ETC',
 			MobileApp: 'FAM',
 			_type: 'json',
-			contentTypeId: 12,
 		};
+
 		// cat1 대분류코드
 		// cat2 중분류코드
 		// cat3 소분류코드
 
 		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
-		&contentTypeId=${config.contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}`;
+		&contentTypeId=${contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}`;
+
+		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
+		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
+		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
@@ -244,11 +250,10 @@ export class ToursService {
 			_type: 'json',
 		};
 
-		const listYN = 'Y';
 		const arrange = 'A';
 		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
-		&listYN=${listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
+		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
@@ -269,13 +274,12 @@ export class ToursService {
 			_type: 'json',
 		};
 
-		const listYN = 'Y';
 		const arrange = 'A';
 		const contentTypeId = 12;
 
 		let httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${config.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
-		&listYN=${listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
+		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}

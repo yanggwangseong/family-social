@@ -78,10 +78,18 @@ export class ToursController {
 	async getHttpTourApiServiceCategories(
 		@Query('numOfRows') numOfRows: number,
 		@Query('pageNo') pageNo: number,
+		@Query('contentTypeId') contentTypeId: string,
+		@Query('cat1') cat1: string,
+		@Query('cat2') cat2: string,
+		@Query('cat3') cat3: string,
 	) {
 		return await this.toursService.getHttpTourApiServiceCategories({
 			numOfRows,
 			pageNo,
+			contentTypeId,
+			cat1,
+			cat2,
+			cat3,
 		});
 	}
 
