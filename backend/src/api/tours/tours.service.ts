@@ -59,16 +59,7 @@ export class ToursService {
 		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
 		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiAreaCodes({
@@ -89,25 +80,14 @@ export class ToursService {
 			MobileOS: 'ETC',
 			MobileApp: 'FAM',
 			_type: 'json',
-			listYN: 'Y',
-			arrange: 'A',
-			contentTypeId: 12,
 		};
 
-		const { data } = await firstValueFrom(
-			this.httpService
-				.get(
-					`${this.endPoint}/KorService1/areaCode1?serviceKey=${config.serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&areaCode=${areaCode}&_type=${config._type}`,
-				)
-				.pipe(
-					catchError((error: AxiosError) => {
-						console.log(error);
-						throw 'An error happened!';
-					}),
-				),
-		);
+		let httpServiceUrl = `${this.endPoint}/KorService1/areaCode1?serviceKey=${config.serviceKey}&numOfRows=${numOfRows}
+		&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}`;
 
-		return data;
+		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
+
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiServiceCategories({
@@ -132,16 +112,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
 		&contentTypeId=${config.contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiIntroduction({
@@ -167,16 +138,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}&contentId=${contentId}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiAdditionalExplanation({
@@ -202,16 +164,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${config.MobileApp}&_type=${config._type}&contentId=${contentId}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiCommonInformation({
@@ -246,16 +199,7 @@ export class ToursService {
 		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
 		`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiImagesByCotentId({
@@ -281,16 +225,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
 		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiFestivalSchedule({
@@ -315,16 +250,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
 		&listYN=${listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
 
-		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
-				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
-				}),
-			),
-		);
-
-		return data;
+		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
 	async getHttpTourApiSearch({
@@ -351,8 +277,12 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${config.MobileOS}&MobileApp=${config.MobileApp}&_type=${config._type}
 		&listYN=${listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
 
+		return this.HttpServiceResponse(httpServiceUrl);
+	}
+
+	private async HttpServiceResponse(url: string) {
 		const { data } = await firstValueFrom(
-			this.httpService.get(httpServiceUrl).pipe(
+			this.httpService.get(url).pipe(
 				catchError((error: AxiosError) => {
 					console.log(error);
 					throw 'An error happened!';
