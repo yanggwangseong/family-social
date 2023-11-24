@@ -11,14 +11,13 @@ export class ToursService {
 		private readonly configService: ConfigService,
 	) {}
 
-	private readonly endPoint =
-		this.configService.get<string>('TOUR_API_END_POINT');
-	private readonly listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
 	private readonly serviceKey: string =
 		this.configService.get<string>('TOUR_API_SERVICE_KEY') ?? '';
-	private readonly MobileOS: string = 'ETC';
 	private readonly MobileApp: string = 'FAM';
-	private readonly _type: string = 'json';
+	private endPoint = this.configService.get<string>('TOUR_API_END_POINT');
+	private listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
+	private MobileOS: string = 'ETC';
+	private _type: string = 'json';
 
 	// private readonly config: {
 	// 	serviceKey?: string;
@@ -173,7 +172,7 @@ export class ToursService {
 		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
 		`;
 
-		const [introduction, common] = [
+		const [introduction, common, additional] = [
 			await this.getHttpTourApiIntroduction({
 				contentId,
 				numOfRows,
@@ -181,9 +180,22 @@ export class ToursService {
 				contentTypeId,
 			}),
 			await this.HttpServiceResponse(httpServiceUrl),
+			await this.getHttpTourApiAdditionalExplanation({
+				contentId,
+				numOfRows,
+				pageNo,
+				contentTypeId,
+			}),
 		];
 
-		return [introduction.response.body.items, common.response.body.items];
+		const commonInfromation = {
+			items: common.response.body.items,
+		};
+
+		commonInfromation.items.introduction = introduction.response.body.items;
+		commonInfromation.items.additional = additional.response.body.items;
+
+		return commonInfromation;
 	}
 
 	async getHttpTourApiImagesByCotentId({

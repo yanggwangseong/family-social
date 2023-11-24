@@ -126,20 +126,20 @@ export class ToursController {
 	// }
 
 	//위의 정보 말고도 부가설명이라고,해서 추가 정보를 제공해주는것
-	@Get('/:contentId/additional-explanation')
-	async getHttpTourApiAdditionalExplanation(
-		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
-		@Query('contentTypeId') contentTypeId: string,
-	) {
-		return await this.toursService.getHttpTourApiAdditionalExplanation({
-			contentId,
-			numOfRows,
-			pageNo,
-			contentTypeId,
-		});
-	}
+	// @Get('/:contentId/additional-explanation')
+	// async getHttpTourApiAdditionalExplanation(
+	// 	@Param('contentId') contentId: string,
+	// 	@Query('numOfRows') numOfRows: number,
+	// 	@Query('pageNo') pageNo: number,
+	// 	@Query('contentTypeId') contentTypeId: string,
+	// ) {
+	// 	return await this.toursService.getHttpTourApiAdditionalExplanation({
+	// 		contentId,
+	// 		numOfRows,
+	// 		pageNo,
+	// 		contentTypeId,
+	// 	});
+	// }
 
 	//contentId에 해당하는 관광정보에 매핑되는 이미지 정보 조회 (없을 수 도 있다.)
 	@Get('/:contentId/Images')
