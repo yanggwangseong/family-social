@@ -173,7 +173,17 @@ export class ToursService {
 		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
 		`;
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		const [introduction, common] = [
+			await this.getHttpTourApiIntroduction({
+				contentId,
+				numOfRows,
+				pageNo,
+				contentTypeId,
+			}),
+			await this.HttpServiceResponse(httpServiceUrl),
+		];
+
+		return [introduction.response.body.items, common.response.body.items];
 	}
 
 	async getHttpTourApiImagesByCotentId({
