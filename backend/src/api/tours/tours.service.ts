@@ -172,7 +172,7 @@ export class ToursService {
 		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
 		`;
 
-		const [introduction, common, additional] = [
+		const [introduction, common, additional, images] = [
 			await this.getHttpTourApiIntroduction({
 				contentId,
 				numOfRows,
@@ -186,6 +186,11 @@ export class ToursService {
 				pageNo,
 				contentTypeId,
 			}),
+			await this.getHttpTourApiImagesByCotentId({
+				contentId,
+				numOfRows,
+				pageNo,
+			}),
 		];
 
 		const commonInfromation = {
@@ -194,6 +199,7 @@ export class ToursService {
 
 		commonInfromation.items.introduction = introduction.response.body.items;
 		commonInfromation.items.additional = additional.response.body.items;
+		commonInfromation.items.image = images.response.body.items;
 
 		return commonInfromation;
 	}
