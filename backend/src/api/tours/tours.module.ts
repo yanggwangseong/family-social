@@ -26,6 +26,6 @@ import { TourismEntity } from '@/models/entities/tourism.entity';
 		TourismPeriodRepository,
 		TourismRepository,
 	],
-	exports: [],
+	exports: [ToursService],
 })
 export class ToursModule {}

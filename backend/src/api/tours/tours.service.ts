@@ -37,7 +37,20 @@ export class ToursService {
 	// 	_type: 'json',
 	// };
 
-	async test() {}
+	async createToursSchedule({
+		memberId,
+		groupId,
+	}: {
+		memberId: string;
+		groupId: string;
+	}) {
+		const schedule = await this.scheduleRepository.createSchedule({
+			memberId,
+			groupId,
+		});
+
+		return schedule;
+	}
 
 	async findAll({
 		arrange,

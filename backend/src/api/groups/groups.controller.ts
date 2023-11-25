@@ -41,6 +41,7 @@ import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 } from '@/constants/business-error';
+import { ToursService } from '../tours/tours.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -51,6 +52,7 @@ export class GroupsController {
 		private readonly groupsService: GroupsService,
 		private readonly famsService: FamsService,
 		private readonly membersService: MembersService,
+		private readonly toursService: ToursService,
 	) {}
 
 	/**
@@ -269,5 +271,19 @@ export class GroupsController {
 		});
 
 		return fam;
+	}
+
+	// groups/:groupId/tours	[post]		일정 생성
+	// groups/:groupId/tours	[put]		일정 수정
+	// groups/:groupId/tours	[delete]	일정삭제
+	@Post('/:groupId/tours')
+	async createToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.toursService.createToursSchedule({
+			memberId: sub,
+			groupId,
+		});
 	}
 }

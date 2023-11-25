@@ -20,12 +20,6 @@ import { ToursService } from './tours.service';
 export class ToursController {
 	constructor(private readonly toursService: ToursService) {}
 
-	// groups/:groupId/tours	[post]		일정 생성
-	// groups/:groupId/tours	[put]		일정 수정
-	// groups/:groupId/tours	[delete]	일정삭제
-	@Get('test')
-	async test() {}
-
 	// [프론트에서 위에 검색 옵션들로 인해 검색을 눌렸을때 아래에 생성되는 관광 리스트들]
 	// @param arrange 정렬구분 (A=제목순, C=수정일순, D=생성일순) 대표이미지가반드시있는정렬(O=제목순, Q=수정일순, R=생성일순)
 	// @param contentTypeId 관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점) ID
