@@ -15,6 +15,7 @@ import { LikeFeedEntity } from './fam-like-feed.entity';
 import { FeedEntity } from './feed.entity';
 import { CommentEntity } from './comment.entity';
 import { LikeCommentEntity } from './fam-like-comment.entity';
+import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -117,4 +118,8 @@ export class MemberEntity extends DefaultEntity {
 	// comment-like
 	@OneToMany(() => LikeCommentEntity, (lkc) => lkc.member)
 	memberLikesComments?: LikeCommentEntity[];
+
+	//schedule
+	@OneToMany(() => ScheduleEntity, (sch) => sch.member)
+	memberCreateSchedules?: ScheduleEntity[];
 }
