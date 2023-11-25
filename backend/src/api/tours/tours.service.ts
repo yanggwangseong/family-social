@@ -1,6 +1,7 @@
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
+import { getDateRange } from '@/utils/get-date-range';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -44,6 +45,8 @@ export class ToursService {
 		memberId: string;
 		groupId: string;
 	}) {
+		const dates = getDateRange('2023-10-30', '2023-11-05');
+		console.log(dates);
 		const schedule = await this.scheduleRepository.createSchedule({
 			memberId,
 			groupId,
