@@ -1,3 +1,6 @@
+import { ScheduleRepository } from '@/models/repositories/schedule.repository';
+import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
+import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,6 +12,9 @@ export class ToursService {
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly configService: ConfigService,
+		private readonly scheduleRepository: ScheduleRepository,
+		private readonly tourismPeriodRepository: TourismPeriodRepository,
+		private readonly tourismRepository: TourismRepository,
 	) {}
 
 	private readonly serviceKey: string =
@@ -30,6 +36,8 @@ export class ToursService {
 	// 	MobileApp: 'FAM',
 	// 	_type: 'json',
 	// };
+
+	async test() {}
 
 	async findAll({
 		arrange,

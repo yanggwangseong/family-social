@@ -11,8 +11,6 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AxiosError } from 'axios';
-import { catchError, firstValueFrom } from 'rxjs';
 import { ToursService } from './tours.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -20,10 +18,13 @@ import { ToursService } from './tours.service';
 @ApiTags('tours')
 @Controller('tours')
 export class ToursController {
-	constructor(
-		private readonly httpService: HttpService,
-		private readonly toursService: ToursService,
-	) {}
+	constructor(private readonly toursService: ToursService) {}
+
+	// groups/:groupId/tours	[post]		일정 생성
+	// groups/:groupId/tours	[put]		일정 수정
+	// groups/:groupId/tours	[delete]	일정삭제
+	@Get('test')
+	async test() {}
 
 	// [프론트에서 위에 검색 옵션들로 인해 검색을 눌렸을때 아래에 생성되는 관광 리스트들]
 	// @param arrange 정렬구분 (A=제목순, C=수정일순, D=생성일순) 대표이미지가반드시있는정렬(O=제목순, Q=수정일순, R=생성일순)
@@ -35,7 +36,6 @@ export class ToursController {
 	// @param cat1 - 대분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
 	// @param cat2 - 중분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
 	// @param cat3 - 소분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
-
 	@Get()
 	async findAll(
 		@Query('arrange') arrange: string,
