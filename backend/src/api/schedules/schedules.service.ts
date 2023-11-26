@@ -1,8 +1,13 @@
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
-import { ICreateTourArgs } from '@/types/args/tour';
+import {
+	ICreateTourArgs,
+	ITourPeriodArgs,
+	ITourismArgs,
+} from '@/types/args/tour';
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class SchedulesService {
@@ -21,11 +26,35 @@ export class SchedulesService {
 			memberId,
 			groupId,
 		});
-
-		// periods.map((item) => {
-		// 	console.log(item.tourisms.)
-		// })
+		await this.createTourismPeriod(periods, schedule.id);
 
 		return schedule;
+	}
+
+	private async createTourismPeriod(
+		periods: ITourPeriodArgs[],
+		scheduleId: string,
+	) {
+		const createTourismPeriod = periods.map((item) => ({
+			id: uuidv4(),
+			scheduleId: scheduleId,
+			...item,
+		}));
+
+		await this.tourismPeriodRepository.createTourismPeriod(createTourismPeriod);
+
+		createTourismPeriod.map(
+			async (item) => await this.createTourism(item.tourisms, item.id),
+		);
+	}
+
+	private async createTourism(tourism: ITourismArgs[], periodId: string) {
+		const createTourisms = tourism.map((item) => ({
+			id: uuidv4(),
+			periodId,
+			...item,
+		}));
+
+		await this.tourismRepository.createTourism(createTourisms);
 	}
 }

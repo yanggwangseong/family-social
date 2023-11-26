@@ -11,4 +11,8 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
+
+	async createTourismPeriod(periods: any[]) {
+		const insertResult = await this.repository.insert(periods);
+	}
 }

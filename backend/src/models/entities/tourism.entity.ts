@@ -6,7 +6,7 @@ import { TourismPeriodEntity } from './tourism-period.entity';
 
 @Entity({ name: 'fam_tourism' })
 export class TourismEntity extends DefaultEntity {
-	@PrimaryColumn({ type: 'uuid', nullable: false })
+	@PrimaryColumn({ type: 'varchar', length: 60, nullable: false })
 	@ApiProperty({
 		nullable: false,
 	})
