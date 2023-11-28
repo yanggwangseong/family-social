@@ -3,11 +3,7 @@ import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-per
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
-import {
-	ICreateTourArgs,
-	ITourPeriodArgs,
-	ITourismArgs,
-} from '@/types/args/tour';
+import { ICreateTourArgs, ICreateTourPeriodArgs } from '@/types/args/tour';
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +24,7 @@ export class SchedulesService {
 			memberId,
 			groupId,
 		});
-		console.log('fuck=', periods);
+
 		await this.createTourismPeriod(periods, schedule.id);
 
 		return schedule;

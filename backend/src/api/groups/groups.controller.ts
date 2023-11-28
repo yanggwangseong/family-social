@@ -41,7 +41,6 @@ import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 } from '@/constants/business-error';
-import { ITourPeriodArgs } from '@/types/args/tour';
 import { SchedulesService } from '../schedules/schedules.service';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 

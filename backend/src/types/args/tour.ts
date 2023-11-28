@@ -1,3 +1,4 @@
+import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 
 export interface ICreateTourArgs {
@@ -6,16 +7,20 @@ export interface ICreateTourArgs {
 	periods: TourismPeriodCreateReqDto[];
 }
 
-export interface ITourPeriodArgs {
-	period: string;
-	startTime: string;
-	endTime: string;
-	tourisms: ITourismArgs[];
+export interface ICreateTourPeriodArgs {
+	id: string;
+	period: Date;
+	startTime: Date;
+	endTime: Date;
+	scheduleId: string;
+	tourisms: TourismCreateReqDto[];
 }
 
-export interface ITourismArgs {
+export interface ICreateTourismArgs {
+	id: string;
+	periodId: string;
 	contentId: string;
-	stayTime: string;
+	stayTime: Date;
 	tourismImage: string;
 	title: string;
 	position: number;
