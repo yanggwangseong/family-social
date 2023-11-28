@@ -41,7 +41,9 @@ import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 } from '@/constants/business-error';
-import { ToursService } from '../tours/tours.service';
+import { ITourPeriodArgs } from '@/types/args/tour';
+import { SchedulesService } from '../schedules/schedules.service';
+import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -52,7 +54,7 @@ export class GroupsController {
 		private readonly groupsService: GroupsService,
 		private readonly famsService: FamsService,
 		private readonly membersService: MembersService,
-		private readonly toursService: ToursService,
+		private readonly schedulesService: SchedulesService,
 	) {}
 
 	/**
@@ -280,10 +282,12 @@ export class GroupsController {
 	async createToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
+		@Body() dto: TourismPeriodCreateReqDto[],
 	) {
-		return await this.toursService.createToursSchedule({
+		return await this.schedulesService.createToursSchedule({
 			memberId: sub,
 			groupId,
+			periods: dto,
 		});
 	}
 }

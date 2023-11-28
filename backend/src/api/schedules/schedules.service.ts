@@ -1,3 +1,5 @@
+import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
+import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -26,13 +28,14 @@ export class SchedulesService {
 			memberId,
 			groupId,
 		});
+		console.log('fuck=', periods);
 		await this.createTourismPeriod(periods, schedule.id);
 
 		return schedule;
 	}
 
 	private async createTourismPeriod(
-		periods: ITourPeriodArgs[],
+		periods: TourismPeriodCreateReqDto[],
 		scheduleId: string,
 	) {
 		const createTourismPeriod = periods.map((item) => ({
@@ -48,7 +51,10 @@ export class SchedulesService {
 		);
 	}
 
-	private async createTourism(tourism: ITourismArgs[], periodId: string) {
+	private async createTourism(
+		tourism: TourismCreateReqDto[],
+		periodId: string,
+	) {
 		const createTourisms = tourism.map((item) => ({
 			id: uuidv4(),
 			periodId,
