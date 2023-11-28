@@ -289,4 +289,17 @@ export class GroupsController {
 			periods: dto,
 		});
 	}
+
+	@Put('/:groupId/tours')
+	async updateToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+		@Body() dto: any,
+	) {
+		return await this.schedulesService.updateToursSchedule({
+			memberId: sub,
+			groupId,
+			scheduleId: dto.scheduleId,
+		});
+	}
 }

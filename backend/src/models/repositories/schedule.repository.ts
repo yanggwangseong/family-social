@@ -43,4 +43,18 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 
 		return this.findOrFailScheduleById({ scheduleId: id });
 	}
+
+	async updateScheduleGroup({
+		memberId,
+		groupId,
+		scheduleId,
+	}: {
+		memberId: string;
+		groupId: string;
+		scheduleId: string;
+	}) {
+		await this.update({ id: scheduleId, memberId }, { groupId: groupId });
+
+		return this.findOrFailScheduleById({ scheduleId: scheduleId });
+	}
 }
