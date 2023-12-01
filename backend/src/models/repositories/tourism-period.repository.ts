@@ -16,4 +16,10 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 	async createTourismPeriod(periods: ICreateTourPeriodArgs[]) {
 		const insertResult = await this.repository.insert(periods);
 	}
+
+	async deleteTourismPeriod(scheduleId: string) {
+		const { affected } = await this.delete({ scheduleId: scheduleId });
+
+		return !!affected;
+	}
 }
