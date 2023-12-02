@@ -16,4 +16,10 @@ export class TourismRepository extends Repository<TourismEntity> {
 	async createTourism(tourism: ICreateTourismArgs[]) {
 		const insertResult = await this.repository.insert(tourism);
 	}
+
+	async deleteTourism(periodId: string) {
+		const { affected } = await this.delete({ periodId: periodId });
+
+		return !!affected;
+	}
 }
