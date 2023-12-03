@@ -57,4 +57,12 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 
 		return this.findOrFailScheduleById({ scheduleId: scheduleId });
 	}
+
+	async deleteSchedule(scheduleId: string) {
+		const { affected } = await this.delete({
+			id: scheduleId,
+		});
+
+		return !!affected;
+	}
 }
