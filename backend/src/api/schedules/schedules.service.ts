@@ -21,19 +21,55 @@ export class SchedulesService {
 			groupId,
 		});
 
-		await this.createTourismPeriod(periods, schedule.id);
+		const createTourismPeriod = await this.createTourismPeriod(
+			periods,
+			schedule.id,
+		);
+
+		createTourismPeriod.map(
+			async (item) => await this.createTourism(item.tourisms, item.id),
+		);
 
 		return schedule;
 	}
 
-	async updateToursSchedule({ memberId, groupId, scheduleId }: any) {
+	async updateToursSchedule({ memberId, groupId, scheduleId, periods }: any) {
 		const schedule = await this.scheduleRepository.updateScheduleGroup({
 			memberId,
 			groupId,
 			scheduleId,
 		});
 
+		// Tourism 먼저 다 삭제
+		const periodIds =
+			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
+				scheduleId,
+			);
+		periodIds.map(async (item) => await this.deleteTourism(item.id));
+
+		// TourismPeriod 다 삭제
+		await this.deleteTourismPeriod(scheduleId);
+
+		// TourismPeriod 생성
+		const createTourismPeriod = await this.createTourismPeriod(
+			periods,
+			schedule.id,
+		);
+
+		// Tourism 생성
+		createTourismPeriod.map(
+			async (item) => await this.createTourism(item.tourisms, item.id),
+		);
+
 		return schedule;
+	}
+
+	private async deleteTourismPeriod(scheduleId: string) {
+		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId);
+	}
+
+	private async deleteTourism(periodId: string) {
+		await this.tourismRepository.deleteTourism(periodId);
 	}
 
 	private async createTourismPeriod(
@@ -48,9 +84,7 @@ export class SchedulesService {
 
 		await this.tourismPeriodRepository.createTourismPeriod(createTourismPeriod);
 
-		createTourismPeriod.map(
-			async (item) => await this.createTourism(item.tourisms, item.id),
-		);
+		return createTourismPeriod;
 	}
 
 	private async createTourism(
