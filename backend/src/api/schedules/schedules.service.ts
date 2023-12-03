@@ -64,6 +64,21 @@ export class SchedulesService {
 		return schedule;
 	}
 
+	async deleteToursSchedule(scheduleId: string) {
+		// Tourism 먼저 다 삭제
+		const periodIds =
+			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
+				scheduleId,
+			);
+		periodIds.map(async (item) => await this.deleteTourism(item.id));
+
+		// TourismPeriod 다 삭제
+		await this.deleteTourismPeriod(scheduleId);
+
+		// Schedule 삭제
+		await this.scheduleRepository.deleteSchedule(scheduleId);
+	}
+
 	private async deleteTourismPeriod(scheduleId: string) {
 		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId);
 	}
