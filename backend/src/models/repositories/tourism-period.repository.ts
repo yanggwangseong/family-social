@@ -22,4 +22,20 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 
 		return !!affected;
 	}
+
+	async findTourismPeriodsByScheduleId(scheduleId: string) {
+		const tourismPeriods = this.repository.find({
+			select: {
+				id: true,
+			},
+			where: {
+				scheduleId: scheduleId,
+			},
+			order: {
+				createdAt: 'asc',
+			},
+		});
+
+		return tourismPeriods;
+	}
 }
