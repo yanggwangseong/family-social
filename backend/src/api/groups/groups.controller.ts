@@ -274,10 +274,10 @@ export class GroupsController {
 		return fam;
 	}
 
-	// groups/:groupId/tours	[post]		일정 생성
-	// groups/:groupId/tours	[put]		일정 수정
-	// groups/:groupId/tours	[delete]	일정삭제
-	@Post('/:groupId/tours')
+	// groups/:groupId/schedules				[post]		일정 생성
+	// groups/:groupId/schedules/:scheduleId	[put]		일정 수정
+	// groups/:groupId/schedules/:scheduleId	[delete]	일정삭제
+	@Post('/:groupId/schedules')
 	async createToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
@@ -290,16 +290,17 @@ export class GroupsController {
 		});
 	}
 
-	@Put('/:groupId/tours')
+	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: any,
 	) {
 		return await this.schedulesService.updateToursSchedule({
 			memberId: sub,
 			groupId,
-			scheduleId: dto.scheduleId,
+			scheduleId: scheduleId,
 		});
 	}
 }
