@@ -44,6 +44,11 @@ import {
 import { SchedulesService } from '../schedules/schedules.service';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
+import {
+	CreateToursScheduleSwagger,
+	DeleteToursScheduleSwagger,
+	UpdateToursScheduleSwagger,
+} from '@/common/decorators/swagger/swagger-schedule.decorrator';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -275,9 +280,17 @@ export class GroupsController {
 		return fam;
 	}
 
-	// groups/:groupId/schedules				[post]		일정 생성
-	// groups/:groupId/schedules/:scheduleId	[put]		일정 수정
-	// groups/:groupId/schedules/:scheduleId	[delete]	일정삭제
+	/**
+	 * @summary 특정 그룹의 여행 일정 작성하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 일정 아이디
+	 */
+	@CreateToursScheduleSwagger()
 	@Post('/:groupId/schedules')
 	async createToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
@@ -297,6 +310,18 @@ export class GroupsController {
 		});
 	}
 
+	/**
+	 * @summary 특정 그룹의 여행 일정 수정하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 일정 아이디
+	 */
+	@UpdateToursScheduleSwagger()
 	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
@@ -321,6 +346,17 @@ export class GroupsController {
 		});
 	}
 
+	/**
+	 * @summary 특정 그룹의 여행 일정 삭제하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteToursScheduleSwagger()
 	@Delete('/:groupId/schedules/:scheduleId')
 	async deleteToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
