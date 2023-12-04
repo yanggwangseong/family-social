@@ -1,3 +1,5 @@
+import { ForBiddenException } from '@/common/exception/service.exception';
+import { ERROR_NO_PERMISSTION_TO_SCHEDULE } from '@/constants/business-error';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
@@ -77,6 +79,16 @@ export class SchedulesService {
 
 		// Schedule 삭제
 		await this.scheduleRepository.deleteSchedule(scheduleId);
+	}
+
+	async findOwnSchedule(scheduleId: string, memberId: string) {
+		const schedule = await this.scheduleRepository.findOwnSchedule(
+			scheduleId,
+			memberId,
+		);
+		if (!schedule) throw ForBiddenException(ERROR_NO_PERMISSTION_TO_SCHEDULE);
+
+		return schedule;
 	}
 
 	private async deleteTourismPeriod(scheduleId: string) {

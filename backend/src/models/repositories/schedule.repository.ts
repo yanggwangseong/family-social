@@ -65,4 +65,16 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 
 		return !!affected;
 	}
+
+	async findOwnSchedule(scheduleId: string, memberId: string) {
+		return await this.repository.findOne({
+			select: {
+				id: true,
+			},
+			where: {
+				id: scheduleId,
+				memberId: memberId,
+			},
+		});
+	}
 }

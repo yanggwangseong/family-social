@@ -316,6 +316,9 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
+		//해당 일정 작성자인지 확인
+		await this.schedulesService.findOwnSchedule(scheduleId, sub);
+
 		return await this.schedulesService.deleteToursSchedule(scheduleId);
 	}
 }
