@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduleEntity } from '../entities/schedule.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
+import { ScheduleResDto } from '../dto/schedule/res/schedule-res.dto';
 
 @Injectable()
 export class ScheduleRepository extends Repository<ScheduleEntity> {
@@ -22,7 +23,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		memberId: string;
 		take: number;
 		skip: number;
-	}) {
+	}): Promise<ScheduleResDto[]> {
 		return await this.repository.find({
 			select: {
 				id: true,

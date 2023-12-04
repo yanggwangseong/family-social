@@ -9,6 +9,7 @@ import {
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
+import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -37,7 +38,7 @@ export class SchedulesService {
 		memberId: string;
 		page: number;
 		limit: number;
-	}) {
+	}): Promise<ScheduleResDto[]> {
 		const { take, skip } = getOffset({ page, limit });
 
 		return await this.scheduleRepository.getScheduleListOwnMemberId({

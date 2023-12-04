@@ -29,5 +29,5 @@ export class ScheduleEntity extends DefaultEntity {
 	member!: MemberEntity;
 
 	@OneToMany(() => TourismPeriodEntity, (tp) => tp.schedule)
-	schdulePeriods?: TourismPeriodEntity[];
+	schdulePeriods!: TourismPeriodEntity[];
 }

@@ -33,5 +33,5 @@ export class TourismPeriodEntity extends DefaultEntity {
 	schedule!: ScheduleEntity;
 
 	@OneToMany(() => TourismEntity, (trs) => trs.tourismPeriod)
-	tourisms?: TourismEntity[];
+	tourisms!: TourismEntity[];
 }
