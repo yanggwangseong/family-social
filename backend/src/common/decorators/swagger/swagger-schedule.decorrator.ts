@@ -14,6 +14,24 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 
+export const GetOneScheduleSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 여행일정 가져오기',
+		}),
+		ApiCreatedResponse({
+			description: '특정 여행일정 가져오기',
+			type: GroupMembersResDto,
+		}),
+		ApiNotFoundResponse({
+			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_SCHEDULE_NOT_FOUND}`,
+		}),
+		ApiForbiddenResponse({
+			description: ERROR_NO_PERMISSTION_TO_GROUP,
+		}),
+	);
+};
+
 export const GetScheduleListSwagger = () => {
 	return applyDecorators(
 		ApiOperation({

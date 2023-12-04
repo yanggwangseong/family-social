@@ -35,11 +35,13 @@ import { MembersService } from '../members/members.service';
 import {
 	BadRequestServiceException,
 	EntityConflictException,
+	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
+	ERROR_SCHEDULE_NOT_FOUND,
 } from '@/constants/business-error';
 import { SchedulesService } from '../schedules/schedules.service';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
@@ -47,6 +49,7 @@ import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-per
 import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
+	GetOneScheduleSwagger,
 	GetScheduleListSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorrator';
@@ -311,6 +314,32 @@ export class GroupsController {
 			page,
 			limit,
 		});
+	}
+
+	/**
+	 * @summary 특정 여행일정 가져오기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId 						- 여행일정 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 특정 여행 일정
+	 */
+	@GetOneScheduleSwagger()
+	@Get('/:groupId/schedules/:scheduleId')
+	async getOneScheduleById(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.getOneScheduleById(scheduleId);
 	}
 
 	/**

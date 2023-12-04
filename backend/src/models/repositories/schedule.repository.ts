@@ -66,6 +66,47 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		});
 	}
 
+	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto | null> {
+		return await this.repository.findOne({
+			select: {
+				id: true,
+				groupId: true,
+				updatedAt: true,
+				schdulePeriods: {
+					id: true,
+					period: true,
+					startTime: true,
+					endTime: true,
+					tourisms: {
+						id: true,
+						contentId: true,
+						stayTime: true,
+						tourismImage: true,
+						title: true,
+						position: true,
+					},
+				},
+			},
+			where: {
+				id: scheduleId,
+			},
+			relations: {
+				schdulePeriods: {
+					tourisms: true,
+				},
+			},
+			order: {
+				updatedAt: 'desc',
+				schdulePeriods: {
+					period: 'ASC',
+					tourisms: {
+						position: 'ASC',
+					},
+				},
+			},
+		});
+	}
+
 	async findOrFailScheduleById({
 		scheduleId,
 	}: {

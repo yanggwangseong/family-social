@@ -48,6 +48,16 @@ export class SchedulesService {
 		});
 	}
 
+	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto> {
+		const schedule = await this.scheduleRepository.getOneScheduleById(
+			scheduleId,
+		);
+
+		if (!schedule) throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
+
+		return schedule;
+	}
+
 	async createToursSchedule({
 		memberId,
 		groupId,
