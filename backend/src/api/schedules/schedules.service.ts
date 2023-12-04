@@ -2,6 +2,7 @@ import { ForBiddenException } from '@/common/exception/service.exception';
 import { ERROR_NO_PERMISSTION_TO_SCHEDULE } from '@/constants/business-error';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
+import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -21,7 +22,11 @@ export class SchedulesService {
 		private readonly tourismRepository: TourismRepository,
 	) {}
 
-	async createToursSchedule({ memberId, groupId, periods }: ICreateTourArgs) {
+	async createToursSchedule({
+		memberId,
+		groupId,
+		periods,
+	}: ICreateTourArgs): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.createSchedule({
 			memberId,
 			groupId,
@@ -44,7 +49,7 @@ export class SchedulesService {
 		groupId,
 		scheduleId,
 		periods,
-	}: IUpdateTourArgs) {
+	}: IUpdateTourArgs): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.updateScheduleGroup({
 			memberId,
 			groupId,
@@ -75,7 +80,7 @@ export class SchedulesService {
 		return schedule;
 	}
 
-	async deleteToursSchedule(scheduleId: string) {
+	async deleteToursSchedule(scheduleId: string): Promise<void> {
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
@@ -90,7 +95,10 @@ export class SchedulesService {
 		await this.scheduleRepository.deleteSchedule(scheduleId);
 	}
 
-	async findOwnSchedule(scheduleId: string, memberId: string) {
+	async findOwnSchedule(
+		scheduleId: string,
+		memberId: string,
+	): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.findOwnSchedule(
 			scheduleId,
 			memberId,

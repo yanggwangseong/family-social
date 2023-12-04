@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduleEntity } from '../entities/schedule.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
 
 @Injectable()
 export class ScheduleRepository extends Repository<ScheduleEntity> {
@@ -13,7 +14,11 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async findOrFailScheduleById({ scheduleId }: { scheduleId: string }) {
+	async findOrFailScheduleById({
+		scheduleId,
+	}: {
+		scheduleId: string;
+	}): Promise<ScheduleByIdResDto> {
 		const schedule = await this.repository.findOneOrFail({
 			where: {
 				id: scheduleId,
@@ -58,7 +63,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		return this.findOrFailScheduleById({ scheduleId: scheduleId });
 	}
 
-	async deleteSchedule(scheduleId: string) {
+	async deleteSchedule(scheduleId: string): Promise<boolean> {
 		const { affected } = await this.delete({
 			id: scheduleId,
 		});
@@ -66,7 +71,10 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		return !!affected;
 	}
 
-	async findOwnSchedule(scheduleId: string, memberId: string) {
+	async findOwnSchedule(
+		scheduleId: string,
+		memberId: string,
+	): Promise<ScheduleByIdResDto | null> {
 		return await this.repository.findOne({
 			select: {
 				id: true,
