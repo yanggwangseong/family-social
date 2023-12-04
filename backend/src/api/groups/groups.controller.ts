@@ -303,4 +303,19 @@ export class GroupsController {
 			scheduleId: scheduleId,
 		});
 	}
+
+	@Delete('/:groupId/schedules/:scheduleId')
+	async deleteToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.deleteToursSchedule(scheduleId);
+	}
 }

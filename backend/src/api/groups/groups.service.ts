@@ -157,7 +157,7 @@ export class GroupsService {
 		}
 	}
 
-	private async checkRoleOfGroupExists(groupId: string, memberId: string) {
+	async checkRoleOfGroupExists(groupId: string, memberId: string) {
 		const role = await this.famsRepository.isMainRoleForMemberInGroup({
 			groupId: groupId,
 			memberId: memberId,
