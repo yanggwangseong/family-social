@@ -47,6 +47,7 @@ import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-per
 import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
+	GetScheduleListSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorrator';
 
@@ -278,6 +279,38 @@ export class GroupsController {
 		});
 
 		return fam;
+	}
+
+	/**
+	 * @summary 여행일정 리스트 전체 가져오기
+	 *
+	 * @tag groups
+	 * @param {number} page 							- 페이지 번호
+	 * @param {number} limit 							- 가져 올 갯수
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 여행 일정 리스트
+	 */
+	@GetScheduleListSwagger()
+	@Get('/:groupId/schedules')
+	async getScheduleListOwnMemberId(
+		@Query('page') page: number,
+		@Query('limit') limit: number = 10,
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.getScheduleListOwnMemberId({
+			memberId: sub,
+			page,
+			limit,
+		});
 	}
 
 	/**

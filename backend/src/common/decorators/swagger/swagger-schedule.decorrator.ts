@@ -4,6 +4,7 @@ import {
 	ERROR_NO_PERMISSTION_TO_SCHEDULE,
 	ERROR_SCHEDULE_NOT_FOUND,
 } from '@/constants/business-error';
+import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
@@ -12,6 +13,25 @@ import {
 	ApiNotFoundResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+
+export const GetScheduleListSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '여행일정 리스트 전체 가져오기',
+		}),
+		ApiCreatedResponse({
+			description: '여행일정 리스트 전체 가져오기',
+			type: GroupMembersResDto,
+			isArray: true,
+		}),
+		ApiNotFoundResponse({
+			description: `${ERROR_GROUP_NOT_FOUND}`,
+		}),
+		ApiForbiddenResponse({
+			description: ERROR_NO_PERMISSTION_TO_GROUP,
+		}),
+	);
+};
 
 export const CreateToursScheduleSwagger = () => {
 	return applyDecorators(
