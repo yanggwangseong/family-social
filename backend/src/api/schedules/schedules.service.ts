@@ -17,6 +17,7 @@ import {
 	ICreateTourPeriodArgs,
 	IUpdateTourArgs,
 } from '@/types/args/tour';
+import { getOffset } from '@/utils/getOffset';
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -27,6 +28,24 @@ export class SchedulesService {
 		private readonly tourismPeriodRepository: TourismPeriodRepository,
 		private readonly tourismRepository: TourismRepository,
 	) {}
+
+	async getScheduleListOwnMemberId({
+		memberId,
+		page,
+		limit,
+	}: {
+		memberId: string;
+		page: number;
+		limit: number;
+	}) {
+		const { take, skip } = getOffset({ page, limit });
+
+		return await this.scheduleRepository.getScheduleListOwnMemberId({
+			memberId,
+			take,
+			skip,
+		});
+	}
 
 	async createToursSchedule({
 		memberId,
