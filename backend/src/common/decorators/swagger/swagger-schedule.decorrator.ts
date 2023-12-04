@@ -2,6 +2,7 @@ import {
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_NO_PERMISSTION_TO_SCHEDULE,
+	ERROR_SCHEDULE_NOT_FOUND,
 } from '@/constants/business-error';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { applyDecorators } from '@nestjs/common';
@@ -40,7 +41,7 @@ export const UpdateToursScheduleSwagger = () => {
 			type: ScheduleByIdResDto,
 		}),
 		ApiNotFoundResponse({
-			description: `${ERROR_GROUP_NOT_FOUND}`,
+			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_SCHEDULE_NOT_FOUND}`,
 		}),
 		ApiForbiddenResponse({
 			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_SCHEDULE}`,
@@ -57,7 +58,7 @@ export const DeleteToursScheduleSwagger = () => {
 			description: '여행 일정 삭제 성공',
 		}),
 		ApiNotFoundResponse({
-			description: `${ERROR_GROUP_NOT_FOUND}`,
+			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_SCHEDULE_NOT_FOUND}`,
 		}),
 		ApiForbiddenResponse({
 			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_SCHEDULE}`,

@@ -31,6 +31,21 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		return schedule;
 	}
 
+	async findScheduleById(
+		scheduleId: string,
+	): Promise<ScheduleByIdResDto | null> {
+		const schedule = await this.repository.findOne({
+			where: {
+				id: scheduleId,
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return schedule;
+	}
+
 	async createSchedule({
 		memberId,
 		groupId,

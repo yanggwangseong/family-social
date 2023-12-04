@@ -1,5 +1,11 @@
-import { ForBiddenException } from '@/common/exception/service.exception';
-import { ERROR_NO_PERMISSTION_TO_SCHEDULE } from '@/constants/business-error';
+import {
+	EntityNotFoundException,
+	ForBiddenException,
+} from '@/common/exception/service.exception';
+import {
+	ERROR_NO_PERMISSTION_TO_SCHEDULE,
+	ERROR_SCHEDULE_NOT_FOUND,
+} from '@/constants/business-error';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
@@ -104,6 +110,14 @@ export class SchedulesService {
 			memberId,
 		);
 		if (!schedule) throw ForBiddenException(ERROR_NO_PERMISSTION_TO_SCHEDULE);
+
+		return schedule;
+	}
+
+	async findScheduleById(scheduleId: string): Promise<ScheduleByIdResDto> {
+		const schedule = await this.scheduleRepository.findScheduleById(scheduleId);
+
+		if (!schedule) throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
 
 		return schedule;
 	}
