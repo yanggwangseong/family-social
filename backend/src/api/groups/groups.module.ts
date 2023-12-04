@@ -8,12 +8,15 @@ import { FamsRepository } from '@/models/repositories/fams.repository';
 import { FamEntity } from '@/models/entities/fam.entity';
 import { FamsModule } from '../fams/fams.module';
 import { MembersModule } from '../members/members.module';
+import { ToursModule } from '../tours/tours.module';
+import { SchedulesModule } from '../schedules/schedules.module';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([GroupEntity, FamEntity]),
 		FamsModule,
 		MembersModule,
+		SchedulesModule,
 	],
 	controllers: [GroupsController],
 	providers: [GroupsService, GroupsRepository, FamsRepository],

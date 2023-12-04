@@ -35,12 +35,24 @@ import { MembersService } from '../members/members.service';
 import {
 	BadRequestServiceException,
 	EntityConflictException,
+	EntityNotFoundException,
 } from '@/common/exception/service.exception';
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
+	ERROR_SCHEDULE_NOT_FOUND,
 } from '@/constants/business-error';
+import { SchedulesService } from '../schedules/schedules.service';
+import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
+import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
+import {
+	CreateToursScheduleSwagger,
+	DeleteToursScheduleSwagger,
+	GetOneScheduleSwagger,
+	GetScheduleListSwagger,
+	UpdateToursScheduleSwagger,
+} from '@/common/decorators/swagger/swagger-schedule.decorrator';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -51,6 +63,7 @@ export class GroupsController {
 		private readonly groupsService: GroupsService,
 		private readonly famsService: FamsService,
 		private readonly membersService: MembersService,
+		private readonly schedulesService: SchedulesService,
 	) {}
 
 	/**
@@ -269,5 +282,164 @@ export class GroupsController {
 		});
 
 		return fam;
+	}
+
+	/**
+	 * @summary 여행일정 리스트 전체 가져오기
+	 *
+	 * @tag groups
+	 * @param {number} page 							- 페이지 번호
+	 * @param {number} limit 							- 가져 올 갯수
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 여행 일정 리스트
+	 */
+	@GetScheduleListSwagger()
+	@Get('/:groupId/schedules')
+	async getScheduleListOwnMemberId(
+		@Query('page') page: number,
+		@Query('limit') limit: number = 10,
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.getScheduleListOwnMemberId({
+			memberId: sub,
+			page,
+			limit,
+		});
+	}
+
+	/**
+	 * @summary 특정 여행일정 가져오기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId 						- 여행일정 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 특정 여행 일정
+	 */
+	@GetOneScheduleSwagger()
+	@Get('/:groupId/schedules/:scheduleId')
+	async getOneScheduleById(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.getOneScheduleById(scheduleId);
+	}
+
+	/**
+	 * @summary 특정 그룹의 여행 일정 작성하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 일정 아이디
+	 */
+	@CreateToursScheduleSwagger()
+	@Post('/:groupId/schedules')
+	async createToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@CurrentUser('sub') sub: string,
+		@Body() dto: TourismPeriodCreateReqDto[],
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		return await this.schedulesService.createToursSchedule({
+			memberId: sub,
+			groupId,
+			periods: dto,
+		});
+	}
+
+	/**
+	 * @summary 특정 그룹의 여행 일정 수정하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 일정 아이디
+	 */
+	@UpdateToursScheduleSwagger()
+	@Put('/:groupId/schedules/:scheduleId')
+	async updateToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@CurrentUser('sub') sub: string,
+		@Body() dto: TourismPeriodUpdateReqDto[],
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		//여행 일정 유/무 체크
+		await this.schedulesService.findScheduleById(scheduleId);
+
+		//해당 일정 작성자인지 확인
+		await this.schedulesService.findOwnSchedule(scheduleId, sub);
+
+		return await this.schedulesService.updateToursSchedule({
+			memberId: sub,
+			groupId,
+			scheduleId: scheduleId,
+			periods: dto,
+		});
+	}
+
+	/**
+	 * @summary 특정 그룹의 여행 일정 삭제하기
+	 *
+	 * @tag groups
+	 * @param {string} groupId 							- 그룹 아이디
+	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteToursScheduleSwagger()
+	@Delete('/:groupId/schedules/:scheduleId')
+	async deleteToursSchedule(
+		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		//여행 일정 유/무 체크
+		await this.schedulesService.findScheduleById(scheduleId);
+
+		//해당 일정 작성자인지 확인
+		await this.schedulesService.findOwnSchedule(scheduleId, sub);
+
+		return await this.schedulesService.deleteToursSchedule(scheduleId);
 	}
 }

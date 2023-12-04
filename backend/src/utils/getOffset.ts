@@ -1,6 +1,6 @@
 import { IPaginationArgs } from '@/types';
 
-export const NUM_OF_ENTITIES = 3 as const;
+export const NUM_OF_ENTITIES: number = 3 as const;
 
 export const getOffset = ({ page, limit }: IPaginationArgs) => {
 	const take: number = limit ?? NUM_OF_ENTITIES;
