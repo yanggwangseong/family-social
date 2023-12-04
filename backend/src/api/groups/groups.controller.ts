@@ -43,6 +43,7 @@ import {
 } from '@/constants/business-error';
 import { SchedulesService } from '../schedules/schedules.service';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
+import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -283,6 +284,12 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@Body() dto: TourismPeriodCreateReqDto[],
 	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
 		return await this.schedulesService.createToursSchedule({
 			memberId: sub,
 			groupId,
@@ -295,12 +302,22 @@ export class GroupsController {
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
 		@CurrentUser('sub') sub: string,
-		@Body() dto: any,
+		@Body() dto: TourismPeriodUpdateReqDto[],
 	) {
+		// 그룹 유/무 체크
+		await this.groupsService.findGroupByIdOrThrow(groupId);
+
+		// 그룹에 속한 사람인지 체크
+		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
+
+		//해당 일정 작성자인지 확인
+		await this.schedulesService.findOwnSchedule(scheduleId, sub);
+
 		return await this.schedulesService.updateToursSchedule({
 			memberId: sub,
 			groupId,
 			scheduleId: scheduleId,
+			periods: dto,
 		});
 	}
 

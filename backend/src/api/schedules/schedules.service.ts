@@ -5,7 +5,11 @@ import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-per
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
-import { ICreateTourArgs, ICreateTourPeriodArgs } from '@/types/args/tour';
+import {
+	ICreateTourArgs,
+	ICreateTourPeriodArgs,
+	IUpdateTourArgs,
+} from '@/types/args/tour';
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -35,7 +39,12 @@ export class SchedulesService {
 		return schedule;
 	}
 
-	async updateToursSchedule({ memberId, groupId, scheduleId, periods }: any) {
+	async updateToursSchedule({
+		memberId,
+		groupId,
+		scheduleId,
+		periods,
+	}: IUpdateTourArgs) {
 		const schedule = await this.scheduleRepository.updateScheduleGroup({
 			memberId,
 			groupId,
