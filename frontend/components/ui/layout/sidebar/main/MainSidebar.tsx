@@ -28,7 +28,7 @@ const MainSidebar: FC = () => {
 		<div className={styles.sidebar_container}>
 			{/* 사이드 메뉴 */}
 			<Menu link="/feeds" Icon={AiOutlineAudit} menu="피드" />
-			<Menu link="/schdules" Icon={AiOutlineSchedule} menu="일정작성" />
+			<Menu link="/schedules" Icon={AiOutlineSchedule} menu="여행 일정" />
 			<Menu link="/accounts" Icon={MdOutlineManageAccounts} menu="계정" />
 			<div className={styles.sidebar_btn_container}>
 				<CustomButton

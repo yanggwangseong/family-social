@@ -1,0 +1,30 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex relative;
+		height: calc(100vh - 80px);
+		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
+
+		.detail_container {
+			@apply relative;
+			flex: 1;
+
+			.main_contents_container {
+				@screen md {
+					@apply mx-auto;
+					width: 768px;
+				}
+				@apply w-full h-full mt-8;
+
+				.feed_container {
+					@apply pt-6 pb-8 flex flex-col gap-10;
+				}
+			}
+		}
+	}
+}

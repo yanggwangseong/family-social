@@ -2,7 +2,7 @@
 	@screen 2xl {
 		@apply block;
 	}
-	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 block;
+	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 hidden;
 
 	//side_bar_tab_menu
 	.side_top_container {
