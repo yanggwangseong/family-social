@@ -11,7 +11,7 @@
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.detail_container {
-			@apply relative;
+			@apply relative py-8;
 			flex: 1;
 
 			.main_contents_container {
@@ -19,7 +19,7 @@
 					@apply mx-auto;
 					width: 768px;
 				}
-				@apply w-full h-full mt-8;
+				@apply w-full h-full;
 
 				.feed_container {
 					@apply pt-6 pb-8 flex flex-col gap-10;
