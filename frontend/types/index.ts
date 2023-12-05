@@ -33,6 +33,7 @@ const LayerMode = {
 const ToggleModalDerection = ['left', 'right'] as const;
 const feedPublicSelectOptions = ['public', 'private'] as const;
 const rightSideTabMenus = ['members', 'groups', 'favorites'] as const;
+const TabMenus = ['TOP', 'MYFEED', 'ALL', 'SCHEDULEALL', 'MYSCHEDULE'] as const;
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict
@@ -61,5 +62,6 @@ export {
 	ToggleModalDerection,
 	feedPublicSelectOptions,
 	rightSideTabMenus,
+	TabMenus,
 };
 export type { Union, OmitStrict, Reverse };
