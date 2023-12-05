@@ -1,6 +1,7 @@
 .button {
-	box-shadow: 0 8px 20px 0 rgba(78, 96, 255, 0.16);
+	@apply shadow-button-shadow;
 }
+
 .shadowNone {
 	box-shadow: none;
 }
