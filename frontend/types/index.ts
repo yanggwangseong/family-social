@@ -8,18 +8,19 @@
  * Union<typeof b>	// 'a' | 'b'
  *
  */
-type Union<T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>> =
-	T extends ReadonlyArray<ValueType>
-		? T[number]
-		: T extends { [k: string]: infer U }
-		? U
-		: never;
+export type Union<
+	T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>,
+> = T extends ReadonlyArray<ValueType>
+	? T[number]
+	: T extends { [k: string]: infer U }
+	? U
+	: never;
 
 type ValueType = string | number | boolean;
 
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
-const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
-const LayerMode = {
+export const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
+export const LayerMode = {
 	linkInvite: 'linkInvite',
 	emailInvite: 'emailInvite',
 	groupDeleteConfirm: 'groupDeleteConfirm',
@@ -30,16 +31,24 @@ const LayerMode = {
 	editProfile: 'editProfile',
 } as const;
 
-const ToggleModalDerection = ['left', 'right'] as const;
-const feedPublicSelectOptions = ['public', 'private'] as const;
-const rightSideTabMenus = ['members', 'groups', 'favorites'] as const;
-const TabMenus = ['TOP', 'MYFEED', 'ALL', 'SCHEDULEALL', 'MYSCHEDULE'] as const;
+export const ToggleModalDerection = ['left', 'right'] as const;
+export const feedPublicSelectOptions = ['public', 'private'] as const;
+export const rightSideTabMenus = ['members', 'groups', 'favorites'] as const;
+export const TabMenus = [
+	'TOP',
+	'MYFEED',
+	'ALL',
+	'SCHEDULEALL',
+	'MYSCHEDULE',
+] as const;
+export const schdulePages = ['selectGroupPage', 'periodPage'] as const;
+
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict
  * @example K를 제외한 T값
  */
-type OmitStrict<T, K extends keyof T> = T extends any
+export type OmitStrict<T, K extends keyof T> = T extends any
 	? Pick<T, Exclude<keyof T, K>>
 	: never;
 
@@ -52,16 +61,16 @@ type OmitStrict<T, K extends keyof T> = T extends any
  * 추론 값 : type ReversedArray = [5, 4, 3, 2, 1]
  *
  */
-type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
+export type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
 	? [...Reverse<Rest>, F]
 	: [];
 
-export {
-	EditMode,
-	LayerMode,
-	ToggleModalDerection,
-	feedPublicSelectOptions,
-	rightSideTabMenus,
-	TabMenus,
-};
-export type { Union, OmitStrict, Reverse };
+// export {
+// 	EditMode,
+// 	LayerMode,
+// 	ToggleModalDerection,
+// 	feedPublicSelectOptions,
+// 	rightSideTabMenus,
+// 	TabMenus,
+// };
+//export type { Union, OmitStrict, Reverse };

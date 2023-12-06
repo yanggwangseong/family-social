@@ -2,9 +2,10 @@ import React, { FC } from 'react';
 import styles from './SchedulePeriod.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SchedulePeriodProps } from './schedule-period.interface';
+import { Union, schdulePages } from 'types';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
-	const handleChangePage = (page: string) => {
+	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		onChangePage(page);
 	};
 

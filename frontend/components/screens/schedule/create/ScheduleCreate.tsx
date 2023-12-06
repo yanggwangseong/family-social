@@ -8,18 +8,18 @@ import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
+import { Union, schdulePages } from 'types';
 
 const ScheduleCreate: FC = () => {
-	const [isPage, setIsPage] = useState<string>('selectGroupPage');
+	const [isPage, setIsPage] =
+		useState<Union<typeof schdulePages>>('selectGroupPage');
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
 		useMemberBelongToGroups();
 
-	const handleChangePage = (page: string) => {
+	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);
 	};
-
-	console.log(isPage);
 
 	return (
 		<Format title={'schedule-create'}>

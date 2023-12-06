@@ -5,6 +5,7 @@ import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SelectGroupProps } from './select-group.interface';
+import { Union, schdulePages } from 'types';
 
 const SelectGroup: FC<SelectGroupProps> = ({
 	onChangePage,
@@ -12,7 +13,7 @@ const SelectGroup: FC<SelectGroupProps> = ({
 	handleSelectedGroup,
 	isSelecteGroup,
 }) => {
-	const handleChangePage = (page: string) => {
+	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		onChangePage(page);
 	};
 
