@@ -44,14 +44,14 @@ const CreateFeed: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
-	const [isSelecteGroup, setIsSelectGroup] = useState('');
 
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
 
 	const [isUplaod, setIsUpload] = useState<boolean>(false);
 
-	const { data, isLoading } = useMemberBelongToGroups();
+	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
+		useMemberBelongToGroups();
 
 	const {
 		data: feed,
@@ -209,10 +209,6 @@ const CreateFeed: FC = () => {
 
 	const handleChangePage = (page: string) => {
 		setIsFeedPage(page);
-	};
-
-	const handleSelectedGroup = (groupId: string) => {
-		setIsSelectGroup(groupId);
 	};
 
 	const handleChageIsPublic = (
