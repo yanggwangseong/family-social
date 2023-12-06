@@ -4,8 +4,11 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import React, { FC } from 'react';
 import styles from './ScheduleCreate.module.scss';
+import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 
 const ScheduleCreate: FC = () => {
+	const { data, isLoading } = useMemberBelongToGroups();
+
 	return (
 		<Format title={'schedule-create'}>
 			<div className={styles.container}>

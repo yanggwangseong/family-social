@@ -36,6 +36,7 @@ import Line from '@/components/ui/line/Line';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Union, feedPublicSelectOptions } from 'types';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -50,12 +51,7 @@ const CreateFeed: FC = () => {
 
 	const [isUplaod, setIsUpload] = useState<boolean>(false);
 
-	const queryClient = useQueryClient();
-
-	const { data, isLoading } = useQuery(
-		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
-	);
+	const { data, isLoading } = useMemberBelongToGroups();
 
 	const {
 		data: feed,
