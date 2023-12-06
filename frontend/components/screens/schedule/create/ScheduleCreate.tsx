@@ -4,20 +4,23 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
+import SchedulePeriod from './schedule-period/SchedulePeriod';
+import SelectGroup from './select-group/SelectGroup';
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
-import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
-import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import SchedulePeriod from './schedule-period/SchedulePeriod';
 
 const ScheduleCreate: FC = () => {
 	const [isPage, setIsPage] = useState<string>('selectGroupPage');
+
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
 		useMemberBelongToGroups();
 
-	const handleChagePage = (page: string) => {
+	const handleChangePage = (page: string) => {
 		setIsPage(page);
 	};
+
+	console.log(isPage);
+
 	return (
 		<Format title={'schedule-create'}>
 			<div className={styles.container}>
@@ -28,46 +31,24 @@ const ScheduleCreate: FC = () => {
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
-							{isPage === 'selectGroupPage' && (
-								<div className={styles.select_group_container}>
-									<div className={styles.step_title}>STEP 1</div>
-									<div className={styles.selectedGroup_title}>그룹선택</div>
-									<div className={styles.selectedGroup_groups_container}>
-										{isLoading || !data ? (
-											<Skeleton />
-										) : (
-											data.map(group => (
-												<div className={styles.group_card_wrap} key={group.id}>
-													<GroupProfile
-														group={{
-															id: group.group.id,
-															groupDescription: group.group.groupDescription,
-															groupName: group.group.groupName,
-														}}
-														onSelectedGroup={handleSelectedGroup}
-														isSelecteGroup={isSelecteGroup}
-													/>
-												</div>
-											))
-										)}
-									</div>
-
-									<div className={styles.button_container}>
-										<CustomButton
-											type="button"
-											className="mt-8 mb-4 bg-customOrange text-customDark 
-											font-bold border border-solid border-customDark 
-											rounded-full p-[10px]
-											w-full hover:bg-orange-500
-											"
-											onClick={() => handleChagePage('periodPage')}
-										>
-											다음
-										</CustomButton>
-									</div>
-								</div>
+							{isPage === 'selectGroupPage' && (!data || isLoading) ? (
+								<Skeleton />
+							) : (
+								isPage === 'selectGroupPage' &&
+								data && (
+									<SelectGroup
+										onChangePage={handleChangePage}
+										data={data}
+										handleSelectedGroup={handleSelectedGroup}
+										isSelecteGroup={isSelecteGroup}
+									></SelectGroup>
+								)
 							)}
-							{isPage === 'periodPage' && <SchedulePeriod></SchedulePeriod>}
+							{isPage === 'periodPage' && (
+								<SchedulePeriod
+									onChangePage={handleChangePage}
+								></SchedulePeriod>
+							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}

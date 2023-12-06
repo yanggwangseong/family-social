@@ -1,8 +1,13 @@
 import React, { FC } from 'react';
 import styles from './SchedulePeriod.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { SchedulePeriodProps } from './schedule-period.interface';
 
-const SchedulePeriod: FC = () => {
+const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
+	const handleChangePage = (page: string) => {
+		onChangePage(page);
+	};
+
 	return (
 		<div className={styles.period_container}>
 			<div className={styles.step_title}>STEP 2</div>
@@ -11,8 +16,9 @@ const SchedulePeriod: FC = () => {
 				<CustomButton
 					type="button"
 					className="mt-8 mb-4 bg-white text-customDark 
-        font-bold border border-solid border-customDark 
-        rounded-full p-[10px] w-full hover:opacity-80"
+                    font-bold border border-solid border-customDark 
+                    rounded-full p-[10px] w-full hover:opacity-80"
+					onClick={() => handleChangePage('selectGroupPage')}
 				>
 					이전
 				</CustomButton>
