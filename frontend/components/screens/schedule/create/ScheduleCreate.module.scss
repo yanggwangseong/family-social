@@ -34,7 +34,7 @@
 					}
 
 					.selectedGroup_groups_container {
-						@apply flex flex-wrap overflow-y-auto h-72 mt-5 py-5;
+						@apply flex flex-wrap overflow-y-auto h-72 my-5;
 
 						.group_card_wrap {
 							@apply w-full;
