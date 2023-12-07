@@ -5,20 +5,23 @@ import { SchedulePeriodProps } from './schedule-period.interface';
 import { Union, schdulePages } from 'types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ko } from 'date-fns/esm/locale';
+import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
+	const [pageInit, setPageInit] = useState<boolean>(false);
+
+	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+	const [startDate, endDate] = dateRange;
+
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		onChangePage(page);
 	};
 
-	const [dateRange, setDateRange] = useState([new Date(), new Date()]);
-	const [startDate, endDate] = dateRange;
-
-	const [isOpen, setIsOpen] = useState(false);
-	const handleChange = (e: any) => {
-		setDateRange(e);
+	const handleChange = (dates: [Date, Date]) => {
+		setDateRange(dates);
 	};
 	const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -27,20 +30,25 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
 
 	const selectedDates = () => {
 		setIsOpen(false);
+		!pageInit && setPageInit(true);
 
-		const formattedDate = format(startDate, 'yyyy-MM-dd (eee)', { locale: ko });
-		console.log(formattedDate);
+		const formattedStartDate = format(startDate, 'yyyy-MM-dd (eee)', {
+			locale: ko,
+		});
+		const formattedEndDate = format(endDate, 'yyyy-MM-dd (eee)', {
+			locale: ko,
+		});
+		console.log(formattedStartDate);
+		console.log(formattedEndDate);
 	};
 
 	return (
 		<div className={styles.period_container}>
 			<div className={styles.step_title}>STEP 2</div>
-			<div className={styles.title}>여행 기간이 어떻게 되시나요?</div>
-			<button className="example-custom-input" onClick={handleClick}>
-				{`버튼`}
-			</button>
-			{isOpen && (
-				<>
+			<div className={styles.title}>여행 일정 선택</div>
+			{(isOpen || !pageInit) && (
+				<div>
+					<div>여행 기간이 어떻게 되시나요?</div>
 					<DatePicker
 						locale={ko}
 						selectsRange={true}
@@ -50,32 +58,50 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
 						inline
 						isClearable={true}
 					/>
-					<button type="button" onClick={selectedDates}>
-						{`선택`}
-					</button>
-				</>
+				</div>
+			)}
+			{pageInit && (
+				<button className="example-custom-input" onClick={handleClick}>
+					{`버튼`}
+				</button>
 			)}
 
 			<div className={styles.button_container}>
-				<CustomButton
-					type="button"
-					className="mt-8 mb-4 bg-white text-customDark 
-                    font-bold border border-solid border-customDark 
-                    rounded-full p-[10px] w-full hover:opacity-80"
-					onClick={() => handleChangePage('selectGroupPage')}
-				>
-					이전
-				</CustomButton>
-				<CustomButton
-					type="button"
-					className="mt-8 mb-4 bg-customOrange text-customDark 
+				{!pageInit ? (
+					<CustomButton
+						type="button"
+						className="mt-8 mb-4 bg-customOrange text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px]
 					w-full hover:bg-orange-500
 					"
-				>
-					다음
-				</CustomButton>
+						onClick={selectedDates}
+					>
+						{`선택`}
+					</CustomButton>
+				) : (
+					<>
+						<CustomButton
+							type="button"
+							className="mt-8 mb-4 bg-white text-customDark 
+                    font-bold border border-solid border-customDark 
+                    rounded-full p-[10px] w-full hover:opacity-80"
+							onClick={() => handleChangePage('selectGroupPage')}
+						>
+							이전
+						</CustomButton>
+						<CustomButton
+							type="button"
+							className="mt-8 mb-4 bg-customOrange text-customDark 
+					font-bold border border-solid border-customDark 
+					rounded-full p-[10px]
+					w-full hover:bg-orange-500
+					"
+						>
+							다음
+						</CustomButton>
+					</>
+				)}
 			</div>
 		</div>
 	);
