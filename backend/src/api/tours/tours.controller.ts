@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ToursService } from './tours.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
-//@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @ApiTags('tours')
 @Controller('tours')
 export class ToursController {

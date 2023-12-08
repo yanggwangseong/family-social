@@ -11,12 +11,15 @@ import { FaCalendar } from 'react-icons/fa';
 import { getDateRange } from '@/utils/get-date-range';
 import Periods from '@/components/ui/schedule/period/Periods';
 
-const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
+const SchedulePeriod: FC<SchedulePeriodProps> = ({
+	onChangePage,
+	onChangePeriods,
+	isPeriods,
+}) => {
 	const [pageInit, setPageInit] = useState<boolean>(false);
 
 	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
 	const [startDate, endDate] = dateRange;
-	const [isPeriods, setIsPeriods] = useState<string[]>([]);
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -27,6 +30,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
 	const handleChange = (dates: [Date, Date]) => {
 		setDateRange(dates);
 	};
+
 	const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setIsOpen(!isOpen);
@@ -45,7 +49,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
 			}),
 		);
 
-		setIsPeriods(dates);
+		onChangePeriods(dates);
 	};
 
 	return (

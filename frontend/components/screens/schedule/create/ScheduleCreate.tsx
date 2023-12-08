@@ -12,6 +12,8 @@ import { Union, schdulePages } from 'types';
 import Tourism from './tourism/Tourism';
 
 const ScheduleCreate: FC = () => {
+	const [isPeriods, setIsPeriods] = useState<string[]>([]);
+
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
@@ -20,6 +22,10 @@ const ScheduleCreate: FC = () => {
 
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);
+	};
+
+	const handleChangePeriods = (dates: string[]) => {
+		setIsPeriods(dates);
 	};
 
 	return (
@@ -48,9 +54,13 @@ const ScheduleCreate: FC = () => {
 							{isPage === 'periodPage' && (
 								<SchedulePeriod
 									onChangePage={handleChangePage}
+									onChangePeriods={handleChangePeriods}
+									isPeriods={isPeriods}
 								></SchedulePeriod>
 							)}
-							{isPage === 'tourismPage' && <Tourism></Tourism>}
+							{isPage === 'tourismPage' && (
+								<Tourism isPeriods={isPeriods}></Tourism>
+							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
