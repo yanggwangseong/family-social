@@ -10,9 +10,14 @@
 		@apply font-semibold text-lg;
 	}
 
-	//calendar
+	.period_btn_container {
+		@apply flex flex-row gap-2;
 
-	// button
+		.icon {
+			@apply cursor-pointer;
+		}
+	}
+
 	.button_container {
 		@screen md {
 			@apply fixed bottom-0 flex gap-4;
