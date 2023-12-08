@@ -1,8 +1,18 @@
 import React, { FC } from 'react';
 import styles from './Tourism.module.scss';
 import { TourismProps } from './tourism.interface';
+import { useQuery } from 'react-query';
+import { TourService } from '@/services/tour/tour.service';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
+	const { data, isLoading } = useQuery(
+		['tour-area-code'],
+		async () => await TourService.getTourAreaCodes(),
+	);
+
+	if (isLoading) return <div>loading</div>;
+
+	console.log(data);
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>

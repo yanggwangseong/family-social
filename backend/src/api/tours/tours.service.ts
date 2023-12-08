@@ -275,6 +275,6 @@ export class ToursService {
 			),
 		);
 
-		return data;
+		return data.response.body;
 	}
 }
