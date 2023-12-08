@@ -1,17 +1,26 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './Tourism.module.scss';
 import { TourismProps } from './tourism.interface';
 import { useQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
+	const [isAreaCode, setIsAreaCode] = useState<string>('1');
 	const { data, isLoading } = useQuery(
-		['tour-area-code'],
+		['tour-area-code-main'],
 		async () => await TourService.getTourAreaCodes(),
+	);
+
+	const { data: areaCodeData, isLoading: areaCodeLoading } = useQuery(
+		['tour-area-code'],
+		async () => await TourService.getTourAreaCodes(isAreaCode),
 	);
 
 	if (isLoading) return <div>loading</div>;
 	if (!data) return <div>loading</div>;
+
+	if (areaCodeLoading) return <div>loading</div>;
+	if (!areaCodeData) return <div>loading</div>;
 
 	return (
 		<div className={styles.tourism_container}>
@@ -21,6 +30,12 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				<div key={index}>{period}</div>
 			))}
 			{data.items.item.map(item => (
+				<div>
+					<div>{item.name}</div>
+				</div>
+			))}
+
+			{areaCodeData.items.item.map(item => (
 				<div>
 					<div>{item.name}</div>
 				</div>
