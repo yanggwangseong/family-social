@@ -1,66 +1,27 @@
-import React, { FC } from 'react';
-import Field from '@/ui/field/Field';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import React, { FC, PropsWithChildren } from 'react';
+import styles from './Table.module.scss';
 
-const Table: FC<{ isPeriods: string[] }> = ({ isPeriods }) => {
-	const tableHeaderCol = [
-		[
-			{ item: '일자' },
-			{ item: '요일' },
-			{ item: '시작시간' },
-			{ item: '종료시간' },
-		],
-	];
-
+const Table: FC<
+	PropsWithChildren<{
+		headerColumns: {
+			item: string;
+		}[][];
+	}>
+> = ({ headerColumns, children }) => {
 	return (
-		<table className="w-full">
+		<table className={styles.table_container}>
 			<thead>
-				{tableHeaderCol.map((tr, index) => (
+				{headerColumns.map((tr, index) => (
 					<tr key={index}>
 						{tr.map((data, idx) => (
-							<th key={idx} className="p-4 font-normal text-customGray">
+							<th key={idx} className={styles.table_header_column}>
 								{data.item}
 							</th>
 						))}
 					</tr>
 				))}
 			</thead>
-			<tbody>
-				{isPeriods.map((period, index) => {
-					const date = new Date(period);
-					return (
-						<tr key={index}>
-							<td className="p-4" align="center">
-								{format(date, 'yyyy-MM-dd', {
-									locale: ko,
-								})}
-							</td>
-							<td className="p-4" align="center">
-								{format(date, 'eee', {
-									locale: ko,
-								})}
-							</td>
-							<td className="p-4" align="center">
-								<Field
-									className="w-full bg-basic"
-									type="time"
-									name="startTime"
-									defaultValue="10:00"
-								/>
-							</td>
-							<td className="p-4" align="center">
-								<Field
-									className="w-full bg-basic"
-									type="time"
-									name="endTime"
-									defaultValue="22:00"
-								/>
-							</td>
-						</tr>
-					);
-				})}
-			</tbody>
+			<tbody>{children}</tbody>
 		</table>
 	);
 };
