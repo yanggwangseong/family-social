@@ -9,6 +9,7 @@ import SelectGroup from './select-group/SelectGroup';
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Union, schdulePages } from 'types';
+import Tourism from './tourism/Tourism';
 
 const ScheduleCreate: FC = () => {
 	const [isPage, setIsPage] =
@@ -49,6 +50,7 @@ const ScheduleCreate: FC = () => {
 									onChangePage={handleChangePage}
 								></SchedulePeriod>
 							)}
+							{isPage === 'tourismPage' && <Tourism></Tourism>}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}

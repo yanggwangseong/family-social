@@ -41,7 +41,11 @@ export const TabMenus = [
 	'SCHEDULEALL',
 	'MYSCHEDULE',
 ] as const;
-export const schdulePages = ['selectGroupPage', 'periodPage'] as const;
+export const schdulePages = [
+	'selectGroupPage',
+	'periodPage',
+	'tourismPage',
+] as const;
 
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
