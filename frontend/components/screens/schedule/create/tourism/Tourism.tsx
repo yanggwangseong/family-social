@@ -11,14 +11,19 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	);
 
 	if (isLoading) return <div>loading</div>;
+	if (!data) return <div>loading</div>;
 
-	console.log(data);
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>
 			<div className={styles.title}>관광 선택</div>
 			{isPeriods.map((period, index) => (
 				<div key={index}>{period}</div>
+			))}
+			{data.items.item.map(item => (
+				<div>
+					<div>{item.name}</div>
+				</div>
 			))}
 		</div>
 	);
