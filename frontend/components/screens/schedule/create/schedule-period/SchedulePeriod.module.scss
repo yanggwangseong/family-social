@@ -11,7 +11,7 @@
 	}
 
 	.period_btn_container {
-		@apply flex flex-row gap-2;
+		@apply flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
 
 		.icon {
 			@apply cursor-pointer;

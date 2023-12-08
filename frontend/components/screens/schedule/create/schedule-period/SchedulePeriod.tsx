@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, MouseEvent, useState } from 'react';
+import React, { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
 import styles from './SchedulePeriod.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SchedulePeriodProps } from './schedule-period.interface';
@@ -78,7 +78,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({ onChangePage }) => {
 						<FaCalendar className={styles.icon} size={22} />
 					</div>
 					{/* 여행기간 */}
-					<Periods></Periods>
+					<Periods isPeriods={isPeriods}></Periods>
 				</>
 			)}
 
