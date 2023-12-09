@@ -12,3 +12,6 @@ export interface TourAreaCodeItem {
 	name: string;
 	rnum: number;
 }
+
+// getServiceCategories
+export interface TourServiceCategoriesResponse extends TourAreaCodesResponse {}

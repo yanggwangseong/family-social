@@ -16,30 +16,46 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		async () => await TourService.getTourAreaCodes(isAreaCode),
 	);
 
+	const { data: serviceCategoryData, isLoading: serviceCategoryLoading } =
+		useQuery(
+			['tour-service-category'],
+			async () =>
+				await TourService.getServiceCategories({ contentTypeId: '12' }),
+		);
+
 	if (isLoading) return <div>loading</div>;
 	if (!data) return <div>loading</div>;
 
 	if (areaCodeLoading) return <div>loading</div>;
 	if (!areaCodeData) return <div>loading</div>;
 
+	if (serviceCategoryLoading) return <div>loading</div>;
+	if (!serviceCategoryData) return <div>loading</div>;
+
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>
 			<div className={styles.title}>관광 선택</div>
-			{isPeriods.map((period, index) => (
+			{/* {isPeriods.map((period, index) => (
 				<div key={index}>{period}</div>
 			))}
-			{data.items.item.map(item => (
-				<div>
+			{data.items.item.map((item, index) => (
+				<div key={index}>
 					<div>{item.name}</div>
 				</div>
 			))}
 
-			{areaCodeData.items.item.map(item => (
-				<div>
+			{areaCodeData.items.item.map((item, index) => (
+				<div key={index}>
 					<div>{item.name}</div>
 				</div>
-			))}
+			))} */}
+
+			{/* {serviceCategoryData.items.item.map((item, index) => (
+				<div key={index}>
+					<div>{item.name}</div>
+				</div>
+			))} */}
 		</div>
 	);
 };

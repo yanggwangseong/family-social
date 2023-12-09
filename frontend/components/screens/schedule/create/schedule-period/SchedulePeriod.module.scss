@@ -20,9 +20,9 @@
 
 	.button_container {
 		@screen md {
-			@apply fixed bottom-0 flex gap-4;
+			@apply fixed bottom-0 flex gap-4 z-50 bg-basic;
 			width: 768px;
 		}
-		@apply w-full mb-10;
+		@apply w-full pb-10;
 	}
 }
