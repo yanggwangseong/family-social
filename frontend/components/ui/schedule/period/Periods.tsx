@@ -4,20 +4,12 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Table from '@/ui/table/Table';
 import styles from './Periods.module.scss';
+import { periodTableHeaderCol } from '@/constants/table.constant';
 
 const Periods: FC<{ isPeriods: string[] }> = ({ isPeriods }) => {
-	const tableHeaderCol = [
-		[
-			{ item: '일자' },
-			{ item: '요일' },
-			{ item: '시작시간' },
-			{ item: '종료시간' },
-		],
-	];
-
 	return (
 		<div className={styles.period_container}>
-			<Table headerColumns={tableHeaderCol}>
+			<Table headerColumns={periodTableHeaderCol}>
 				{isPeriods.map((period, index) => {
 					const date = new Date(period);
 					return (

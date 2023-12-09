@@ -3,6 +3,7 @@ import styles from './Tourism.module.scss';
 import { TourismProps } from './tourism.interface';
 import { useQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
+import Table from '@/components/ui/table/Table';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	const [isAreaCode, setIsAreaCode] = useState<string>('1');
@@ -70,6 +71,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>
 			<div className={styles.title}>관광 선택</div>
+
 			{/* {isPeriods.map((period, index) => (
 				<div key={index}>{period}</div>
 			))}
@@ -97,11 +99,11 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				</div>
 			))} */}
 
-			{thirdServiceCategoryData.items.item.map((item, index) => (
+			{/* {thirdServiceCategoryData.items.item.map((item, index) => (
 				<div key={index}>
 					<div>{item.name}</div>
 				</div>
-			))}
+			))} */}
 		</div>
 	);
 };
