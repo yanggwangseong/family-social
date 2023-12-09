@@ -16,6 +16,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		async () => await TourService.getTourAreaCodes(isAreaCode),
 	);
 
+	// 대분류 서비스 코드
 	const { data: serviceCategoryData, isLoading: serviceCategoryLoading } =
 		useQuery(
 			['tour-service-category'],
@@ -23,6 +24,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				await TourService.getServiceCategories({ contentTypeId: '12' }),
 		);
 
+	// 중분류 서비스 코드
 	const {
 		data: secondServiceCategoryData,
 		isLoading: secondServiceCategoryLoading,
@@ -32,6 +34,20 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 			await TourService.getServiceCategories({
 				contentTypeId: '12',
 				firstCategory: 'A01',
+			}),
+	);
+
+	// 소분류 서비스 코드
+	const {
+		data: thirdServiceCategoryData,
+		isLoading: thirdServiceCategoryLoading,
+	} = useQuery(
+		['tour-third-service-category'],
+		async () =>
+			await TourService.getServiceCategories({
+				contentTypeId: '12',
+				firstCategory: 'A01',
+				secondCategory: 'A0101',
 			}),
 	);
 
@@ -46,6 +62,9 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 
 	if (secondServiceCategoryLoading) return <div>loading</div>;
 	if (!secondServiceCategoryData) return <div>loading</div>;
+
+	if (thirdServiceCategoryLoading) return <div>loading</div>;
+	if (!thirdServiceCategoryData) return <div>loading</div>;
 
 	return (
 		<div className={styles.tourism_container}>
@@ -72,7 +91,13 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				</div>
 			))} */}
 
-			{secondServiceCategoryData.items.item.map((item, index) => (
+			{/* {secondServiceCategoryData.items.item.map((item, index) => (
+				<div key={index}>
+					<div>{item.name}</div>
+				</div>
+			))} */}
+
+			{thirdServiceCategoryData.items.item.map((item, index) => (
 				<div key={index}>
 					<div>{item.name}</div>
 				</div>
