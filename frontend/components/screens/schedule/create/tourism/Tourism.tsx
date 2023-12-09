@@ -23,6 +23,18 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				await TourService.getServiceCategories({ contentTypeId: '12' }),
 		);
 
+	const {
+		data: secondServiceCategoryData,
+		isLoading: secondServiceCategoryLoading,
+	} = useQuery(
+		['tour-second-service-category'],
+		async () =>
+			await TourService.getServiceCategories({
+				contentTypeId: '12',
+				firstCategory: 'A01',
+			}),
+	);
+
 	if (isLoading) return <div>loading</div>;
 	if (!data) return <div>loading</div>;
 
@@ -31,6 +43,9 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 
 	if (serviceCategoryLoading) return <div>loading</div>;
 	if (!serviceCategoryData) return <div>loading</div>;
+
+	if (secondServiceCategoryLoading) return <div>loading</div>;
+	if (!secondServiceCategoryData) return <div>loading</div>;
 
 	return (
 		<div className={styles.tourism_container}>
@@ -56,6 +71,12 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 					<div>{item.name}</div>
 				</div>
 			))} */}
+
+			{secondServiceCategoryData.items.item.map((item, index) => (
+				<div key={index}>
+					<div>{item.name}</div>
+				</div>
+			))}
 		</div>
 	);
 };
