@@ -3,11 +3,11 @@ export interface TableProps {
 }
 
 export interface headerRowType {
-	rowspan?: number;
-	colspan?: number;
 	column: headerColumnType[];
 }
 
 export interface headerColumnType {
 	item: string;
+	rowspan?: number;
+	colspan?: number;
 }
