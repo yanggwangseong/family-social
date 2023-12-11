@@ -88,6 +88,22 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				<div className="w-3/4 flex items-center">관광지</div>
 			</div>
 
+			<div className="flex gap-4">
+				<div className="w-1/4">
+					<CustomButton
+						type="button"
+						className=" bg-basic text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+					>
+						서비스분류
+					</CustomButton>
+				</div>
+				<div className="w-3/4 flex items-center">관광지</div>
+			</div>
+
 			<div className="absolute w-full h-full z-"></div>
 		</div>
 	);
