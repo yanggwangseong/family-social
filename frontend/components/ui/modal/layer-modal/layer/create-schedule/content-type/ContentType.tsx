@@ -10,7 +10,13 @@ const ContentType: FC = () => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
-				<div className={styles.contents_wrap}></div>
+				<div className={styles.contents_wrap}>
+					<div className="flex flex-wrap">
+						{ContentTypeId.map((value, index) => {
+							return <div className="p-6 w-1/2">{ContentTypeName[value]}</div>;
+						})}
+					</div>
+				</div>
 
 				<div className={styles.btn_container}>
 					<CustomButton
