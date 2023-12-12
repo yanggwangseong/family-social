@@ -8,6 +8,7 @@ import FeedDeleteConfirm from './layer/FeedDeleteConfirm';
 import CommentDeleteConfirm from './layer/CommentDeleteConfirm';
 import LogOutConfirm from './layer/LogOutConfirm';
 import EditProfile from './layer/EditProfile/EditProfile';
+import ContentType from './layer/create-schedule/content-type/ContentType';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -18,6 +19,7 @@ const StatusLookUpTable = {
 	[LayerMode.commentDeleteConfirm]: CommentDeleteConfirm,
 	[LayerMode.logoutConfirm]: LogOutConfirm,
 	[LayerMode.editProfile]: EditProfile,
+	[LayerMode.selectedContentType]: ContentType,
 };
 
 interface StatusProps {

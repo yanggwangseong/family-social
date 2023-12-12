@@ -29,6 +29,7 @@ export const LayerMode = {
 	commentDeleteConfirm: 'commentDeleteConfirm',
 	logoutConfirm: 'logoutConfirm',
 	editProfile: 'editProfile',
+	selectedContentType: 'selectedContentType',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;
@@ -68,13 +69,3 @@ export type OmitStrict<T, K extends keyof T> = T extends any
 export type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
 	? [...Reverse<Rest>, F]
 	: [];
-
-// export {
-// 	EditMode,
-// 	LayerMode,
-// 	ToggleModalDerection,
-// 	feedPublicSelectOptions,
-// 	rightSideTabMenus,
-// 	TabMenus,
-// };
-//export type { Union, OmitStrict, Reverse };
