@@ -9,13 +9,16 @@ import { Union } from 'types';
 import cn from 'classnames';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { useRecoilState } from 'recoil';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const ContentType: FC = () => {
-	const [isContentId, setIsContentId] = useRecoilState(contentIdsAtom);
+	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
 
-	// const [isContentId, setIsContentId] = useState<Union<typeof ContentTypeId>[]>(
-	// 	[],
-	// );
+	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
+	const [isContentId, setIsContentId] = useState<Union<typeof ContentTypeId>[]>(
+		[],
+	);
 
 	const handleSelectedContentId = (contentId: Union<typeof ContentTypeId>) => {
 		setIsContentId(prevContentIds => {
@@ -32,9 +35,14 @@ const ContentType: FC = () => {
 		setIsContentId([...ContentTypeId]);
 	};
 
+	const handleSelectedComplete = () => {
+		setIsAtomContentId([...isContentId]);
+		setIsShowing(false);
+	};
+
 	useEffect(() => {
-		console.log(isContentId);
-	}, [isContentId]);
+		if (isAtomContentId.length > 0) setIsContentId([...isAtomContentId]);
+	}, [isAtomContentId]);
 
 	return (
 		<div className={styles.container}>
@@ -52,6 +60,7 @@ const ContentType: FC = () => {
 						{ContentTypeId.map((value, index) => {
 							return (
 								<div
+									key={index}
 									className={styles.content_type_item_wrap}
 									onClick={() => handleSelectedContentId(value)}
 								>
@@ -74,6 +83,7 @@ const ContentType: FC = () => {
 						className="bg-customDark text-customOrange 
 									font-bold border border-solid border-customDark 
 									rounded-full p-[10px] w-full hover:opacity-80"
+						onClick={handleSelectedComplete}
 					>
 						확인
 					</CustomButton>
@@ -83,6 +93,7 @@ const ContentType: FC = () => {
 						className="bg-white text-customDark 
 									font-bold border border-solid border-customDark 
 									rounded-full p-[10px] w-full hover:bg-gray-200"
+						onClick={() => setIsShowing(false)}
 					>
 						취소
 					</CustomButton>
