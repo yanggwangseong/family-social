@@ -7,6 +7,8 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
+import { contentIdsAtom } from '@/atoms/contentIdAtom';
+import { ContentTypeName } from '@/constants/content-type.constant';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	// const [isAreaCode, setIsAreaCode] = useState<string>('1');
@@ -73,6 +75,8 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
+	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
+
 	const handleSelectedContentType = () => {
 		setIsShowing(!isShowing);
 		setIsLayer({
@@ -101,7 +105,11 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 							관광타입
 						</CustomButton>
 					</div>
-					<div className="w-3/4 flex items-center">관광지</div>
+					<div className="w-3/4 flex items-center">
+						{isAtomContentId.map((item, index) => (
+							<span key={index}>{`${ContentTypeName[item]}`}</span>
+						))}
+					</div>
 				</div>
 
 				<div className="flex gap-4">
