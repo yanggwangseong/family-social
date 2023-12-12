@@ -1,24 +1,65 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ContentType.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import {
 	ContentTypeId,
 	ContentTypeName,
 } from '@/constants/content-type.constant';
+import { Union } from 'types';
+import cn from 'classnames';
+import { contentIdsAtom } from '@/atoms/contentIdAtom';
+import { useRecoilState } from 'recoil';
 
 const ContentType: FC = () => {
+	const [isContentId, setIsContentId] = useRecoilState(contentIdsAtom);
+
+	// const [isContentId, setIsContentId] = useState<Union<typeof ContentTypeId>[]>(
+	// 	[],
+	// );
+
+	const handleSelectedContentId = (contentId: Union<typeof ContentTypeId>) => {
+		setIsContentId(prevContentIds => {
+			const isAlreadySelected = prevContentIds.includes(contentId);
+			if (isAlreadySelected) {
+				return prevContentIds.filter(id => id !== contentId);
+			} else {
+				return [...prevContentIds, contentId];
+			}
+		});
+	};
+
+	const handleSelectedAll = () => {
+		setIsContentId([...ContentTypeId]);
+	};
+
+	useEffect(() => {
+		console.log(isContentId);
+	}, [isContentId]);
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.content_type_container}>
 						<div className={styles.content_type_item_wrap}>
-							<div className={styles.content_type_item}>전체</div>
+							<div
+								className={styles.content_type_item}
+								onClick={handleSelectedAll}
+							>
+								전체
+							</div>
 						</div>
 						{ContentTypeId.map((value, index) => {
 							return (
-								<div className={styles.content_type_item_wrap}>
-									<div className={styles.content_type_item}>
+								<div
+									className={styles.content_type_item_wrap}
+									onClick={() => handleSelectedContentId(value)}
+								>
+									<div
+										className={cn(styles.content_type_item, {
+											[styles.active]: isContentId.includes(value),
+										})}
+									>
 										{ContentTypeName[value]}
 									</div>
 								</div>
