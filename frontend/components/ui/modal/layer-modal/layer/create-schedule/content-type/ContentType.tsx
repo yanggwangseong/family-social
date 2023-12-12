@@ -11,9 +11,18 @@ const ContentType: FC = () => {
 		<div className={styles.container}>
 			<div className={styles.wrap}>
 				<div className={styles.contents_wrap}>
-					<div className="flex flex-wrap">
+					<div className={styles.content_type_container}>
+						<div className={styles.content_type_item_wrap}>
+							<div className={styles.content_type_item}>전체</div>
+						</div>
 						{ContentTypeId.map((value, index) => {
-							return <div className="p-6 w-1/2">{ContentTypeName[value]}</div>;
+							return (
+								<div className={styles.content_type_item_wrap}>
+									<div className={styles.content_type_item}>
+										{ContentTypeName[value]}
+									</div>
+								</div>
+							);
 						})}
 					</div>
 				</div>
@@ -21,7 +30,7 @@ const ContentType: FC = () => {
 				<div className={styles.btn_container}>
 					<CustomButton
 						type="button"
-						className="mt-8 mb-4 bg-customDark text-customOrange 
+						className="bg-customDark text-customOrange 
 									font-bold border border-solid border-customDark 
 									rounded-full p-[10px] w-full hover:opacity-80"
 					>
@@ -30,7 +39,7 @@ const ContentType: FC = () => {
 
 					<CustomButton
 						type="button"
-						className="mt-8 mb-4 bg-white text-customDark 
+						className="bg-white text-customDark 
 									font-bold border border-solid border-customDark 
 									rounded-full p-[10px] w-full hover:bg-gray-200"
 					>
