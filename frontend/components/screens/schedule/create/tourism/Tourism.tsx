@@ -85,12 +85,20 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		});
 	};
 
+	const handleSelectedServiceCategory = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '서비스 분류 선택',
+			layer: LayerMode.serviceCategory,
+		});
+	};
+
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>
 			<div className={styles.title}>관광 선택</div>
 
-			<div className="mt-10">
+			<div className="mt-10 flex flex-col gap-4">
 				<div className="flex gap-4">
 					<div className="w-1/4">
 						<CustomButton
@@ -106,9 +114,12 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 						</CustomButton>
 					</div>
 					<div className="w-3/4 flex items-center">
-						{isAtomContentId.map((item, index) => (
-							<span key={index}>{`${ContentTypeName[item]}`}</span>
-						))}
+						{isAtomContentId.map((item, index) => {
+							const comma = index === isAtomContentId.length - 1 ? '' : ',';
+							return (
+								<span key={index}>{`${ContentTypeName[item]}${comma}`}</span>
+							);
+						})}
 					</div>
 				</div>
 
@@ -121,6 +132,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 								rounded-full p-[10px]
 								w-full hover:bg-orange-500
 								"
+							onClick={handleSelectedServiceCategory}
 						>
 							서비스분류
 						</CustomButton>

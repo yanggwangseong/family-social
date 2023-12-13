@@ -9,6 +9,7 @@ import CommentDeleteConfirm from './layer/CommentDeleteConfirm';
 import LogOutConfirm from './layer/LogOutConfirm';
 import EditProfile from './layer/EditProfile/EditProfile';
 import ContentType from './layer/create-schedule/content-type/ContentType';
+import ServiceCategory from './layer/create-schedule/service-category/ServiceCategory';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -20,6 +21,7 @@ const StatusLookUpTable = {
 	[LayerMode.logoutConfirm]: LogOutConfirm,
 	[LayerMode.editProfile]: EditProfile,
 	[LayerMode.selectedContentType]: ContentType,
+	[LayerMode.serviceCategory]: ServiceCategory,
 };
 
 interface StatusProps {

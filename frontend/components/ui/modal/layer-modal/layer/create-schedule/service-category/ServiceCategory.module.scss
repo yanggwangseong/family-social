@@ -1,0 +1,15 @@
+.container {
+	@apply my-8 h-[50vh];
+
+	.wrap {
+		@apply flex flex-col h-full;
+
+		.contents_wrap {
+			@apply flex-grow overflow-y-auto h-[30vh];
+		}
+
+		.btn_container {
+			@apply flex w-full gap-5;
+		}
+	}
+}

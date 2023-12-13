@@ -30,6 +30,7 @@ export const LayerMode = {
 	logoutConfirm: 'logoutConfirm',
 	editProfile: 'editProfile',
 	selectedContentType: 'selectedContentType',
+	serviceCategory: 'serviceCategory',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;
