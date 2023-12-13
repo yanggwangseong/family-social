@@ -32,11 +32,28 @@ const ServiceCategory: FC = () => {
 			}),
 	);
 
+	// 소분류 서비스 코드
+	const {
+		data: thirdServiceCategoryData,
+		isLoading: thirdServiceCategoryLoading,
+	} = useQuery(
+		['tour-third-service-category'],
+		async () =>
+			await TourService.getServiceCategories({
+				contentTypeId: '12',
+				firstCategory: 'A01',
+				secondCategory: 'A0101',
+			}),
+	);
+
 	if (serviceCategoryLoading) return <div>loading</div>;
 	if (!serviceCategoryData) return <div>loading</div>;
 
 	if (secondServiceCategoryLoading) return <div>loading</div>;
 	if (!secondServiceCategoryData) return <div>loading</div>;
+
+	if (thirdServiceCategoryLoading) return <div>loading</div>;
+	if (!thirdServiceCategoryData) return <div>loading</div>;
 
 	return (
 		<div className={styles.container}>
@@ -57,6 +74,9 @@ const ServiceCategory: FC = () => {
 						</div>
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>소분류</div>
+							{thirdServiceCategoryData.items.item.map((item, index) => (
+								<div key={index}>{item.name}</div>
+							))}
 						</div>
 					</div>
 				</div>
