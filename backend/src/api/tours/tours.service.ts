@@ -105,8 +105,9 @@ export class ToursService {
 	}) {
 		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}`;
+		&MobileApp=${this.MobileApp}&_type=${this._type}`;
 
+		if (contentTypeId) httpServiceUrl += `&contentTypeId=${contentTypeId}`;
 		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
 		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
 		if (cat3) httpServiceUrl += `&cat3=${cat3}`;

@@ -21,10 +21,11 @@ export const TourService = {
 		firstCategory?: string;
 		secondCategory?: string;
 		thirdCategory?: string;
-		contentTypeId: string;
+		contentTypeId?: string;
 	}) {
-		let url = `tours/service-categories?numOfRows=50&pageNo=1&contentTypeId=${contentTypeId}`;
+		let url = `tours/service-categories?numOfRows=50&pageNo=1`;
 
+		if (contentTypeId) url += `&contentTypeId=${contentTypeId}`;
 		if (firstCategory) url += `&cat1=${firstCategory}`;
 		if (secondCategory) url += `&cat2=${secondCategory}`;
 		if (thirdCategory) url += `&cat3=${thirdCategory}`;
