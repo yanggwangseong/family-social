@@ -6,7 +6,19 @@ const ServiceCategory: FC = () => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
-				<div className={styles.contents_wrap}></div>
+				<div className={styles.contents_wrap}>
+					<div className={styles.service_category_container}>
+						<div className={styles.service_category_item_wrap}>
+							<div className={styles.service_category_header}>대분류</div>
+						</div>
+						<div className={styles.service_category_item_wrap}>
+							<div className={styles.service_category_header}>중분류</div>
+						</div>
+						<div className={styles.service_category_item_wrap}>
+							<div className={styles.service_category_header}>소분류</div>
+						</div>
+					</div>
+				</div>
 
 				<div className={styles.btn_container}>
 					<CustomButton
