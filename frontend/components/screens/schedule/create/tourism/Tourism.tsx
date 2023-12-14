@@ -9,6 +9,7 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { ContentTypeName } from '@/constants/content-type.constant';
+import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	// const [isAreaCode, setIsAreaCode] = useState<string>('1');
@@ -77,6 +78,10 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 
 	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
 
+	const [isServiceCategories, setIsServiceCategories] = useRecoilState(
+		serviceCategoriesAtom,
+	);
+
 	const handleSelectedContentType = () => {
 		setIsShowing(!isShowing);
 		setIsLayer({
@@ -137,7 +142,14 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 							서비스분류
 						</CustomButton>
 					</div>
-					<div className="w-3/4 flex items-center">관광지</div>
+					<div className="w-3/4 flex items-center">
+						{isServiceCategories.firstCategory &&
+							`대분류: ${isServiceCategories.firstCategoryName}, `}
+						{isServiceCategories.secondCategory &&
+							`중분류: ${isServiceCategories.secondCategoryName}, `}
+						{isServiceCategories.thirdCategory &&
+							`소분류: ${isServiceCategories.thirdCategoryName}`}
+					</div>
 				</div>
 			</div>
 		</div>

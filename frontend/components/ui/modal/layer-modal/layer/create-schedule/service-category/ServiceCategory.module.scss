@@ -5,7 +5,7 @@
 		@apply flex flex-col h-full;
 
 		.contents_wrap {
-			@apply flex-grow overflow-y-auto h-[30vh];
+			@apply flex-grow overflow-y-auto h-[30vh] my-8;
 
 			.service_category_container {
 				@apply flex gap-4;
