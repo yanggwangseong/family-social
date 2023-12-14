@@ -59,9 +59,30 @@ const ServiceCategory: FC = () => {
 	if (thirdServiceCategoryLoading) return <div>loading</div>;
 	if (!thirdServiceCategoryData) return <div>loading</div>;
 
-	const selecetedFirstServiceCategory = (code: string) => {
-		console.log(code);
+	const selectedFirstServiceCategory = (code: string) => {
+		setIsServiceCategories({
+			firstCategory: code,
+			secondCategory: '',
+			thirdCategory: '',
+		});
 	};
+
+	const selectedSecondServiceCategory = (code: string) => {
+		setIsServiceCategories({
+			firstCategory: isServiceCategories.firstCategory,
+			secondCategory: code,
+			thirdCategory: '',
+		});
+	};
+
+	const selectedThirdServiceCategory = (code: string) => {
+		setIsServiceCategories({
+			firstCategory: isServiceCategories.firstCategory,
+			secondCategory: isServiceCategories.secondCategory,
+			thirdCategory: code,
+		});
+	};
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
@@ -73,7 +94,7 @@ const ServiceCategory: FC = () => {
 								<div
 									className={styles.service_category_item}
 									key={index}
-									onClick={() => selecetedFirstServiceCategory(item.code)}
+									onClick={() => selectedFirstServiceCategory(item.code)}
 								>
 									{item.name}
 								</div>
@@ -82,7 +103,11 @@ const ServiceCategory: FC = () => {
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>중분류</div>
 							{secondServiceCategoryData.items.item.map((item, index) => (
-								<div className={styles.service_category_item} key={index}>
+								<div
+									className={styles.service_category_item}
+									key={index}
+									onClick={() => selectedSecondServiceCategory(item.code)}
+								>
 									{item.name}
 								</div>
 							))}
@@ -90,7 +115,11 @@ const ServiceCategory: FC = () => {
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>소분류</div>
 							{thirdServiceCategoryData.items.item.map((item, index) => (
-								<div className={styles.service_category_item} key={index}>
+								<div
+									className={styles.service_category_item}
+									key={index}
+									onClick={() => selectedThirdServiceCategory(item.code)}
+								>
 									{item.name}
 								</div>
 							))}
