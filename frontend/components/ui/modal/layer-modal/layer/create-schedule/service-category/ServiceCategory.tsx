@@ -79,7 +79,9 @@ const ServiceCategory: FC = () => {
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>소분류</div>
 							{thirdServiceCategoryData.items.item.map((item, index) => (
-								<div key={index}>{item.name}</div>
+								<div className={styles.service_category_item} key={index}>
+									{item.name}
+								</div>
 							))}
 						</div>
 					</div>
