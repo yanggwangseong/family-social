@@ -5,9 +5,13 @@ import { useQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { useRecoilState } from 'recoil';
+import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 
 const ServiceCategory: FC = () => {
 	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
+	const [isServiceCategories, setIsServiceCategories] = useRecoilState(
+		serviceCategoriesAtom,
+	);
 
 	// 대분류 서비스 코드
 	const { data: serviceCategoryData, isLoading: serviceCategoryLoading } =
@@ -55,6 +59,9 @@ const ServiceCategory: FC = () => {
 	if (thirdServiceCategoryLoading) return <div>loading</div>;
 	if (!thirdServiceCategoryData) return <div>loading</div>;
 
+	const selecetedFirstServiceCategory = (code: string) => {
+		console.log(code);
+	};
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
@@ -63,7 +70,11 @@ const ServiceCategory: FC = () => {
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>대분류</div>
 							{serviceCategoryData.items.item.map((item, index) => (
-								<div className={styles.service_category_item} key={index}>
+								<div
+									className={styles.service_category_item}
+									key={index}
+									onClick={() => selecetedFirstServiceCategory(item.code)}
+								>
 									{item.name}
 								</div>
 							))}
