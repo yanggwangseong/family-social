@@ -98,6 +98,14 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		});
 	};
 
+	const handleSelectedAreaCode = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '지역 선택',
+			layer: LayerMode.areaCode,
+		});
+	};
+
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.step_title}>STEP 3</div>
@@ -150,6 +158,23 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 						{isServiceCategories.thirdCategory &&
 							`소분류: ${isServiceCategories.thirdCategoryName}`}
 					</div>
+				</div>
+
+				<div className="flex gap-4">
+					<div className="w-1/4">
+						<CustomButton
+							type="button"
+							className=" bg-basic text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+							onClick={handleSelectedAreaCode}
+						>
+							지역
+						</CustomButton>
+					</div>
+					<div className="w-3/4 flex items-center"></div>
 				</div>
 			</div>
 		</div>

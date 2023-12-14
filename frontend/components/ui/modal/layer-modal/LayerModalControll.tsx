@@ -10,6 +10,7 @@ import LogOutConfirm from './layer/LogOutConfirm';
 import EditProfile from './layer/EditProfile/EditProfile';
 import ContentType from './layer/create-schedule/content-type/ContentType';
 import ServiceCategory from './layer/create-schedule/service-category/ServiceCategory';
+import AreaCode from './layer/create-schedule/area-code/AreaCode';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -22,6 +23,7 @@ const StatusLookUpTable = {
 	[LayerMode.editProfile]: EditProfile,
 	[LayerMode.selectedContentType]: ContentType,
 	[LayerMode.serviceCategory]: ServiceCategory,
+	[LayerMode.areaCode]: AreaCode,
 };
 
 interface StatusProps {

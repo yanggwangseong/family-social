@@ -31,6 +31,7 @@ export const LayerMode = {
 	editProfile: 'editProfile',
 	selectedContentType: 'selectedContentType',
 	serviceCategory: 'serviceCategory',
+	areaCode: 'areaCode',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;
