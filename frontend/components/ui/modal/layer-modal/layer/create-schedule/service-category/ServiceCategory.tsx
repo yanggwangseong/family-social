@@ -63,13 +63,17 @@ const ServiceCategory: FC = () => {
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>대분류</div>
 							{serviceCategoryData.items.item.map((item, index) => (
-								<div key={index}>{item.name}</div>
+								<div className={styles.service_category_item} key={index}>
+									{item.name}
+								</div>
 							))}
 						</div>
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>중분류</div>
 							{secondServiceCategoryData.items.item.map((item, index) => (
-								<div key={index}>{item.name}</div>
+								<div className={styles.service_category_item} key={index}>
+									{item.name}
+								</div>
 							))}
 						</div>
 						<div className={styles.service_category_item_wrap}>
