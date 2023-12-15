@@ -1,8 +1,18 @@
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import React, { FC } from 'react';
 import styles from './AreaCode.module.scss';
+import { TourService } from '@/services/tour/tour.service';
+import { useQuery } from 'react-query';
 
 const AreaCode: FC = () => {
+	const { data, isLoading } = useQuery(
+		['tour-area-code-main'],
+		async () => await TourService.getTourAreaCodes(),
+	);
+
+	if (isLoading) return <div>loading</div>;
+	if (!data) return <div>loading</div>;
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.wrap}>
@@ -10,10 +20,9 @@ const AreaCode: FC = () => {
 					<div className={styles.area_code_container}>
 						<div className={styles.area_code_main_item_wrap}>
 							<div className={styles.area_code_header}>시/도</div>
-							<div className={styles.area_code_lst_container}>
-								<div className={styles.area_code_item}>서울</div>
-								<div className={styles.area_code_item}>강원특별자치도</div>
-							</div>
+							{data.items.item.map(item => (
+								<div className={styles.area_code_item}>{item.name}</div>
+							))}
 						</div>
 						<div className={styles.area_code_sub_item_wrap}>
 							<div className={styles.area_code_header}>시/군/구</div>
