@@ -3,12 +3,25 @@ import React, { FC } from 'react';
 import styles from './AreaCode.module.scss';
 import { TourService } from '@/services/tour/tour.service';
 import { useQuery } from 'react-query';
+import { useRecoilState } from 'recoil';
+import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 
 const AreaCode: FC = () => {
+	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
+
 	const { data, isLoading } = useQuery(
 		['tour-area-code-main'],
 		async () => await TourService.getTourAreaCodes(),
 	);
+
+	const selectedMainAreaCode = (code: string, name: string) => {
+		setIsAreaCode({
+			areaCodeMain: code,
+			areaCodeMainName: name,
+			areaCodeSub: '',
+			areaCodeSubName: '',
+		});
+	};
 
 	if (isLoading) return <div>loading</div>;
 	if (!data) return <div>loading</div>;
