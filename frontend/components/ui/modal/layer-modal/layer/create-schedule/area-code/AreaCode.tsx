@@ -6,9 +6,12 @@ import { useQuery } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 import cn from 'classnames';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const AreaCode: FC = () => {
 	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
+
+	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const { data, isLoading } = useQuery(
 		['tour-area-code-main'],
@@ -29,6 +32,19 @@ const AreaCode: FC = () => {
 		});
 	};
 
+	const selectedSubAreaCode = (code: string, name: string) => {
+		setIsAreaCode({
+			areaCodeMain: isAreaCode.areaCodeMain,
+			areaCodeMainName: isAreaCode.areaCodeMainName,
+			areaCodeSub: code,
+			areaCodeSubName: name,
+		});
+	};
+
+	const handleSelectedComplete = () => {
+		setIsShowing(false);
+	};
+
 	if (isLoading) return <div>loading</div>;
 	if (!data) return <div>loading</div>;
 
@@ -39,23 +55,34 @@ const AreaCode: FC = () => {
 					<div className={styles.area_code_container}>
 						<div className={styles.area_code_main_item_wrap}>
 							<div className={styles.area_code_header}>시/도</div>
-							{data.items.item.map(item => (
-								<div
-									className={cn(styles.area_code_item, {
-										[styles.active]: isAreaCode.areaCodeMain === item.code,
-									})}
-									onClick={() => selectedMainAreaCode(item.code, item.name)}
-								>
-									{item.name}
-								</div>
-							))}
+							<div className={styles.area_code_lst_container}>
+								{data.items.item.map(item => (
+									<div className={styles.area_code_item_container}>
+										<div
+											className={cn(styles.area_code_item, {
+												[styles.active]: isAreaCode.areaCodeMain === item.code,
+											})}
+											onClick={() => selectedMainAreaCode(item.code, item.name)}
+										>
+											{item.name.substring(0, 4)}
+										</div>
+									</div>
+								))}
+							</div>
 						</div>
 						<div className={styles.area_code_sub_item_wrap}>
 							<div className={styles.area_code_header}>시/군/구</div>
 							<div className={styles.area_code_lst_container}>
 								{areaCodeData?.items.item.map(item => (
 									<div className={styles.area_code_item_container}>
-										<div className={styles.area_code_item}>{item.name}</div>
+										<div
+											className={cn(styles.area_code_item, {
+												[styles.active]: isAreaCode.areaCodeSub === item.code,
+											})}
+											onClick={() => selectedSubAreaCode(item.code, item.name)}
+										>
+											{item.name}
+										</div>
 									</div>
 								))}
 							</div>
@@ -69,6 +96,7 @@ const AreaCode: FC = () => {
 						className="bg-customDark text-customOrange 
 							font-bold border border-solid border-customDark 
 							rounded-full p-[10px] w-full hover:opacity-80"
+						onClick={handleSelectedComplete}
 					>
 						확인
 					</CustomButton>
@@ -78,6 +106,7 @@ const AreaCode: FC = () => {
 						className="bg-white text-customDark 
 							font-bold border border-solid border-customDark 
 							rounded-full p-[10px] w-full hover:bg-gray-200"
+						onClick={() => setIsShowing(false)}
 					>
 						취소
 					</CustomButton>
