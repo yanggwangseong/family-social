@@ -5,6 +5,7 @@ import { TourService } from '@/services/tour/tour.service';
 import { useQuery } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
+import cn from 'classnames';
 
 const AreaCode: FC = () => {
 	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
@@ -12,6 +13,11 @@ const AreaCode: FC = () => {
 	const { data, isLoading } = useQuery(
 		['tour-area-code-main'],
 		async () => await TourService.getTourAreaCodes(),
+	);
+
+	const { data: areaCodeData, isLoading: areaCodeLoading } = useQuery(
+		['tour-area-code-sub', isAreaCode.areaCodeMain],
+		async () => await TourService.getTourAreaCodes(isAreaCode.areaCodeMain),
 	);
 
 	const selectedMainAreaCode = (code: string, name: string) => {
@@ -34,15 +40,24 @@ const AreaCode: FC = () => {
 						<div className={styles.area_code_main_item_wrap}>
 							<div className={styles.area_code_header}>시/도</div>
 							{data.items.item.map(item => (
-								<div className={styles.area_code_item}>{item.name}</div>
+								<div
+									className={cn(styles.area_code_item, {
+										[styles.active]: isAreaCode.areaCodeMain === item.code,
+									})}
+									onClick={() => selectedMainAreaCode(item.code, item.name)}
+								>
+									{item.name}
+								</div>
 							))}
 						</div>
 						<div className={styles.area_code_sub_item_wrap}>
 							<div className={styles.area_code_header}>시/군/구</div>
 							<div className={styles.area_code_lst_container}>
-								<div className={styles.area_code_item}>서울</div>
-								<div className={styles.area_code_item}>기타지역</div>
-								<div className={styles.area_code_item}>강서구</div>
+								{areaCodeData?.items.item.map(item => (
+									<div className={styles.area_code_item_container}>
+										<div className={styles.area_code_item}>{item.name}</div>
+									</div>
+								))}
 							</div>
 						</div>
 					</div>
