@@ -33,4 +33,31 @@ export const TourService = {
 		const { data } = await axiosAPI.get<TourServiceCategoriesResponse>(url);
 		return data;
 	},
+
+	async getTourLists({
+		numOfRows,
+		pageNo,
+		contentTypeId,
+		areaCode,
+		sigunguCode,
+		cat1,
+		cat2,
+		cat3,
+	}: {
+		numOfRows: number;
+		pageNo: number;
+		contentTypeId: string;
+		areaCode: string;
+		sigunguCode: string;
+		cat1: string;
+		cat2: string;
+		cat3: string;
+	}) {
+		let url = `tours?arrange=A&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}
+		&areaCode=${areaCode}&sigunguCode=${sigunguCode}&cat1=${cat1}&cat2=${cat2}&cat3=${cat3}
+		`;
+
+		const { data } = await axiosAPI.get(url);
+		return data;
+	},
 };

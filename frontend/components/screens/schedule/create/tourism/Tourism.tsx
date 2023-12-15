@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import styles from './Tourism.module.scss';
 import { TourismProps } from './tourism.interface';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRecoilState } from 'recoil';
@@ -23,6 +23,37 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	);
 
 	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
+
+	const {
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isError,
+		isRefetching,
+		refetch,
+	} = useInfiniteQuery(
+		['feeds'],
+		async ({ pageParam = 1 }) =>
+			await TourService.getTourLists({
+				numOfRows: 10,
+				pageNo: pageParam,
+				areaCode: isAreaCode.areaCodeMain,
+				contentTypeId: '12',
+				sigunguCode: isAreaCode.areaCodeSub,
+				cat1: isServiceCategories.firstCategory,
+				cat2: isServiceCategories.secondCategory,
+				cat3: isServiceCategories.thirdCategory,
+			}),
+		{
+			getNextPageParam: (lastPage, allPosts) => {
+				return lastPage.page !== allPosts[0].totalPage
+					? lastPage.page + 1
+					: undefined;
+			},
+			enabled: isAtomContentId.length > 0,
+		},
+	);
 
 	const handleSelectedContentType = () => {
 		setIsShowing(!isShowing);
@@ -46,6 +77,10 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 			modal_title: '지역 선택',
 			layer: LayerMode.areaCode,
 		});
+	};
+
+	const handleTourSearch = () => {
+		console.log(data);
 	};
 
 	return (
@@ -123,6 +158,19 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 							`시/군/구: ${isAreaCode.areaCodeSubName}`}
 					</div>
 				</div>
+			</div>
+			<div>
+				<CustomButton
+					type="button"
+					className=" bg-basic text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+					onClick={handleTourSearch}
+				>
+					검색
+				</CustomButton>
 			</div>
 		</div>
 	);
