@@ -10,69 +10,9 @@ import { LayerMode } from 'types';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
+import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
-	// const [isAreaCode, setIsAreaCode] = useState<string>('1');
-	// const { data, isLoading } = useQuery(
-	// 	['tour-area-code-main'],
-	// 	async () => await TourService.getTourAreaCodes(),
-	// );
-
-	// const { data: areaCodeData, isLoading: areaCodeLoading } = useQuery(
-	// 	['tour-area-code'],
-	// 	async () => await TourService.getTourAreaCodes(isAreaCode),
-	// );
-
-	// // 대분류 서비스 코드
-	// const { data: serviceCategoryData, isLoading: serviceCategoryLoading } =
-	// 	useQuery(
-	// 		['tour-service-category'],
-	// 		async () =>
-	// 			await TourService.getServiceCategories({ contentTypeId: '12' }),
-	// 	);
-
-	// // 중분류 서비스 코드
-	// const {
-	// 	data: secondServiceCategoryData,
-	// 	isLoading: secondServiceCategoryLoading,
-	// } = useQuery(
-	// 	['tour-second-service-category'],
-	// 	async () =>
-	// 		await TourService.getServiceCategories({
-	// 			contentTypeId: '12',
-	// 			firstCategory: 'A01',
-	// 		}),
-	// );
-
-	// // 소분류 서비스 코드
-	// const {
-	// 	data: thirdServiceCategoryData,
-	// 	isLoading: thirdServiceCategoryLoading,
-	// } = useQuery(
-	// 	['tour-third-service-category'],
-	// 	async () =>
-	// 		await TourService.getServiceCategories({
-	// 			contentTypeId: '12',
-	// 			firstCategory: 'A01',
-	// 			secondCategory: 'A0101',
-	// 		}),
-	// );
-
-	// if (isLoading) return <div>loading</div>;
-	// if (!data) return <div>loading</div>;
-
-	// if (areaCodeLoading) return <div>loading</div>;
-	// if (!areaCodeData) return <div>loading</div>;
-
-	// if (serviceCategoryLoading) return <div>loading</div>;
-	// if (!serviceCategoryData) return <div>loading</div>;
-
-	// if (secondServiceCategoryLoading) return <div>loading</div>;
-	// if (!secondServiceCategoryData) return <div>loading</div>;
-
-	// if (thirdServiceCategoryLoading) return <div>loading</div>;
-	// if (!thirdServiceCategoryData) return <div>loading</div>;
-
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -81,6 +21,8 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	const [isServiceCategories, setIsServiceCategories] = useRecoilState(
 		serviceCategoriesAtom,
 	);
+
+	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
 
 	const handleSelectedContentType = () => {
 		setIsShowing(!isShowing);
@@ -174,7 +116,12 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 							지역
 						</CustomButton>
 					</div>
-					<div className="w-3/4 flex items-center"></div>
+					<div className="w-3/4 flex items-center">
+						{isServiceCategories.firstCategory &&
+							`시/도: ${isAreaCode.areaCodeMainName}, `}
+						{isServiceCategories.thirdCategory &&
+							`시/군/구: ${isAreaCode.areaCodeSubName}`}
+					</div>
 				</div>
 			</div>
 		</div>
