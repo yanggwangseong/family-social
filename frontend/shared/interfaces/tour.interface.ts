@@ -15,3 +15,14 @@ export interface TourAreaCodeItem {
 
 // getServiceCategories
 export interface TourServiceCategoriesResponse extends TourAreaCodesResponse {}
+
+export interface TourListResponse {
+	items: {
+		item: any[];
+	};
+	numOfRows: number;
+	pageNo: number;
+	totalCount: number;
+}
+
+export interface TourismItem {}

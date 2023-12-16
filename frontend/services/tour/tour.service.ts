@@ -1,5 +1,6 @@
 import {
 	TourAreaCodesResponse,
+	TourListResponse,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
 import { axiosAPI } from 'api/axios';
@@ -57,7 +58,7 @@ export const TourService = {
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}&cat1=${cat1}&cat2=${cat2}&cat3=${cat3}
 		`;
 
-		const { data } = await axiosAPI.get(url);
+		const { data } = await axiosAPI.get<TourListResponse>(url);
 		return data;
 	},
 };

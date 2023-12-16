@@ -11,6 +11,7 @@ import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
@@ -33,7 +34,14 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 		isRefetching,
 		refetch,
 	} = useInfiniteQuery(
-		['feeds'],
+		[
+			'tour-list',
+			isAreaCode.areaCodeMain,
+			isAreaCode.areaCodeSub,
+			isServiceCategories.firstCategory,
+			isServiceCategories.secondCategory,
+			isServiceCategories.thirdCategory,
+		],
 		async ({ pageParam = 1 }) =>
 			await TourService.getTourLists({
 				numOfRows: 10,
@@ -47,11 +55,19 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 			}),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.page !== allPosts[0].totalPage
-					? lastPage.page + 1
+				return lastPage.pageNo !==
+					Math.ceil(allPosts[0].totalCount / allPosts[0].numOfRows)
+					? lastPage.pageNo + 1
 					: undefined;
 			},
-			enabled: isAtomContentId.length > 0,
+			enabled: !!(
+				isAtomContentId.length > 0 &&
+				isAreaCode.areaCodeMain &&
+				isAreaCode.areaCodeSub &&
+				isServiceCategories.firstCategory &&
+				isServiceCategories.secondCategory &&
+				isServiceCategories.thirdCategory
+			),
 		},
 	);
 
@@ -81,6 +97,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 
 	const handleTourSearch = () => {
 		console.log(data);
+		fetchNextPage();
 	};
 
 	return (
@@ -152,14 +169,14 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 						</CustomButton>
 					</div>
 					<div className="w-3/4 flex items-center">
-						{isServiceCategories.firstCategory &&
+						{isAreaCode.areaCodeMain &&
 							`시/도: ${isAreaCode.areaCodeMainName}, `}
-						{isServiceCategories.thirdCategory &&
+						{isAreaCode.areaCodeSub &&
 							`시/군/구: ${isAreaCode.areaCodeSubName}`}
 					</div>
 				</div>
 			</div>
-			<div>
+			<div className="mt-10">
 				<CustomButton
 					type="button"
 					className=" bg-basic text-customDark 
@@ -171,6 +188,16 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				>
 					검색
 				</CustomButton>
+			</div>
+			<div className="mt-10">
+				{isLoading && <Skeleton />}
+				{data?.pages.map((page, pageIndex) => (
+					<React.Fragment key={pageIndex}>
+						{page.items.item.map((tour: any, index: number) => (
+							<div key={index}>{tour.title}</div>
+						))}
+					</React.Fragment>
+				))}
 			</div>
 		</div>
 	);
