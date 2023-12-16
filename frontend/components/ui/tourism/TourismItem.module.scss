@@ -4,4 +4,16 @@
 	.img_container {
 		@apply h-[100px];
 	}
+
+	.tour_title {
+		@apply text-lg font-bold;
+	}
+
+	.tour_content_type_name {
+		@apply text-sm text-customOrange;
+	}
+
+	.tour_addr {
+		@apply text-sm text-customGray;
+	}
 }
