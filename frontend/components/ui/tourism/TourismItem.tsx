@@ -1,12 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './TourismItem.module.scss';
 import { TourismItemProps } from './tourism-item.interface';
 import Image from 'next/image';
 import { AiFillHeart } from 'react-icons/ai';
 import { AiFillStar } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 const TourismItem: FC<TourismItemProps> = ({ tour }) => {
+	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
+
 	return (
 		<div className={styles.container}>
 			<div className="flex items-center justify-between">
@@ -39,9 +42,21 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 					</div>
 				</div>
 				<div className="flex w-[24px] flex-shrink-0">
-					<div className="cursor-pointer">
-						<AiOutlinePlus size={24} />
-					</div>
+					{isAddTourism ? (
+						<div
+							className="cursor-pointer"
+							onClick={() => setIsAddTourism(!isAddTourism)}
+						>
+							<AiOutlineCheck size={24} />
+						</div>
+					) : (
+						<div className="cursor-pointer">
+							<AiOutlinePlus
+								size={24}
+								onClick={() => setIsAddTourism(!isAddTourism)}
+							/>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
