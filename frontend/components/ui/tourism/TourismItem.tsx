@@ -4,6 +4,7 @@ import { TourismItemProps } from './tourism-item.interface';
 import Image from 'next/image';
 import { AiFillHeart } from 'react-icons/ai';
 import { AiFillStar } from 'react-icons/ai';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 	return (
@@ -37,7 +38,11 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex w-[24px] flex-shrink-0">dd</div>
+				<div className="flex w-[24px] flex-shrink-0">
+					<div className="cursor-pointer">
+						<AiOutlinePlus size={24} />
+					</div>
+				</div>
 			</div>
 		</div>
 	);
