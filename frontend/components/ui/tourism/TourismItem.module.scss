@@ -55,7 +55,7 @@
 				@apply cursor-pointer p-2;
 
 				&.active {
-					@apply border border-solid border-customDark bg-customOrange;
+					@apply border border-solid border-customDark bg-customOrange rounded-full;
 				}
 			}
 		}

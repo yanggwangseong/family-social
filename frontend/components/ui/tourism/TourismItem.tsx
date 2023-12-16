@@ -7,6 +7,10 @@ import { AiFillStar } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineCheck } from 'react-icons/ai';
 import cn from 'classnames';
+import {
+	ContentTypeId,
+	ContentTypeName,
+} from '@/constants/content-type.constant';
 
 const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
@@ -27,7 +31,9 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 					<div className={styles.tour_description_container}>
 						<div className={styles.tour_title}>{tour.title}</div>
 						<div className={styles.tour_addr_container}>
-							<div className={styles.tour_content_type_name}>명소</div>
+							<div className={styles.tour_content_type_name}>
+								{ContentTypeName['12']}
+							</div>
 							<div className={styles.tour_addr}>{tour.addr1}</div>
 						</div>
 						<div className={styles.tour_card_footer_container}>
