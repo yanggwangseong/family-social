@@ -3,9 +3,9 @@ import styles from './Schedule.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import { scheduleTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 
 const Schedule: FC = () => {
 	return (
@@ -26,7 +26,7 @@ const Schedule: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<RightSidebar />
+					<ScheduleSidebar />
 				</div>
 			</div>
 		</Format>

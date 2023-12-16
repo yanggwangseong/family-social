@@ -1,7 +1,6 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
@@ -10,6 +9,7 @@ import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Union, schdulePages } from 'types';
 import Tourism from './tourism/Tourism';
+import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useState<string[]>([]);
@@ -64,7 +64,7 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<RightSidebar />
+					<ScheduleSidebar />
 				</div>
 			</div>
 		</Format>

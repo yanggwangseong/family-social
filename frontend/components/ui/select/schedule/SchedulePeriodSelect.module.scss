@@ -1,0 +1,12 @@
+.public_select_container {
+	@apply relative;
+
+	.toggle_container {
+		@apply flex w-36 mt-1 px-2 py-1 border 
+        border-solid border-customDark rounded-full cursor-pointer;
+
+		.option_text {
+			@apply font-bold text-sm mx-4 grow;
+		}
+	}
+}
