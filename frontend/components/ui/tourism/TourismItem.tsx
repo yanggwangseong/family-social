@@ -6,14 +6,15 @@ import { AiFillHeart } from 'react-icons/ai';
 import { AiFillStar } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineCheck } from 'react-icons/ai';
+import cn from 'classnames';
 
 const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
 
 	return (
 		<div className={styles.container}>
-			<div className="flex items-center justify-between">
-				<div className="flex gap-4">
+			<div className={styles.tour_item_card}>
+				<div className={styles.tour_img_title_container}>
 					<div className={styles.img_container}>
 						<Image
 							width={120}
@@ -23,34 +24,36 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 							style={{ height: '100px' }}
 						></Image>
 					</div>
-					<div className="flex flex-col justify-between">
+					<div className={styles.tour_description_container}>
 						<div className={styles.tour_title}>{tour.title}</div>
-						<div className="flex gap-6">
+						<div className={styles.tour_addr_container}>
 							<div className={styles.tour_content_type_name}>명소</div>
 							<div className={styles.tour_addr}>{tour.addr1}</div>
 						</div>
-						<div className="flex gap-4">
-							<div className="flex items-center gap-2">
+						<div className={styles.tour_card_footer_container}>
+							<div className={styles.heart_container}>
 								<AiFillHeart size={14} color="#FB1F42" />
-								<span className="text-sm">0</span>
+								<span className={styles.score}>0</span>
 							</div>
-							<div className="flex items-center gap-2">
+							<div className={styles.star_container}>
 								<AiFillStar size={14} color="rgb(253, 224, 71)" />
-								<span className="text-sm">0</span>
+								<span className={styles.score}>0</span>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="flex w-[24px] flex-shrink-0">
+				<div className={styles.tour_right_btn_container}>
 					{isAddTourism ? (
 						<div
-							className="cursor-pointer"
+							className={cn(styles.btn_container, {
+								[styles.active]: !!isAddTourism,
+							})}
 							onClick={() => setIsAddTourism(!isAddTourism)}
 						>
-							<AiOutlineCheck size={24} />
+							<AiOutlineCheck size={24} color="#0a0a0a" />
 						</div>
 					) : (
-						<div className="cursor-pointer">
+						<div className={styles.btn_container}>
 							<AiOutlinePlus
 								size={24}
 								onClick={() => setIsAddTourism(!isAddTourism)}

@@ -1,19 +1,63 @@
 .container {
 	@apply border border-solid border-customDark p-4;
+	.tour_item_card {
+		@apply flex items-center justify-between;
 
-	.img_container {
-		@apply h-[100px];
-	}
+		.tour_img_title_container {
+			@apply flex gap-4;
 
-	.tour_title {
-		@apply text-lg font-bold;
-	}
+			.img_container {
+				@apply h-[100px];
+			}
 
-	.tour_content_type_name {
-		@apply text-sm text-customOrange;
-	}
+			.tour_description_container {
+				@apply flex flex-col justify-between;
 
-	.tour_addr {
-		@apply text-sm text-customGray;
+				.tour_title {
+					@apply text-lg font-bold;
+				}
+
+				.tour_addr_container {
+					@apply flex gap-6;
+
+					.tour_content_type_name {
+						@apply text-sm text-customOrange;
+					}
+
+					.tour_addr {
+						@apply text-sm text-customGray;
+					}
+				}
+
+				.tour_card_footer_container {
+					@apply flex gap-4;
+
+					.heart_container {
+						@apply flex items-center gap-2;
+					}
+
+					.star_container {
+						@apply flex items-center gap-2;
+					}
+
+					.score {
+						@apply text-sm;
+					}
+				}
+			}
+		}
+
+		//right button
+		.tour_right_btn_container {
+			@apply flex flex-shrink-0;
+
+			.btn_container {
+				@apply cursor-pointer p-2;
+
+				&.active {
+					@apply border border-solid border-customDark bg-customOrange;
+				}
+			}
+		}
 	}
 }
