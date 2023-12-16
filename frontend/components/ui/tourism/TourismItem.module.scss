@@ -1,0 +1,7 @@
+.container {
+	@apply border border-solid border-customDark p-4;
+
+	.img_container {
+		@apply h-[100px];
+	}
+}

@@ -12,6 +12,7 @@ import { ContentTypeName } from '@/constants/content-type.constant';
 import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
+import TourismItem from '@/components/ui/tourism/TourismItem';
 
 const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
@@ -96,7 +97,6 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 	};
 
 	const handleTourSearch = () => {
-		console.log(data);
 		fetchNextPage();
 	};
 
@@ -176,7 +176,7 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-10">
+			<div className="my-10">
 				<CustomButton
 					type="button"
 					className=" bg-basic text-customDark 
@@ -189,12 +189,13 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 					검색
 				</CustomButton>
 			</div>
-			<div className="mt-10">
+
+			<div className="mt-10 flex flex-col gap-4">
 				{isLoading && <Skeleton />}
 				{data?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>
 						{page.items.item.map((tour: any, index: number) => (
-							<div key={index}>{tour.title}</div>
+							<TourismItem key={index} tour={tour} />
 						))}
 					</React.Fragment>
 				))}
