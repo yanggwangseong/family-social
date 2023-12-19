@@ -41,9 +41,9 @@ const SchedulePeriodSelect: FC = () => {
 					</div>
 					<div className={styles.select_item}>
 						1일차 2023-12-23
-						{/* <div className={styles.icon_container}>
+						<div className={styles.icon_container}>
 							<AiOutlineCheck size={14} color="#e5855d" />
-						</div> */}
+						</div>
 					</div>
 					<div className={styles.select_item}>
 						2일차 2023-12-24
