@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -10,9 +10,11 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Union, schdulePages } from 'types';
 import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
+import { useRecoilState } from 'recoil';
+import { periodAtom } from '@/atoms/periodAtom';
 
 const ScheduleCreate: FC = () => {
-	const [isPeriods, setIsPeriods] = useState<string[]>([]);
+	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
