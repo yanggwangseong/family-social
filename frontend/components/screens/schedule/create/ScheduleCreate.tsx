@@ -26,16 +26,8 @@ const ScheduleCreate: FC = () => {
 		setIsPage(page);
 	};
 
-	const handleChangePeriods = (dates: string[]) => {
-		const periods: PeriodsType[] = [];
-		dates.map(date => {
-			periods.push({
-				period: date,
-				startTime: '10:00',
-				endTime: '16:00',
-			});
-		});
-		setIsPeriods(periods);
+	const handleChangePeriods = (dates: PeriodsType[]) => {
+		setIsPeriods(dates);
 	};
 
 	return (

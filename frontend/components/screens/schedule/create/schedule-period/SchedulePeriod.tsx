@@ -10,12 +10,15 @@ import { format } from 'date-fns';
 import { FaCalendar } from 'react-icons/fa';
 import { getDateRange } from '@/utils/get-date-range';
 import Periods from '@/components/ui/schedule/period/Periods';
+import { PeriodsType } from '@/atoms/periodAtom';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
 	onChangePeriods,
 	isPeriods,
 }) => {
+	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>();
+
 	const [pageInit, setPageInit] = useState<boolean>(false);
 
 	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
@@ -49,8 +52,20 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 			}),
 		);
 
-		onChangePeriods(dates);
+		setIsPeriodTimes(
+			dates.map(date => ({
+				period: date,
+				startTime: '10:00',
+				endTime: '22:00',
+			})),
+		);
 	};
+
+	useEffect(() => {
+		if (isPeriodTimes) {
+			onChangePeriods(isPeriodTimes);
+		}
+	}, [isPeriodTimes]);
 
 	return (
 		<div className={styles.period_container}>
