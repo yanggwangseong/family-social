@@ -4,12 +4,19 @@ import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriod
 import { PeriodsType } from '@/atoms/periodAtom';
 import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
-const ScheduleSidebar: FC<ScheduleSidebarProps> = ({ periodItem }) => {
+const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
+	periodItem,
+	onSelectedPeriod,
+}) => {
+	const handleSelectedPeriod = (period: PeriodsType) => {
+		onSelectedPeriod(period);
+	};
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div>
 				<SchedulePeriodSelect
 					selectedDate={periodItem.period}
+					onSelectedPeriod={handleSelectedPeriod}
 				></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>

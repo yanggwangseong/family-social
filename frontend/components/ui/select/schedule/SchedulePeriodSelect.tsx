@@ -9,8 +9,9 @@ import styles from './SchedulePeriodSelect.module.scss';
 import { useRecoilState } from 'recoil';
 import { periodAtom } from '@/atoms/periodAtom';
 import cn from 'classnames';
+import { SchedulePeriodSelectProps } from './schedule-period-select.interface';
 
-const SchedulePeriodSelect: FC<{ selectedDate: string }> = ({
+const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 	selectedDate,
 }) => {
 	const [isPeriods] = useRecoilState(periodAtom);
