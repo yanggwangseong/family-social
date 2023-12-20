@@ -33,6 +33,10 @@ const ScheduleCreate: FC = () => {
 		setIsPeriods(dates);
 	};
 
+	const handleSelectedPeriod = (period: PeriodsType) => {
+		setIsSelectedPeriod(period);
+	};
+
 	useEffect(() => {
 		if (isPeriods) {
 			setIsSelectedPeriod(isPeriods[0]);
@@ -75,7 +79,10 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar periodItem={isSelectedPeriod} />
+					<ScheduleSidebar
+						periodItem={isSelectedPeriod}
+						onSelectedPeriod={handleSelectedPeriod}
+					/>
 				</div>
 			</div>
 		</Format>

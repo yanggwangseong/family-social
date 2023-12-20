@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
-const ScheduleSidebar: FC<{ periodItem: PeriodsType }> = ({ periodItem }) => {
+const ScheduleSidebar: FC<ScheduleSidebarProps> = ({ periodItem }) => {
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div>
