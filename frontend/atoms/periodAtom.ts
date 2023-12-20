@@ -1,6 +1,20 @@
 import { atom } from 'recoil';
 
-export const periodAtom = atom<string[]>({
+export interface PeriodsType {
+	period: string;
+	startTime: string;
+	endTime: string;
+	tourism?: TourismType[];
+}
+
+export interface TourismType {
+	contentId: string;
+	stayTime: string;
+	tourismImage: string;
+	title: string;
+	position: number;
+}
+export const periodAtom = atom<PeriodsType[]>({
 	default: [],
 	key: 'periods',
 });

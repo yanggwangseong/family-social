@@ -5,13 +5,14 @@ import { ko } from 'date-fns/locale';
 import Table from '@/ui/table/Table';
 import styles from './Periods.module.scss';
 import { periodTableHeaderCol } from '@/constants/table.constant';
+import { PeriodsType } from '@/atoms/periodAtom';
 
-const Periods: FC<{ isPeriods: string[] }> = ({ isPeriods }) => {
+const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 	return (
 		<div className={styles.period_container}>
 			<Table headerColumns={periodTableHeaderCol}>
 				{isPeriods.map((period, index) => {
-					const date = new Date(period);
+					const date = new Date(period.period);
 					return (
 						<tr key={index}>
 							<td className={styles.table_row} align="center">

@@ -54,7 +54,7 @@ export const TourService = {
 		cat2: string;
 		cat3: string;
 	}) {
-		let url = `tours?arrange=A&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}
+		let url = `tours?arrange=O&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}&cat1=${cat1}&cat2=${cat2}&cat3=${cat3}
 		`;
 

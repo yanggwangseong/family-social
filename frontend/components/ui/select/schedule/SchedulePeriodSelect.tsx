@@ -45,7 +45,7 @@ const SchedulePeriodSelect: FC = () => {
 					</div>
 					{isPeriods.map((period, index) => (
 						<div key={index} className={styles.select_item}>
-							{`${index + 1}일차 ${period}`}
+							{`${index + 1}일차 ${period.period}`}
 						</div>
 					))}
 					{/* <div className={styles.select_item}>

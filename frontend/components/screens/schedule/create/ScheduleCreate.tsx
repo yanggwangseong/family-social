@@ -11,7 +11,7 @@ import { Union, schdulePages } from 'types';
 import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 import { useRecoilState } from 'recoil';
-import { periodAtom } from '@/atoms/periodAtom';
+import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -27,7 +27,15 @@ const ScheduleCreate: FC = () => {
 	};
 
 	const handleChangePeriods = (dates: string[]) => {
-		setIsPeriods(dates);
+		const periods: PeriodsType[] = [];
+		dates.map(date => {
+			periods.push({
+				period: date,
+				startTime: '10:00',
+				endTime: '16:00',
+			});
+		});
+		setIsPeriods(periods);
 	};
 
 	return (
