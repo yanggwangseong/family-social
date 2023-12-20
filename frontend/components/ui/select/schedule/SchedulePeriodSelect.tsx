@@ -8,8 +8,11 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import styles from './SchedulePeriodSelect.module.scss';
 import { useRecoilState } from 'recoil';
 import { periodAtom } from '@/atoms/periodAtom';
+import cn from 'classnames';
 
-const SchedulePeriodSelect: FC = () => {
+const SchedulePeriodSelect: FC<{ selectedDate: string }> = ({
+	selectedDate,
+}) => {
 	const [isPeriods] = useRecoilState(periodAtom);
 
 	const [isSelectToggle, setIsSelectToggle] = useState<boolean>(false);
@@ -24,7 +27,7 @@ const SchedulePeriodSelect: FC = () => {
 				<div>
 					<AiOutlineSchedule size={22} />
 				</div>
-				<div className={styles.option_text}>{'1일차 2023-12-23'}</div>
+				<div className={styles.option_text}>{`1일차 ${selectedDate}`}</div>
 				<div>
 					{isSelectToggle ? (
 						<MdKeyboardArrowDown size={22} />
@@ -44,8 +47,18 @@ const SchedulePeriodSelect: FC = () => {
 						</div>
 					</div>
 					{isPeriods.map((period, index) => (
-						<div key={index} className={styles.select_item}>
+						<div
+							key={index}
+							className={cn(styles.select_item, {
+								[styles.active]: selectedDate === period.period,
+							})}
+						>
 							{`${index + 1}일차 ${period.period}`}
+							{selectedDate === period.period && (
+								<div className={styles.icon_container}>
+									<AiOutlineCheck size={14} color="#e5855d" />
+								</div>
+							)}
 						</div>
 					))}
 					{/* <div className={styles.select_item}>

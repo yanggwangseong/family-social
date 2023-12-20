@@ -15,6 +15,9 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+	const [isSelectedPeriod, setIsSelectedPeriod] = useState<PeriodsType>(
+		isPeriods[0],
+	);
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
@@ -29,6 +32,12 @@ const ScheduleCreate: FC = () => {
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		setIsPeriods(dates);
 	};
+
+	useEffect(() => {
+		if (isPeriods) {
+			setIsSelectedPeriod(isPeriods[0]);
+		}
+	}, [isPeriods]);
 
 	return (
 		<Format title={'schedule-create'}>
@@ -66,7 +75,7 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar />
+					<ScheduleSidebar periodItem={isSelectedPeriod} />
 				</div>
 			</div>
 		</Format>

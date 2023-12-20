@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
+import { PeriodsType } from '@/atoms/periodAtom';
 
-const ScheduleSidebar: FC = () => {
+const ScheduleSidebar: FC<{ periodItem: PeriodsType }> = ({ periodItem }) => {
 	return (
 		<div className={styles.right_sidebar_container}>
 			<div>
-				<SchedulePeriodSelect></SchedulePeriodSelect>
+				<SchedulePeriodSelect
+					selectedDate={periodItem.period}
+				></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>
 				<div className={styles.tourism_count}>12</div>
