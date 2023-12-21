@@ -80,6 +80,7 @@ const ScheduleCreate: FC = () => {
 					</div>
 					{/* 오른쪽 사이드바 */}
 					<ScheduleSidebar
+						isPeriods={isPeriods}
 						periodItem={isSelectedPeriod}
 						onSelectedPeriod={handleSelectedPeriod}
 					/>

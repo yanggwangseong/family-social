@@ -7,13 +7,14 @@ import {
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import styles from './SchedulePeriodSelect.module.scss';
 import { useRecoilState } from 'recoil';
-import { periodAtom } from '@/atoms/periodAtom';
+import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import cn from 'classnames';
 import { SchedulePeriodSelectProps } from './schedule-period-select.interface';
 
 const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 	selectedDate,
 	onSelectedPeriod,
+	currentDay,
 }) => {
 	const [isPeriods] = useRecoilState(periodAtom);
 
@@ -23,13 +24,20 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 		setIsSelectToggle(!isSelectToggle);
 	};
 
+	const handleSelectedPeriod = (period: PeriodsType) => {
+		onSelectedPeriod(period);
+		setIsSelectToggle(!isSelectToggle);
+	};
+
 	return (
 		<div className={styles.public_select_container}>
 			<div className={styles.toggle_container} onClick={handleSelectToggle}>
 				<div>
 					<AiOutlineSchedule size={22} />
 				</div>
-				<div className={styles.option_text}>{`1일차 ${selectedDate}`}</div>
+				<div
+					className={styles.option_text}
+				>{`${currentDay}일차 ${selectedDate}`}</div>
 				<div>
 					{isSelectToggle ? (
 						<MdKeyboardArrowDown size={22} />
@@ -54,6 +62,7 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 							className={cn(styles.select_item, {
 								[styles.active]: selectedDate === period.period,
 							})}
+							onClick={() => handleSelectedPeriod(period)}
 						>
 							{`${index + 1}일차 ${period.period}`}
 							{selectedDate === period.period && (

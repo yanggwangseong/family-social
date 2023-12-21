@@ -6,17 +6,24 @@ import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	periodItem,
+	isPeriods,
 	onSelectedPeriod,
 }) => {
 	const handleSelectedPeriod = (period: PeriodsType) => {
 		onSelectedPeriod(period);
 	};
+
+	const currentDay = isPeriods.findIndex(
+		item => item.period === periodItem.period,
+	);
+
 	return periodItem ? (
 		<div className={styles.right_sidebar_container}>
 			<div>
 				<SchedulePeriodSelect
 					selectedDate={periodItem.period}
 					onSelectedPeriod={handleSelectedPeriod}
+					currentDay={currentDay + 1}
 				></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>
