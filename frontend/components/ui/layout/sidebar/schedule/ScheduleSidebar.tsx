@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
 import { PeriodsType } from '@/atoms/periodAtom';
@@ -6,16 +6,11 @@ import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	periodItem,
-	isPeriods,
 	onSelectedPeriod,
 }) => {
 	const handleSelectedPeriod = (period: PeriodsType) => {
 		onSelectedPeriod(period);
 	};
-
-	const currentDay = isPeriods.findIndex(
-		item => item.period === periodItem.period,
-	);
 
 	return periodItem ? (
 		<div className={styles.right_sidebar_container}>
@@ -23,7 +18,6 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 				<SchedulePeriodSelect
 					selectedDate={periodItem.period}
 					onSelectedPeriod={handleSelectedPeriod}
-					currentDay={currentDay + 1}
 				></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>

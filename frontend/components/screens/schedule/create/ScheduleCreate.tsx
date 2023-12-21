@@ -74,13 +74,15 @@ const ScheduleCreate: FC = () => {
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (
-								<Tourism isPeriods={isPeriods}></Tourism>
+								<Tourism
+									onChangePeriods={handleChangePeriods}
+									isSelectedPeriod={isSelectedPeriod}
+								></Tourism>
 							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
 					<ScheduleSidebar
-						isPeriods={isPeriods}
 						periodItem={isSelectedPeriod}
 						onSelectedPeriod={handleSelectedPeriod}
 					/>

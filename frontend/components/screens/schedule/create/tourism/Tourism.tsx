@@ -13,8 +13,9 @@ import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
+import { PeriodsType } from '@/atoms/periodAtom';
 
-const Tourism: FC<TourismProps> = ({ isPeriods }) => {
+const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -98,6 +99,10 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 
 	const handleTourSearch = () => {
 		fetchNextPage();
+	};
+
+	const handleChangePeriods = (dates: PeriodsType[]) => {
+		onChangePeriods(dates);
 	};
 
 	return (
@@ -195,7 +200,12 @@ const Tourism: FC<TourismProps> = ({ isPeriods }) => {
 				{data?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>
 						{page.items.item.map((tour: any, index: number) => (
-							<TourismItem key={index} tour={tour} />
+							<TourismItem
+								key={index}
+								tour={tour}
+								onChangePeriods={handleChangePeriods}
+								isSelectedPeriod={isSelectedPeriod}
+							/>
 						))}
 					</React.Fragment>
 				))}

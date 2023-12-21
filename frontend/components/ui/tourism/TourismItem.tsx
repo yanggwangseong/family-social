@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './TourismItem.module.scss';
 import { TourismItemProps } from './tourism-item.interface';
 import Image from 'next/image';
@@ -11,9 +11,54 @@ import {
 	ContentTypeId,
 	ContentTypeName,
 } from '@/constants/content-type.constant';
+import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
+import { useRecoilState } from 'recoil';
 
-const TourismItem: FC<TourismItemProps> = ({ tour }) => {
+const TourismItem: FC<TourismItemProps> = ({
+	tour,
+	onChangePeriods,
+	isSelectedPeriod,
+}) => {
+	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+
 	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
+
+	const handleChagePeriods = (tour: {
+		contentId: string;
+		stayTime: string;
+		tourismImage: string;
+		title: string;
+	}) => {
+		const tourism: TourismType[] = [
+			{
+				contentId: tour.contentId,
+				stayTime: tour.stayTime,
+				tourismImage: tour.tourismImage,
+				title: tour.title,
+				position: 0,
+			},
+		];
+
+		setIsPeriods(prev => {
+			const updatedPeriods = prev.map(item => {
+				if (item.period === isSelectedPeriod.period) {
+					return {
+						...item,
+						tourism: tourism,
+					};
+				}
+				return item;
+			});
+
+			return updatedPeriods;
+		});
+
+		setIsAddTourism(!isAddTourism);
+	};
+
+	useEffect(() => {
+		console.log(isPeriods);
+	}, [isPeriods]);
 
 	return (
 		<div className={styles.container}>
@@ -54,7 +99,6 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 							className={cn(styles.btn_container, {
 								[styles.active]: !!isAddTourism,
 							})}
-							onClick={() => setIsAddTourism(!isAddTourism)}
 						>
 							<AiOutlineCheck size={24} color="#0a0a0a" />
 						</div>
@@ -62,7 +106,14 @@ const TourismItem: FC<TourismItemProps> = ({ tour }) => {
 						<div className={styles.btn_container}>
 							<AiOutlinePlus
 								size={24}
-								onClick={() => setIsAddTourism(!isAddTourism)}
+								onClick={() =>
+									handleChagePeriods({
+										contentId: tour.contentid,
+										stayTime: '02:00',
+										tourismImage: tour.firstimage,
+										title: tour.title,
+									})
+								}
 							/>
 						</div>
 					)}

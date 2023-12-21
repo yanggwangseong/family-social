@@ -1,5 +1,6 @@
 import { PeriodsType } from '@/atoms/periodAtom';
 
 export interface TourismProps {
-	isPeriods: PeriodsType[];
+	onChangePeriods: (dates: PeriodsType[]) => void;
+	isSelectedPeriod: PeriodsType;
 }
