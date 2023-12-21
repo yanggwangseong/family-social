@@ -11,7 +11,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	const handleSelectedPeriod = (period: PeriodsType) => {
 		onSelectedPeriod(period);
 	};
-	return (
+	return periodItem ? (
 		<div className={styles.right_sidebar_container}>
 			<div>
 				<SchedulePeriodSelect
@@ -27,7 +27,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 				<div className={styles.not_found_text}>장소를 선택해주세요.</div>
 			</div>
 		</div>
-	);
+	) : null;
 };
 
 export default ScheduleSidebar;

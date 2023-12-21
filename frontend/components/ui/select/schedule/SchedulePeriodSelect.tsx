@@ -13,6 +13,7 @@ import { SchedulePeriodSelectProps } from './schedule-period-select.interface';
 
 const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 	selectedDate,
+	onSelectedPeriod,
 }) => {
 	const [isPeriods] = useRecoilState(periodAtom);
 

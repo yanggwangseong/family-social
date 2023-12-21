@@ -26,7 +26,7 @@ const Schedule: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar />
+					{/* <ScheduleSidebar /> */}
 				</div>
 			</div>
 		</Format>
