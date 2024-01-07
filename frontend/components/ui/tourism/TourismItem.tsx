@@ -29,22 +29,21 @@ const TourismItem: FC<TourismItemProps> = ({
 		tourismImage: string;
 		title: string;
 	}) => {
-		const tourism: TourismType[] = [
-			{
-				contentId: tour.contentId,
-				stayTime: tour.stayTime,
-				tourismImage: tour.tourismImage,
-				title: tour.title,
-				position: 0,
-			},
-		];
-
 		setIsPeriods(prev => {
 			const updatedPeriods = prev.map(item => {
 				if (item.period === isSelectedPeriod.period) {
 					return {
 						...item,
-						tourism: tourism,
+						tourism: [
+							...(item.tourism || []),
+							{
+								contentId: tour.contentId,
+								stayTime: tour.stayTime,
+								tourismImage: tour.tourismImage,
+								title: tour.title,
+								position: item.tourism ? item.tourism.length : 0,
+							},
+						],
 					};
 				}
 				return item;

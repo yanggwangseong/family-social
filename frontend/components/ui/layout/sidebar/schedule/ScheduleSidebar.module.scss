@@ -16,11 +16,15 @@
 		}
 	}
 
-	.not_found_tourism_container {
-		@apply flex justify-center items-center w-full h-[80px] bg-customOrange rounded-lg;
+	.schedule_tourism_container {
+		@apply flex flex-col gap-4;
 
-		.not_found_text {
-			@apply w-full p-2 m-1 text-xs text-center text-customDark font-semibold;
+		.not_found_tourism_container {
+			@apply flex justify-center items-center w-full h-[80px] bg-customOrange rounded-lg;
+
+			.not_found_text {
+				@apply w-full p-2 m-1 text-xs text-center text-customDark font-semibold;
+			}
 		}
 	}
 }

@@ -17,8 +17,6 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 }) => {
 	const [isPeriods] = useRecoilState(periodAtom);
 
-	//const currentDay = isPeriods.findIndex(item => item.period === selectedDate);
-
 	const [isSelectToggle, setIsSelectToggle] = useState<boolean>(false);
 
 	const handleSelectToggle = () => {
@@ -36,7 +34,9 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 				<div>
 					<AiOutlineSchedule size={22} />
 				</div>
-				<div className={styles.option_text}>{`${1}일차 ${selectedDate}`}</div>
+				<div className={styles.option_text}>{`${
+					isPeriods.findIndex(item => item.period === selectedDate) + 1
+				}일차 ${selectedDate}`}</div>
 				<div>
 					{isSelectToggle ? (
 						<MdKeyboardArrowDown size={22} />
