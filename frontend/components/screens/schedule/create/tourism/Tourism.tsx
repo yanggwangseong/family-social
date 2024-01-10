@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
 import styles from './Tourism.module.scss';
-import { TourismProps } from './tourism.interface';
+import { TourismProps, orderSelectOptionsKeys } from './tourism.interface';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
-import { LayerMode } from 'types';
+import { LayerMode, Union } from 'types';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
@@ -14,8 +14,13 @@ import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { useSelect } from '@/hooks/useSelect';
+import { orderSelectOptions } from './tourism.constants';
 
 const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
+	const { handleChageSelected, handleSelectToggle, isToggle, isSelected } =
+		useSelect<orderSelectOptionsKeys>('orderCreated');
+
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -194,6 +199,8 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 					검색
 				</CustomButton>
 			</div>
+
+			<div className="my-10"></div>
 
 			<div className="mt-10 flex flex-col gap-4">
 				{isLoading && <Skeleton />}
