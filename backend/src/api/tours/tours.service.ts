@@ -251,14 +251,15 @@ export class ToursService {
 		numOfRows,
 		pageNo,
 		keyword,
+		arrange,
+		contentTypeId,
 	}: {
 		numOfRows: number;
 		pageNo: number;
 		keyword: string;
+		arrange: string;
+		contentTypeId: string;
 	}) {
-		const arrange = 'A';
-		const contentTypeId = 12;
-
 		let httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
