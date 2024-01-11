@@ -1,5 +1,18 @@
 import { TabeMenuListType } from './tab-menu.interface';
 
+export const tourismTabMenus: TabeMenuListType[] = [
+	{
+		link: '/schedules/create?menu=TOURCONTENTTYPE',
+		options: 'TOURCONTENTTYPE',
+		title: '관광 타입',
+	},
+	{
+		link: '/schedules/create?menu=TOURSEARCH',
+		options: 'TOURSEARCH',
+		title: '검색',
+	},
+];
+
 export const scheduleTabMenus: TabeMenuListType[] = [
 	{
 		link: '/schedules',

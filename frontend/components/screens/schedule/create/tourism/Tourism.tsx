@@ -17,8 +17,14 @@ import { PeriodsType } from '@/atoms/periodAtom';
 import { useSelect } from '@/hooks/useSelect';
 import { optionsLists, orderSelectOptions } from './tourism.constants';
 import SelectBox from '@/components/ui/select/SelectBox';
+import TabMenu from '@/components/ui/tab-menu/TabMenu';
+import { tourismTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import { useRouter } from 'next/router';
 
 const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
+	const router = useRouter();
+	const query = router.query as { menu: 'TOURCONTENTTYPE' | 'TOURSEARCH' };
+
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
 		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
 
@@ -118,90 +124,87 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 			<div className={styles.step_title}>STEP 3</div>
 			<div className={styles.title}>관광 선택</div>
 
-			<div className="mt-10 flex flex-col gap-4">
-				<div className="flex gap-4">
-					<div className="w-1/4">
-						<CustomButton
-							type="button"
-							className=" bg-basic text-customDark 
-								font-bold border border-solid border-customDark 
-								rounded-full p-[10px]
-								w-full hover:bg-orange-500
-								"
-							onClick={handleSelectedContentType}
-						>
-							관광타입
-						</CustomButton>
-					</div>
-					<div className="w-3/4 flex items-center">
-						{isAtomContentId.map((item, index) => {
-							const comma = index === isAtomContentId.length - 1 ? '' : ',';
-							return (
-								<span key={index}>{`${ContentTypeName[item]}${comma}`}</span>
-							);
-						})}
-					</div>
-				</div>
+			{/* 탭 메뉴 */}
+			<TabMenu
+				list={tourismTabMenus}
+				options={query.menu ?? 'TOURCONTENTTYPE'}
+			></TabMenu>
 
-				<div className="flex gap-4">
-					<div className="w-1/4">
-						<CustomButton
-							type="button"
-							className=" bg-basic text-customDark 
+			{(query.menu === 'TOURCONTENTTYPE' || !query.menu) && (
+				<div className="mt-10 flex flex-col gap-4">
+					<div className="flex gap-4">
+						<div className="w-1/4">
+							<CustomButton
+								type="button"
+								className=" bg-basic text-customDark 
 								font-bold border border-solid border-customDark 
 								rounded-full p-[10px]
 								w-full hover:bg-orange-500
 								"
-							onClick={handleSelectedServiceCategory}
-						>
-							서비스분류
-						</CustomButton>
+								onClick={handleSelectedContentType}
+							>
+								관광타입
+							</CustomButton>
+						</div>
+						<div className="w-3/4 flex items-center">
+							{isAtomContentId.map((item, index) => {
+								const comma = index === isAtomContentId.length - 1 ? '' : ',';
+								return (
+									<span key={index}>{`${ContentTypeName[item]}${comma}`}</span>
+								);
+							})}
+						</div>
 					</div>
-					<div className="w-3/4 flex items-center">
-						{isServiceCategories.firstCategory &&
-							`대분류: ${isServiceCategories.firstCategoryName}, `}
-						{isServiceCategories.secondCategory &&
-							`중분류: ${isServiceCategories.secondCategoryName}, `}
-						{isServiceCategories.thirdCategory &&
-							`소분류: ${isServiceCategories.thirdCategoryName}`}
-					</div>
-				</div>
 
-				<div className="flex gap-4">
-					<div className="w-1/4">
-						<CustomButton
-							type="button"
-							className=" bg-basic text-customDark 
+					<div className="flex gap-4">
+						<div className="w-1/4">
+							<CustomButton
+								type="button"
+								className=" bg-basic text-customDark 
 								font-bold border border-solid border-customDark 
 								rounded-full p-[10px]
 								w-full hover:bg-orange-500
 								"
-							onClick={handleSelectedAreaCode}
-						>
-							지역
-						</CustomButton>
+								onClick={handleSelectedServiceCategory}
+							>
+								서비스분류
+							</CustomButton>
+						</div>
+						<div className="w-3/4 flex items-center">
+							{isServiceCategories.firstCategory &&
+								`대분류: ${isServiceCategories.firstCategoryName}, `}
+							{isServiceCategories.secondCategory &&
+								`중분류: ${isServiceCategories.secondCategoryName}, `}
+							{isServiceCategories.thirdCategory &&
+								`소분류: ${isServiceCategories.thirdCategoryName}`}
+						</div>
 					</div>
-					<div className="w-3/4 flex items-center">
-						{isAreaCode.areaCodeMain &&
-							`시/도: ${isAreaCode.areaCodeMainName}, `}
-						{isAreaCode.areaCodeSub &&
-							`시/군/구: ${isAreaCode.areaCodeSubName}`}
+
+					<div className="flex gap-4">
+						<div className="w-1/4">
+							<CustomButton
+								type="button"
+								className=" bg-basic text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+								onClick={handleSelectedAreaCode}
+							>
+								지역
+							</CustomButton>
+						</div>
+						<div className="w-3/4 flex items-center">
+							{isAreaCode.areaCodeMain &&
+								`시/도: ${isAreaCode.areaCodeMainName}, `}
+							{isAreaCode.areaCodeSub &&
+								`시/군/구: ${isAreaCode.areaCodeSubName}`}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className="my-10">
-				<CustomButton
-					type="button"
-					className=" bg-basic text-customDark 
-								font-bold border border-solid border-customDark 
-								rounded-full p-[10px]
-								w-full hover:bg-orange-500
-								"
-					onClick={handleTourSearch}
-				>
-					검색
-				</CustomButton>
-			</div>
+			)}
+
+			{query.menu === 'TOURSEARCH' && <div>search</div>}
 
 			<div className="my-10 flex">
 				<div className="w-1/2 ml-auto">
@@ -214,6 +217,20 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 						comment={`관광정보 정렬`}
 					></SelectBox>
 				</div>
+			</div>
+
+			<div className="my-10">
+				<CustomButton
+					type="button"
+					className=" bg-basic text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+					onClick={handleTourSearch}
+				>
+					검색
+				</CustomButton>
 			</div>
 
 			<div className="mt-10 flex flex-col gap-4">

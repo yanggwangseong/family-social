@@ -3,10 +3,10 @@
 
 	// 현재 STEP표시
 	.step_title {
-		@apply font-bold text-3xl mb-5;
+		@apply font-bold text-3xl;
 	}
 
 	.title {
-		@apply font-semibold text-lg;
+		@apply font-semibold text-lg my-5;
 	}
 }

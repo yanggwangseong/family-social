@@ -43,6 +43,8 @@ export const TabMenus = [
 	'ALL',
 	'SCHEDULEALL',
 	'MYSCHEDULE',
+	'TOURCONTENTTYPE',
+	'TOURSEARCH',
 ] as const;
 export const schdulePages = [
 	'selectGroupPage',
