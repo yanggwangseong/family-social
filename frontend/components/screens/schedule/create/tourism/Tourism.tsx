@@ -15,11 +15,12 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import { PeriodsType } from '@/atoms/periodAtom';
 import { useSelect } from '@/hooks/useSelect';
-import { orderSelectOptions } from './tourism.constants';
+import { optionsLists, orderSelectOptions } from './tourism.constants';
+import SelectBox from '@/components/ui/select/SelectBox';
 
 const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
-	const { handleChageSelected, handleSelectToggle, isToggle, isSelected } =
-		useSelect<orderSelectOptionsKeys>('orderCreated');
+	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
+		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -200,7 +201,18 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 				</CustomButton>
 			</div>
 
-			<div className="my-10"></div>
+			<div className="my-10 flex">
+				<div className="w-1/2 ml-auto">
+					<SelectBox
+						options={optionsLists}
+						onChangeSelected={handleChangeSelected}
+						onSelectToggle={handleSelectToggle}
+						isToggle={isToggle}
+						isSelected={isSelected}
+						comment={`관광정보 정렬`}
+					></SelectBox>
+				</div>
+			</div>
 
 			<div className="mt-10 flex flex-col gap-4">
 				{isLoading && <Skeleton />}

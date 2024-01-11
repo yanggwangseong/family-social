@@ -1,3 +1,9 @@
+export const optionsLists = [
+	'orderSubject',
+	'orderUpdated',
+	'orderCreated',
+] as const;
+
 export const orderSelectOptions = {
 	orderSubject: '제목순',
 	orderUpdated: '수정일순',

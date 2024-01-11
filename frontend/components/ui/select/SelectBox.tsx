@@ -3,15 +3,33 @@ import styles from './SelectBox.module.scss';
 import { AiOutlineCheck, AiOutlineEye } from 'react-icons/ai';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import cn from 'classnames';
-import { SelectOptions, Union } from 'types';
+import { Union } from 'types';
+import { useSelect } from '@/hooks/useSelect';
+import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
+import { orderSelectOptions } from '@/components/screens/schedule/create/tourism/tourism.constants';
 
-const SelectBox: FC = () => {
-	const [isToggle, setIsToggle] = useState<boolean>(false);
-
+const SelectBox: FC<{
+	options: readonly orderSelectOptionsKeys[];
+	onChangeSelected: (status: orderSelectOptionsKeys) => void;
+	onSelectToggle: () => void;
+	isToggle: boolean;
+	isSelected: orderSelectOptionsKeys;
+	comment: string;
+}> = ({
+	options,
+	onSelectToggle,
+	onChangeSelected,
+	isToggle,
+	isSelected,
+	comment,
+}) => {
 	const handleSelectToggle = () => {
-		setIsToggle(!isToggle);
+		onSelectToggle();
 	};
 
+	const handleChangeSelected = (status: orderSelectOptionsKeys) => {
+		onChangeSelected(status);
+	};
 	return (
 		<div className={styles.public_select_container}>
 			<div className={styles.toggle_container} onClick={handleSelectToggle}>
@@ -19,7 +37,7 @@ const SelectBox: FC = () => {
 					<AiOutlineEye size={22} />
 				</div>
 				<div className={styles.option_text}>
-					{isPublic === 'public' ? '공개' : '비공개'}
+					{orderSelectOptions[isSelected]}
 				</div>
 				<div>
 					{isToggle ? (
@@ -35,16 +53,33 @@ const SelectBox: FC = () => {
 						<div>
 							<AiOutlineEye size={22} />
 						</div>
-						<div className={styles.modal_title}>피드를 공개/비공개 설정</div>
+						<div className={styles.modal_title}>{comment}</div>
 					</div>
-					<div
+					{options.map((option, index) => (
+						<div
+							key={index}
+							className={cn(styles.select_item, {
+								[styles.active]: isSelected === option,
+							})}
+							onClick={() => handleChangeSelected(option)}
+						>
+							{orderSelectOptions[option]}
+							{isSelected === option && (
+								<div className={styles.icon_container}>
+									<AiOutlineCheck size={14} color="#e5855d" />
+								</div>
+							)}
+						</div>
+					))}
+
+					{/* <div
 						className={cn(styles.select_item, {
-							[styles.active]: isPublic === 'public',
+							[styles.active]: isSelected === 'orderSubject',
 						})}
-						onClick={() => handleChageIsPublic('public')}
+						onClick={() => handleChageSelected('orderSubject')}
 					>
-						공개
-						{isPublic === 'public' && (
+						{orderSelectOptions['orderSubject']}
+						{isSelected === 'orderSubject' && (
 							<div className={styles.icon_container}>
 								<AiOutlineCheck size={14} color="#e5855d" />
 							</div>
@@ -52,17 +87,17 @@ const SelectBox: FC = () => {
 					</div>
 					<div
 						className={cn(styles.select_item, {
-							[styles.active]: isPublic === 'private',
+							[styles.active]: isSelected === 'orderUpdated',
 						})}
-						onClick={() => handleChageIsPublic('private')}
+						onClick={() => handleChageSelected('orderUpdated')}
 					>
-						비공개
-						{isPublic === 'private' && (
+						{orderSelectOptions['orderUpdated']}
+						{isSelected === 'orderUpdated' && (
 							<div className={styles.icon_container}>
 								<AiOutlineCheck size={14} color="#e5855d" />
 							</div>
 						)}
-					</div>
+					</div> */}
 				</div>
 			)}
 		</div>

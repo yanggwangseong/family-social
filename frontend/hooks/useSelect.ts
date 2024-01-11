@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { SelectOptions, Union } from 'types';
 
-export const useSelect = <T>(defaultSelected: T) => {
+export const useSelect = <T extends string>(defaultSelected: T) => {
 	const [isSelected, setIsSelected] = useState<T>(defaultSelected);
 	const [isToggle, setIsToggle] = useState<boolean>(false);
 
@@ -9,13 +8,13 @@ export const useSelect = <T>(defaultSelected: T) => {
 		setIsToggle(!isToggle);
 	};
 
-	const handleChageSelected = (status: T) => {
+	const handleChangeSelected = (status: T) => {
 		setIsSelected(status);
 		handleSelectToggle();
 	};
 
 	return {
-		handleChageSelected,
+		handleChangeSelected,
 		handleSelectToggle,
 		isToggle,
 		isSelected,
