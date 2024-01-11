@@ -49,6 +49,7 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 			isServiceCategories.firstCategory,
 			isServiceCategories.secondCategory,
 			isServiceCategories.thirdCategory,
+			isSelected,
 		],
 		async ({ pageParam = 1 }) =>
 			await TourService.getTourLists({
@@ -60,6 +61,7 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 				cat1: isServiceCategories.firstCategory,
 				cat2: isServiceCategories.secondCategory,
 				cat3: isServiceCategories.thirdCategory,
+				isSelected,
 			}),
 		{
 			getNextPageParam: (lastPage, allPosts) => {

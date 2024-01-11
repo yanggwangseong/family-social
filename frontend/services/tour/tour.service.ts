@@ -1,3 +1,4 @@
+import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
 import {
 	TourAreaCodesResponse,
 	TourListResponse,
@@ -44,6 +45,7 @@ export const TourService = {
 		cat1,
 		cat2,
 		cat3,
+		isSelected,
 	}: {
 		numOfRows: number;
 		pageNo: number;
@@ -53,8 +55,18 @@ export const TourService = {
 		cat1: string;
 		cat2: string;
 		cat3: string;
+		isSelected: orderSelectOptionsKeys;
 	}) {
-		let url = `tours?arrange=O&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}
+		let arrange = 'O';
+		if (isSelected === 'orderSubject') {
+			arrange = 'O';
+		} else if (isSelected === 'orderCreated') {
+			arrange = 'R';
+		} else if (isSelected === 'orderUpdated') {
+			arrange = 'Q';
+		}
+
+		let url = `tours?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}&cat1=${cat1}&cat2=${cat2}&cat3=${cat3}
 		`;
 
