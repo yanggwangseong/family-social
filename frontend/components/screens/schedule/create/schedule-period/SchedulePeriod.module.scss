@@ -1,0 +1,28 @@
+.period_container {
+	@apply h-full relative;
+
+	// 현재 STEP표시
+	.step_title {
+		@apply font-bold text-3xl mb-5;
+	}
+
+	.title {
+		@apply font-semibold text-lg;
+	}
+
+	.period_btn_container {
+		@apply flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
+
+		.icon {
+			@apply cursor-pointer;
+		}
+	}
+
+	.button_container {
+		@screen md {
+			@apply fixed bottom-0 flex gap-4 z-50 bg-basic;
+			width: 768px;
+		}
+		@apply w-full pb-10;
+	}
+}

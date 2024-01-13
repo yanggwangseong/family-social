@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { BelongToGroupResDto } from '../dto/group/res/belong-to-group.res.dto';
+import { GroupMembersResDto } from '../dto/group/res/group-members.res.dto';
 
 @Injectable()
 export class FamsRepository extends Repository<FamEntity> {
@@ -20,6 +21,38 @@ export class FamsRepository extends Repository<FamEntity> {
 		private readonly repository: Repository<FamEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async getMemberListBelongToGroup({
+		groupId,
+		take,
+		skip,
+	}: {
+		groupId: string;
+		take: number;
+		skip: number;
+	}): Promise<GroupMembersResDto[]> {
+		return await this.repository.find({
+			select: {
+				id: true,
+				invitationAccepted: true,
+				role: true,
+				member: {
+					id: true,
+					profileImage: true,
+					username: true,
+				},
+			},
+			where: {
+				groupId: groupId,
+				invitationAccepted: true,
+			},
+			relations: {
+				member: true,
+			},
+			take,
+			skip,
+		});
 	}
 
 	async getMemberBelongToGroups(
@@ -37,6 +70,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			},
 			where: {
 				memberId: memberId,
+				invitationAccepted: true,
 			},
 			relations: {
 				group: true,
@@ -47,8 +81,8 @@ export class FamsRepository extends Repository<FamEntity> {
 	async isMainRoleForMemberInGroup({
 		groupId,
 		memberId,
-	}: IDeleteGroupArgs): Promise<{ role: roleType }> {
-		const role = await this.repository.findOneOrFail({
+	}: IDeleteGroupArgs): Promise<{ role: roleType } | null> {
+		const role = await this.repository.findOne({
 			select: {
 				role: true,
 			},

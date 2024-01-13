@@ -1,0 +1,12 @@
+.tourism_container {
+	@apply h-full relative;
+
+	// 현재 STEP표시
+	.step_title {
+		@apply font-bold text-3xl;
+	}
+
+	.title {
+		@apply font-semibold text-lg my-5;
+	}
+}

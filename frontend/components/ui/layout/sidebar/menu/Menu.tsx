@@ -7,11 +7,12 @@ import cn from 'classnames';
 
 const Menu: FC<MenuProps> = ({ link, Icon, menu }) => {
 	const router = useRouter();
+	const { pathname } = router;
 
 	return (
 		<Link
 			className={cn(styles.sidebar_menu_container, {
-				[styles.active]: link === router.pathname,
+				[styles.active]: !!pathname.startsWith(link),
 			})}
 			href={link}
 		>

@@ -4,6 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
+import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_group' })
 export class GroupEntity extends DefaultEntity {
@@ -32,4 +33,7 @@ export class GroupEntity extends DefaultEntity {
 
 	@OneToMany(() => FeedEntity, (fd) => fd.group)
 	feedByGroups?: FeedEntity[];
+
+	@OneToMany(() => ScheduleEntity, (sc) => sc.group)
+	schedulesByGroup?: ScheduleEntity[];
 }

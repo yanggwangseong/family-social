@@ -8,8 +8,14 @@ import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const MainSidebar: FC = () => {
+	const router = useRouter();
+	const { pathname } = router;
+	const isSchedulesRoute = pathname.startsWith('/schedules');
+
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 	const [, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -28,20 +34,34 @@ const MainSidebar: FC = () => {
 		<div className={styles.sidebar_container}>
 			{/* 사이드 메뉴 */}
 			<Menu link="/feeds" Icon={AiOutlineAudit} menu="피드" />
-			<Menu link="/schdules" Icon={AiOutlineSchedule} menu="일정작성" />
+			<Menu link="/schedules" Icon={AiOutlineSchedule} menu="여행 일정" />
 			<Menu link="/accounts" Icon={MdOutlineManageAccounts} menu="계정" />
 			<div className={styles.sidebar_btn_container}>
-				<CustomButton
-					type="button"
-					className="mt-8 bg-customOrange text-customDark 
+				{isSchedulesRoute ? (
+					<Link
+						className="mt-8 bg-customOrange text-customDark 
+						font-bold border border-solid border-customDark 
+						rounded-full p-[10px]
+						w-full hover:bg-orange-500 inline-block text-center
+						shadow-button-shadow
+						"
+						href={`/schedules/create`}
+					>
+						+ 일정 만들기
+					</Link>
+				) : (
+					<CustomButton
+						type="button"
+						className="mt-8 bg-customOrange text-customDark 
             font-bold border border-solid border-customDark 
             rounded-full p-[10px]
             w-full hover:bg-orange-500
             "
-					onClick={handleCreateFeed}
-				>
-					+ 피드
-				</CustomButton>
+						onClick={handleCreateFeed}
+					>
+						+ 피드
+					</CustomButton>
+				)}
 			</div>
 		</div>
 	);

@@ -11,6 +11,12 @@ const nextConfig = {
 				port: '',
 				pathname: '/feed/developmentbody-media/**',
 			},
+			{
+				protocol: 'http',
+				hostname: 'tong.visitkorea.or.kr',
+				port: '',
+				pathname: '/cms/resource/**',
+			},
 		],
 	},
 };

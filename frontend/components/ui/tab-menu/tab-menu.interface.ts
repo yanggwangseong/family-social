@@ -1,8 +1,11 @@
+import { TabMenus, Union } from 'types';
+
 export interface TabMenuProps {
 	list: TabeMenuListType[];
 }
 
 export interface TabeMenuListType {
 	link: string;
-	options: 'TOP' | 'MYFEED' | 'ALL';
+	options: Union<typeof TabMenus>;
+	title: string;
 }

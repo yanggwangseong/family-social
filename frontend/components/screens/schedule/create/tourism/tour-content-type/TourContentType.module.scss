@@ -1,0 +1,25 @@
+.container {
+	@apply mt-10 flex flex-col gap-4;
+
+	// 필요 조건에 따른 선택
+	.selected_type_container {
+		@apply flex gap-4;
+
+		.btn_container {
+			@apply w-1/4;
+		}
+		.description_container {
+			@apply w-3/4 flex items-center;
+		}
+	}
+
+	// 검색 버튼
+	.search_btn_container {
+		@apply my-10;
+	}
+
+	// 관광 아이템
+	.tourism_item_container {
+		@apply mt-10 flex flex-col gap-4;
+	}
+}

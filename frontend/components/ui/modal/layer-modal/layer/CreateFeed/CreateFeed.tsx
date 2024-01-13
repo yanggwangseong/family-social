@@ -36,6 +36,7 @@ import Line from '@/components/ui/line/Line';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Union, feedPublicSelectOptions } from 'types';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -43,19 +44,14 @@ const CreateFeed: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
-	const [isSelecteGroup, setIsSelectGroup] = useState('');
 
 	const [isFiles, setIsFiles] = useState<File[]>([]);
 	const [isImageUrl, setIsImageUrl] = useState<string[]>([]);
 
 	const [isUplaod, setIsUpload] = useState<boolean>(false);
 
-	const queryClient = useQueryClient();
-
-	const { data, isLoading } = useQuery(
-		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
-	);
+	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
+		useMemberBelongToGroups();
 
 	const {
 		data: feed,
@@ -213,10 +209,6 @@ const CreateFeed: FC = () => {
 
 	const handleChangePage = (page: string) => {
 		setIsFeedPage(page);
-	};
-
-	const handleSelectedGroup = (groupId: string) => {
-		setIsSelectGroup(groupId);
 	};
 
 	const handleChageIsPublic = (

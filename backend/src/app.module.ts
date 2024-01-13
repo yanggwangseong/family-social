@@ -13,6 +13,7 @@ import { FamsModule } from './api/fams/fams.module';
 import { FeedsModule } from './api/feeds/feeds.module';
 import { MediasModule } from './api/medias/medias.module';
 import { CommentsModule } from './api/comments/comments.module';
+import { ToursModule } from './api/tours/tours.module';
 
 @Module({
 	imports: [
@@ -30,6 +31,7 @@ import { CommentsModule } from './api/comments/comments.module';
 		FeedsModule,
 		MediasModule,
 		CommentsModule,
+		ToursModule,
 	],
 	controllers: [],
 	providers: [],

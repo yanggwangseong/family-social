@@ -9,6 +9,7 @@ export type roleType = 'main' | 'user';
 
 @Entity({ name: 'fam' })
 export class FamEntity extends DefaultEntity {
+	@ApiProperty()
 	@Column({
 		type: 'varchar',
 		length: 30,
