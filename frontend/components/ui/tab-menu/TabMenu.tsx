@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
 import { TabeMenuListType } from './tab-menu.interface';
+import { TabMenus, Union } from 'types';
 
 const TabMenu: FC<{
 	list: TabeMenuListType[];
-	options: 'TOP' | 'MYFEED' | 'ALL';
+	options: Union<typeof TabMenus>;
 }> = ({ options = 'TOP', list }) => {
 	const router = useRouter();
 
@@ -21,33 +22,9 @@ const TabMenu: FC<{
 					})}
 					href={`${item.link}`}
 				>
-					{item.options}
+					{item.title}
 				</Link>
 			))}
-			{/* <Link
-				className={cn(styles.tab_menu_item, {
-					[styles.active]: options === 'TOP',
-				})}
-				href={'/feeds?options=TOP'}
-			>
-				TOP
-			</Link>
-			<Link
-				className={cn(styles.tab_menu_item, {
-					[styles.active]: options === 'MYFEED',
-				})}
-				href={'/feeds?options=MYFEED'}
-			>
-				MY FEED
-			</Link>
-			<Link
-				className={cn(styles.tab_menu_item, {
-					[styles.active]: options === 'ALL',
-				})}
-				href={'/feeds?options=ALL'}
-			>
-				ALL
-			</Link> */}
 		</div>
 	);
 };

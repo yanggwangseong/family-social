@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ToursService } from './tours.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
-//@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @ApiTags('tours')
 @Controller('tours')
 export class ToursController {
@@ -167,6 +167,8 @@ export class ToursController {
 	@Get('/search/:keyword')
 	async getHttpTourApiSearch(
 		@Param('keyword') keyword: string,
+		@Query('arrange') arrange: string,
+		@Query('contentTypeId') contentTypeId: string,
 		@Query('numOfRows') numOfRows: number,
 		@Query('pageNo') pageNo: number,
 	) {
@@ -174,6 +176,8 @@ export class ToursController {
 			keyword,
 			numOfRows,
 			pageNo,
+			arrange,
+			contentTypeId,
 		});
 	}
 }

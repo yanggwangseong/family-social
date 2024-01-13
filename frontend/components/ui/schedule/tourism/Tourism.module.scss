@@ -1,0 +1,56 @@
+.schedule_tourism_container {
+	@apply flex gap-4;
+
+	.order_container {
+		@apply flex items-center;
+
+		.order_number {
+			@apply w-[25px] h-[25px] text-customDark border border-solid border-customDark bg-customOrange rounded-full text-sm text-center;
+		}
+	}
+
+	.container {
+		@apply border border-solid border-customDark p-2 flex-1 rounded-md;
+
+		.tour_item_card {
+			@apply flex items-center justify-between;
+
+			.tour_img_title_container {
+				@apply flex gap-4 mr-2;
+
+				.img_container {
+					@apply h-[45px];
+				}
+
+				.tour_description_container {
+					@apply flex flex-col justify-between;
+
+					.tour_title {
+						@apply text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap break-all;
+						width: 130px;
+					}
+
+					.tour_addr_container {
+						@apply flex gap-6;
+
+						.tour_content_type_name {
+							@apply text-xs text-customOrange;
+						}
+					}
+				}
+			}
+
+			//right button
+			.tour_right_btn_container {
+				@apply flex gap-4;
+
+				.stay_time {
+					@apply text-sm flex items-center whitespace-nowrap;
+				}
+				.close_btn {
+					@apply text-lg flex items-center;
+				}
+			}
+		}
+	}
+}
