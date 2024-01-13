@@ -73,4 +73,32 @@ export const TourService = {
 		const { data } = await axiosAPI.get<TourListResponse>(url);
 		return data;
 	},
+
+	async searchTourLists({
+		keyword,
+		isSelected,
+		contentTypeId,
+		pageNo,
+		numOfRows,
+	}: {
+		keyword: string;
+		isSelected: orderSelectOptionsKeys;
+		numOfRows: number;
+		pageNo: number;
+		contentTypeId: string;
+	}) {
+		let arrange = 'O';
+		if (isSelected === 'orderSubject') {
+			arrange = 'O';
+		} else if (isSelected === 'orderCreated') {
+			arrange = 'R';
+		} else if (isSelected === 'orderUpdated') {
+			arrange = 'Q';
+		}
+
+		let url = `tours/search/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
+
+		const { data } = await axiosAPI.get<TourListResponse>(url);
+		return data;
+	},
 };
