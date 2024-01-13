@@ -36,6 +36,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 							period.tourism && period.tourism.length > 0 ? (
 								period.tourism.map((tour, index) => (
 									<ScheduleTourism
+										key={index}
 										contentId={tour.contentId}
 										stayTime={tour.stayTime}
 										tourismImage={tour.tourismImage}
