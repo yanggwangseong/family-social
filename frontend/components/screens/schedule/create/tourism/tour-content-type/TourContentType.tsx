@@ -119,7 +119,7 @@ const TourContentType: FC<TourContentTypeProps> = ({
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.tour_content_type_container}>
+			<div className={styles.selected_type_container}>
 				<div className={styles.btn_container}>
 					<CustomButton
 						type="button"
@@ -143,15 +143,15 @@ const TourContentType: FC<TourContentTypeProps> = ({
 				</div>
 			</div>
 
-			<div className={styles.service_category_container}>
+			<div className={styles.selected_type_container}>
 				<div className={styles.btn_container}>
 					<CustomButton
 						type="button"
 						className=" bg-basic text-customDark 
-                font-bold border border-solid border-customDark 
-                rounded-full p-[10px]
-                w-full hover:bg-orange-500
-                "
+                        font-bold border border-solid border-customDark 
+                        rounded-full p-[10px]
+                        w-full hover:bg-orange-500
+                        "
 						onClick={handleSelectedServiceCategory}
 					>
 						서비스분류
@@ -167,8 +167,8 @@ const TourContentType: FC<TourContentTypeProps> = ({
 				</div>
 			</div>
 
-			<div className="flex gap-4">
-				<div className="w-1/4">
+			<div className={styles.selected_type_container}>
+				<div className={styles.btn_container}>
 					<CustomButton
 						type="button"
 						className=" bg-basic text-customDark 
@@ -181,7 +181,7 @@ const TourContentType: FC<TourContentTypeProps> = ({
 						지역
 					</CustomButton>
 				</div>
-				<div className="w-3/4 flex items-center">
+				<div className={styles.description_container}>
 					{isAreaCode.areaCodeMain && `시/도: ${isAreaCode.areaCodeMainName}, `}
 					{isAreaCode.areaCodeSub && `시/군/구: ${isAreaCode.areaCodeSubName}`}
 				</div>
@@ -200,7 +200,7 @@ const TourContentType: FC<TourContentTypeProps> = ({
 				</div>
 			</div>
 
-			<div className={'my-10'}>
+			<div className={styles.search_btn_container}>
 				<CustomButton
 					type="button"
 					className=" bg-basic text-customDark 
@@ -214,7 +214,7 @@ const TourContentType: FC<TourContentTypeProps> = ({
 				</CustomButton>
 			</div>
 
-			<div className={'mt-10 flex flex-col gap-4'}>
+			<div className={styles.tourism_item_container}>
 				{isLoading && <Skeleton />}
 				{data?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>

@@ -14,18 +14,18 @@
 				@apply flex flex-col justify-between;
 
 				.tour_title {
-					@apply text-lg font-bold;
+					@apply text-base font-bold;
 				}
 
 				.tour_addr_container {
 					@apply flex gap-6;
 
 					.tour_content_type_name {
-						@apply text-sm text-customOrange;
+						@apply text-xs text-customOrange;
 					}
 
 					.tour_addr {
-						@apply text-sm text-customGray;
+						@apply text-xs text-customGray;
 					}
 				}
 
@@ -41,7 +41,7 @@
 					}
 
 					.score {
-						@apply text-sm;
+						@apply text-xs;
 					}
 				}
 			}

@@ -131,7 +131,12 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 			{query.menu === 'FESTIVAL' && <Festival></Festival>}
 
 			{/* 키워드 검색 */}
-			{query.menu === 'TOURSEARCH' && <TourSearch></TourSearch>}
+			{query.menu === 'TOURSEARCH' && (
+				<TourSearch
+					onChangePeriods={handleChangePeriods}
+					isSelectedPeriod={isSelectedPeriod}
+				></TourSearch>
+			)}
 		</div>
 	);
 };

@@ -10,13 +10,13 @@
 	}
 
 	.container {
-		@apply border border-solid border-customDark p-4 flex-1;
+		@apply border border-solid border-customDark p-2 flex-1 rounded-md;
 
 		.tour_item_card {
 			@apply flex items-center justify-between;
 
 			.tour_img_title_container {
-				@apply flex gap-4;
+				@apply flex gap-4 mr-2;
 
 				.img_container {
 					@apply h-[45px];
@@ -26,18 +26,15 @@
 					@apply flex flex-col justify-between;
 
 					.tour_title {
-						@apply text-base font-medium;
+						@apply text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap break-all;
+						width: 130px;
 					}
 
 					.tour_addr_container {
 						@apply flex gap-6;
 
 						.tour_content_type_name {
-							@apply text-sm text-customOrange;
-						}
-
-						.tour_addr {
-							@apply text-sm text-customGray;
+							@apply text-xs text-customOrange;
 						}
 					}
 				}
@@ -48,7 +45,7 @@
 				@apply flex gap-4;
 
 				.stay_time {
-					@apply text-sm flex items-center;
+					@apply text-sm flex items-center whitespace-nowrap;
 				}
 				.close_btn {
 					@apply text-lg flex items-center;

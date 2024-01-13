@@ -2,7 +2,7 @@
 	@screen 2xl {
 		@apply block;
 	}
-	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 block p-4;
+	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 block p-4 overflow-y-auto;
 
 	.sidebar_tourism_total_time_container {
 		@apply flex my-4 gap-4 items-center;
