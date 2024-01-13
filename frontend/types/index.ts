@@ -45,6 +45,7 @@ export const TabMenus = [
 	'MYSCHEDULE',
 	'TOURCONTENTTYPE',
 	'TOURSEARCH',
+	'FESTIVAL',
 ] as const;
 export const schdulePages = [
 	'selectGroupPage',

@@ -7,9 +7,14 @@ export const tourismTabMenus: TabeMenuListType[] = [
 		title: '관광 타입',
 	},
 	{
+		link: '/schedules/create?menu=FESTIVAL',
+		options: 'FESTIVAL',
+		title: '행사/축제',
+	},
+	{
 		link: '/schedules/create?menu=TOURSEARCH',
 		options: 'TOURSEARCH',
-		title: '검색',
+		title: '키워드 검색',
 	},
 ];
 
