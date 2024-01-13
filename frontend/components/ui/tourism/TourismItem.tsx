@@ -55,10 +55,6 @@ const TourismItem: FC<TourismItemProps> = ({
 		setIsAddTourism(!isAddTourism);
 	};
 
-	useEffect(() => {
-		console.log(isPeriods);
-	}, [isPeriods]);
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.tour_item_card}>

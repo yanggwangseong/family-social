@@ -38,7 +38,7 @@ const ScheduleCreate: FC = () => {
 	};
 
 	useEffect(() => {
-		if (isPeriods) {
+		if (!isSelectedPeriod) {
 			setIsSelectedPeriod(isPeriods[0]);
 		}
 	}, [isPeriods]);
