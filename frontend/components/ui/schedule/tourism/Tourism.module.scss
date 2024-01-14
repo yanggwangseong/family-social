@@ -16,7 +16,7 @@
 			@apply flex items-center justify-between;
 
 			.tour_img_title_container {
-				@apply flex gap-4 mr-2;
+				@apply flex gap-4 mr-2 cursor-grab;
 
 				.img_container {
 					@apply h-[45px] border border-solid border-customDark;
@@ -45,10 +45,10 @@
 				@apply flex gap-4;
 
 				.stay_time {
-					@apply text-sm flex items-center whitespace-nowrap;
+					@apply text-sm flex items-center whitespace-nowrap cursor-pointer;
 				}
 				.close_btn {
-					@apply text-lg flex items-center;
+					@apply text-lg flex items-center cursor-pointer;
 				}
 			}
 		}
