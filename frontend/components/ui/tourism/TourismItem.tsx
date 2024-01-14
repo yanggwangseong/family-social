@@ -58,15 +58,30 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 			return updatedPeriods;
 		});
 
-		setIsAddTourism(`${query.menu}${isSelectedPeriod}${tour.contentId}`);
+		setIsAddTourism(tour.contentId);
 	};
-	// TOURSEARCH tour.contentId
 
+	const handleDeleteTourism = (contentId: string) => {
+		const newPeriods = isPeriods.map(item => ({
+			...item,
+			tourism: item.tourism?.filter(v => contentId !== v.contentId),
+		}));
+		setIsPeriods(newPeriods);
+		setIsAddTourism('');
+	};
+
+	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기
 	useEffect(() => {
 		if (isSelectedPeriod) {
-			console.log(isSelectedPeriod);
+			isPeriods.map(item =>
+				item.tourism?.map(v => {
+					if (v.contentId === tour.contentid) {
+						setIsAddTourism(v.contentId);
+					}
+				}),
+			);
 		}
-	}, [isSelectedPeriod]);
+	}, [isPeriods, isSelectedPeriod, tour.contentid]);
 
 	return (
 		<div className={styles.container}>
@@ -102,11 +117,12 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 					</div>
 				</div>
 				<div className={styles.tour_right_btn_container}>
-					{isAddTourism ? (
+					{isAddTourism && isAddTourism === tour.contentid ? (
 						<div
 							className={cn(styles.btn_container, {
-								[styles.active]: !!isSelectedPeriod,
+								[styles.active]: isAddTourism === tour.contentid,
 							})}
+							onClick={() => handleDeleteTourism(tour.contentid)}
 						>
 							<AiOutlineCheck size={24} color="#0a0a0a" />
 						</div>
