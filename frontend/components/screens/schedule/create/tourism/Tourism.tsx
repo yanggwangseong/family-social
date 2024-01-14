@@ -9,7 +9,7 @@ import TourSearch from './tour-search/TourSearch';
 import Festival from './festival/Festival';
 import TourContentType from './tour-content-type/TourContentType';
 
-const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
+const Tourism: FC<TourismProps> = ({ onChangePeriods }) => {
 	const router = useRouter();
 	const query = router.query as {
 		menu: 'TOURCONTENTTYPE' | 'FESTIVAL' | 'TOURSEARCH';
@@ -33,7 +33,6 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 			{(query.menu === 'TOURCONTENTTYPE' || !query.menu) && (
 				<TourContentType
 					onChangePeriods={handleChangePeriods}
-					isSelectedPeriod={isSelectedPeriod}
 				></TourContentType>
 			)}
 
@@ -42,10 +41,7 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 
 			{/* 키워드 검색 */}
 			{query.menu === 'TOURSEARCH' && (
-				<TourSearch
-					onChangePeriods={handleChangePeriods}
-					isSelectedPeriod={isSelectedPeriod}
-				></TourSearch>
+				<TourSearch onChangePeriods={handleChangePeriods}></TourSearch>
 			)}
 		</div>
 	);

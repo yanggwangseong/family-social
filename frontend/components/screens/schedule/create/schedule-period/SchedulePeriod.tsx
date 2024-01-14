@@ -11,12 +11,17 @@ import { FaCalendar } from 'react-icons/fa';
 import { getDateRange } from '@/utils/get-date-range';
 import Periods from '@/components/ui/schedule/period/Periods';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { useRecoilState } from 'recoil';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
 	onChangePeriods,
 	isPeriods,
 }) => {
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
 	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>();
 
 	const [pageInit, setPageInit] = useState<boolean>(false);
@@ -52,6 +57,8 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 			}),
 		);
 
+		setIsSelectedPeriod(dates[0]);
+
 		setIsPeriodTimes(
 			dates.map(date => ({
 				period: date,
@@ -65,7 +72,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		if (isPeriodTimes) {
 			onChangePeriods(isPeriodTimes);
 		}
-	}, [isPeriodTimes]);
+	}, [isPeriodTimes, onChangePeriods]);
 
 	return (
 		<div className={styles.period_container}>

@@ -2,27 +2,20 @@ import React, { FC, useEffect } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
-import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 import { useRecoilState } from 'recoil';
 import ScheduleTourism from '@/components/ui/schedule/tourism/Tourism';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
-const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
-	periodItem,
-	onSelectedPeriod,
-}) => {
+const ScheduleSidebar: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
-	const handleSelectedPeriod = (period: PeriodsType) => {
-		onSelectedPeriod(period);
-	};
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
 
-	return periodItem ? (
+	return isSelectedPeriod ? (
 		<div className={styles.right_sidebar_container}>
 			<div>
-				<SchedulePeriodSelect
-					selectedDate={periodItem.period}
-					onSelectedPeriod={handleSelectedPeriod}
-				></SchedulePeriodSelect>
+				<SchedulePeriodSelect></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>
 				<div className={styles.tourism_count}>12</div>
@@ -32,7 +25,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 			<div>
 				{isPeriods.map((period, index) => (
 					<div className={styles.schedule_tourism_container} key={index}>
-						{period.period === periodItem.period ? (
+						{period.period === isSelectedPeriod ? (
 							period.tourism && period.tourism.length > 0 ? (
 								period.tourism.map((tour, index) => (
 									<ScheduleTourism

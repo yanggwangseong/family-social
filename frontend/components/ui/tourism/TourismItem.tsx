@@ -13,15 +13,21 @@ import {
 } from '@/constants/content-type.constant';
 import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
-const TourismItem: FC<TourismItemProps> = ({
-	tour,
-	onChangePeriods,
-	isSelectedPeriod,
-}) => {
+const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
+	const router = useRouter();
+	const query = router.query as {
+		menu: 'TOURCONTENTTYPE' | 'FESTIVAL' | 'TOURSEARCH';
+	};
+
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
-	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
+	const [isAddTourism, setIsAddTourism] = useState<string>('');
 
 	const handleChagePeriods = (tour: {
 		contentId: string;
@@ -31,7 +37,7 @@ const TourismItem: FC<TourismItemProps> = ({
 	}) => {
 		setIsPeriods(prev => {
 			const updatedPeriods = prev.map(item => {
-				if (item.period === isSelectedPeriod.period) {
+				if (item.period === isSelectedPeriod) {
 					return {
 						...item,
 						tourism: [
@@ -52,8 +58,15 @@ const TourismItem: FC<TourismItemProps> = ({
 			return updatedPeriods;
 		});
 
-		setIsAddTourism(!isAddTourism);
+		setIsAddTourism(`${query.menu}${isSelectedPeriod}${tour.contentId}`);
 	};
+	// TOURSEARCH tour.contentId
+
+	useEffect(() => {
+		if (isSelectedPeriod) {
+			console.log(isSelectedPeriod);
+		}
+	}, [isSelectedPeriod]);
 
 	return (
 		<div className={styles.container}>
@@ -92,7 +105,7 @@ const TourismItem: FC<TourismItemProps> = ({
 					{isAddTourism ? (
 						<div
 							className={cn(styles.btn_container, {
-								[styles.active]: !!isAddTourism,
+								[styles.active]: !!isSelectedPeriod,
 							})}
 						>
 							<AiOutlineCheck size={24} color="#0a0a0a" />

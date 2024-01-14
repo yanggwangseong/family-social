@@ -12,12 +12,10 @@ import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
-	const [isSelectedPeriod, setIsSelectedPeriod] = useState<PeriodsType>(
-		isPeriods[0],
-	);
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
@@ -32,16 +30,6 @@ const ScheduleCreate: FC = () => {
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		setIsPeriods(dates);
 	};
-
-	const handleSelectedPeriod = (period: PeriodsType) => {
-		setIsSelectedPeriod(period);
-	};
-
-	useEffect(() => {
-		if (!isSelectedPeriod) {
-			setIsSelectedPeriod(isPeriods[0]);
-		}
-	}, [isPeriods]);
 
 	return (
 		<Format title={'schedule-create'}>
@@ -74,18 +62,12 @@ const ScheduleCreate: FC = () => {
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (
-								<Tourism
-									onChangePeriods={handleChangePeriods}
-									isSelectedPeriod={isSelectedPeriod}
-								></Tourism>
+								<Tourism onChangePeriods={handleChangePeriods}></Tourism>
 							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar
-						periodItem={isSelectedPeriod}
-						onSelectedPeriod={handleSelectedPeriod}
-					/>
+					<ScheduleSidebar />
 				</div>
 			</div>
 		</Format>
