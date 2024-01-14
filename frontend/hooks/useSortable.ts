@@ -1,14 +1,28 @@
 import { useState } from 'react';
-
-export const useSortable = <T>(targetLists: T[]) => {
+/**
+ * @description 리스트를 드래그앤 드롭으로 순서를 변경 하는 훅
+ * @template T - 리스트 타입
+ * @template U - HTML태그
+ * @param {T[]} targetLists 리스트
+ * @returns {{
+ *   handleDragOver: (e: React.DragEvent) => void,
+ *   handleDragStart: (e: React.DragEvent<U>) => void,
+ *   handleDragEnd: (e: React.DragEvent) => void,
+ *   handleDragEnter: (e: React.DragEvent<U>) => void,
+ *   handleDragLeave: (e: React.DragEvent) => void,
+ *   handleDrop: (e: React.DragEvent<HTMLLIElement>) => void,
+ *   lists: T[],
+ * }}
+ */
+export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 	const [lists, setLists] = useState<T[]>(targetLists);
-	const [grab, setGrab] = useState<HTMLLIElement | null>(null);
+	const [grab, setGrab] = useState<U | null>(null);
 
 	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
 	};
 
-	const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+	const handleDragStart = (e: React.DragEvent<U>) => {
 		setGrab(e.currentTarget);
 		e.currentTarget.classList.add('grabbing');
 		e.dataTransfer.effectAllowed = 'move';
@@ -21,7 +35,7 @@ export const useSortable = <T>(targetLists: T[]) => {
 		setGrab(null);
 	};
 
-	const handleDragEnter = (e: React.DragEvent<HTMLLIElement>) => {
+	const handleDragEnter = (e: React.DragEvent<U>) => {
 		if (grab) {
 			const grabPosition = Number(grab.dataset.position);
 			const targetPosition = Number(e.currentTarget.dataset.position);
@@ -39,7 +53,7 @@ export const useSortable = <T>(targetLists: T[]) => {
 		e.currentTarget.classList.remove('move_down');
 	};
 
-	const handleDrop = (e: React.DragEvent<HTMLLIElement>) => {
+	const handleDrop = (e: React.DragEvent<U>) => {
 		const grabPosition = Number(grab?.dataset.position);
 		const targetPosition = Number(e.currentTarget.dataset.position);
 

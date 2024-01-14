@@ -17,8 +17,6 @@
 	}
 
 	.schedule_tourism_container {
-		@apply flex flex-col gap-4;
-
 		.not_found_tourism_container {
 			@apply flex justify-center items-center w-full h-[80px] bg-customOrange rounded-lg;
 
