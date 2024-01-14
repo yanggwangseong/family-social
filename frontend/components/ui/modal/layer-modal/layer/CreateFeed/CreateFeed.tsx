@@ -191,7 +191,7 @@ const CreateFeed: FC = () => {
 			// 컴포넌트가 언마운트될 때 URL을 제거
 			if (isImageUrl) {
 				isImageUrl.map(url => {
-					console.log('호출!!!', url);
+					//console.log('호출!!!', url);
 					URL.revokeObjectURL(url);
 				});
 			}

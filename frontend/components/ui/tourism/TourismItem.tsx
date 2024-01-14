@@ -13,15 +13,21 @@ import {
 } from '@/constants/content-type.constant';
 import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
-const TourismItem: FC<TourismItemProps> = ({
-	tour,
-	onChangePeriods,
-	isSelectedPeriod,
-}) => {
+const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
+	const router = useRouter();
+	const query = router.query as {
+		menu: 'TOURCONTENTTYPE' | 'FESTIVAL' | 'TOURSEARCH';
+	};
+
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
-	const [isAddTourism, setIsAddTourism] = useState<boolean>(false);
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
+	const [isAddTourism, setIsAddTourism] = useState<string>('');
 
 	const handleChagePeriods = (tour: {
 		contentId: string;
@@ -31,7 +37,7 @@ const TourismItem: FC<TourismItemProps> = ({
 	}) => {
 		setIsPeriods(prev => {
 			const updatedPeriods = prev.map(item => {
-				if (item.period === isSelectedPeriod.period) {
+				if (item.period === isSelectedPeriod) {
 					return {
 						...item,
 						tourism: [
@@ -52,12 +58,30 @@ const TourismItem: FC<TourismItemProps> = ({
 			return updatedPeriods;
 		});
 
-		setIsAddTourism(!isAddTourism);
+		setIsAddTourism(tour.contentId);
 	};
 
+	const handleDeleteTourism = (contentId: string) => {
+		const newPeriods = isPeriods.map(item => ({
+			...item,
+			tourism: item.tourism?.filter(v => contentId !== v.contentId),
+		}));
+		setIsPeriods(newPeriods);
+		setIsAddTourism('');
+	};
+
+	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기
 	useEffect(() => {
-		console.log(isPeriods);
-	}, [isPeriods]);
+		if (isSelectedPeriod) {
+			isPeriods.map(item =>
+				item.tourism?.map(v => {
+					if (v.contentId === tour.contentid) {
+						setIsAddTourism(v.contentId);
+					}
+				}),
+			);
+		}
+	}, [isPeriods, isSelectedPeriod, tour.contentid]);
 
 	return (
 		<div className={styles.container}>
@@ -93,11 +117,12 @@ const TourismItem: FC<TourismItemProps> = ({
 					</div>
 				</div>
 				<div className={styles.tour_right_btn_container}>
-					{isAddTourism ? (
+					{isAddTourism && isAddTourism === tour.contentid ? (
 						<div
 							className={cn(styles.btn_container, {
-								[styles.active]: !!isAddTourism,
+								[styles.active]: isAddTourism === tour.contentid,
 							})}
+							onClick={() => handleDeleteTourism(tour.contentid)}
 						>
 							<AiOutlineCheck size={24} color="#0a0a0a" />
 						</div>

@@ -7,7 +7,7 @@
 			@apply flex gap-4;
 
 			.img_container {
-				@apply h-[100px];
+				@apply h-[100px] border border-solid border-customDark;
 			}
 
 			.tour_description_container {

@@ -13,10 +13,7 @@ import TourismItem from '@/components/ui/tourism/TourismItem';
 import { TourSearchProps } from './tour-search.interface';
 import { PeriodsType } from '@/atoms/periodAtom';
 
-const TourSearch: FC<TourSearchProps> = ({
-	onChangePeriods,
-	isSelectedPeriod,
-}) => {
+const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 	const [isKeyword, setIsKeyword] = useState<string>('');
 
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
@@ -102,7 +99,6 @@ const TourSearch: FC<TourSearchProps> = ({
 								key={index}
 								tour={tour}
 								onChangePeriods={handleChangePeriods}
-								isSelectedPeriod={isSelectedPeriod}
 							/>
 						))}
 					</React.Fragment>
