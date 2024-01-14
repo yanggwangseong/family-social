@@ -18,7 +18,13 @@ const ScheduleSidebar: FC = () => {
 				<SchedulePeriodSelect></SchedulePeriodSelect>
 			</div>
 			<div className={styles.sidebar_tourism_total_time_container}>
-				<div className={styles.tourism_count}>12</div>
+				<div className={styles.tourism_count}>
+					{isPeriods.map(item => {
+						if (item.period === isSelectedPeriod) {
+							return item.tourism?.length;
+						}
+					})}
+				</div>
 				<div className={styles.stay_time}>2시간 0분 / 12시간 0분</div>
 			</div>
 
