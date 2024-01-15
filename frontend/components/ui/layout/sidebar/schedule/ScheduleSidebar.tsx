@@ -5,6 +5,7 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import ScheduleTourism from '@/components/ui/schedule/tourism/Tourism';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import { getSumTime } from '@/utils/get-sum-time';
 
 const ScheduleSidebar: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -25,7 +26,14 @@ const ScheduleSidebar: FC = () => {
 						}
 					})}
 				</div>
-				<div className={styles.stay_time}>2시간 0분 / 12시간 0분</div>
+				<div className={styles.stay_time}>
+					2시간 0분 /
+					{isPeriods.map(
+						period =>
+							period.period === isSelectedPeriod &&
+							getSumTime(period.startTime, period.endTime),
+					)}
+				</div>
 			</div>
 
 			<div>

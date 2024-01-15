@@ -18,6 +18,8 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 		lists,
 	} = useSortable<TourismType, HTMLDivElement>(tourList);
 
+	const handleCompleTime = () => {};
+
 	return (
 		<div className={styles.wrap}>
 			{lists.map((item, index) => (

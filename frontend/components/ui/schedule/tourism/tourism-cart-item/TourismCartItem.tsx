@@ -22,6 +22,10 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 		setIsTimeMode(!isTimeMode);
 	};
 
+	const handleCompleteTime = () => {
+		setIsTimeMode(!isTimeMode);
+	};
+
 	return (
 		<div
 			className={styles.schedule_tourism_container}
@@ -64,7 +68,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 							/>
 						</div>
 						<div className={styles.btn_contaienr}>
-							<div className={styles.complete_btn} onClick={handleTimeMode}>
+							<div className={styles.complete_btn} onClick={handleCompleteTime}>
 								완료
 							</div>
 						</div>
