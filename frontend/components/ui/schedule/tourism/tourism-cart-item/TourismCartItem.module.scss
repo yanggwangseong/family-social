@@ -12,6 +12,26 @@
 	.container {
 		@apply border border-solid border-customDark p-2 flex-1 rounded-md;
 
+		.time_fix_item_card {
+			@apply flex justify-between p-2;
+
+			.stay_time_title {
+				@apply text-sm flex items-center font-semibold;
+			}
+
+			.field_container {
+				@apply w-1/5;
+			}
+
+			.btn_contaienr {
+				@apply flex items-center;
+
+				.complete_btn {
+					@apply text-customOrange text-sm;
+				}
+			}
+		}
+
 		.tour_item_card {
 			@apply flex items-center justify-between;
 
