@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 /**
  * @description 리스트를 드래그앤 드롭으로 순서를 변경 하는 훅
  * @template T - 리스트 타입
@@ -69,6 +69,12 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		}
 	};
 
+	useEffect(() => {
+		if (targetLists) {
+			setLists(targetLists);
+		}
+	}, [targetLists]);
+
 	return {
 		handleDragOver,
 		handleDragStart,
@@ -77,5 +83,6 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		handleDragLeave,
 		handleDrop,
 		lists,
+		setLists,
 	};
 };

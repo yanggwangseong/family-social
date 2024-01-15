@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Tourism.module.scss';
 import Image from 'next/image';
 import { ContentTypeName } from '@/constants/content-type.constant';
