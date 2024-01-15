@@ -4,6 +4,7 @@ import styles from './TourismCartItem.module.scss';
 import { TourismCartItemProps } from './tourism-cart-item.interface';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import Field from '@/components/ui/field/Field';
+import { getTransTime } from '@/utils/get-trans-time';
 
 const TourismCartItem: FC<TourismCartItemProps> = ({
 	dataPosition,
@@ -48,11 +49,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 								name="hour"
 								min={0}
 								max={24}
-								defaultValue={
-									item.stayTime.split(':')[0] === '00'
-										? '0'
-										: item.stayTime.split(':')[0]
-								}
+								defaultValue={getTransTime(item.stayTime.split(':')[0])}
 							/>
 						</div>
 						<div className={styles.field_container}>
@@ -63,11 +60,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 								name="minute"
 								min={0}
 								max={59}
-								defaultValue={
-									item.stayTime.split(':')[1] === '00'
-										? '0'
-										: item.stayTime.split(':')[1]
-								}
+								defaultValue={getTransTime(item.stayTime.split(':')[1])}
 							/>
 						</div>
 						<div className={styles.btn_contaienr}>

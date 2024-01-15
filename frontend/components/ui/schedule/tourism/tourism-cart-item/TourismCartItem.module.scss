@@ -65,7 +65,7 @@
 				@apply flex gap-4;
 
 				.stay_time {
-					@apply text-sm flex items-center whitespace-nowrap cursor-pointer;
+					@apply text-base flex items-center whitespace-nowrap cursor-pointer;
 
 					&:hover {
 						@apply text-customGray;
