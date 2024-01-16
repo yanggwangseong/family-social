@@ -15,15 +15,24 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 	onDrop,
 	onDragEnter,
 	onDragLeave,
+	onCompleTime,
 }) => {
 	const [isTimeMode, setIsTimeMode] = useState<boolean>(false);
+
+	const [isHour, setIsHour] = useState<string>(item.stayTime.split(':')[0]);
+	const [isMinute, setIsMinute] = useState<string>(item.stayTime.split(':')[1]);
 
 	const handleTimeMode = () => {
 		setIsTimeMode(!isTimeMode);
 	};
 
 	const handleCompleteTime = () => {
+		handleCompleTime(item.position, Number(isHour), Number(isMinute));
 		setIsTimeMode(!isTimeMode);
+	};
+
+	const handleCompleTime = (position: number, hour: number, minute: number) => {
+		onCompleTime(position, hour, minute);
 	};
 
 	return (
@@ -53,7 +62,8 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 								name="hour"
 								min={0}
 								max={24}
-								defaultValue={getTransTime(item.stayTime.split(':')[0])}
+								defaultValue={isHour}
+								onChange={e => setIsHour(e.target.value)}
 							/>
 						</div>
 						<div className={styles.field_container}>
@@ -64,7 +74,8 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 								name="minute"
 								min={0}
 								max={59}
-								defaultValue={getTransTime(item.stayTime.split(':')[1])}
+								defaultValue={isMinute}
+								onChange={e => setIsMinute(e.target.value)}
 							/>
 						</div>
 						<div className={styles.btn_contaienr}>

@@ -9,4 +9,5 @@ export interface TourismCartItemProps {
 	onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
 	onDragEnter: (e: React.DragEvent<HTMLDivElement>) => void;
 	onDragLeave: (e: React.DragEvent<Element>) => void;
+	onCompleTime: (position: number, hour: number, minute: number) => void;
 }
