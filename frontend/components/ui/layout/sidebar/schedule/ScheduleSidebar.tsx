@@ -27,7 +27,33 @@ const ScheduleSidebar: FC = () => {
 					})}
 				</div>
 				<div className={styles.stay_time}>
-					2시간 0분 /
+					{isPeriods.map(period => {
+						if (period.period === isSelectedPeriod) {
+							if (!period.tourism) {
+								return `0시간 0분`;
+							}
+							const total = period.tourism.reduce(
+								(prev, item) => {
+									const hours =
+										Number(prev.hours) + Number(item.stayTime.split(':')[0]);
+									const minutes =
+										Number(prev.minutes) + Number(item.stayTime.split(':')[1]);
+
+									return {
+										hours: hours + Math.floor(minutes / 60),
+										minutes: minutes % 60,
+									};
+								},
+								{ hours: 0, minutes: 0 },
+							);
+
+							const formattedTotal = `${String(total?.hours)}시간 ${String(
+								total?.minutes,
+							)}분`;
+							return formattedTotal;
+						}
+					})}
+					/
 					{isPeriods.map(
 						period =>
 							period.period === isSelectedPeriod &&
