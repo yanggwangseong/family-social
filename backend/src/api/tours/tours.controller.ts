@@ -1,7 +1,3 @@
-import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
-import { HttpService } from '@nestjs/axios';
 import {
 	Controller,
 	Get,
@@ -11,7 +7,12 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+
 import { ToursService } from './tours.service';
+
+import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)

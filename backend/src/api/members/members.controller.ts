@@ -9,20 +9,23 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { MembersService } from './members.service';
-import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
-import { CurrentUser } from '@/common/decorators/user.decorator';
+
+import { MembersService } from './members.service';
+
 import {
 	BadRequestServiceException,
 	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
+import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+
+import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
+import { CurrentUser } from '@/common/decorators/user.decorator';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { UpdateMemberProfileSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
-import { FilesInterceptor } from '@nestjs/platform-express';
 import {
 	CreateMemberCoverImageMulterOptions,
 	CreateMemberProfileImageMulterOptions,
