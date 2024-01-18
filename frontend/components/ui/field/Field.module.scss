@@ -16,6 +16,15 @@
 	}
 }
 
+//time을 설정하는 input style
+@mixin time_input() {
+	@apply font-semibold;
+
+	> input[type='number'] {
+		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold text-sm;
+	}
+}
+
 // 기본 input 스타일
 .input {
 	@apply border border-solid border-customDark rounded-full py-1 px-5;
@@ -35,4 +44,8 @@
 
 .error {
 	@apply text-customOrange;
+}
+
+.time_input {
+	@include time_input();
 }

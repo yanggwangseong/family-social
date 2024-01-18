@@ -1,12 +1,20 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Tourism.module.scss';
 import Image from 'next/image';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { ScheduleTourismProps } from './tourism.interface';
-import { TourismType } from '@/atoms/periodAtom';
+import { TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useSortable } from '@/hooks/useSortable';
+import TourismCartItem from './tourism-cart-item/TourismCartItem';
+import { useRecoilState } from 'recoil';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
 const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
+	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
 	const {
 		handleDragOver,
 		handleDragStart,
@@ -17,52 +25,67 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 		lists,
 	} = useSortable<TourismType, HTMLDivElement>(tourList);
 
+	const handleDelteTourismItem = (contentId: string) => {
+		setIsPeriods(prev => {
+			return prev.map(value => {
+				if (value.period === isSelectedPeriod && value.tourism) {
+					const updatedTourism = value.tourism.filter(
+						item => item.contentId !== contentId,
+					);
+
+					return {
+						...value,
+						tourism: updatedTourism,
+					};
+				}
+
+				return value;
+			});
+		});
+	};
+
+	const handleCompleTime = (position: number, hour: number, minute: number) => {
+		setIsPeriods(prev => {
+			return prev.map(value => {
+				let tourism;
+				if (value.period === isSelectedPeriod) {
+					tourism =
+						value.tourism &&
+						value.tourism.map(item => {
+							if (item.position === position) {
+								return {
+									...item,
+									stayTime: `${String(hour)}:${String(minute)}`,
+								};
+							}
+							return item;
+						});
+				}
+
+				return {
+					...value,
+					tourism: tourism || value.tourism,
+				};
+			});
+		});
+	};
+
 	return (
-		<div className={styles.container}>
+		<div className={styles.wrap}>
 			{lists.map((item, index) => (
-				<div
-					className={styles.schedule_tourism_container}
+				<TourismCartItem
 					key={index}
-					data-position={index}
+					dataPosition={index}
+					item={item}
 					onDragOver={handleDragOver}
 					onDragStart={handleDragStart}
 					onDragEnd={handleDragEnd}
 					onDrop={handleDrop}
 					onDragEnter={handleDragEnter}
 					onDragLeave={handleDragLeave}
-					draggable
-				>
-					<div className={styles.order_container}>
-						<div className={styles.order_number}>{index}</div>
-					</div>
-					<div className={styles.container}>
-						<div className={styles.tour_item_card}>
-							<div className={styles.tour_img_title_container}>
-								<div className={styles.img_container}>
-									<Image
-										width={45}
-										height={45}
-										src={item.tourismImage}
-										alt="img"
-										style={{ height: '45px' }}
-									></Image>
-								</div>
-								<div className={styles.tour_description_container}>
-									<div className={styles.tour_title}>{item.title}</div>
-									<div className={styles.tour_addr_container}>
-										<div className={styles.tour_content_type_name}>
-											{ContentTypeName['12']}
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className={styles.tour_right_btn_container}>
-								<div className={styles.stay_time}>2시간 0분</div>
-								<div className={styles.close_btn}>x</div>
-							</div>
-						</div>
-					</div>
-				</div>
+					onCompleTime={handleCompleTime}
+					onDelteTourismItem={handleDelteTourismItem}
+				></TourismCartItem>
 			))}
 		</div>
 	);

@@ -73,6 +73,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기
 	useEffect(() => {
 		if (isSelectedPeriod) {
+			setIsAddTourism(''); // 기본 default값으로 비우고 이후에 속하는 contentId만 담기
 			isPeriods.map(item =>
 				item.tourism?.map(v => {
 					if (v.contentId === tour.contentid) {
@@ -133,7 +134,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 								onClick={() =>
 									handleChagePeriods({
 										contentId: tour.contentid,
-										stayTime: '02:00',
+										stayTime: '02:40',
 										tourismImage: tour.firstimage,
 										title: tour.title,
 									})

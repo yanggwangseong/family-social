@@ -1,0 +1,84 @@
+.schedule_tourism_container {
+	@apply flex gap-4;
+
+	.order_container {
+		@apply flex items-center;
+
+		.order_number {
+			@apply w-[25px] h-[25px] text-customDark border border-solid border-customDark bg-customOrange rounded-full text-sm text-center;
+		}
+	}
+
+	.container {
+		@apply border border-solid border-customDark p-2 flex-1 rounded-md;
+
+		.time_fix_item_card {
+			@apply flex justify-between p-2;
+
+			.stay_time_title {
+				@apply text-sm flex items-center font-semibold;
+			}
+
+			.field_container {
+				@apply w-1/5;
+			}
+
+			.btn_contaienr {
+				@apply flex items-center;
+
+				.complete_btn {
+					@apply text-customOrange text-sm;
+				}
+			}
+		}
+
+		.tour_item_card {
+			@apply flex items-center justify-between;
+
+			.tour_img_title_container {
+				@apply flex gap-4 mr-2 cursor-grab;
+
+				.img_container {
+					@apply h-[45px] border border-solid border-customDark;
+				}
+
+				.tour_description_container {
+					@apply flex flex-col justify-between;
+
+					.tour_title {
+						@apply text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap break-all;
+						width: 130px;
+					}
+
+					.tour_addr_container {
+						@apply flex gap-6;
+
+						.tour_content_type_name {
+							@apply text-xs text-customOrange;
+						}
+					}
+				}
+			}
+
+			//right button
+			.tour_right_btn_container {
+				@apply flex gap-4;
+
+				.stay_time {
+					@apply text-base flex items-center whitespace-nowrap cursor-pointer;
+
+					&:hover {
+						@apply text-customGray;
+					}
+				}
+				.close_btn {
+					@apply text-lg flex items-center cursor-pointer;
+
+					&:hover {
+						@apply text-customOrange;
+					}
+				}
+			}
+		}
+	}
+}
