@@ -16,6 +16,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 	onDragEnter,
 	onDragLeave,
 	onCompleTime,
+	onDelteTourismItem,
 }) => {
 	const [isTimeMode, setIsTimeMode] = useState<boolean>(false);
 
@@ -35,6 +36,10 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 		onCompleTime(position, hour, minute);
 	};
 
+	const handleDelteTourismItem = (contentId: string) => {
+		onDelteTourismItem(contentId);
+	};
+
 	return (
 		<div
 			className={styles.schedule_tourism_container}
@@ -48,7 +53,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 			draggable
 		>
 			<div className={styles.order_container}>
-				<div className={styles.order_number}>{dataPosition}</div>
+				<div className={styles.order_number}>{dataPosition + 1}</div>
 			</div>
 			<div className={styles.container}>
 				{isTimeMode ? (
@@ -109,7 +114,12 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 							<div className={styles.stay_time} onClick={handleTimeMode}>
 								{item.stayTime}
 							</div>
-							<div className={styles.close_btn}>x</div>
+							<div
+								className={styles.close_btn}
+								onClick={() => handleDelteTourismItem(item.contentId)}
+							>
+								x
+							</div>
 						</div>
 					</div>
 				)}

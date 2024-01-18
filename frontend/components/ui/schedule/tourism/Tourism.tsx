@@ -25,6 +25,25 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 		lists,
 	} = useSortable<TourismType, HTMLDivElement>(tourList);
 
+	const handleDelteTourismItem = (contentId: string) => {
+		setIsPeriods(prev => {
+			return prev.map(value => {
+				if (value.period === isSelectedPeriod && value.tourism) {
+					const updatedTourism = value.tourism.filter(
+						item => item.contentId !== contentId,
+					);
+
+					return {
+						...value,
+						tourism: updatedTourism,
+					};
+				}
+
+				return value;
+			});
+		});
+	};
+
 	const handleCompleTime = (position: number, hour: number, minute: number) => {
 		setIsPeriods(prev => {
 			return prev.map(value => {
@@ -36,18 +55,16 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 							if (item.position === position) {
 								return {
 									...item,
-									stayTime: `${String(hour).padStart(2, '0')}:${String(
-										minute,
-									).padStart(2, '0')}`,
+									stayTime: `${String(hour)}:${String(minute)}`,
 								};
 							}
-							return item; // Return the original item if position doesn't match
+							return item;
 						});
 				}
 
 				return {
 					...value,
-					tourism: tourism || value.tourism, // Use original tourism array if it's undefined
+					tourism: tourism || value.tourism,
 				};
 			});
 		});
@@ -67,6 +84,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 					onDragEnter={handleDragEnter}
 					onDragLeave={handleDragLeave}
 					onCompleTime={handleCompleTime}
+					onDelteTourismItem={handleDelteTourismItem}
 				></TourismCartItem>
 			))}
 		</div>

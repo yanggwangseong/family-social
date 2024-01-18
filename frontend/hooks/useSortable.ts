@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
  * @template T - 리스트 타입
  * @template U - HTML태그
  * @param {T[]} targetLists 리스트
- * @returns {{
+ * @returns {
  *   handleDragOver: (e: React.DragEvent) => void,
  *   handleDragStart: (e: React.DragEvent<U>) => void,
  *   handleDragEnd: (e: React.DragEvent) => void,
@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
  *   handleDragLeave: (e: React.DragEvent) => void,
  *   handleDrop: (e: React.DragEvent<HTMLLIElement>) => void,
  *   lists: T[],
- * }}
+ * }
  */
 export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 	const [lists, setLists] = useState<T[]>(targetLists);
