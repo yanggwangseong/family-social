@@ -32,6 +32,7 @@ export const LayerMode = {
 	selectedContentType: 'selectedContentType',
 	serviceCategory: 'serviceCategory',
 	areaCode: 'areaCode',
+	tourismDetail: 'tourismDetail',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;

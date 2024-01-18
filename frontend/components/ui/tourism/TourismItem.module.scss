@@ -4,7 +4,7 @@
 		@apply flex items-center justify-between;
 
 		.tour_img_title_container {
-			@apply flex gap-4;
+			@apply flex gap-4 cursor-pointer;
 
 			.img_container {
 				@apply h-[100px] border border-solid border-customDark;

@@ -15,6 +15,8 @@ import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { LayerMode } from 'types';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -23,6 +25,8 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	};
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
@@ -70,6 +74,14 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 		setIsAddTourism('');
 	};
 
+	const handleTourismDetailLayerModal = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: tour.title,
+			layer: LayerMode.tourismDetail,
+		});
+	};
+
 	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기
 	useEffect(() => {
 		if (isSelectedPeriod) {
@@ -87,7 +99,10 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.tour_item_card}>
-				<div className={styles.tour_img_title_container}>
+				<div
+					className={styles.tour_img_title_container}
+					onClick={handleTourismDetailLayerModal}
+				>
 					<div className={styles.img_container}>
 						<Image
 							width={120}
