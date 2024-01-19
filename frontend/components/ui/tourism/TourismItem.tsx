@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
+import { tourDetailAtom } from '@/atoms/tourDetailAtom';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -26,6 +27,8 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [isContentIdTypeId, setIsContentIdTypeId] =
+		useRecoilState(tourDetailAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
@@ -74,7 +77,14 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 		setIsAddTourism('');
 	};
 
-	const handleTourismDetailLayerModal = () => {
+	const handleTourismDetailLayerModal = (
+		contentId: string,
+		contentTypeId: string,
+	) => {
+		setIsContentIdTypeId({
+			contentId: contentId,
+			contentTypeId: contentTypeId,
+		});
 		setIsShowing(!isShowing);
 		setIsLayer({
 			modal_title: tour.title,
@@ -101,7 +111,9 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 			<div className={styles.tour_item_card}>
 				<div
 					className={styles.tour_img_title_container}
-					onClick={handleTourismDetailLayerModal}
+					onClick={() =>
+						handleTourismDetailLayerModal(tour.contentid, tour.contenttypeid)
+					}
 				>
 					<div className={styles.img_container}>
 						<Image
