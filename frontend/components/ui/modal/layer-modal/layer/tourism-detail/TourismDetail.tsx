@@ -56,6 +56,12 @@ const TourismDetail: FC = () => {
 								</div>
 								<div className="text-sm text-customDark font-normal">{`${data.items.introduction.item[0].infocenter}`}</div>
 							</div>
+							<div className="flex mt-2 gap-2">
+								<div className="text-sm text-customDark font-normal">
+									영업시간:
+								</div>
+								<div className="text-sm text-customDark font-normal">{`${data.items.introduction.item[0].usetime}`}</div>
+							</div>
 						</div>
 					)
 				)}
