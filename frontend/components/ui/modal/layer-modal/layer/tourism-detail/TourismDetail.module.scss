@@ -1,5 +1,6 @@
 .tourism_detail_container {
-	@apply mt-2 flex flex-col gap-2;
+	@apply mt-2 flex flex-col gap-2 overflow-y-auto;
+	max-height: 600px;
 
 	.contentTypeName {
 		@apply text-sm text-customOrange;
