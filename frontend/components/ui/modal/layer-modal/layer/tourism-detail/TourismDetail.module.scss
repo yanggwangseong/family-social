@@ -1,3 +1,10 @@
-.container {
-	@apply mt-10;
+.tourism_detail_container {
+	@apply mt-2 flex flex-col gap-2;
+
+	.contentTypeName {
+		@apply text-sm text-customOrange;
+	}
+	.container {
+		@apply mt-2;
+	}
 }

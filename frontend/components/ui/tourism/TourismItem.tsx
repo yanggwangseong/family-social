@@ -2,8 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './TourismItem.module.scss';
 import { TourismItemProps } from './tourism-item.interface';
 import Image from 'next/image';
-import { AiFillHeart } from 'react-icons/ai';
-import { AiFillStar } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineCheck } from 'react-icons/ai';
 import cn from 'classnames';
@@ -18,6 +16,7 @@ import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { tourDetailAtom } from '@/atoms/tourDetailAtom';
+import HeartAndStar from '../heart-and-star/HeartAndStar';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -132,16 +131,8 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 							</div>
 							<div className={styles.tour_addr}>{tour.addr1}</div>
 						</div>
-						<div className={styles.tour_card_footer_container}>
-							<div className={styles.heart_container}>
-								<AiFillHeart size={14} color="#FB1F42" />
-								<span className={styles.score}>0</span>
-							</div>
-							<div className={styles.star_container}>
-								<AiFillStar size={14} color="rgb(253, 224, 71)" />
-								<span className={styles.score}>0</span>
-							</div>
-						</div>
+						{/* heart와 별점 */}
+						<HeartAndStar></HeartAndStar>
 					</div>
 				</div>
 				<div className={styles.tour_right_btn_container}>

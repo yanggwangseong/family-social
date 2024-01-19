@@ -28,22 +28,6 @@
 						@apply text-xs text-customGray;
 					}
 				}
-
-				.tour_card_footer_container {
-					@apply flex gap-4;
-
-					.heart_container {
-						@apply flex items-center gap-2;
-					}
-
-					.star_container {
-						@apply flex items-center gap-2;
-					}
-
-					.score {
-						@apply text-xs;
-					}
-				}
 			}
 		}
 
