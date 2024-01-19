@@ -46,6 +46,10 @@ const TourismDetail: FC = () => {
 							<div className="text-sm text-customGray font-normal mt-2 text-ellipsis whitespace-nowrap overflow-hidden">
 								{data.items.item[0].overview}
 							</div>
+							<div className="flex mt-2 gap-2">
+								<div className="text-sm text-customDark font-normal">주소:</div>
+								<div className="text-sm text-customDark font-normal">{`(${data.items.item[0].zipcode})${data.items.item[0].addr1}${data.items.item[0].addr2}`}</div>
+							</div>
 						</div>
 					)
 				)}
