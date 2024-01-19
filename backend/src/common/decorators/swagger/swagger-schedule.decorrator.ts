@@ -1,3 +1,11 @@
+import { applyDecorators } from '@nestjs/common';
+import {
+	ApiCreatedResponse,
+	ApiForbiddenResponse,
+	ApiNotFoundResponse,
+	ApiOperation,
+} from '@nestjs/swagger';
+
 import {
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSTION_TO_GROUP,
@@ -6,13 +14,6 @@ import {
 } from '@/constants/business-error';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
-import { applyDecorators } from '@nestjs/common';
-import {
-	ApiCreatedResponse,
-	ApiForbiddenResponse,
-	ApiNotFoundResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
 
 export const GetOneScheduleSwagger = () => {
 	return applyDecorators(

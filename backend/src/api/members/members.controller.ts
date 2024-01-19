@@ -12,24 +12,23 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import { MembersService } from './members.service';
-
+import { UpdateMemberProfileSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import { CurrentUser } from '@/common/decorators/user.decorator';
 import {
 	BadRequestServiceException,
 	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
+import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
-
-import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
-import { CurrentUser } from '@/common/decorators/user.decorator';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
-import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { UpdateMemberProfileSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
 import {
 	CreateMemberCoverImageMulterOptions,
 	CreateMemberProfileImageMulterOptions,
 } from '@/utils/upload-media';
+
+import { MembersService } from './members.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)

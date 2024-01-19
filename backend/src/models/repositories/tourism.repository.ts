@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { TourismEntity } from '../entities/tourism.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { ICreateTourismArgs } from '@/types/args/tour';
+
+import { TourismEntity } from '../entities/tourism.entity';
 
 @Injectable()
 export class TourismRepository extends Repository<TourismEntity> {
@@ -14,7 +16,7 @@ export class TourismRepository extends Repository<TourismEntity> {
 	}
 
 	async createTourism(tourism: ICreateTourismArgs[]) {
-		const insertResult = await this.repository.insert(tourism);
+		await this.repository.insert(tourism);
 	}
 
 	async deleteTourism(periodId: string) {

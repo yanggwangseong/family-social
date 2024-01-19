@@ -1,6 +1,7 @@
-import { MemberEntity } from '@/models/entities/member.entity';
-import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+
+import { MemberEntity } from '@/models/entities/member.entity';
 
 export class VerifyEmailReqDto extends PickType(MemberEntity, [
 	'email',

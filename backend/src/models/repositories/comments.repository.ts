@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CommentEntity } from '../entities/comment.entity';
-import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+
 import { ICreateCommentsArgs } from '@/types/args/comment';
+
+import { CommentEntity } from '../entities/comment.entity';
 
 @Injectable()
 export class CommentsRepository extends Repository<CommentEntity> {

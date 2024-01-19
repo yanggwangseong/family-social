@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MediaResDto } from '../../media/res/media-res.dto';
+
 import { CommentGetListsResDto } from '../../comments/res/comment-get-lists-res.dto';
+import { MediaResDto } from '../../media/res/media-res.dto';
 
 export class FeedResDto {
 	@ApiProperty({

@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+
+import { DefaultEntity } from './common/default.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
 
 @Entity({ name: 'fam_tourism' })
@@ -46,7 +47,7 @@ export class TourismEntity extends DefaultEntity {
 	@IsUUID()
 	public readonly periodId!: string;
 
-	@ManyToOne((type) => TourismPeriodEntity, (tp) => tp.tourisms)
+	@ManyToOne(() => TourismPeriodEntity, (tp) => tp.tourisms)
 	@JoinColumn({ name: 'periodId', referencedColumnName: 'id' })
 	tourismPeriod!: TourismPeriodEntity;
 }

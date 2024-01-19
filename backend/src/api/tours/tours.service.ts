@@ -1,11 +1,12 @@
-import { ScheduleRepository } from '@/models/repositories/schedule.repository';
-import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
-import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
+
+import { ScheduleRepository } from '@/models/repositories/schedule.repository';
+import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
+import { TourismRepository } from '@/models/repositories/tourism.repository';
 
 @Injectable()
 export class ToursService {

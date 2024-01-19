@@ -1,8 +1,3 @@
-import {
-	ERROR_COMMENT_NOT_FOUND,
-	ERROR_DELETE_COMMENT,
-	ERROR_FEED_NOT_FOUND,
-} from '@/constants/business-error';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiConflictResponse,
@@ -10,6 +5,12 @@ import {
 	ApiNotFoundResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
+
+import {
+	ERROR_COMMENT_NOT_FOUND,
+	ERROR_DELETE_COMMENT,
+	ERROR_FEED_NOT_FOUND,
+} from '@/constants/business-error';
 
 export const CreateCommentSwagger = () => {
 	return applyDecorators(

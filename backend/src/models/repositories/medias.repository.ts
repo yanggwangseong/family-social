@@ -1,10 +1,11 @@
-import { EntityManager, Repository } from 'typeorm';
-import { FeedMediaEntity } from '../entities/fam-feed-media.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
+import { EntityManager, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+
+import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '../dto/media/req/media-update-req-dto';
+import { FeedMediaEntity } from '../entities/fam-feed-media.entity';
 
 @Injectable()
 export class MediasRepository extends Repository<FeedMediaEntity> {

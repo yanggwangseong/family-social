@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { MembersModule } from '../members/members.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MemberEntity } from '@/models/entities/member.entity';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from '@/common/strategies/refreshToken.strategy';
+import { MemberEntity } from '@/models/entities/member.entity';
+
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { MembersModule } from '../members/members.module';
 
 @Module({
 	imports: [

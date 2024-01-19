@@ -1,3 +1,6 @@
+import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -11,8 +14,6 @@ import { LikeCommentEntity } from '@/models/entities/fam-like-comment.entity';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
 import { ICreateCommentsArgs } from '@/types/args/comment';
-import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CommentsService {

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { LikeCommentEntity } from '../entities/fam-like-comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { LikeCommentEntity } from '../entities/fam-like-comment.entity';
 
 @Injectable()
 export class LikesCommentRepository extends Repository<LikeCommentEntity> {

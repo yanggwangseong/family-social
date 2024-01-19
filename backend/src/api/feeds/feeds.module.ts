@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { LikeFeedEntity } from '@/models/entities/fam-like-feed.entity';
+import { FeedEntity } from '@/models/entities/feed.entity';
+import { FeedsRepository } from '@/models/repositories/feeds.repository';
+import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
+
 import { FeedsController } from './feeds.controller';
 import { FeedsService } from './feeds.service';
-import { FeedsRepository } from '@/models/repositories/feeds.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { FeedEntity } from '@/models/entities/feed.entity';
-import { MediasModule } from '../medias/medias.module';
-import { LikeFeedEntity } from '@/models/entities/fam-like-feed.entity';
-import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 import { CommentsModule } from '../comments/comments.module';
+import { MediasModule } from '../medias/medias.module';
 
 @Module({
 	imports: [

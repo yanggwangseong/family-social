@@ -1,10 +1,12 @@
-import { CommentEntity } from '@/models/entities/comment.entity';
 import {
 	ApiProperty,
 	ApiPropertyOptional,
 	OmitType,
 	PickType,
 } from '@nestjs/swagger';
+
+import { CommentEntity } from '@/models/entities/comment.entity';
+
 import { MemberResDto } from '../../member/res/member-res.dto';
 
 export class CommentGetListsResDto extends PickType(CommentEntity, [

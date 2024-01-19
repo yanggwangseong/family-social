@@ -1,6 +1,7 @@
-import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+
+import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 
 export const GetInvitationsListSwagger = () => {
 	return applyDecorators(

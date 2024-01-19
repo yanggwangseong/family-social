@@ -3,10 +3,10 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
-import { AppModule } from './app.module';
-
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+
+import { AppModule } from './app.module';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {

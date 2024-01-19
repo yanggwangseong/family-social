@@ -1,3 +1,14 @@
+import { applyDecorators } from '@nestjs/common';
+import {
+	ApiConflictResponse,
+	ApiCreatedResponse,
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiUnauthorizedResponse,
+	ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
+
 import {
 	ERROR_PASSWORD_MISMATCH,
 	ERROR_EMAIL_NOT_FOUND,
@@ -8,17 +19,6 @@ import {
 } from '@/constants/business-error';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
-import { applyDecorators } from '@nestjs/common';
-import {
-	ApiConflictResponse,
-	ApiCreatedResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiResponse,
-	ApiUnauthorizedResponse,
-	ApiUnprocessableEntityResponse,
-} from '@nestjs/swagger';
 
 export const LoginMemberSwagger = () => {
 	return applyDecorators(
