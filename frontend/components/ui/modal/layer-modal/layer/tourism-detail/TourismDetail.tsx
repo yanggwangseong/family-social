@@ -24,7 +24,7 @@ const TourismDetail: FC = () => {
 				isContentIdTypeId.contentTypeId,
 			),
 	);
-
+	console.log(data);
 	return (
 		<div className={styles.tourism_detail_container}>
 			<div className={styles.contentTypeName}>
@@ -40,7 +40,14 @@ const TourismDetail: FC = () => {
 				{isLoading ? (
 					<Skeleton></Skeleton>
 				) : (
-					data && <ImagesGallary images={data.items.image.item}></ImagesGallary>
+					data && (
+						<div>
+							<ImagesGallary images={data.items.image.item}></ImagesGallary>
+							<div className="text-sm text-customGray font-normal mt-2 text-ellipsis whitespace-nowrap overflow-hidden">
+								{data.items.item[0].overview}
+							</div>
+						</div>
+					)
 				)}
 			</div>
 		</div>
