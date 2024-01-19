@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+
+import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
@@ -20,11 +21,11 @@ export class ScheduleEntity extends DefaultEntity {
 	@IsUUID()
 	public readonly memberId!: string;
 
-	@ManyToOne((type) => GroupEntity, (gr) => gr.schedulesByGroup)
+	@ManyToOne(() => GroupEntity, (gr) => gr.schedulesByGroup)
 	@JoinColumn({ name: 'groupId', referencedColumnName: 'id' })
 	group!: GroupEntity;
 
-	@ManyToOne((type) => MemberEntity, (mb) => mb.memberCreateSchedules)
+	@ManyToOne(() => MemberEntity, (mb) => mb.memberCreateSchedules)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
 

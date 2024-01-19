@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MemberEntity } from '@/models/entities/member.entity';
 import {
 	ICreateMemberArgs,
 	ILoginMemberArgs,
 	IUpdateMemberArgs,
 } from '@/types/args/member';
-import { v4 as uuidv4 } from 'uuid';
-import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
-import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {

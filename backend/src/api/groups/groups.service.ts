@@ -1,17 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { GroupsRepository } from '@/models/repositories/groups.repository';
+
 import {
 	EntityConflictException,
 	EntityNotFoundException,
 	ForBiddenException,
-	UnAuthOrizedException,
 } from '@/common/exception/service.exception';
-import {
-	IDeleteGroupArgs,
-	IMembersBelongToGroupArgs,
-} from '@/types/args/group';
-import { FamsRepository } from '@/models/repositories/fams.repository';
-import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import {
 	ERROR_DELETE_GROUP,
 	ERROR_DELETE_GROUP_MEMBER,
@@ -23,6 +16,13 @@ import {
 } from '@/constants/business-error';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
+import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
+import { FamsRepository } from '@/models/repositories/fams.repository';
+import { GroupsRepository } from '@/models/repositories/groups.repository';
+import {
+	IDeleteGroupArgs,
+	IMembersBelongToGroupArgs,
+} from '@/types/args/group';
 import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
@@ -94,7 +94,7 @@ export class GroupsService {
 		memberId: string;
 	}): Promise<GroupResDto> {
 		// 그룹 유/무 체크
-		const group = await this.findGroupByIdOrThrow(groupId);
+		await this.findGroupByIdOrThrow(groupId);
 
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);

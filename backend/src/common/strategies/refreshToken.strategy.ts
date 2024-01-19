@@ -1,9 +1,10 @@
-import { TokenPayload } from '@/types/token';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+
+import { TokenPayload } from '@/types/token';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(

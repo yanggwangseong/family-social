@@ -1,3 +1,8 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamEntity, roleType } from '@/models/entities/fam.entity';
@@ -7,10 +12,7 @@ import {
 	IUpdateFamInvitationAcceptArgs,
 } from '@/types/args/fam';
 import { IDeleteGroupArgs } from '@/types/args/group';
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+
 import { BelongToGroupResDto } from '../dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '../dto/group/res/group-members.res.dto';
 

@@ -2,8 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './TourismItem.module.scss';
 import { TourismItemProps } from './tourism-item.interface';
 import Image from 'next/image';
-import { AiFillHeart } from 'react-icons/ai';
-import { AiFillStar } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineCheck } from 'react-icons/ai';
 import cn from 'classnames';
@@ -15,6 +13,10 @@ import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { LayerMode } from 'types';
+import { tourDetailAtom } from '@/atoms/tourDetailAtom';
+import HeartAndStar from '../heart-and-star/HeartAndStar';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -23,6 +25,10 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	};
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [isContentIdTypeId, setIsContentIdTypeId] =
+		useRecoilState(tourDetailAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
@@ -70,6 +76,21 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 		setIsAddTourism('');
 	};
 
+	const handleTourismDetailLayerModal = (
+		contentId: string,
+		contentTypeId: string,
+	) => {
+		setIsContentIdTypeId({
+			contentId: contentId,
+			contentTypeId: contentTypeId,
+		});
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: tour.title,
+			layer: LayerMode.tourismDetail,
+		});
+	};
+
 	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기
 	useEffect(() => {
 		if (isSelectedPeriod) {
@@ -87,7 +108,12 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.tour_item_card}>
-				<div className={styles.tour_img_title_container}>
+				<div
+					className={styles.tour_img_title_container}
+					onClick={() =>
+						handleTourismDetailLayerModal(tour.contentid, tour.contenttypeid)
+					}
+				>
 					<div className={styles.img_container}>
 						<Image
 							width={120}
@@ -105,16 +131,8 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 							</div>
 							<div className={styles.tour_addr}>{tour.addr1}</div>
 						</div>
-						<div className={styles.tour_card_footer_container}>
-							<div className={styles.heart_container}>
-								<AiFillHeart size={14} color="#FB1F42" />
-								<span className={styles.score}>0</span>
-							</div>
-							<div className={styles.star_container}>
-								<AiFillStar size={14} color="rgb(253, 224, 71)" />
-								<span className={styles.score}>0</span>
-							</div>
-						</div>
+						{/* heart와 별점 */}
+						<HeartAndStar></HeartAndStar>
 					</div>
 				</div>
 				<div className={styles.tour_right_btn_container}>

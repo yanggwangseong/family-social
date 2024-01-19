@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Column, Entity, OneToMany } from 'typeorm';
+
+import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
 import { ScheduleEntity } from './schedule.entity';

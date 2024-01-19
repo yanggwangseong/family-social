@@ -1,12 +1,11 @@
-import { EntityNotFoundException } from '@/common/exception/service.exception';
-import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService {
 	constructor(private readonly mailerService: MailerService) {}
 
-	async test(args?: string) {
+	async test() {
 		//if (!args) throw EntityNotFoundException('공지사항을 찾을 수 없습니다');
 		try {
 			await this.mailerService.sendMail({

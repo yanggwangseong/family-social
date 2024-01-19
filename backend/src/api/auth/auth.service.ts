@@ -1,25 +1,16 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { MailerService } from '@nestjs-modules/mailer';
+import * as bcrypt from 'bcryptjs';
+import { CookieOptions, Response } from 'express';
+
 import {
 	EntityConflictException,
 	EntityNotFoundException,
 	UnAuthOrizedException,
 	UnProcessAbleException,
 } from '@/common/exception/service.exception';
-import { Injectable } from '@nestjs/common';
-import {
-	ICreateMemberArgs,
-	ILoginMemberArgs,
-	IVerifyEmailArgs,
-} from '@/types/args/member';
-import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
-import * as bcrypt from 'bcryptjs';
-import { MembersRepository } from '@/models/repositories/members.repository';
-import { MailerService } from '@nestjs-modules/mailer';
-import { generateRandomCode } from '@/utils/generate-random-code';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { ITokenInCookieArgs } from '@/types/args/auth';
-import { CookieOptions, Response } from 'express';
-import { IRefreshTokenArgs } from '@/types/token';
 import {
 	ERROR_PASSWORD_MISMATCH,
 	ERROR_EMAIL_NOT_FOUND,
@@ -28,7 +19,17 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
+import { MembersRepository } from '@/models/repositories/members.repository';
+import { ITokenInCookieArgs } from '@/types/args/auth';
+import {
+	ICreateMemberArgs,
+	ILoginMemberArgs,
+	IVerifyEmailArgs,
+} from '@/types/args/member';
+import { IRefreshTokenArgs } from '@/types/token';
+import { generateRandomCode } from '@/utils/generate-random-code';
 
 @Injectable()
 export class AuthService {

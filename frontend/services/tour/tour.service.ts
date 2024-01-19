@@ -1,6 +1,7 @@
 import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
 import {
 	TourAreaCodesResponse,
+	TourDetailResponse,
 	TourListResponse,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
@@ -99,6 +100,13 @@ export const TourService = {
 		let url = `tours/search/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
 
 		const { data } = await axiosAPI.get<TourListResponse>(url);
+		return data;
+	},
+
+	async getTourDetail(contentId: string, contentTypeId: string) {
+		const url = `tours/${contentId}/common-information?numOfRows=10&pageNo=1&contentTypeId=${contentTypeId}`;
+
+		const { data } = await axiosAPI.get<TourDetailResponse>(url);
 		return data;
 	},
 };

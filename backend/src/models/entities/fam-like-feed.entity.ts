@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 import {
 	CreateDateColumn,
 	Entity,
@@ -5,10 +7,9 @@ import {
 	ManyToOne,
 	PrimaryColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
-import { MemberEntity } from './member.entity';
+
 import { FeedEntity } from './feed.entity';
+import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_like_feed' })
 export class LikeFeedEntity {
@@ -24,11 +25,11 @@ export class LikeFeedEntity {
 	@IsUUID()
 	public readonly feedId!: string;
 
-	@ManyToOne((type) => MemberEntity, (member) => member.memberLikesFeeds)
+	@ManyToOne(() => MemberEntity, (member) => member.memberLikesFeeds)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
 
-	@ManyToOne((type) => FeedEntity, (feed) => feed.LikedByMembers)
+	@ManyToOne(() => FeedEntity, (feed) => feed.LikedByMembers)
 	@JoinColumn({ name: 'feedId', referencedColumnName: 'id' })
 	feed!: FeedEntity;
 

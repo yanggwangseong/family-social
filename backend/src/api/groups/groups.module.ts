@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { FamEntity } from '@/models/entities/fam.entity';
+import { GroupEntity } from '@/models/entities/group.entity';
+import { FamsRepository } from '@/models/repositories/fams.repository';
+import { GroupsRepository } from '@/models/repositories/groups.repository';
+
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GroupEntity } from '@/models/entities/group.entity';
-import { GroupsRepository } from '@/models/repositories/groups.repository';
-import { FamsRepository } from '@/models/repositories/fams.repository';
-import { FamEntity } from '@/models/entities/fam.entity';
 import { FamsModule } from '../fams/fams.module';
 import { MembersModule } from '../members/members.module';
-import { ToursModule } from '../tours/tours.module';
 import { SchedulesModule } from '../schedules/schedules.module';
 
 @Module({

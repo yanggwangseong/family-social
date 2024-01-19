@@ -1,3 +1,6 @@
+import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+
 import {
 	EntityNotFoundException,
 	ForBiddenException,
@@ -13,14 +16,8 @@ import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
-import {
-	ICreateTourArgs,
-	ICreateTourPeriodArgs,
-	IUpdateTourArgs,
-} from '@/types/args/tour';
+import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
 import { getOffset } from '@/utils/getOffset';
-import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class SchedulesService {

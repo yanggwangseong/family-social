@@ -1,8 +1,9 @@
-import multerS3 from 'multer-s3';
-import { Request } from 'express';
+import * as path from 'path';
+
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import * as dotenv from 'dotenv';
-import * as path from 'path';
+import { Request } from 'express';
+import multerS3 from 'multer-s3';
 
 dotenv.config({
 	path: path.resolve(

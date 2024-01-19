@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { TourismPeriodEntity } from '../entities/tourism-period.entity';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { ICreateTourPeriodArgs } from '@/types/args/tour';
+
+import { TourismPeriodEntity } from '../entities/tourism-period.entity';
 
 @Injectable()
 export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
@@ -14,7 +16,7 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 	}
 
 	async createTourismPeriod(periods: ICreateTourPeriodArgs[]) {
-		const insertResult = await this.repository.insert(periods);
+		await this.repository.insert(periods);
 	}
 
 	async deleteTourismPeriod(scheduleId: string) {
