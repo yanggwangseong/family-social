@@ -201,7 +201,7 @@ const CreateFeed: FC = () => {
 	useEffect(() => {
 		if (!isFeedId) remove();
 		if (feed && !isLoading && isFeedId) handleSelectedGroup(feed.groupId);
-	}, [feed]);
+	}, [feed, handleSelectedGroup, isFeedId, isLoading, remove]);
 
 	// [TODO] 1. 그룹을 먼저 선택한다. (O)
 	// [TODO] 2. 이미지 또는 미디어를 올린다.

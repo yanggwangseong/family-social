@@ -26,3 +26,9 @@ export interface TourListResponse {
 }
 
 export interface TourismItem {}
+
+export interface TourDetailResponse {
+	items: {
+		item: any[];
+	};
+}
