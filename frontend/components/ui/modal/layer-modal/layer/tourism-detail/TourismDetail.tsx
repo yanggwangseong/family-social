@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './TourismDetail.module.scss';
 import { TourService } from '@/services/tour/tour.service';
 import { useQuery } from 'react-query';
@@ -17,9 +17,12 @@ import {
 	IoLocationSharp,
 	IoCall,
 	IoTimeSharp,
+	IoChevronDownOutline,
+	IoChevronUp,
 } from 'react-icons/io5';
 
 const TourismDetail: FC = () => {
+	const [isDescription, setIsDescription] = useState<boolean>(false);
 	const isContentIdTypeId = useRecoilValue(tourDetailAtom);
 
 	const { data, isLoading } = useQuery(
@@ -30,7 +33,11 @@ const TourismDetail: FC = () => {
 				isContentIdTypeId.contentTypeId,
 			),
 	);
-	console.log(data);
+
+	const handleDescriptionToggle = () => {
+		setIsDescription(!isDescription);
+	};
+
 	return (
 		<div className={styles.tourism_detail_container}>
 			<div className="flex gap-2">
@@ -53,16 +60,39 @@ const TourismDetail: FC = () => {
 							<ImagesGallary images={data.items.image.item}></ImagesGallary>
 							<div className="flex mt-2 gap-1">
 								<div className="flex gap-2">
-									<div className="flex items-center">
+									<div className="flex">
 										<IoInformationCircle size={18} color="#0a0a0a" />
 									</div>
 									<div className="text-sm text-customDark font-normal">
 										개요:
 									</div>
 								</div>
-								<div className="text-ellipsis whitespace-nowrap overflow-hidden text-sm text-customDark font-normal flex-1">
-									{data.items.item[0].overview}
-								</div>
+
+								{isDescription ? (
+									<div className="flex-1 flex ">
+										<div className="text-sm text-customDark font-normal flex-1 overflow-y-auto max-h-16">
+											{data.items.item[0].overview}
+										</div>
+										<div
+											className="cursor-pointer"
+											onClick={handleDescriptionToggle}
+										>
+											<IoChevronUp size={18} color="#0a0a0a" />
+										</div>
+									</div>
+								) : (
+									<div
+										className="flex-1 flex text-ellipsis whitespace-nowrap overflow-hidden cursor-pointer"
+										onClick={handleDescriptionToggle}
+									>
+										<div className="text-ellipsis whitespace-nowrap overflow-hidden text-sm text-customDark font-normal">
+											{data.items.item[0].overview}
+										</div>
+										<div>
+											<IoChevronDownOutline size={18} color="#0a0a0a" />
+										</div>
+									</div>
+								)}
 							</div>
 							<div className="flex mt-2 gap-2">
 								<div className="flex items-center">
