@@ -9,10 +9,22 @@ import { getSumTime } from '@/utils/get-sum-time';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const ScheduleSidebar: FC = () => {
+	const [isValidate, setIsValidate] = useState<boolean>(false);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
+
+	const handleCreateSchedule = () => {
+		console.log('click');
+	};
+
+	useEffect(() => {
+		if (isPeriods) {
+			const exist = isPeriods.every(value => value.tourism?.length !== 0);
+			setIsValidate(exist);
+		}
+	}, [isPeriods]);
 
 	return isSelectedPeriod ? (
 		<div className={styles.right_sidebar_container}>
@@ -94,6 +106,8 @@ const ScheduleSidebar: FC = () => {
 						rounded-full p-[10px]
 						w-full hover:bg-orange-500
 						"
+						disabled={!isValidate}
+						onClick={() => isValidate && handleCreateSchedule()}
 					>
 						일정 생성
 					</CustomButton>
