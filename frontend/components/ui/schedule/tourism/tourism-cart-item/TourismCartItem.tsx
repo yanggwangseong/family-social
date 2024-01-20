@@ -99,6 +99,7 @@ const TourismCartItem: FC<TourismCartItemProps> = ({
 									src={item.tourismImage}
 									alt="img"
 									style={{ height: '45px' }}
+									draggable={false}
 								></Image>
 							</div>
 							<div className={styles.tour_description_container}>
