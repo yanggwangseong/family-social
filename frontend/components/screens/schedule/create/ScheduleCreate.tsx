@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -12,7 +12,6 @@ import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
-import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -67,7 +66,7 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar />
+					<ScheduleSidebar isSelecteGroup={isSelecteGroup} />
 				</div>
 			</div>
 		</Format>
