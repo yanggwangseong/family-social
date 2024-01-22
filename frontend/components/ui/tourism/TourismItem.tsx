@@ -46,7 +46,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 				if (item.period === isSelectedPeriod) {
 					return {
 						...item,
-						tourism: [
+						tourisms: [
 							...(item.tourisms || []),
 							{
 								contentId: tour.contentId,
@@ -70,7 +70,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const handleDeleteTourism = (contentId: string) => {
 		const newPeriods = isPeriods.map(item => ({
 			...item,
-			tourism: item.tourisms?.filter(v => contentId !== v.contentId),
+			tourisms: item.tourisms?.filter(v => contentId !== v.contentId),
 		}));
 		setIsPeriods(newPeriods);
 		setIsAddTourism('');
