@@ -47,13 +47,13 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 					return {
 						...item,
 						tourism: [
-							...(item.tourism || []),
+							...(item.tourisms || []),
 							{
 								contentId: tour.contentId,
 								stayTime: tour.stayTime,
 								tourismImage: tour.tourismImage,
 								title: tour.title,
-								position: item.tourism ? item.tourism.length : 0,
+								position: item.tourisms ? item.tourisms.length : 0,
 							},
 						],
 					};
@@ -70,7 +70,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const handleDeleteTourism = (contentId: string) => {
 		const newPeriods = isPeriods.map(item => ({
 			...item,
-			tourism: item.tourism?.filter(v => contentId !== v.contentId),
+			tourism: item.tourisms?.filter(v => contentId !== v.contentId),
 		}));
 		setIsPeriods(newPeriods);
 		setIsAddTourism('');
@@ -96,7 +96,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 		if (isSelectedPeriod) {
 			setIsAddTourism(''); // 기본 default값으로 비우고 이후에 속하는 contentId만 담기
 			isPeriods.map(item =>
-				item.tourism?.map(v => {
+				item.tourisms?.map(v => {
 					if (v.contentId === tour.contentid) {
 						setIsAddTourism(v.contentId);
 					}

@@ -64,7 +64,9 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 			'일정 생성',
 			'닫기',
 			() => {
-				createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
+				//createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
+				console.log('isSelecteGroup', isSelecteGroup);
+				console.log('isPeriods', isPeriods);
 			},
 			() => {},
 			{},
@@ -74,7 +76,7 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 	useEffect(() => {
 		if (isPeriods) {
 			const exist = isPeriods.every(
-				value => value.tourism && value.tourism?.length !== 0,
+				value => value.tourisms && value.tourisms?.length !== 0,
 			);
 			setIsValidate(exist);
 		}
@@ -91,17 +93,17 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 						<div className={styles.tourism_count}>
 							{isPeriods.map(item => {
 								if (item.period === isSelectedPeriod) {
-									return item.tourism?.length;
+									return item.tourisms?.length;
 								}
 							})}
 						</div>
 						<div className={styles.stay_time}>
 							{isPeriods.map(period => {
 								if (period.period === isSelectedPeriod) {
-									if (!period.tourism) {
+									if (!period.tourisms) {
 										return `0시간 0분`;
 									}
-									const total = period.tourism.reduce(
+									const total = period.tourisms.reduce(
 										(prev, item) => {
 											const hours =
 												Number(prev.hours) +
@@ -136,9 +138,9 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 						{isPeriods.map((period, index) => (
 							<div className={styles.schedule_tourism_container} key={index}>
 								{period.period === isSelectedPeriod ? (
-									period.tourism && period.tourism.length > 0 ? (
+									period.tourisms && period.tourisms.length > 0 ? (
 										<ScheduleTourism
-											tourList={period.tourism}
+											tourList={period.tourisms}
 										></ScheduleTourism>
 									) : (
 										<div className={styles.not_found_tourism_container}>

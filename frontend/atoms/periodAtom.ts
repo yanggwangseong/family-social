@@ -4,7 +4,7 @@ export interface PeriodsType {
 	period: string;
 	startTime: string;
 	endTime: string;
-	tourism?: TourismType[];
+	tourisms?: TourismType[];
 }
 
 export interface TourismType {

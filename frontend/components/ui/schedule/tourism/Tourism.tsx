@@ -28,8 +28,8 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	const handleDelteTourismItem = (contentId: string) => {
 		setIsPeriods(prev => {
 			return prev.map(value => {
-				if (value.period === isSelectedPeriod && value.tourism) {
-					const updatedTourism = value.tourism.filter(
+				if (value.period === isSelectedPeriod && value.tourisms) {
+					const updatedTourism = value.tourisms.filter(
 						item => item.contentId !== contentId,
 					);
 
@@ -50,8 +50,8 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 				let tourism;
 				if (value.period === isSelectedPeriod) {
 					tourism =
-						value.tourism &&
-						value.tourism.map(item => {
+						value.tourisms &&
+						value.tourisms.map(item => {
 							if (item.position === position) {
 								return {
 									...item,
@@ -64,7 +64,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 
 				return {
 					...value,
-					tourism: tourism || value.tourism,
+					tourism: tourism || value.tourisms,
 				};
 			});
 		});
