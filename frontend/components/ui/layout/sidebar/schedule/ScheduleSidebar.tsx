@@ -2,6 +2,8 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
 import ScheduleTourism from '@/components/ui/schedule/tourism/Tourism';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
@@ -11,13 +13,49 @@ import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 import { useMutation } from 'react-query';
 import { CreateScheduleRequest } from '@/shared/interfaces/schedule.interface';
 import { ScheduleService } from '@/services/schedule/schedule.service';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
-const ScheduleSidebar: FC = () => {
+const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
+	isSelecteGroup,
+}) => {
+	const router = useRouter();
+
 	const [isValidate, setIsValidate] = useState<boolean>(false);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
+
+	const { mutate: createScheduleSync } = useMutation(
+		['create-schedule'],
+		(data: CreateScheduleRequest) =>
+			ScheduleService.createSchedules({
+				groupId: data.groupId,
+				schedules: data.schedules,
+			}),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `일정을 생성 하였습니다.`, '확인', () => {
+					router.push(`/schedules/${data.id}`);
+				});
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
 
 	const handleCreateSchedule = () => {
 		Confirm.show(
@@ -26,7 +64,7 @@ const ScheduleSidebar: FC = () => {
 			'일정 생성',
 			'닫기',
 			() => {
-				alert('Thank you.');
+				createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
 			},
 			() => {},
 			{},

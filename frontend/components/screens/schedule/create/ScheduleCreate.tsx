@@ -66,7 +66,7 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar />
+					<ScheduleSidebar isSelecteGroup={isSelecteGroup} />
 				</div>
 			</div>
 		</Format>
