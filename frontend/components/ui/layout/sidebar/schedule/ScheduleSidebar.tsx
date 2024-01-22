@@ -7,6 +7,10 @@ import ScheduleTourism from '@/components/ui/schedule/tourism/Tourism';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { getSumTime } from '@/utils/get-sum-time';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+import { useMutation } from 'react-query';
+import { CreateScheduleRequest } from '@/shared/interfaces/schedule.interface';
+import { ScheduleService } from '@/services/schedule/schedule.service';
 
 const ScheduleSidebar: FC = () => {
 	const [isValidate, setIsValidate] = useState<boolean>(false);
@@ -16,12 +20,24 @@ const ScheduleSidebar: FC = () => {
 		useRecoilState(selectedPeriodAtom);
 
 	const handleCreateSchedule = () => {
-		console.log('click');
+		Confirm.show(
+			'일정 생성',
+			'해당 일정을 생성 하시겠습니까?',
+			'일정 생성',
+			'닫기',
+			() => {
+				alert('Thank you.');
+			},
+			() => {},
+			{},
+		);
 	};
 
 	useEffect(() => {
 		if (isPeriods) {
-			const exist = isPeriods.every(value => value.tourism?.length !== 0);
+			const exist = isPeriods.every(
+				value => value.tourism && value.tourism?.length !== 0,
+			);
 			setIsValidate(exist);
 		}
 	}, [isPeriods]);
