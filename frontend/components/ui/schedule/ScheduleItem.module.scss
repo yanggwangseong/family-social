@@ -1,11 +1,11 @@
 .schedule_card_container {
-	@apply border border-solid border-customDark flex p-4 flex-row gap-4;
+	@apply border border-solid border-customDark flex flex-row gap-4;
 
 	.img_container {
-		@apply w-1/4 h-28 relative border border-solid border-customDark;
+		@apply w-1/4 h-36 relative;
 	}
 	.schedule_card_contents_container {
-		@apply flex flex-col;
+		@apply flex flex-col justify-between p-4 flex-1;
 
 		.contents_top_container {
 			@apply flex gap-4;
@@ -15,6 +15,18 @@
 			.title {
 				@apply font-bold text-base;
 			}
+
+			.setting_container {
+				@apply ml-auto;
+			}
+		}
+
+		.schedule_periods {
+			@apply text-base font-medium;
+		}
+
+		.update_date {
+			@apply text-customGray text-xs;
 		}
 	}
 }
