@@ -20,6 +20,10 @@
 					width: 768px;
 				}
 				@apply w-full h-full;
+
+				.schedule_container {
+					@apply pt-6 pb-8 flex flex-col gap-10;
+				}
 			}
 		}
 	}

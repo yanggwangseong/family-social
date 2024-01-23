@@ -1,0 +1,20 @@
+.schedule_card_container {
+	@apply border border-solid border-customDark flex p-4 flex-row gap-4;
+
+	.img_container {
+		@apply w-1/4 h-28 relative border border-solid border-customDark;
+	}
+	.schedule_card_contents_container {
+		@apply flex flex-col;
+
+		.contents_top_container {
+			@apply flex gap-4;
+			.d_day {
+				@apply bg-customOrange px-2 py-[1px] border border-solid border-customDark rounded-2xl text-sm;
+			}
+			.title {
+				@apply font-bold text-base;
+			}
+		}
+	}
+}
