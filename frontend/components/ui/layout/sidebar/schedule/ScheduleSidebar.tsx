@@ -64,9 +64,7 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 			'일정 생성',
 			'닫기',
 			() => {
-				//createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
-				console.log('isSelecteGroup', isSelecteGroup);
-				console.log('isPeriods', isPeriods);
+				createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
 			},
 			() => {},
 			{},

@@ -137,7 +137,42 @@ const Feed: FC = () => {
 
 	const [observedPost, setObservedPost] = useState('');
 
+	// const handleUpdateLike = (feedId: string, page: number) => {
+	// 	feedLikeSync({ feedId, page });
+	// };
+
+	const handleRefetch = (pageValue: number) => {
+		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
+	};
+
+	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
+
+	const { handleLikeComment } = useCommentLike({
+		handleRefetch,
+		handleIsLottie,
+	});
+
 	useEffect(() => {
+		const observeElement = (element: HTMLElement | null) => {
+			if (!element) return;
+			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
+			const observer = new IntersectionObserver(
+				// entries는 IntersectionObserverEntry 인스턴스의 배열
+				entries => {
+					console.log('entries', entries);
+					// isIntersecting: 관찰 대상의 교차 상태(Boolean)
+					if (entries[0].isIntersecting === true) {
+						console.log('마지막 포스트에 왔습니다');
+						fetchNextPage();
+						observer.unobserve(element); //이전에 observe 하고 있던걸 없애준다.
+					}
+				},
+				{ threshold: 1 },
+			);
+			// 대상 요소의 관찰을 시작
+			observer.observe(element);
+		};
+
 		//포스트가 없다면 return
 		if (
 			!data?.pages[data?.pages.length - 1].list ||
@@ -156,50 +191,7 @@ const Feed: FC = () => {
 			observeElement(document.getElementById(id));
 		}
 		return () => {};
-	}, [data]);
-
-	const observeElement = (element: HTMLElement | null) => {
-		if (!element) return;
-		// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
-		const observer = new IntersectionObserver(
-			// entries는 IntersectionObserverEntry 인스턴스의 배열
-			entries => {
-				console.log('entries', entries);
-				// isIntersecting: 관찰 대상의 교차 상태(Boolean)
-				if (entries[0].isIntersecting === true) {
-					console.log('마지막 포스트에 왔습니다');
-					fetchNextPage();
-					observer.unobserve(element); //이전에 observe 하고 있던걸 없애준다.
-				}
-			},
-			{ threshold: 1 },
-		);
-		// 대상 요소의 관찰을 시작
-		observer.observe(element);
-	};
-
-	// const handleUpdateLike = (feedId: string, page: number) => {
-	// 	feedLikeSync({ feedId, page });
-	// };
-
-	const handleRefetch = (pageValue: number) => {
-		refetch({ refetchPage: (page, index) => index === pageValue - 1 });
-	};
-
-	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
-
-	const { handleLikeComment } = useCommentLike({
-		handleRefetch,
-		handleIsLottie,
-	});
-
-	// const handleLikeComment = (
-	// 	feedId: string,
-	// 	commentId: string,
-	// 	page: number,
-	// ) => {
-	// 	commentLikeSync({ feedId, commentId, page });
-	// };
+	}, [data, fetchNextPage, observedPost]);
 
 	return (
 		<Format title={'feed'}>
