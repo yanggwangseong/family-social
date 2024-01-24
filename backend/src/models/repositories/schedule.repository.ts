@@ -31,6 +31,10 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 			select: {
 				id: true,
 				groupId: true,
+				scheduleImage: true,
+				scheduleName: true,
+				startPeriod: true,
+				endPeriod: true,
 				updatedAt: true,
 				schdulePeriods: {
 					id: true,

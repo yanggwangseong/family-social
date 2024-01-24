@@ -7,6 +7,10 @@ import { TourismPeriodResDto } from './tourism-period-res.dto';
 export class ScheduleResDto extends PickType(ScheduleEntity, [
 	'id',
 	'groupId',
+	'scheduleImage',
+	'scheduleName',
+	'startPeriod',
+	'endPeriod',
 	'updatedAt',
 ] as const) {
 	@ApiProperty({
