@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { DefaultEntity } from './common/default.entity';
@@ -20,6 +20,13 @@ export class ScheduleEntity extends DefaultEntity {
 	@IsNotEmpty()
 	@IsUUID()
 	public readonly memberId!: string;
+
+	@Column({ type: 'varchar', length: 30, nullable: false })
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsString()
+	@MaxLength(30)
+	scheduleName!: string;
 
 	@ManyToOne(() => GroupEntity, (gr) => gr.schedulesByGroup)
 	@JoinColumn({ name: 'groupId', referencedColumnName: 'id' })
