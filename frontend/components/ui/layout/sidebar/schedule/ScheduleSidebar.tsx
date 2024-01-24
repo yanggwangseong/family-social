@@ -15,9 +15,12 @@ import { CreateScheduleRequest } from '@/shared/interfaces/schedule.interface';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
-const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
+const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
+	isScheduleName,
+	isStartEndPeriod,
 }) => {
 	const router = useRouter();
 

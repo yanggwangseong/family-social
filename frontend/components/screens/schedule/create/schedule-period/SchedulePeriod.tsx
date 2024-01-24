@@ -19,7 +19,9 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
 	onChangePeriods,
 	onChangeScheduleName,
+	onChangeStartEndPeriod,
 	isPeriods,
+	isScheduleName,
 }) => {
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
@@ -50,14 +52,18 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		setIsOpen(false);
 		!pageInit && setPageInit(true);
 
-		const dates = getDateRange(
-			format(startDate, 'yyyy-MM-dd', {
-				locale: ko,
-			}),
-			format(endDate, 'yyyy-MM-dd', {
-				locale: ko,
-			}),
-		);
+		const startPeriod = format(startDate, 'yyyy-MM-dd', {
+			locale: ko,
+		});
+
+		const endPeriod = format(endDate, 'yyyy-MM-dd', {
+			locale: ko,
+		});
+
+		const dates = getDateRange(startPeriod, endPeriod);
+
+		// 시작기간 종료기간
+		onChangeStartEndPeriod(startPeriod, endPeriod);
 
 		setIsSelectedPeriod(dates[0]);
 
@@ -91,6 +97,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 						<div>
 							<Field
 								onChange={e => handleChangeScheduleName(e.target.value)}
+								defaultValue={isScheduleName}
 								placeholder="여행 이름을 작성해주세요."
 							></Field>
 						</div>
