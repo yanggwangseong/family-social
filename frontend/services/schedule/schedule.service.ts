@@ -7,10 +7,21 @@ import {
 import { axiosAPI } from 'api/axios';
 
 export const ScheduleService = {
-	async createSchedules({ groupId, schedules }: CreateScheduleRequest) {
+	async createSchedules({
+		groupId,
+		scheduleName,
+		startPeriod,
+		endPeriod,
+		periods,
+	}: CreateScheduleRequest) {
 		const { data } = await axiosAPI.post<CreateScheduleResponse>(
 			`/groups/${groupId}/schedules`,
-			schedules,
+			{
+				scheduleName,
+				startPeriod,
+				endPeriod,
+				periods,
+			},
 		);
 
 		return data;

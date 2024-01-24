@@ -34,8 +34,11 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 		['create-schedule'],
 		(data: CreateScheduleRequest) =>
 			ScheduleService.createSchedules({
+				periods: data.periods,
 				groupId: data.groupId,
-				schedules: data.schedules,
+				scheduleName: data.scheduleName,
+				startPeriod: data.startPeriod,
+				endPeriod: data.endPeriod,
 			}),
 		{
 			onMutate: variable => {
@@ -67,7 +70,13 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 			'일정 생성',
 			'닫기',
 			() => {
-				createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
+				createScheduleSync({
+					groupId: isSelecteGroup,
+					scheduleName: isScheduleName,
+					startPeriod: isStartEndPeriod.startPeriod,
+					endPeriod: isStartEndPeriod.endPeriod,
+					periods: isPeriods,
+				});
 			},
 			() => {},
 			{},

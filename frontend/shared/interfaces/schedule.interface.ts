@@ -6,7 +6,10 @@ export interface CreateScheduleResponse {
 
 export interface CreateScheduleRequest {
 	groupId: string;
-	schedules: PeriodsType[];
+	scheduleName: string;
+	startPeriod: string;
+	endPeriod: string;
+	periods: PeriodsType[];
 }
 
 export interface GetScheduleListResponse {
