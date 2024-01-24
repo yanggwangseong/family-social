@@ -295,7 +295,7 @@ export class GroupsController {
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
 		@Query('page') page: number,
-		@Query('limit') limit: number = 10,
+		@Query('limit') limit: number = 3,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {

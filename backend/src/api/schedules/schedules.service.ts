@@ -17,7 +17,6 @@ import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
-import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
 export class SchedulesService {
@@ -36,19 +35,17 @@ export class SchedulesService {
 		page: number;
 		limit: number;
 	}): Promise<ScheduleResDto> {
-		const { take, skip } = getOffset({ page, limit });
-
 		const [list, count] =
 			await this.scheduleRepository.getScheduleListOwnMemberId({
 				memberId,
-				take,
-				skip,
+				take: limit + 1,
+				skip: (page - 1) * limit,
 			});
 
 		return {
 			list: list,
 			page: page,
-			totalPage: Math.ceil(count / take),
+			totalPage: Math.ceil(count / limit),
 		};
 	}
 
