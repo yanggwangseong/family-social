@@ -13,10 +13,12 @@ import Periods from '@/components/ui/schedule/period/Periods';
 import { PeriodsType } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import Field from '@/components/ui/field/Field';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
 	onChangePeriods,
+	onChangeScheduleName,
 	isPeriods,
 }) => {
 	const [isSelectedPeriod, setIsSelectedPeriod] =
@@ -68,6 +70,10 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		);
 	};
 
+	const handleChangeScheduleName = (name: string) => {
+		onChangeScheduleName(name);
+	};
+
 	useEffect(() => {
 		if (isPeriodTimes) {
 			onChangePeriods(isPeriodTimes);
@@ -77,9 +83,19 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	return (
 		<div className={styles.period_container}>
 			<div className={styles.step_title}>STEP 2</div>
-			<div className={styles.title}>여행 일정 선택</div>
+
 			{isOpen || !pageInit ? (
 				<div>
+					<div className={styles.schedule_name_container}>
+						<div className={styles.title}>여행 이름</div>
+						<div>
+							<Field
+								onChange={e => handleChangeScheduleName(e.target.value)}
+								placeholder="여행 이름을 작성해주세요."
+							></Field>
+						</div>
+					</div>
+					<div className={styles.title}>여행 일정 선택</div>
 					<div>여행 기간이 어떻게 되시나요?</div>
 					<DatePicker
 						locale={ko}

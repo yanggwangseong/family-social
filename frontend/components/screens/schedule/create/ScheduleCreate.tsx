@@ -16,6 +16,8 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
+	const [isScheduleName, setIsScheduleName] = useState<string>('');
+
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
@@ -28,6 +30,10 @@ const ScheduleCreate: FC = () => {
 
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		setIsPeriods(dates);
+	};
+
+	const handleChangeScheduleName = (name: string) => {
+		setIsScheduleName(name);
 	};
 
 	return (
@@ -57,6 +63,7 @@ const ScheduleCreate: FC = () => {
 								<SchedulePeriod
 									onChangePage={handleChangePage}
 									onChangePeriods={handleChangePeriods}
+									onChangeScheduleName={handleChangeScheduleName}
 									isPeriods={isPeriods}
 								></SchedulePeriod>
 							)}
