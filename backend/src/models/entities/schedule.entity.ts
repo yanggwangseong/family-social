@@ -49,6 +49,16 @@ export class ScheduleEntity extends DefaultEntity {
 	@MaxLength(2048)
 	scheduleImage?: string;
 
+	@Column({ type: 'date', nullable: false })
+	@ApiProperty()
+	@IsNotEmpty()
+	startPeriod!: Date;
+
+	@Column({ type: 'date', nullable: false })
+	@ApiProperty()
+	@IsNotEmpty()
+	endPeriod!: Date;
+
 	@ManyToOne(() => GroupEntity, (gr) => gr.schedulesByGroup)
 	@JoinColumn({ name: 'groupId', referencedColumnName: 'id' })
 	group!: GroupEntity;
