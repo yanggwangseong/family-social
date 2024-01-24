@@ -41,7 +41,6 @@ export const GetScheduleListSwagger = () => {
 		ApiCreatedResponse({
 			description: '여행일정 리스트 전체 가져오기',
 			type: ScheduleResDto,
-			isArray: true,
 		}),
 		ApiNotFoundResponse({
 			description: `${ERROR_GROUP_NOT_FOUND}`,

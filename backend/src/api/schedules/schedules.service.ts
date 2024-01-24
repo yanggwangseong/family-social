@@ -35,17 +35,24 @@ export class SchedulesService {
 		memberId: string;
 		page: number;
 		limit: number;
-	}): Promise<ScheduleResDto[]> {
+	}): Promise<ScheduleResDto> {
 		const { take, skip } = getOffset({ page, limit });
 
-		return await this.scheduleRepository.getScheduleListOwnMemberId({
-			memberId,
-			take,
-			skip,
-		});
+		const [list, count] =
+			await this.scheduleRepository.getScheduleListOwnMemberId({
+				memberId,
+				take,
+				skip,
+			});
+
+		return {
+			list: list,
+			page: page,
+			totalPage: Math.ceil(count / take),
+		};
 	}
 
-	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto> {
+	async getOneScheduleById(scheduleId: string) {
 		const schedule = await this.scheduleRepository.getOneScheduleById(
 			scheduleId,
 		);

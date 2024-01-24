@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ICreateScheduleArgs } from '@/types/args/schedule';
 
 import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
-import { ScheduleResDto } from '../dto/schedule/res/schedule-res.dto';
+import { ScheduleItemResDto } from '../dto/schedule/res/schedule-item-res.dto';
 import { ScheduleEntity } from '../entities/schedule.entity';
 
 @Injectable()
@@ -26,8 +26,8 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		memberId: string;
 		take: number;
 		skip: number;
-	}): Promise<ScheduleResDto[]> {
-		return await this.repository.find({
+	}): Promise<[ScheduleItemResDto[], number]> {
+		return await this.repository.findAndCount({
 			select: {
 				id: true,
 				groupId: true,
@@ -73,11 +73,17 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		});
 	}
 
-	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto | null> {
+	async getOneScheduleById(
+		scheduleId: string,
+	): Promise<ScheduleItemResDto | null> {
 		return await this.repository.findOne({
 			select: {
 				id: true,
 				groupId: true,
+				scheduleImage: true,
+				scheduleName: true,
+				startPeriod: true,
+				endPeriod: true,
 				updatedAt: true,
 				schdulePeriods: {
 					id: true,

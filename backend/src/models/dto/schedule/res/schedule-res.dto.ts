@@ -1,21 +1,21 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
-import { ScheduleEntity } from '@/models/entities/schedule.entity';
+import { ScheduleItemResDto } from './schedule-item-res.dto';
 
-import { TourismPeriodResDto } from './tourism-period-res.dto';
-
-export class ScheduleResDto extends PickType(ScheduleEntity, [
-	'id',
-	'groupId',
-	'scheduleImage',
-	'scheduleName',
-	'startPeriod',
-	'endPeriod',
-	'updatedAt',
-] as const) {
+export class ScheduleResDto {
 	@ApiProperty({
 		nullable: false,
-		type: [TourismPeriodResDto],
+		type: [ScheduleItemResDto],
 	})
-	schdulePeriods!: TourismPeriodResDto[];
+	list!: ScheduleItemResDto[];
+
+	@ApiProperty({
+		nullable: false,
+	})
+	page!: number;
+
+	@ApiProperty({
+		nullable: false,
+	})
+	totalPage!: number;
 }
