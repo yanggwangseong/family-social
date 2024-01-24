@@ -42,7 +42,7 @@ import {
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
-import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
+import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
 
 import { GroupsService } from './groups.service';
@@ -344,7 +344,7 @@ export class GroupsController {
 	 * @tag groups
 	 * @param {string} groupId 							- 그룹 아이디
 	 * @param {string} sub  							- 인증된 사용자 아이디
-	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @param {ScheduleCreateReqDto} dto  		- 여행 일정별 정보
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
@@ -353,7 +353,7 @@ export class GroupsController {
 	async createToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
-		@Body() dto: TourismPeriodCreateReqDto[],
+		@Body() dto: ScheduleCreateReqDto,
 	) {
 		// 그룹 유/무 체크
 		await this.groupsService.findGroupByIdOrThrow(groupId);
@@ -364,7 +364,7 @@ export class GroupsController {
 		return await this.schedulesService.createToursSchedule({
 			memberId: sub,
 			groupId,
-			periods: dto,
+			scheduleItem: dto,
 		});
 	}
 
@@ -375,7 +375,7 @@ export class GroupsController {
 	 * @param {string} groupId 							- 그룹 아이디
 	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
 	 * @param {string} sub  							- 인증된 사용자 아이디
-	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @param {TourismPeriodUpdateReqDto[]} dto  		- 여행 일정별 정보
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */

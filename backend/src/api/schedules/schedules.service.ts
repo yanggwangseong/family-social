@@ -58,15 +58,18 @@ export class SchedulesService {
 	async createToursSchedule({
 		memberId,
 		groupId,
-		periods,
+		scheduleItem,
 	}: ICreateTourArgs): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.createSchedule({
 			memberId,
 			groupId,
+			scheduleName: scheduleItem.scheduleName,
+			startPeriod: scheduleItem.startPeriod,
+			endPeriod: scheduleItem.endPeriod,
 		});
 
 		const createTourismPeriod = await this.createTourismPeriod(
-			periods,
+			scheduleItem.periods,
 			schedule.id,
 		);
 

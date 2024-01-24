@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ICreateScheduleArgs } from '@/types/args/schedule';
+
 import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleResDto } from '../dto/schedule/res/schedule-res.dto';
 import { ScheduleEntity } from '../entities/schedule.entity';
@@ -143,14 +145,17 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	async createSchedule({
 		memberId,
 		groupId,
-	}: {
-		memberId: string;
-		groupId: string;
-	}) {
+		scheduleName,
+		startPeriod,
+		endPeriod,
+	}: ICreateScheduleArgs) {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			groupId: groupId,
 			memberId: memberId,
+			scheduleName,
+			startPeriod,
+			endPeriod,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
