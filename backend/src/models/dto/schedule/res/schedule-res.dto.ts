@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ScheduleItemResDto } from './schedule-item-res.dto';
+import { ScheduleGetListResDto } from './schedule-get-list-res.dto';
 
 export class ScheduleResDto {
 	@ApiProperty({
 		nullable: false,
-		type: [ScheduleItemResDto],
+		type: [ScheduleGetListResDto],
 	})
-	list!: ScheduleItemResDto[];
+	list!: ScheduleGetListResDto[];
 
 	@ApiProperty({
 		nullable: false,

@@ -17,5 +17,5 @@ export class ScheduleItemResDto extends PickType(ScheduleEntity, [
 		nullable: false,
 		type: [TourismPeriodResDto],
 	})
-	schdulePeriods!: TourismPeriodResDto[];
+	schedulePeriods!: TourismPeriodResDto[];
 }

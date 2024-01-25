@@ -29,7 +29,7 @@ export class TourismPeriodEntity extends DefaultEntity {
 	@IsUUID()
 	public readonly scheduleId!: string;
 
-	@ManyToOne(() => ScheduleEntity, (sch) => sch.schdulePeriods)
+	@ManyToOne(() => ScheduleEntity, (sch) => sch.schedulePeriods)
 	@JoinColumn({ name: 'scheduleId', referencedColumnName: 'id' })
 	schedule!: ScheduleEntity;
 
