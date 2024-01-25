@@ -4,9 +4,8 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SchedulePeriodProps } from './schedule-period.interface';
 import { Union, schdulePages } from 'types';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { format } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
 import { FaCalendar } from 'react-icons/fa';
 import { getDateRange } from '@/utils/get-date-range';
 import Periods from '@/components/ui/schedule/period/Periods';
@@ -14,6 +13,7 @@ import { PeriodsType } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import Field from '@/components/ui/field/Field';
+import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
@@ -52,13 +52,9 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		setIsOpen(false);
 		!pageInit && setPageInit(true);
 
-		const startPeriod = format(startDate, 'yyyy-MM-dd', {
-			locale: ko,
-		});
+		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
 
-		const endPeriod = format(endDate, 'yyyy-MM-dd', {
-			locale: ko,
-		});
+		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
 
 		const dates = getDateRange(startPeriod, endPeriod);
 
@@ -118,11 +114,10 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 				<>
 					<div className={styles.period_btn_container}>
 						<button className="example-custom-input" onClick={handleClick}>
-							{`${format(startDate, 'yyyy-MM-dd (eee)', {
-								locale: ko,
-							})} - ${format(endDate, 'yyyy-MM-dd (eee)', {
-								locale: ko,
-							})}`}
+							{`${TranslateDateFormat(
+								startDate,
+								'yyyy-MM-dd (eee)',
+							)} - ${TranslateDateFormat(endDate, 'yyyy-MM-dd (eee)')}`}
 						</button>
 						<FaCalendar className={styles.icon} size={22} />
 					</div>
