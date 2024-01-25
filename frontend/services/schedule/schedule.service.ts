@@ -28,8 +28,8 @@ export const ScheduleService = {
 	},
 
 	async getScheduleList(page: number, groupId: string) {
-		const { data } = await axiosAPI.get<GetScheduleListResponse[]>(
-			`/groups/${groupId}/schedules?page=${page}&limit=10`,
+		const { data } = await axiosAPI.get<GetScheduleListResponse>(
+			`/groups/${groupId}/schedules?page=${page}&limit=3`,
 		);
 
 		return data;

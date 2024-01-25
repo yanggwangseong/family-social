@@ -13,10 +13,19 @@ export interface CreateScheduleRequest {
 }
 
 export interface GetScheduleListResponse {
+	list: ScheduleResponse[];
+	page: number;
+	totalPage: number;
+}
+
+export interface ScheduleResponse {
 	id: string;
-	updateAt: string;
 	groupId: string;
-	schdulePeriods: TourismPeriodResponse[];
+	scheduleImage: string;
+	scheduleName: string;
+	startPeriod: Date;
+	endPeriod: Date;
+	updatedAt: string;
 }
 
 export interface TourismPeriodResponse {
