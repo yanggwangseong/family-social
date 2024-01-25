@@ -7,13 +7,21 @@ import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { ScheduleSettingMenu } from '../modal/toggle-menu.constants';
+import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
+import { useRecoilState } from 'recoil';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
+	const [, setIsScheduleId] = useRecoilState(scheduleIdAtom);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
 		isShowing: isOpenSetting,
 		handleToggleModal: handleCloseSettingModal,
 	} = useModal(settingModalWrapperRef);
+
+	const handleClickSettingModal = () => {
+		handleCloseSettingModal();
+		setIsScheduleId(schedule.id);
+	};
 
 	return (
 		<div className={styles.schedule_card_container} id={schedule.id}>
@@ -32,7 +40,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 						className={styles.setting_container}
 						ref={settingModalWrapperRef}
 					>
-						<BsThreeDots size={24} onClick={handleCloseSettingModal} />
+						<BsThreeDots size={24} onClick={handleClickSettingModal} />
 						{isOpenSetting && (
 							<ToggleModal
 								list={ScheduleSettingMenu}
