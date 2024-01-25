@@ -4,10 +4,10 @@
 		@apply flex items-center justify-between;
 
 		.tour_img_title_container {
-			@apply flex gap-4;
+			@apply flex gap-4 cursor-pointer;
 
 			.img_container {
-				@apply h-[100px];
+				@apply h-[100px] border border-solid border-customDark;
 			}
 
 			.tour_description_container {
@@ -26,22 +26,6 @@
 
 					.tour_addr {
 						@apply text-xs text-customGray;
-					}
-				}
-
-				.tour_card_footer_container {
-					@apply flex gap-4;
-
-					.heart_container {
-						@apply flex items-center gap-2;
-					}
-
-					.star_container {
-						@apply flex items-center gap-2;
-					}
-
-					.score {
-						@apply text-xs;
 					}
 				}
 			}

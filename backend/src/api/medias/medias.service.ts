@@ -1,8 +1,9 @@
+import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
+
 import { MediaCreateReqDto } from '@/models/dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '@/models/dto/media/req/media-update-req-dto';
 import { MediasRepository } from '@/models/repositories/medias.repository';
-import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class MediasService {

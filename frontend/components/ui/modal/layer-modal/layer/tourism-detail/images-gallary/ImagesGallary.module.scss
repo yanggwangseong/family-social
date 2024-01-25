@@ -1,0 +1,22 @@
+.images_gallary_container {
+	@apply w-full flex flex-wrap;
+
+	.uploaded_swiper {
+		@apply w-full h-[340px] relative border border-solid border-customDark;
+
+		.uploaded_swiper_slide {
+			@apply relative;
+
+			.swiper_button_prev {
+				@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
+                bg-customOrange rounded-full p-2 cursor-pointer;
+			}
+
+			.swiper_button_next {
+				@apply absolute right-5 
+                z-50 top-1/2 border border-solid border-customDark
+                bg-customOrange rounded-full p-2 cursor-pointer;
+			}
+		}
+	}
+}

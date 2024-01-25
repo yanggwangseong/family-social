@@ -11,6 +11,7 @@ import EditProfile from './layer/EditProfile/EditProfile';
 import ContentType from './layer/create-schedule/content-type/ContentType';
 import ServiceCategory from './layer/create-schedule/service-category/ServiceCategory';
 import AreaCode from './layer/create-schedule/area-code/AreaCode';
+import TourismDetail from './layer/tourism-detail/TourismDetail';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -24,6 +25,7 @@ const StatusLookUpTable = {
 	[LayerMode.selectedContentType]: ContentType,
 	[LayerMode.serviceCategory]: ServiceCategory,
 	[LayerMode.areaCode]: AreaCode,
+	[LayerMode.tourismDetail]: TourismDetail,
 };
 
 interface StatusProps {

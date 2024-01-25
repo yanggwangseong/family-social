@@ -4,19 +4,28 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SchedulePeriodProps } from './schedule-period.interface';
 import { Union, schdulePages } from 'types';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
-import { format } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
 import { FaCalendar } from 'react-icons/fa';
 import { getDateRange } from '@/utils/get-date-range';
 import Periods from '@/components/ui/schedule/period/Periods';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { useRecoilState } from 'recoil';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import Field from '@/components/ui/field/Field';
+import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangePage,
 	onChangePeriods,
+	onChangeScheduleName,
+	onChangeStartEndPeriod,
 	isPeriods,
+	isScheduleName,
 }) => {
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
 	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>();
 
 	const [pageInit, setPageInit] = useState<boolean>(false);
@@ -43,14 +52,16 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		setIsOpen(false);
 		!pageInit && setPageInit(true);
 
-		const dates = getDateRange(
-			format(startDate, 'yyyy-MM-dd', {
-				locale: ko,
-			}),
-			format(endDate, 'yyyy-MM-dd', {
-				locale: ko,
-			}),
-		);
+		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
+
+		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
+
+		const dates = getDateRange(startPeriod, endPeriod);
+
+		// 시작기간 종료기간
+		onChangeStartEndPeriod(startPeriod, endPeriod);
+
+		setIsSelectedPeriod(dates[0]);
 
 		setIsPeriodTimes(
 			dates.map(date => ({
@@ -61,18 +72,33 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 		);
 	};
 
+	const handleChangeScheduleName = (name: string) => {
+		onChangeScheduleName(name);
+	};
+
 	useEffect(() => {
 		if (isPeriodTimes) {
 			onChangePeriods(isPeriodTimes);
 		}
-	}, [isPeriodTimes]);
+	}, [isPeriodTimes, onChangePeriods]);
 
 	return (
 		<div className={styles.period_container}>
 			<div className={styles.step_title}>STEP 2</div>
-			<div className={styles.title}>여행 일정 선택</div>
+
 			{isOpen || !pageInit ? (
 				<div>
+					<div className={styles.schedule_name_container}>
+						<div className={styles.title}>여행 이름</div>
+						<div>
+							<Field
+								onChange={e => handleChangeScheduleName(e.target.value)}
+								defaultValue={isScheduleName}
+								placeholder="여행 이름을 작성해주세요."
+							></Field>
+						</div>
+					</div>
+					<div className={styles.title}>여행 일정 선택</div>
 					<div>여행 기간이 어떻게 되시나요?</div>
 					<DatePicker
 						locale={ko}
@@ -88,11 +114,10 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 				<>
 					<div className={styles.period_btn_container}>
 						<button className="example-custom-input" onClick={handleClick}>
-							{`${format(startDate, 'yyyy-MM-dd (eee)', {
-								locale: ko,
-							})} - ${format(endDate, 'yyyy-MM-dd (eee)', {
-								locale: ko,
-							})}`}
+							{`${TranslateDateFormat(
+								startDate,
+								'yyyy-MM-dd (eee)',
+							)} - ${TranslateDateFormat(endDate, 'yyyy-MM-dd (eee)')}`}
 						</button>
 						<FaCalendar className={styles.icon} size={22} />
 					</div>

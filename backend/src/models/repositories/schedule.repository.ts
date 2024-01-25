@@ -1,10 +1,14 @@
-import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ScheduleEntity } from '../entities/schedule.entity';
+import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+
+import { ICreateScheduleArgs } from '@/types/args/schedule';
+
 import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
-import { ScheduleResDto } from '../dto/schedule/res/schedule-res.dto';
+import { ScheduleGetListResDto } from '../dto/schedule/res/schedule-get-list-res.dto';
+import { ScheduleItemResDto } from '../dto/schedule/res/schedule-item-res.dto';
+import { ScheduleEntity } from '../entities/schedule.entity';
 
 @Injectable()
 export class ScheduleRepository extends Repository<ScheduleEntity> {
@@ -23,56 +27,46 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		memberId: string;
 		take: number;
 		skip: number;
-	}): Promise<ScheduleResDto[]> {
-		return await this.repository.find({
+	}): Promise<[ScheduleGetListResDto[], number]> {
+		return await this.repository.findAndCount({
 			select: {
 				id: true,
 				groupId: true,
+				scheduleImage: true,
+				scheduleName: true,
+				startPeriod: true,
+				endPeriod: true,
 				updatedAt: true,
-				schdulePeriods: {
-					id: true,
-					period: true,
-					startTime: true,
-					endTime: true,
-					tourisms: {
-						id: true,
-						contentId: true,
-						stayTime: true,
-						tourismImage: true,
-						title: true,
-						position: true,
-					},
-				},
 			},
 			where: {
 				memberId: memberId,
 			},
 			relations: {
-				schdulePeriods: {
+				schedulePeriods: {
 					tourisms: true,
 				},
 			},
 			order: {
 				updatedAt: 'desc',
-				schdulePeriods: {
-					period: 'ASC',
-					tourisms: {
-						position: 'ASC',
-					},
-				},
 			},
 			take,
 			skip,
 		});
 	}
 
-	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto | null> {
+	async getOneScheduleById(
+		scheduleId: string,
+	): Promise<ScheduleItemResDto | null> {
 		return await this.repository.findOne({
 			select: {
 				id: true,
 				groupId: true,
+				scheduleImage: true,
+				scheduleName: true,
+				startPeriod: true,
+				endPeriod: true,
 				updatedAt: true,
-				schdulePeriods: {
+				schedulePeriods: {
 					id: true,
 					period: true,
 					startTime: true,
@@ -91,13 +85,13 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 				id: scheduleId,
 			},
 			relations: {
-				schdulePeriods: {
+				schedulePeriods: {
 					tourisms: true,
 				},
 			},
 			order: {
 				updatedAt: 'desc',
-				schdulePeriods: {
+				schedulePeriods: {
 					period: 'ASC',
 					tourisms: {
 						position: 'ASC',
@@ -142,14 +136,17 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	async createSchedule({
 		memberId,
 		groupId,
-	}: {
-		memberId: string;
-		groupId: string;
-	}) {
+		scheduleName,
+		startPeriod,
+		endPeriod,
+	}: ICreateScheduleArgs) {
 		const insertResult = await this.repository.insert({
 			id: uuidv4(),
 			groupId: groupId,
 			memberId: memberId,
+			scheduleName,
+			startPeriod,
+			endPeriod,
 		});
 
 		const id: string = insertResult.identifiers[0].id;

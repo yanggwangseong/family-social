@@ -1,5 +1,7 @@
-import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 import { ApiProperty, PickType } from '@nestjs/swagger';
+
+import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
+
 import { TourismResDto } from './tourism-res.dto';
 
 export class TourismPeriodResDto extends PickType(TourismPeriodEntity, [

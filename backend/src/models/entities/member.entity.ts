@@ -1,5 +1,3 @@
-import { Column, Entity, OneToMany, Unique } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
 	IsEmail,
@@ -10,11 +8,14 @@ import {
 	MaxLength,
 	MinLength,
 } from 'class-validator';
-import { FamEntity } from './fam.entity';
-import { LikeFeedEntity } from './fam-like-feed.entity';
-import { FeedEntity } from './feed.entity';
+import { Column, Entity, OneToMany, Unique } from 'typeorm';
+
 import { CommentEntity } from './comment.entity';
+import { DefaultEntity } from './common/default.entity';
 import { LikeCommentEntity } from './fam-like-comment.entity';
+import { LikeFeedEntity } from './fam-like-feed.entity';
+import { FamEntity } from './fam.entity';
+import { FeedEntity } from './feed.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })

@@ -191,7 +191,7 @@ const CreateFeed: FC = () => {
 			// 컴포넌트가 언마운트될 때 URL을 제거
 			if (isImageUrl) {
 				isImageUrl.map(url => {
-					console.log('호출!!!', url);
+					//console.log('호출!!!', url);
 					URL.revokeObjectURL(url);
 				});
 			}
@@ -201,7 +201,7 @@ const CreateFeed: FC = () => {
 	useEffect(() => {
 		if (!isFeedId) remove();
 		if (feed && !isLoading && isFeedId) handleSelectedGroup(feed.groupId);
-	}, [feed]);
+	}, [feed, handleSelectedGroup, isFeedId, isLoading, remove]);
 
 	// [TODO] 1. 그룹을 먼저 선택한다. (O)
 	// [TODO] 2. 이미지 또는 미디어를 올린다.

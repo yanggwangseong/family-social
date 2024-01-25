@@ -1,11 +1,12 @@
-import { ScheduleRepository } from '@/models/repositories/schedule.repository';
-import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
-import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
+
+import { ScheduleRepository } from '@/models/repositories/schedule.repository';
+import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
+import { TourismRepository } from '@/models/repositories/tourism.repository';
 
 @Injectable()
 export class ToursService {
@@ -126,7 +127,7 @@ export class ToursService {
 		pageNo: number;
 		contentTypeId: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/detailIntro1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/detailIntro1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
 
@@ -144,7 +145,7 @@ export class ToursService {
 		pageNo: number;
 		contentTypeId: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/detailInfo1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/detailInfo1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
 
@@ -172,7 +173,7 @@ export class ToursService {
 			overviewYN: 'Y', // 콘텐츠개요조회여부( Y,N )
 		};
 
-		let httpServiceUrl = `${this.endPoint}/KorService1/detailCommon1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/detailCommon1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}
 		&defaultYN=${config.defaultYN}&firstImageYN=${config.firstImageYN}&areacodeYN=${config.areacodeYN}
@@ -201,12 +202,12 @@ export class ToursService {
 		];
 
 		const commonInfromation = {
-			items: common.response.body.items,
+			items: common.items,
 		};
 
-		commonInfromation.items.introduction = introduction.response.body.items;
-		commonInfromation.items.additional = additional.response.body.items;
-		commonInfromation.items.image = images.response.body.items;
+		commonInfromation.items.introduction = introduction.items;
+		commonInfromation.items.additional = additional.items;
+		commonInfromation.items.image = images.items;
 
 		return commonInfromation;
 	}
@@ -223,7 +224,7 @@ export class ToursService {
 		const imageYN: string = 'Y'; // 이미지조회1 : Y=콘텐츠이미지조회 N=”음식점”타입의음식메뉴이미지
 		const subImageYN: string = 'Y'; // 이미지조회2 : Y=원본,썸네일이미지조회,공공누리 저작권유형정보조회 N=Null
 
-		let httpServiceUrl = `${this.endPoint}/KorService1/detailImage1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/detailImage1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
 
@@ -240,7 +241,7 @@ export class ToursService {
 		eventStartDate: string;
 	}) {
 		const arrange = 'A';
-		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
 
@@ -260,7 +261,7 @@ export class ToursService {
 		arrange: string;
 		contentTypeId: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${this.serviceKey}
+		const httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
 

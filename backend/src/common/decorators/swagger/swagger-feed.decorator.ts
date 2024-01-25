@@ -1,3 +1,11 @@
+import { applyDecorators } from '@nestjs/common';
+import {
+	ApiConflictResponse,
+	ApiCreatedResponse,
+	ApiNotFoundResponse,
+	ApiOperation,
+} from '@nestjs/swagger';
+
 import {
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FEED_NOT_FOUND,
@@ -6,13 +14,6 @@ import {
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
-import { applyDecorators } from '@nestjs/common';
-import {
-	ApiConflictResponse,
-	ApiCreatedResponse,
-	ApiNotFoundResponse,
-	ApiOperation,
-} from '@nestjs/swagger';
 
 export const GetFeedDetailSwagger = () => {
 	return applyDecorators(

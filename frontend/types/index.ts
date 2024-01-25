@@ -32,6 +32,7 @@ export const LayerMode = {
 	selectedContentType: 'selectedContentType',
 	serviceCategory: 'serviceCategory',
 	areaCode: 'areaCode',
+	tourismDetail: 'tourismDetail',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;
@@ -43,6 +44,7 @@ export const TabMenus = [
 	'ALL',
 	'SCHEDULEALL',
 	'MYSCHEDULE',
+	'SHAREDSCHEDULE',
 	'TOURCONTENTTYPE',
 	'TOURSEARCH',
 	'FESTIVAL',

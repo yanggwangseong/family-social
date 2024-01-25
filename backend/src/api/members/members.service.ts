@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { MembersRepository } from '@/models/repositories/members.repository';
+
 import { EntityNotFoundException } from '@/common/exception/service.exception';
-import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { ERROR_USER_NOT_FOUND } from '@/constants/business-error';
+import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { MembersRepository } from '@/models/repositories/members.repository';
 import { IUpdateMemberArgs } from '@/types/args/member';
 
 @Injectable()

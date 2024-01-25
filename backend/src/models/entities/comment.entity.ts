@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MemberEntity } from './member.entity';
-import { FeedEntity } from './feed.entity';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+
+import { DefaultEntity } from './common/default.entity';
 import { LikeCommentEntity } from './fam-like-comment.entity';
+import { FeedEntity } from './feed.entity';
+import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_comment' })
 export class CommentEntity extends DefaultEntity {
@@ -48,11 +49,11 @@ export class CommentEntity extends DefaultEntity {
 	@JoinColumn({ name: 'parentId', referencedColumnName: 'id' })
 	parent?: CommentEntity;
 
-	@ManyToOne((type) => MemberEntity, (mb) => mb.memberCreateComments)
+	@ManyToOne(() => MemberEntity, (mb) => mb.memberCreateComments)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
 
-	@ManyToOne((type) => FeedEntity, (fd) => fd.comments)
+	@ManyToOne(() => FeedEntity, (fd) => fd.comments)
 	@JoinColumn({ name: 'feedId', referencedColumnName: 'id' })
 	feed!: FeedEntity;
 

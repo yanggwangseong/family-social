@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { DefaultEntity } from './common/default.entity';
-import { FeedEntity } from './feed.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+
+import { DefaultEntity } from './common/default.entity';
+import { FeedEntity } from './feed.entity';
 
 @Entity({ name: 'fam_feed_media' })
 export class FeedMediaEntity extends DefaultEntity {
@@ -34,7 +35,7 @@ export class FeedMediaEntity extends DefaultEntity {
 	@IsNumber()
 	position!: number;
 
-	@ManyToOne((type) => FeedEntity, (feed) => feed.medias)
+	@ManyToOne(() => FeedEntity, (feed) => feed.medias)
 	@JoinColumn({ name: 'feedId', referencedColumnName: 'id' })
 	feed!: FeedEntity;
 }

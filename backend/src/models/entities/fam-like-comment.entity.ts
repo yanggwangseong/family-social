@@ -7,8 +7,9 @@ import {
 	ManyToOne,
 	PrimaryColumn,
 } from 'typeorm';
-import { MemberEntity } from './member.entity';
+
 import { CommentEntity } from './comment.entity';
+import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_like_comment' })
 export class LikeCommentEntity {
@@ -28,11 +29,11 @@ export class LikeCommentEntity {
 	@IsUUID()
 	public readonly commentId!: string;
 
-	@ManyToOne((type) => MemberEntity, (member) => member.memberLikesComments)
+	@ManyToOne(() => MemberEntity, (member) => member.memberLikesComments)
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
 
-	@ManyToOne((type) => CommentEntity, (cm) => cm.LikedByComments)
+	@ManyToOne(() => CommentEntity, (cm) => cm.LikedByComments)
 	@JoinColumn({ name: 'commentId', referencedColumnName: 'id' })
 	comment!: CommentEntity;
 

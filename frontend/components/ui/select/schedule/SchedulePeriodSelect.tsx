@@ -9,22 +9,22 @@ import styles from './SchedulePeriodSelect.module.scss';
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import cn from 'classnames';
-import { SchedulePeriodSelectProps } from './schedule-period-select.interface';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
-const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
-	selectedDate,
-	onSelectedPeriod,
-}) => {
+const SchedulePeriodSelect: FC = () => {
 	const [isPeriods] = useRecoilState(periodAtom);
 
 	const [isSelectToggle, setIsSelectToggle] = useState<boolean>(false);
+
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
 
 	const handleSelectToggle = () => {
 		setIsSelectToggle(!isSelectToggle);
 	};
 
-	const handleSelectedPeriod = (period: PeriodsType) => {
-		onSelectedPeriod(period);
+	const handleSelectedPeriod = (period: string) => {
+		setIsSelectedPeriod(period);
 		setIsSelectToggle(!isSelectToggle);
 	};
 
@@ -35,8 +35,8 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 					<AiOutlineSchedule size={22} />
 				</div>
 				<div className={styles.option_text}>{`${
-					isPeriods.findIndex(item => item.period === selectedDate) + 1
-				}일차 ${selectedDate}`}</div>
+					isPeriods.findIndex(item => item.period === isSelectedPeriod) + 1
+				}일차 ${isSelectedPeriod}`}</div>
 				<div>
 					{isSelectToggle ? (
 						<MdKeyboardArrowDown size={22} />
@@ -59,12 +59,12 @@ const SchedulePeriodSelect: FC<SchedulePeriodSelectProps> = ({
 						<div
 							key={index}
 							className={cn(styles.select_item, {
-								[styles.active]: selectedDate === period.period,
+								[styles.active]: isSelectedPeriod === period.period,
 							})}
-							onClick={() => handleSelectedPeriod(period)}
+							onClick={() => handleSelectedPeriod(period.period)}
 						>
 							{`${index + 1}일차 ${period.period}`}
-							{selectedDate === period.period && (
+							{isSelectedPeriod === period.period && (
 								<div className={styles.icon_container}>
 									<AiOutlineCheck size={14} color="#e5855d" />
 								</div>

@@ -1,11 +1,3 @@
-import {
-	ERROR_GROUP_NOT_FOUND,
-	ERROR_NO_PERMISSTION_TO_GROUP,
-	ERROR_NO_PERMISSTION_TO_SCHEDULE,
-	ERROR_SCHEDULE_NOT_FOUND,
-} from '@/constants/business-error';
-import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
-import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { applyDecorators } from '@nestjs/common';
 import {
 	ApiCreatedResponse,
@@ -14,6 +6,15 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 
+import {
+	ERROR_GROUP_NOT_FOUND,
+	ERROR_NO_PERMISSTION_TO_GROUP,
+	ERROR_NO_PERMISSTION_TO_SCHEDULE,
+	ERROR_SCHEDULE_NOT_FOUND,
+} from '@/constants/business-error';
+import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
+import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
+
 export const GetOneScheduleSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
@@ -21,7 +22,7 @@ export const GetOneScheduleSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '특정 여행일정 가져오기',
-			type: GroupMembersResDto,
+			type: ScheduleResDto,
 		}),
 		ApiNotFoundResponse({
 			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_SCHEDULE_NOT_FOUND}`,
@@ -39,8 +40,7 @@ export const GetScheduleListSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '여행일정 리스트 전체 가져오기',
-			type: GroupMembersResDto,
-			isArray: true,
+			type: ScheduleResDto,
 		}),
 		ApiNotFoundResponse({
 			description: `${ERROR_GROUP_NOT_FOUND}`,

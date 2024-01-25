@@ -1,10 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+import cookieParser from 'cookie-parser';
+
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
+import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+
+import { AppModule } from './app.module';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {

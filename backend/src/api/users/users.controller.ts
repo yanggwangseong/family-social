@@ -1,7 +1,9 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+
+import { UsersService } from './users.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @Controller('users')

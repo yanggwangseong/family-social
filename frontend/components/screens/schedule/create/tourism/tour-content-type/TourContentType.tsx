@@ -19,10 +19,7 @@ import { orderSelectOptionsKeys } from '../tourism.interface';
 import { optionsLists } from '../tourism.constants';
 import { TourContentTypeProps } from './tour-content-type.interface';
 
-const TourContentType: FC<TourContentTypeProps> = ({
-	onChangePeriods,
-	isSelectedPeriod,
-}) => {
+const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
 		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
 
@@ -223,7 +220,6 @@ const TourContentType: FC<TourContentTypeProps> = ({
 								key={index}
 								tour={tour}
 								onChangePeriods={handleChangePeriods}
-								isSelectedPeriod={isSelectedPeriod}
 							/>
 						))}
 					</React.Fragment>

@@ -1,6 +1,8 @@
-import { PeriodsType } from '@/atoms/periodAtom';
-
 export interface ScheduleSidebarProps {
-	periodItem: PeriodsType;
-	onSelectedPeriod: (period: PeriodsType) => void;
+	isSelecteGroup: string;
+	isScheduleName: string;
+	isStartEndPeriod: {
+		startPeriod: string;
+		endPeriod: string;
+	};
 }

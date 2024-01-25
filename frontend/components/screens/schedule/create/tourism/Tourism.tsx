@@ -9,101 +9,11 @@ import TourSearch from './tour-search/TourSearch';
 import Festival from './festival/Festival';
 import TourContentType from './tour-content-type/TourContentType';
 
-const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
+const Tourism: FC<TourismProps> = ({ onChangePeriods }) => {
 	const router = useRouter();
 	const query = router.query as {
 		menu: 'TOURCONTENTTYPE' | 'FESTIVAL' | 'TOURSEARCH';
 	};
-
-	// const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
-	// 	useSelect<orderSelectOptionsKeys>(optionsLists[0]);
-
-	// const [isShowing, setIsShowing] = useRecoilState(modalAtom);
-	// const [, setIsLayer] = useRecoilState(modalLayerAtom);
-
-	// const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
-
-	// const [isServiceCategories, setIsServiceCategories] = useRecoilState(
-	// 	serviceCategoriesAtom,
-	// );
-
-	// const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
-
-	// const {
-	// 	data,
-	// 	fetchNextPage,
-	// 	hasNextPage,
-	// 	isLoading,
-	// 	isError,
-	// 	isRefetching,
-	// 	refetch,
-	// } = useInfiniteQuery(
-	// 	[
-	// 		'tour-list',
-	// 		isAreaCode.areaCodeMain,
-	// 		isAreaCode.areaCodeSub,
-	// 		isServiceCategories.firstCategory,
-	// 		isServiceCategories.secondCategory,
-	// 		isServiceCategories.thirdCategory,
-	// 		isSelected,
-	// 	],
-	// 	async ({ pageParam = 1 }) =>
-	// 		await TourService.getTourLists({
-	// 			numOfRows: 10,
-	// 			pageNo: pageParam,
-	// 			areaCode: isAreaCode.areaCodeMain,
-	// 			contentTypeId: '12',
-	// 			sigunguCode: isAreaCode.areaCodeSub,
-	// 			cat1: isServiceCategories.firstCategory,
-	// 			cat2: isServiceCategories.secondCategory,
-	// 			cat3: isServiceCategories.thirdCategory,
-	// 			isSelected,
-	// 		}),
-	// 	{
-	// 		getNextPageParam: (lastPage, allPosts) => {
-	// 			return lastPage.pageNo !==
-	// 				Math.ceil(allPosts[0].totalCount / allPosts[0].numOfRows)
-	// 				? lastPage.pageNo + 1
-	// 				: undefined;
-	// 		},
-	// 		enabled: !!(
-	// 			isAtomContentId.length > 0 &&
-	// 			isAreaCode.areaCodeMain &&
-	// 			isAreaCode.areaCodeSub &&
-	// 			isServiceCategories.firstCategory &&
-	// 			isServiceCategories.secondCategory &&
-	// 			isServiceCategories.thirdCategory
-	// 		),
-	// 	},
-	// );
-
-	// const handleSelectedContentType = () => {
-	// 	setIsShowing(!isShowing);
-	// 	setIsLayer({
-	// 		modal_title: '관광 타입 선택',
-	// 		layer: LayerMode.selectedContentType,
-	// 	});
-	// };
-
-	// const handleSelectedServiceCategory = () => {
-	// 	setIsShowing(!isShowing);
-	// 	setIsLayer({
-	// 		modal_title: '서비스 분류 선택',
-	// 		layer: LayerMode.serviceCategory,
-	// 	});
-	// };
-
-	// const handleSelectedAreaCode = () => {
-	// 	setIsShowing(!isShowing);
-	// 	setIsLayer({
-	// 		modal_title: '지역 선택',
-	// 		layer: LayerMode.areaCode,
-	// 	});
-	// };
-
-	// const handleTourSearch = () => {
-	// 	fetchNextPage();
-	// };
 
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		onChangePeriods(dates);
@@ -123,7 +33,6 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 			{(query.menu === 'TOURCONTENTTYPE' || !query.menu) && (
 				<TourContentType
 					onChangePeriods={handleChangePeriods}
-					isSelectedPeriod={isSelectedPeriod}
 				></TourContentType>
 			)}
 
@@ -132,10 +41,7 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods, isSelectedPeriod }) => {
 
 			{/* 키워드 검색 */}
 			{query.menu === 'TOURSEARCH' && (
-				<TourSearch
-					onChangePeriods={handleChangePeriods}
-					isSelectedPeriod={isSelectedPeriod}
-				></TourSearch>
+				<TourSearch onChangePeriods={handleChangePeriods}></TourSearch>
 			)}
 		</div>
 	);

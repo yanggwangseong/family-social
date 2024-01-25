@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -15,9 +15,15 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
-	const [isSelectedPeriod, setIsSelectedPeriod] = useState<PeriodsType>(
-		isPeriods[0],
-	);
+
+	const [isScheduleName, setIsScheduleName] = useState<string>('');
+	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
+		startPeriod: string;
+		endPeriod: string;
+	}>({
+		startPeriod: '',
+		endPeriod: '',
+	});
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
@@ -33,15 +39,19 @@ const ScheduleCreate: FC = () => {
 		setIsPeriods(dates);
 	};
 
-	const handleSelectedPeriod = (period: PeriodsType) => {
-		setIsSelectedPeriod(period);
+	const handleChangeScheduleName = (name: string) => {
+		setIsScheduleName(name);
 	};
 
-	useEffect(() => {
-		if (isPeriods) {
-			setIsSelectedPeriod(isPeriods[0]);
-		}
-	}, [isPeriods]);
+	const handleChangeStartEndPeriod = (
+		startPeriod: string,
+		endPeriod: string,
+	) => {
+		setIsStartEndPeriod({
+			startPeriod,
+			endPeriod,
+		});
+	};
 
 	return (
 		<Format title={'schedule-create'}>
@@ -70,21 +80,22 @@ const ScheduleCreate: FC = () => {
 								<SchedulePeriod
 									onChangePage={handleChangePage}
 									onChangePeriods={handleChangePeriods}
+									onChangeScheduleName={handleChangeScheduleName}
+									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
+									isScheduleName={isScheduleName}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (
-								<Tourism
-									onChangePeriods={handleChangePeriods}
-									isSelectedPeriod={isSelectedPeriod}
-								></Tourism>
+								<Tourism onChangePeriods={handleChangePeriods}></Tourism>
 							)}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
 					<ScheduleSidebar
-						periodItem={isSelectedPeriod}
-						onSelectedPeriod={handleSelectedPeriod}
+						isSelecteGroup={isSelecteGroup}
+						isScheduleName={isScheduleName}
+						isStartEndPeriod={isStartEndPeriod}
 					/>
 				</div>
 			</div>

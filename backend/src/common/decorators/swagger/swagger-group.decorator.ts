@@ -1,3 +1,14 @@
+import { applyDecorators } from '@nestjs/common';
+import {
+	ApiBadRequestResponse,
+	ApiConflictResponse,
+	ApiCreatedResponse,
+	ApiForbiddenResponse,
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiOperation,
+} from '@nestjs/swagger';
+
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_DELETE_GROUP,
@@ -15,17 +26,6 @@ import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
-import { applyDecorators } from '@nestjs/common';
-import {
-	ApiBadRequestResponse,
-	ApiConflictResponse,
-	ApiCreatedResponse,
-	ApiForbiddenResponse,
-	ApiNotFoundResponse,
-	ApiOkResponse,
-	ApiOperation,
-	ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
 
 export const GetMemberListBelongToGroupSwagger = () => {
 	return applyDecorators(

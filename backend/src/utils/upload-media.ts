@@ -1,10 +1,11 @@
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+
 import {
 	MulterBuilder,
 	imageMimeTypes,
 	mediaMimeTypes,
 } from '@/common/builders/multer.builder';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
 export const fileFilter =
 	(kind: 'image' | 'media') => (req: any, file: any, cb: any) => {

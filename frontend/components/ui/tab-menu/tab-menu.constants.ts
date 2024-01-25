@@ -29,6 +29,11 @@ export const scheduleTabMenus: TabeMenuListType[] = [
 		options: 'MYSCHEDULE',
 		title: '나의 일정',
 	},
+	{
+		link: '/schedules',
+		options: 'SHAREDSCHEDULE',
+		title: '공유된 일정',
+	},
 ];
 
 export const accountTabMenus: TabeMenuListType[] = [

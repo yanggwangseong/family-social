@@ -16,7 +16,7 @@ export class LoggingInterceptor implements NestInterceptor {
 		const { path } = request;
 
 		return next.handle().pipe(
-			tap((response) => {
+			tap(() => {
 				if (
 					this.configService.get<string>('NODE_ENV')?.toLowerCase() !== 'test'
 				) {

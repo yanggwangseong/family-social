@@ -11,13 +11,8 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-
-import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
-import { GroupsService } from './groups.service';
-import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { ApiTags } from '@nestjs/swagger';
+
 import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
@@ -28,24 +23,6 @@ import {
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
-import { CurrentUser } from '@/common/decorators/user.decorator';
-import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
-import { FamsService } from '../fams/fams.service';
-import { MembersService } from '../members/members.service';
-import {
-	BadRequestServiceException,
-	EntityConflictException,
-	EntityNotFoundException,
-} from '@/common/exception/service.exception';
-import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
-import {
-	ERROR_CANNOT_INVITE_SELF,
-	ERROR_INVITED_MEMBER_NOT_FOUND,
-	ERROR_SCHEDULE_NOT_FOUND,
-} from '@/constants/business-error';
-import { SchedulesService } from '../schedules/schedules.service';
-import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
-import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
 import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
@@ -53,6 +30,25 @@ import {
 	GetScheduleListSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorrator';
+import { CurrentUser } from '@/common/decorators/user.decorator';
+import { BadRequestServiceException } from '@/common/exception/service.exception';
+import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import {
+	ERROR_CANNOT_INVITE_SELF,
+	ERROR_INVITED_MEMBER_NOT_FOUND,
+} from '@/constants/business-error';
+import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
+import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
+import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
+import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
+import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
+
+import { GroupsService } from './groups.service';
+import { FamsService } from '../fams/fams.service';
+import { MembersService } from '../members/members.service';
+import { SchedulesService } from '../schedules/schedules.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -299,7 +295,7 @@ export class GroupsController {
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
 		@Query('page') page: number,
-		@Query('limit') limit: number = 10,
+		@Query('limit') limit: number = 3,
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {
@@ -348,7 +344,7 @@ export class GroupsController {
 	 * @tag groups
 	 * @param {string} groupId 							- 그룹 아이디
 	 * @param {string} sub  							- 인증된 사용자 아이디
-	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @param {ScheduleCreateReqDto} dto  		- 여행 일정별 정보
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
@@ -357,7 +353,7 @@ export class GroupsController {
 	async createToursSchedule(
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
-		@Body() dto: TourismPeriodCreateReqDto[],
+		@Body() dto: ScheduleCreateReqDto,
 	) {
 		// 그룹 유/무 체크
 		await this.groupsService.findGroupByIdOrThrow(groupId);
@@ -368,7 +364,7 @@ export class GroupsController {
 		return await this.schedulesService.createToursSchedule({
 			memberId: sub,
 			groupId,
-			periods: dto,
+			scheduleItem: dto,
 		});
 	}
 
@@ -379,7 +375,7 @@ export class GroupsController {
 	 * @param {string} groupId 							- 그룹 아이디
 	 * @param {string} scheduleId  						- 여행일정 스케줄 아이디
 	 * @param {string} sub  							- 인증된 사용자 아이디
-	 * @param {TourismPeriodCreateReqDto[]} dto  		- 여행 일정별 정보
+	 * @param {TourismPeriodUpdateReqDto[]} dto  		- 여행 일정별 정보
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
