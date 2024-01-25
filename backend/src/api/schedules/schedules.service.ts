@@ -35,17 +35,24 @@ export class SchedulesService {
 		memberId: string;
 		page: number;
 		limit: number;
-	}): Promise<ScheduleResDto[]> {
+	}): Promise<ScheduleResDto> {
 		const { take, skip } = getOffset({ page, limit });
 
-		return await this.scheduleRepository.getScheduleListOwnMemberId({
-			memberId,
-			take,
-			skip,
-		});
+		const [list, count] =
+			await this.scheduleRepository.getScheduleListOwnMemberId({
+				memberId,
+				take,
+				skip,
+			});
+
+		return {
+			list: list,
+			page: page,
+			totalPage: Math.ceil(count / take),
+		};
 	}
 
-	async getOneScheduleById(scheduleId: string): Promise<ScheduleResDto> {
+	async getOneScheduleById(scheduleId: string) {
 		const schedule = await this.scheduleRepository.getOneScheduleById(
 			scheduleId,
 		);
@@ -58,15 +65,18 @@ export class SchedulesService {
 	async createToursSchedule({
 		memberId,
 		groupId,
-		periods,
+		scheduleItem,
 	}: ICreateTourArgs): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.createSchedule({
 			memberId,
 			groupId,
+			scheduleName: scheduleItem.scheduleName,
+			startPeriod: scheduleItem.startPeriod,
+			endPeriod: scheduleItem.endPeriod,
 		});
 
 		const createTourismPeriod = await this.createTourismPeriod(
-			periods,
+			scheduleItem.periods,
 			schedule.id,
 		);
 

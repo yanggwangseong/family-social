@@ -1,4 +1,5 @@
-import { PickType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 
@@ -9,5 +10,11 @@ export class TourismPeriodCreateReqDto extends PickType(TourismPeriodEntity, [
 	'startTime',
 	'endTime',
 ] as const) {
+	@ApiProperty({
+		nullable: false,
+		type: [TourismCreateReqDto],
+	})
+	@IsNotEmpty()
+	@IsArray()
 	tourisms!: TourismCreateReqDto[];
 }

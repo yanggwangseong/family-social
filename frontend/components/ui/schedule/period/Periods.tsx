@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import Field from '@/ui/field/Field';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import Table from '@/ui/table/Table';
 import styles from './Periods.module.scss';
 import { periodTableHeaderCol } from '@/constants/table.constant';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 	return (
@@ -16,14 +15,10 @@ const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 					return (
 						<tr key={index}>
 							<td className={styles.table_row} align="center">
-								{format(date, 'yyyy-MM-dd', {
-									locale: ko,
-								})}
+								{TranslateDateFormat(date, 'yyyy-MM-dd')}
 							</td>
 							<td className={styles.table_row} align="center">
-								{format(date, 'eee', {
-									locale: ko,
-								})}
+								{TranslateDateFormat(date, 'eee')}
 							</td>
 							<td className={styles.table_row} align="center">
 								<Field

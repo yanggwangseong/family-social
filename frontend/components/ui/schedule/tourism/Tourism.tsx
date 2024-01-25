@@ -35,7 +35,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 
 					return {
 						...value,
-						tourism: updatedTourism,
+						tourisms: updatedTourism,
 					};
 				}
 
@@ -47,9 +47,9 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	const handleCompleTime = (position: number, hour: number, minute: number) => {
 		setIsPeriods(prev => {
 			return prev.map(value => {
-				let tourism;
+				let tourisms;
 				if (value.period === isSelectedPeriod) {
-					tourism =
+					tourisms =
 						value.tourisms &&
 						value.tourisms.map(item => {
 							if (item.position === position) {
@@ -64,7 +64,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 
 				return {
 					...value,
-					tourism: tourism || value.tourisms,
+					tourisms: tourisms || value.tourisms,
 				};
 			});
 		});

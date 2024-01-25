@@ -15,9 +15,12 @@ import { CreateScheduleRequest } from '@/shared/interfaces/schedule.interface';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
-const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
+const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
+	isScheduleName,
+	isStartEndPeriod,
 }) => {
 	const router = useRouter();
 
@@ -31,8 +34,11 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 		['create-schedule'],
 		(data: CreateScheduleRequest) =>
 			ScheduleService.createSchedules({
+				periods: data.periods,
 				groupId: data.groupId,
-				schedules: data.schedules,
+				scheduleName: data.scheduleName,
+				startPeriod: data.startPeriod,
+				endPeriod: data.endPeriod,
 			}),
 		{
 			onMutate: variable => {
@@ -64,9 +70,13 @@ const ScheduleSidebar: FC<{ isSelecteGroup: string }> = ({
 			'일정 생성',
 			'닫기',
 			() => {
-				//createScheduleSync({ groupId: isSelecteGroup, schedules: isPeriods });
-				console.log('isSelecteGroup', isSelecteGroup);
-				console.log('isPeriods', isPeriods);
+				createScheduleSync({
+					groupId: isSelecteGroup,
+					scheduleName: isScheduleName,
+					startPeriod: isStartEndPeriod.startPeriod,
+					endPeriod: isStartEndPeriod.endPeriod,
+					periods: isPeriods,
+				});
 			},
 			() => {},
 			{},

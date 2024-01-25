@@ -6,6 +6,11 @@
 		@apply font-bold text-3xl mb-5;
 	}
 
+	// 여행 이름
+	.schedule_name_container {
+		@apply flex flex-col gap-4 mb-4;
+	}
+
 	.title {
 		@apply font-semibold text-lg;
 	}

@@ -16,6 +16,15 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 const ScheduleCreate: FC = () => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
+	const [isScheduleName, setIsScheduleName] = useState<string>('');
+	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
+		startPeriod: string;
+		endPeriod: string;
+	}>({
+		startPeriod: '',
+		endPeriod: '',
+	});
+
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
@@ -28,6 +37,20 @@ const ScheduleCreate: FC = () => {
 
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		setIsPeriods(dates);
+	};
+
+	const handleChangeScheduleName = (name: string) => {
+		setIsScheduleName(name);
+	};
+
+	const handleChangeStartEndPeriod = (
+		startPeriod: string,
+		endPeriod: string,
+	) => {
+		setIsStartEndPeriod({
+			startPeriod,
+			endPeriod,
+		});
 	};
 
 	return (
@@ -57,7 +80,10 @@ const ScheduleCreate: FC = () => {
 								<SchedulePeriod
 									onChangePage={handleChangePage}
 									onChangePeriods={handleChangePeriods}
+									onChangeScheduleName={handleChangeScheduleName}
+									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
+									isScheduleName={isScheduleName}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (
@@ -66,7 +92,11 @@ const ScheduleCreate: FC = () => {
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
-					<ScheduleSidebar isSelecteGroup={isSelecteGroup} />
+					<ScheduleSidebar
+						isSelecteGroup={isSelecteGroup}
+						isScheduleName={isScheduleName}
+						isStartEndPeriod={isStartEndPeriod}
+					/>
 				</div>
 			</div>
 		</Format>
