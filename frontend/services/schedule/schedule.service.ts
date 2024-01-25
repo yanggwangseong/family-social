@@ -34,4 +34,12 @@ export const ScheduleService = {
 
 		return data;
 	},
+
+	async deleteSchedule(scheduleId: string, groupId: string) {
+		const { data } = await axiosAPI.delete<void>(
+			`/groups/${groupId}/schedules/${scheduleId}`,
+		);
+
+		return data;
+	},
 };
