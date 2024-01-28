@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './EditProfile.module.scss';
 import Image from 'next/image';
 import { GoPencil } from 'react-icons/go';
@@ -11,7 +11,6 @@ import {
 } from './edit-profile.interface';
 import { validPhoneNumber } from '@/components/screens/sign-up/sign-up.constants';
 import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
-import { blobToFile } from '@/utils/file';
 import { useMutation } from 'react-query';
 import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
@@ -20,8 +19,12 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
 import { MemberService } from '@/services/member/member.service';
+import { useUploadImage } from '@/hooks/useUploadImage';
 
 const EditProfile: FC = () => {
+	const { isFiles, handleUploadImage, uploadImage } = useUploadImage();
+	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
 	const {
 		register,
 		formState: { errors, isValid },
@@ -32,8 +35,6 @@ const EditProfile: FC = () => {
 	} = useForm<EditProfileFields>({
 		mode: 'onChange',
 	});
-
-	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const { mutateAsync: profileImageUploadASync } = useMutation(
 		['profile-image-upload'],
@@ -71,22 +72,6 @@ const EditProfile: FC = () => {
 		},
 	);
 
-	const [isFiles, setIsFiles] = useState<File>();
-	const [uploadImage, setUploadImage] = useState<{
-		image: Blob | null;
-		fileName: string;
-	}>({ image: null, fileName: '' });
-
-	const handleUploadImage = (image: Blob, fileName: string) =>
-		setUploadImage({ image, fileName });
-
-	useEffect(() => {
-		if (uploadImage.image) {
-			const file = blobToFile(uploadImage.image, uploadImage.fileName);
-			setIsFiles(file);
-		}
-	}, [uploadImage]);
-
 	const onSubmit: SubmitHandler<EditProfileFields> = async ({
 		username,
 		phoneNumber,
@@ -96,7 +81,7 @@ const EditProfile: FC = () => {
 			await updateProfileASync({
 				username,
 				phoneNumber,
-				memberId: '410b7202-660a-4423-a6c3-6377857241cc',
+				memberId: '410b7202-660a-4423-a6c3-6377857241cc', // [Todo] 로그인한 사용자 아이디 가져오기
 				profileImage: url[0], // [Todo] 만약 이미지 수정 안했으면 uploadImage null 일떄 기존 프로필 image 넣어주기
 			});
 		}
@@ -160,10 +145,11 @@ const EditProfile: FC = () => {
 				<CustomButton
 					type="submit"
 					className="mt-8 bg-customOrange text-customDark 
-				font-bold border border-solid border-customDark 
-				rounded-full p-[10px]
-				w-full hover:bg-orange-500
-				"
+					font-bold border border-solid border-customDark 
+					rounded-full p-[10px]
+					w-full hover:bg-orange-500
+					"
+					disabled={!isValid}
 				>
 					수정하기
 				</CustomButton>
