@@ -15,20 +15,18 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { GroupService } from '@/services/group/group.service';
 import axios from 'axios';
-import { UpdateGroupFields } from './group-update.interface';
+import {
+	GroupDetailEditModeType,
+	UpdateGroupFields,
+} from './group-update.interface';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { EditMode, Union } from 'types';
+import { useEditMode } from '@/hooks/useEditMode';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
-	const [isMode, setMode] = useState<Union<typeof EditMode>>('');
-
-	const handleEdit = (mode: Union<typeof EditMode>) => {
-		if (mode === 'reset') return setMode('');
-		setMode(mode);
-	};
+	const { isMode, handleEdit } = useEditMode<GroupDetailEditModeType>('reset');
 
 	const {
 		register,
@@ -90,7 +88,8 @@ const GroupDetailEdit: FC = () => {
 								<div className={styles.detail_wrap}>
 									<div
 										className={cn(styles.group_setting_lst_menu_container, {
-											[styles.disabled]: isMode && isMode !== 'information',
+											[styles.disabled]:
+												isMode !== 'reset' && isMode !== 'information',
 										})}
 									>
 										<div className={styles.detail_container_title}>
@@ -158,10 +157,8 @@ const GroupDetailEdit: FC = () => {
 													</div>
 													<div
 														className={styles.edit_btn_container}
-														onClick={
-															!isMode
-																? () => handleEdit('information')
-																: undefined
+														onClick={() =>
+															isMode === 'reset' && handleEdit('information')
 														}
 													>
 														<div className={styles.btn_wrap}>
@@ -180,7 +177,8 @@ const GroupDetailEdit: FC = () => {
 
 									<div
 										className={cn(styles.group_setting_lst_menu_container, {
-											[styles.disabled]: isMode && isMode !== 'visitMessage',
+											[styles.disabled]:
+												isMode !== 'reset' && isMode !== 'visitMessage',
 										})}
 									>
 										<div className={styles.detail_container_title}>
@@ -207,10 +205,8 @@ const GroupDetailEdit: FC = () => {
 													</div>
 													<div
 														className={styles.edit_btn_container}
-														onClick={
-															!isMode
-																? () => handleEdit('visitMessage')
-																: undefined
+														onClick={() =>
+															isMode === 'reset' && handleEdit('visitMessage')
 														}
 													>
 														<div className={styles.btn_wrap}>
