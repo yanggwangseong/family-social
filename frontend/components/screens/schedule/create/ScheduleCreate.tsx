@@ -13,7 +13,10 @@ import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSid
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 
-const ScheduleCreate: FC = () => {
+const ScheduleCreate: FC<{
+	edit?: boolean;
+}> = ({ edit = false }) => {
+	console.log(edit);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>('');
