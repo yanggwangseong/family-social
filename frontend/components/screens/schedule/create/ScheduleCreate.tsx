@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -12,11 +12,12 @@ import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
+import { axiosAPI } from 'api/axios';
 
 const ScheduleCreate: FC<{
 	edit?: boolean;
 }> = ({ edit = false }) => {
-	console.log(edit);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>('');
