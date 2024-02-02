@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY, API_URL } from '@/constants/index';
+import { ACCESS_TOKEN_KEY, API_URL, SSR_API_URL } from '@/constants/index';
 import { getCookie } from '@/utils/cookie';
 import axios, {
 	AxiosError,
@@ -25,16 +25,19 @@ axiosClassic.interceptors.response.use((res: AxiosResponse) => {
 
 export const axiosAPI = (() => {
 	const axiosInstance = axios.create({
-		baseURL: API_URL,
+		baseURL: typeof window !== 'undefined' ? API_URL : SSR_API_URL,
 		withCredentials: true,
 	});
 
 	axiosInstance.interceptors.request.use(
 		(config: InternalAxiosRequestConfig) => {
-			const accessToken = getCookie(ACCESS_TOKEN_KEY as string);
+			// client side
+			if (typeof window !== 'undefined') {
+				const accessToken = getCookie(ACCESS_TOKEN_KEY as string);
 
-			if (accessToken) {
-				config.headers.setAuthorization(`Bearer ${accessToken}`);
+				if (accessToken) {
+					config.headers.setAuthorization(`Bearer ${accessToken}`);
+				}
 			}
 
 			return config;
