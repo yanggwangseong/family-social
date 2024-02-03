@@ -123,6 +123,13 @@ export class SchedulesService {
 		return schedule;
 	}
 
+	async UpdateScheduleTitleById(scheduleId: string, scheduleName: string) {
+		return await this.scheduleRepository.updateScheduleTitleById(
+			scheduleId,
+			scheduleName,
+		);
+	}
+
 	async deleteToursSchedule(scheduleId: string): Promise<void> {
 		// Tourism 먼저 다 삭제
 		const periodIds =
