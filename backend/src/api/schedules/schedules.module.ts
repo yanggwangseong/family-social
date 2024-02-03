@@ -8,6 +8,7 @@ import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 
+import { SchedulesController } from './schedules.controller';
 import { SchedulesService } from './schedules.service';
 
 @Module({
@@ -18,7 +19,7 @@ import { SchedulesService } from './schedules.service';
 			TourismEntity,
 		]),
 	],
-	controllers: [],
+	controllers: [SchedulesController],
 	providers: [
 		SchedulesService,
 		ScheduleRepository,
