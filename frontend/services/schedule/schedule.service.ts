@@ -3,8 +3,10 @@ import {
 	CreateScheduleRequest,
 	CreateScheduleResponse,
 	GetScheduleListResponse,
+	ScheduleItemResponse,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
+import { AxiosError } from 'axios';
 
 export const ScheduleService = {
 	async createSchedules({
@@ -30,6 +32,14 @@ export const ScheduleService = {
 	async getScheduleList(page: number, groupId: string) {
 		const { data } = await axiosAPI.get<GetScheduleListResponse>(
 			`/groups/${groupId}/schedules?page=${page}&limit=3`,
+		);
+
+		return data;
+	},
+
+	async getScheduleById(groupId: string, scheduleId: string) {
+		const { data } = await axiosAPI.get<ScheduleItemResponse>(
+			`/groups/${groupId}/schedules/${scheduleId}`,
 		);
 
 		return data;

@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -12,24 +12,37 @@ import Tourism from './tourism/Tourism';
 import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
 import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { TranslateDateFormat } from '@/utils/translate-date-format';
+import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 
-const ScheduleCreate: FC = () => {
+const ScheduleCreate: FC<{
+	edit: boolean;
+	scheduleItem: ScheduleItemResponse;
+}> = ({ edit, scheduleItem }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
-	const [isScheduleName, setIsScheduleName] = useState<string>('');
+	const [isScheduleName, setIsScheduleName] = useState<string>(
+		edit && scheduleItem ? scheduleItem.scheduleName : '',
+	);
 	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
 		startPeriod: string;
 		endPeriod: string;
 	}>({
-		startPeriod: '',
-		endPeriod: '',
+		startPeriod:
+			edit && scheduleItem
+				? TranslateDateFormat(new Date(scheduleItem.startPeriod), 'yyyy-MM-dd')
+				: '',
+		endPeriod:
+			edit && scheduleItem
+				? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
+				: '',
 	});
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
-		useMemberBelongToGroups();
+		useMemberBelongToGroups(edit && scheduleItem ? scheduleItem.groupId : '');
 
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);
@@ -84,6 +97,9 @@ const ScheduleCreate: FC = () => {
 									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
 									isScheduleName={isScheduleName}
+									updateStartDate={scheduleItem.startPeriod}
+									updateEndDate={scheduleItem.endPeriod}
+									schedulePeriods={scheduleItem.schedulePeriods}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (

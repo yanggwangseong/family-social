@@ -22,6 +22,9 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	onChangeStartEndPeriod,
 	isPeriods,
 	isScheduleName,
+	updateStartDate,
+	updateEndDate,
+	schedulePeriods,
 }) => {
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
@@ -30,7 +33,10 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 
 	const [pageInit, setPageInit] = useState<boolean>(false);
 
-	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+	const [dateRange, setDateRange] = useState<Date[]>([
+		updateStartDate ? new Date(updateStartDate) : new Date(),
+		updateEndDate ? new Date(updateEndDate) : new Date(),
+	]);
 	const [startDate, endDate] = dateRange;
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);

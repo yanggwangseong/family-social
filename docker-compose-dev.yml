@@ -11,6 +11,8 @@ services:
       - "/app/node_modules"
       # - "/app"
       # - "/app/.next"
+    networks:
+      - social_network
 
   nginx:
     restart: always
@@ -19,6 +21,8 @@ services:
       context: ./nginx
     ports:
       - "3000:80"
+    networks:
+      - social_network
 
   backend:
     build:
@@ -36,3 +40,8 @@ services:
       POSTGRESQL_HOST: ${POSTGRESQL_HOST}
       POSTGRESQL_USER: ${POSTGRESQL_USER}
       POSTGRESQL_PORT: ${POSTGRESQL_PORT}
+    networks:
+      - social_network
+
+networks:
+  social_network:

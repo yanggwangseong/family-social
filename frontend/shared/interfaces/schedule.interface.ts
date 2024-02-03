@@ -28,6 +28,10 @@ export interface ScheduleResponse {
 	updatedAt: string;
 }
 
+export interface ScheduleItemResponse extends ScheduleResponse {
+	schedulePeriods: TourismPeriodResponse[];
+}
+
 export interface TourismPeriodResponse {
 	id: string;
 	period: string;

@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
 import styles from './SelectGroup.module.scss';
-import Skeleton from '@/components/ui/skeleton/Skeleton';
-import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SelectGroupProps } from './select-group.interface';

@@ -13,7 +13,6 @@ import ServiceCategory from './layer/create-schedule/service-category/ServiceCat
 import AreaCode from './layer/create-schedule/area-code/AreaCode';
 import TourismDetail from './layer/tourism-detail/TourismDetail';
 import ScheduleDeleteConfirm from './layer/ScheduleDeleteConfirm';
-import ScheduleUpdateConfirm from './layer/ScheduleUpdateConfirm';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -29,7 +28,6 @@ const StatusLookUpTable = {
 	[LayerMode.areaCode]: AreaCode,
 	[LayerMode.tourismDetail]: TourismDetail,
 	[LayerMode.scheduleDeleteConfirm]: ScheduleDeleteConfirm,
-	[LayerMode.scheduleUpdateConfirm]: ScheduleUpdateConfirm,
 };
 
 interface StatusProps {
