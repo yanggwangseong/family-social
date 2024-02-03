@@ -6,18 +6,37 @@ import { AxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 
 import React from 'react';
-import { QueryClient, dehydrate } from 'react-query';
+import { QueryClient, dehydrate, useQuery } from 'react-query';
 
 import Error from 'next/error';
+import { useRouter } from 'next/router';
+import Skeleton from '@/components/ui/skeleton/Skeleton';
 
 const ScheduleEditPage: NextPage<{ err: boolean; status: number }> = ({
 	err,
 	status,
 }) => {
+	const router = useRouter();
+
+	const query = router.query as { scheduleId: string };
+
+	const { data, isLoading } = useQuery(
+		['get-scheduleId', query.scheduleId],
+		async () =>
+			await ScheduleService.getScheduleById(
+				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+				query.scheduleId,
+			),
+	);
+
 	if (err) {
 		return <Error statusCode={status} />;
 	}
-	return <ScheduleCreate edit={true} />;
+
+	if (isLoading) return <Skeleton></Skeleton>;
+	if (!data) return <Skeleton></Skeleton>;
+
+	return <ScheduleCreate edit={true} scheduleItem={data} />;
 };
 
 export default ScheduleEditPage;
