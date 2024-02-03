@@ -8,4 +8,7 @@ export interface SchedulePeriodProps {
 	onChangeStartEndPeriod: (startPeriod: string, endPeriod: string) => void;
 	isPeriods: PeriodsType[];
 	isScheduleName: string;
+	updateStartDate?: Date;
+	updateEndDate?: Date;
+	schedulePeriods?: PeriodsType[];
 }
