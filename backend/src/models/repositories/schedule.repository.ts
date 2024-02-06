@@ -168,6 +168,10 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		return this.findOrFailScheduleById({ scheduleId: scheduleId });
 	}
 
+	async updateScheduleTitleById(scheduleId: string, scheduleName: string) {
+		await this.update({ id: scheduleId }, { scheduleName: scheduleName });
+	}
+
 	async deleteSchedule(scheduleId: string): Promise<boolean> {
 		const { affected } = await this.delete({
 			id: scheduleId,

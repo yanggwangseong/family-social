@@ -103,3 +103,14 @@ export const DeleteToursScheduleSwagger = () => {
 		}),
 	);
 };
+
+export const PatchScheduleTitleSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 스케줄 여행제목 수정',
+		}),
+		ApiCreatedResponse({
+			description: '여행 제목 수정 성공',
+		}),
+	);
+};

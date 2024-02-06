@@ -1,4 +1,3 @@
-import { PeriodsType } from '@/atoms/periodAtom';
 import {
 	CreateScheduleRequest,
 	CreateScheduleResponse,
@@ -6,7 +5,6 @@ import {
 	ScheduleItemResponse,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
-import { AxiosError } from 'axios';
 
 export const ScheduleService = {
 	async createSchedules({
@@ -48,6 +46,17 @@ export const ScheduleService = {
 	async deleteSchedule(scheduleId: string, groupId: string) {
 		const { data } = await axiosAPI.delete<void>(
 			`/groups/${groupId}/schedules/${scheduleId}`,
+		);
+
+		return data;
+	},
+
+	async updateScheduleName(scheduleId: string, scheduleName: string) {
+		const { data } = await axiosAPI.patch<void>(
+			`/schedules/${scheduleId}/title`,
+			{
+				scheduleName,
+			},
 		);
 
 		return data;

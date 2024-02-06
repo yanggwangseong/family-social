@@ -1,0 +1,15 @@
+.update_title_form {
+	@apply flex-1;
+
+	.container {
+		@apply flex gap-2;
+
+		.field_container {
+			@apply flex-1;
+		}
+
+		.btn_container {
+			@apply flex h-8 gap-2;
+		}
+	}
+}
