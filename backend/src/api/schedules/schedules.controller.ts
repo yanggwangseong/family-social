@@ -52,6 +52,15 @@ export class SchedulesController {
 		);
 	}
 
+	/**
+	 * @summary 특정 스케줄 여행스케줄 썸네일 변경
+	 *
+	 * @tag schedules
+	 * @param {string} scheduleId - 스케줄 아이디
+	 * @param {Express.MulterS3.File} files - 업로드 파일
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns string[]
+	 */
 	@PatchScheduleUploadThumbnailImageSwagger()
 	@Patch(':scheduleId/uploads/thumbnail-image')
 	@UseInterceptors(
