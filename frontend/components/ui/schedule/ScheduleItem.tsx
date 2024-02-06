@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import Image from 'next/image';
 import { BsThreeDots } from 'react-icons/bs';
 import styles from './ScheduleItem.module.scss';
@@ -9,8 +9,13 @@ import ToggleModal from '../modal/ToggleModal';
 import { ScheduleSettingMenu } from '../modal/toggle-menu.constants';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
 import { useRecoilState } from 'recoil';
+import { GoPencil } from 'react-icons/go';
+import Field from '../field/Field';
+import CustomButton from '../button/custom-button/CustomButton';
+import ScheduleUpdateTitle from './update-title/UpdateTitle';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
+	const [isUpdateTitle, setIsUpdateTitle] = useState<boolean>(false);
 	const [, setIsScheduleId] = useRecoilState(scheduleIdAtom);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
@@ -21,6 +26,10 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 	const handleClickSettingModal = () => {
 		handleCloseSettingModal();
 		setIsScheduleId(schedule.id);
+	};
+
+	const handleUpdateTitle = () => {
+		setIsUpdateTitle(!isUpdateTitle);
 	};
 
 	return (
@@ -34,8 +43,24 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 			</div>
 			<div className={styles.schedule_card_contents_container}>
 				<div className={styles.contents_top_container}>
-					<div className={styles.d_day}>D-248</div>
-					<div className={styles.title}>{schedule.scheduleName}</div>
+					<div>
+						<div className={styles.d_day}>D-248</div>
+					</div>
+					{isUpdateTitle ? (
+						<ScheduleUpdateTitle
+							handleUpdateTitle={handleUpdateTitle}
+						></ScheduleUpdateTitle>
+					) : (
+						<>
+							<div className={styles.title}>{schedule.scheduleName}</div>
+							<div
+								className={styles.title_update_icon_container}
+								onClick={handleUpdateTitle}
+							>
+								<GoPencil size={18} color="#0a0a0a" />
+							</div>
+						</>
+					)}
 					<div
 						className={styles.setting_container}
 						ref={settingModalWrapperRef}
