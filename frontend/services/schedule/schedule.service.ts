@@ -52,4 +52,15 @@ export const ScheduleService = {
 
 		return data;
 	},
+
+	async updateScheduleName(scheduleId: string, scheduleName: string) {
+		const { data } = await axiosAPI.patch<void>(
+			`/schedules/${scheduleId}/title`,
+			{
+				scheduleName,
+			},
+		);
+
+		return data;
+	},
 };
