@@ -10,8 +10,6 @@ import { ScheduleSettingMenu } from '../modal/toggle-menu.constants';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
 import { useRecoilState } from 'recoil';
 import { GoPencil } from 'react-icons/go';
-import Field from '../field/Field';
-import CustomButton from '../button/custom-button/CustomButton';
 import ScheduleUpdateTitle from './update-title/UpdateTitle';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
@@ -49,6 +47,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 					{isUpdateTitle ? (
 						<ScheduleUpdateTitle
 							handleUpdateTitle={handleUpdateTitle}
+							scheduleId={schedule.id}
 						></ScheduleUpdateTitle>
 					) : (
 						<>

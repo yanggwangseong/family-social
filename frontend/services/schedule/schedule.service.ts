@@ -1,4 +1,3 @@
-import { PeriodsType } from '@/atoms/periodAtom';
 import {
 	CreateScheduleRequest,
 	CreateScheduleResponse,
@@ -6,7 +5,6 @@ import {
 	ScheduleItemResponse,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
-import { AxiosError } from 'axios';
 
 export const ScheduleService = {
 	async createSchedules({

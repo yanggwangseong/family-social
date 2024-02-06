@@ -3,10 +3,16 @@ import Field from '@/ui/field/Field';
 import CustomButton from '@/ui/button/custom-button/CustomButton';
 import styles from './UpdateTitle.module.scss';
 import { ScheduleUpdateTitleProps } from './update-title.interface';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import axios from 'axios';
+import { useMutation } from 'react-query';
+import { ScheduleService } from '@/services/schedule/schedule.service';
 
 const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 	handleUpdateTitle,
+	scheduleId,
 }) => {
 	const {
 		register,
@@ -19,10 +25,44 @@ const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 		mode: 'onChange',
 	});
 
+	const { mutate: updateScheduleNameSync } = useMutation(
+		['create-group'],
+		(data: { scheduleName: string }) =>
+			ScheduleService.updateScheduleName(scheduleId, data.scheduleName),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `일정 제목 수정 하였습니다.`, '확인', () => {
+					handleUpdateTitle();
+				});
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const onSubmit: SubmitHandler<{ scheduleName: string }> = data => {
+		updateScheduleNameSync(data);
+	};
+
 	return (
-		<form className="flex-1">
-			<div className="flex gap-2">
-				<div className="flex-1">
+		<form
+			className={styles.update_title_form}
+			onSubmit={handleSubmit(onSubmit)}
+		>
+			<div className={styles.container}>
+				<div className={styles.field_container}>
 					<Field
 						{...register('scheduleName', {
 							required: '여행이름은 필수입니다',
@@ -40,9 +80,9 @@ const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 						error={errors.scheduleName}
 					></Field>
 				</div>
-				<div className="flex h-8 gap-2">
+				<div className={styles.btn_container}>
 					<CustomButton
-						type="button"
+						type="submit"
 						className="bg-customOrange text-customDark 
                         font-bold border border-solid border-customDark 
                         rounded-full text-xs px-4
