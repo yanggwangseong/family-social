@@ -13,8 +13,11 @@ import { GoPencil } from 'react-icons/go';
 import ScheduleUpdateTitle from './update-title/UpdateTitle';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
+import { useRouter } from 'next/router';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
+	const router = useRouter();
+
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -43,14 +46,25 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 		});
 	};
 
+	const handleChangePageScheduleDetail = (scheduleId: string) => {
+		router.push(`/schedules/${scheduleId}`);
+	};
+
 	return (
-		<div className={styles.schedule_card_container} id={schedule.id}>
+		<div
+			className={styles.schedule_card_container}
+			id={schedule.id}
+			onClick={() => handleChangePageScheduleDetail(schedule.id)}
+		>
 			<div className={styles.img_container}>
 				<Image
 					fill
 					src={schedule.scheduleImage ?? '/images/banner/group-base.png'}
 					alt="banner"
-					onClick={handleUploadThumbnailImage}
+					onClick={e => {
+						e.stopPropagation();
+						handleUploadThumbnailImage();
+					}}
 				></Image>
 			</div>
 			<div className={styles.schedule_card_contents_container}>
@@ -68,7 +82,10 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 							<div className={styles.title}>{schedule.scheduleName}</div>
 							<div
 								className={styles.title_update_icon_container}
-								onClick={handleUpdateTitle}
+								onClick={e => {
+									e.stopPropagation();
+									handleUpdateTitle();
+								}}
 							>
 								<GoPencil size={18} color="#0a0a0a" />
 							</div>
@@ -78,7 +95,13 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 						className={styles.setting_container}
 						ref={settingModalWrapperRef}
 					>
-						<BsThreeDots size={24} onClick={handleClickSettingModal} />
+						<BsThreeDots
+							size={24}
+							onClick={e => {
+								e.stopPropagation();
+								handleClickSettingModal();
+							}}
+						/>
 						{isOpenSetting && (
 							<ToggleModal
 								list={ScheduleSettingMenu}

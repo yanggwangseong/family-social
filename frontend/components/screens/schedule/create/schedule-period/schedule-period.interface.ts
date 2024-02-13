@@ -10,5 +10,4 @@ export interface SchedulePeriodProps {
 	isScheduleName: string;
 	updateStartDate?: Date;
 	updateEndDate?: Date;
-	schedulePeriods?: PeriodsType[];
 }

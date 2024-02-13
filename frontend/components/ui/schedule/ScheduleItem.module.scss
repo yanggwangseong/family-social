@@ -1,5 +1,5 @@
 .schedule_card_container {
-	@apply border border-solid border-customDark flex flex-row gap-4;
+	@apply border border-solid border-customDark flex flex-row gap-4 cursor-pointer;
 
 	.img_container {
 		@apply w-1/4 h-36 relative border-r border-solid border-customDark cursor-pointer;

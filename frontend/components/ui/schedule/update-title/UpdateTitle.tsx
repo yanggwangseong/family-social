@@ -60,6 +60,9 @@ const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 		<form
 			className={styles.update_title_form}
 			onSubmit={handleSubmit(onSubmit)}
+			onClick={e => {
+				e.stopPropagation();
+			}}
 		>
 			<div className={styles.container}>
 				<div className={styles.field_container}>
