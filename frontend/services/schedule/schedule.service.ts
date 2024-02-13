@@ -61,4 +61,22 @@ export const ScheduleService = {
 
 		return data;
 	},
+
+	async uploadScheduleThumbnailImage(
+		img: File,
+		scheduleId: string,
+	): Promise<string[]> {
+		const formData = new FormData();
+		formData.append('files', img);
+
+		const { data } = await axiosAPI.patch(
+			`/schedules/${scheduleId}/uploads/thumbnail-image`,
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
+
+		return data;
+	},
 };

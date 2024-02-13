@@ -11,8 +11,13 @@ import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
 import { useRecoilState } from 'recoil';
 import { GoPencil } from 'react-icons/go';
 import ScheduleUpdateTitle from './update-title/UpdateTitle';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { LayerMode } from 'types';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+
 	const [isUpdateTitle, setIsUpdateTitle] = useState<boolean>(false);
 	const [, setIsScheduleId] = useRecoilState(scheduleIdAtom);
 	const settingModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -30,6 +35,14 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 		setIsUpdateTitle(!isUpdateTitle);
 	};
 
+	const handleUploadThumbnailImage = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '썸네일 업로드',
+			layer: LayerMode.scheduleThumbnailImage,
+		});
+	};
+
 	return (
 		<div className={styles.schedule_card_container} id={schedule.id}>
 			<div className={styles.img_container}>
@@ -37,6 +50,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 					fill
 					src={schedule.scheduleImage ?? '/images/banner/group-base.png'}
 					alt="banner"
+					onClick={handleUploadThumbnailImage}
 				></Image>
 			</div>
 			<div className={styles.schedule_card_contents_container}>

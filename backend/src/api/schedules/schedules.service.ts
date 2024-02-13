@@ -123,10 +123,17 @@ export class SchedulesService {
 		return schedule;
 	}
 
-	async UpdateScheduleTitleById(scheduleId: string, scheduleName: string) {
+	async updateScheduleTitleById(scheduleId: string, scheduleName: string) {
 		return await this.scheduleRepository.updateScheduleTitleById(
 			scheduleId,
 			scheduleName,
+		);
+	}
+
+	async updateScheduleThumbnail(scheduleId: string, imageUrl: string) {
+		return await this.scheduleRepository.updateScheduleThumbnail(
+			scheduleId,
+			imageUrl,
 		);
 	}
 

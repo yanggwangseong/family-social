@@ -34,6 +34,7 @@ export const LayerMode = {
 	areaCode: 'areaCode',
 	tourismDetail: 'tourismDetail',
 	scheduleDeleteConfirm: 'scheduleDeleteConfirm',
+	scheduleThumbnailImage: 'scheduleThumbnailImage',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;
