@@ -33,6 +33,11 @@
 						@apply font-medium text-lg flex items-center text-customGray;
 					}
 				}
+
+				// list
+				.lst_container {
+					@apply mt-12 flex flex-col gap-4;
+				}
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
+import ScheduleDetailList from '@/components/ui/schedule/detail/DetailList';
 
 const ScheduleDetail: FC = () => {
 	const router = useRouter();
@@ -56,6 +57,10 @@ const ScheduleDetail: FC = () => {
 										onSelectedPeriod={handleSelectedPeriod}
 										isSelectedPeriod={isSelectedPeriod}
 									></ScheduleDetailSelect>
+
+									<div className={styles.lst_container}>
+										<ScheduleDetailList></ScheduleDetailList>
+									</div>
 								</>
 							)}
 						</div>
