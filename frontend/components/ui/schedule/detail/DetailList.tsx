@@ -2,11 +2,13 @@ import React, { FC } from 'react';
 import styles from './DetailList.module.scss';
 import { TourismPeriodResponse } from '@/shared/interfaces/schedule.interface';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
+import ScheduleDetailTourismItem from './tourism-item/DetailTourismItem';
 
 const ScheduleDetailList: FC<{
 	list: TourismPeriodResponse;
 	index: number;
 }> = ({ list, index }) => {
+	console.log(list.tourisms);
 	return (
 		<div>
 			<div className={styles.list_title_container}>
@@ -16,6 +18,12 @@ const ScheduleDetailList: FC<{
 					{TranslateDateFormat(new Date(list.period), 'yyyy-MM-dd (eee)')}
 				</div>
 			</div>
+			{list.tourisms.map((tour, index) => (
+				<ScheduleDetailTourismItem
+					key={index}
+					index={index + 1}
+				></ScheduleDetailTourismItem>
+			))}
 		</div>
 	);
 };
