@@ -33,6 +33,10 @@
 				@apply flex items-center gap-4;
 			}
 		}
+
+		.img_container {
+			@apply ml-auto border border-solid border-customDark;
+		}
 	}
 
 	// lastItem

@@ -2,13 +2,15 @@ import React, { FC } from 'react';
 import styles from './DetailTourismItem.module.scss';
 import Image from 'next/image';
 import { BsFillStopwatchFill } from 'react-icons/bs';
-import { GoDotFill } from 'react-icons/go';
 import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
+import { TourismResponse } from '@/shared/interfaces/schedule.interface';
+import { ContentTypeName } from '@/constants/content-type.constant';
 
 const ScheduleDetailTourismItem: FC<{
 	index: number;
 	lastItemNumber: number;
-}> = ({ index, lastItemNumber }) => {
+	tourism: TourismResponse;
+}> = ({ index, lastItemNumber, tourism }) => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.top_container}>
@@ -16,17 +18,21 @@ const ScheduleDetailTourismItem: FC<{
 			</div>
 			<div className={styles.contents_container}>
 				<div className={styles.description_container}>
-					<div className={styles.tour_content_type_name}>명소</div>
-					<div className={styles.tour_subject}>감로암(서울)</div>
+					<div className={styles.tour_content_type_name}>
+						{ContentTypeName['12']}
+					</div>
+					<div className={styles.tour_subject}>{tourism.title}</div>
 					<div className={styles.stay_time}>
 						<BsFillStopwatchFill />
-						02:40
+						{`${tourism.stayTime.split(':')[0]}:${
+							tourism.stayTime.split(':')[1]
+						}`}
 					</div>
 					<HeartAndStar></HeartAndStar>
 				</div>
-				<div className="ml-auto border border-solid border-customDark">
+				<div className={styles.img_container}>
 					<Image
-						src={`http://tong.visitkorea.or.kr/cms/resource/85/2031885_image2_1.jpg`}
+						src={`${tourism.tourismImage}`}
 						width={200}
 						height={150}
 						alt={''}
