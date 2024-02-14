@@ -44,7 +44,7 @@ const ScheduleDetail: FC = () => {
 							{isLoading && !data && <Skeleton></Skeleton>}
 
 							{/* select박스 */}
-							{data && (
+							{!isLoading && data && (
 								<>
 									<div className={styles.title_container}>
 										<div className={styles.title}>{data.scheduleName}</div>
@@ -59,7 +59,23 @@ const ScheduleDetail: FC = () => {
 									></ScheduleDetailSelect>
 
 									<div className={styles.lst_container}>
-										<ScheduleDetailList></ScheduleDetailList>
+										{/* {selectArray?.map((list, index) => (
+											<ScheduleDetailList key={index}></ScheduleDetailList>
+										))} */}
+
+										{data.schedulePeriods
+											.filter(item =>
+												isSelectedPeriod === 'ALL'
+													? item
+													: item.period === isSelectedPeriod,
+											)
+											.map((item, index) => (
+												<ScheduleDetailList
+													key={index}
+													list={item}
+													index={index}
+												></ScheduleDetailList>
+											))}
 									</div>
 								</>
 							)}
