@@ -34,4 +34,9 @@
 			}
 		}
 	}
+
+	// lastItem
+	.last_item {
+		@apply ml-[21px] w-2 h-2 border border-solid border-customDark rounded-full bg-customOrange;
+	}
 }

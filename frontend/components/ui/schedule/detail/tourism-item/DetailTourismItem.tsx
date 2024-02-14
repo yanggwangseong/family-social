@@ -2,9 +2,13 @@ import React, { FC } from 'react';
 import styles from './DetailTourismItem.module.scss';
 import Image from 'next/image';
 import { BsFillStopwatchFill } from 'react-icons/bs';
+import { GoDotFill } from 'react-icons/go';
 import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
 
-const ScheduleDetailTourismItem: FC<{ index: number }> = ({ index }) => {
+const ScheduleDetailTourismItem: FC<{
+	index: number;
+	lastItemNumber: number;
+}> = ({ index, lastItemNumber }) => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.top_container}>
@@ -29,6 +33,7 @@ const ScheduleDetailTourismItem: FC<{ index: number }> = ({ index }) => {
 					></Image>
 				</div>
 			</div>
+			{lastItemNumber === index && <div className={styles.last_item}></div>}
 		</div>
 	);
 };

@@ -22,6 +22,7 @@ const ScheduleDetailList: FC<{
 				<ScheduleDetailTourismItem
 					key={index}
 					index={index + 1}
+					lastItemNumber={list.tourisms.length}
 				></ScheduleDetailTourismItem>
 			))}
 		</div>
