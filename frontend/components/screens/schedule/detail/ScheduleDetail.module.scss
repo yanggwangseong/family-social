@@ -20,6 +20,19 @@
 					width: 768px;
 				}
 				@apply w-full h-full;
+
+				// title
+				.title_container {
+					@apply flex mb-4 gap-4;
+
+					.title {
+						@apply font-bold text-3xl;
+					}
+
+					.title_period {
+						@apply font-medium text-lg flex items-center text-customGray;
+					}
+				}
 			}
 		}
 	}

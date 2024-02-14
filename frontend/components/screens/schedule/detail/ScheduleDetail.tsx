@@ -17,9 +17,9 @@ const ScheduleDetail: FC = () => {
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
-							<div className="flex">
-								<div>여행9</div>
-								<div>2024.1.21-2024.1.24</div>
+							<div className={styles.title_container}>
+								<div className={styles.title}>여행9</div>
+								<div className={styles.title_period}>2024.1.21-2024.1.24</div>
 							</div>
 							{/* select박스 */}
 							<ScheduleDetailSelect></ScheduleDetailSelect>

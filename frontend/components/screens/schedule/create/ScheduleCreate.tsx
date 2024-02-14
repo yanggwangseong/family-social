@@ -16,8 +16,8 @@ import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 
 const ScheduleCreate: FC<{
-	edit: boolean;
-	scheduleItem: ScheduleItemResponse;
+	edit?: boolean;
+	scheduleItem?: ScheduleItemResponse;
 }> = ({ edit, scheduleItem }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
@@ -98,12 +98,12 @@ const ScheduleCreate: FC<{
 									isPeriods={isPeriods}
 									isScheduleName={isScheduleName}
 									updateStartDate={
-										edit && scheduleItem.startPeriod
+										edit && scheduleItem?.startPeriod
 											? scheduleItem.startPeriod
 											: undefined
 									}
 									updateEndDate={
-										edit && scheduleItem.endPeriod
+										edit && scheduleItem?.endPeriod
 											? scheduleItem.endPeriod
 											: undefined
 									}
