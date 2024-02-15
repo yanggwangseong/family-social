@@ -1,0 +1,44 @@
+.container {
+	@screen md {
+		@apply h-full;
+	}
+	@apply h-full text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex relative;
+		min-height: calc(100vh - 80px);
+		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
+
+		.detail_container {
+			@apply relative py-8;
+			flex: 1;
+
+			.main_contents_container {
+				@screen md {
+					@apply mx-auto;
+					width: 768px;
+				}
+				@apply w-full h-full;
+
+				// title
+				.title_container {
+					@apply flex mb-4 gap-4;
+
+					.title {
+						@apply font-bold text-3xl;
+					}
+
+					.title_period {
+						@apply font-medium text-lg flex items-center text-customGray;
+					}
+				}
+
+				// list
+				.lst_container {
+					@apply mt-12 flex flex-col gap-8;
+				}
+			}
+		}
+	}
+}

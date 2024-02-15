@@ -1,0 +1,11 @@
+.list_title_container {
+	@apply flex mb-4;
+
+	.list_title {
+		@apply font-semibold text-lg;
+	}
+
+	.list_date {
+		@apply ml-auto flex items-center text-sm text-customGray;
+	}
+}

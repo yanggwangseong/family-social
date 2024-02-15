@@ -16,8 +16,8 @@ import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 
 const ScheduleCreate: FC<{
-	edit: boolean;
-	scheduleItem: ScheduleItemResponse;
+	edit?: boolean;
+	scheduleItem?: ScheduleItemResponse;
 }> = ({ edit, scheduleItem }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
@@ -97,9 +97,16 @@ const ScheduleCreate: FC<{
 									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
 									isScheduleName={isScheduleName}
-									updateStartDate={scheduleItem.startPeriod}
-									updateEndDate={scheduleItem.endPeriod}
-									schedulePeriods={scheduleItem.schedulePeriods}
+									updateStartDate={
+										edit && scheduleItem?.startPeriod
+											? scheduleItem.startPeriod
+											: undefined
+									}
+									updateEndDate={
+										edit && scheduleItem?.endPeriod
+											? scheduleItem.endPeriod
+											: undefined
+									}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (

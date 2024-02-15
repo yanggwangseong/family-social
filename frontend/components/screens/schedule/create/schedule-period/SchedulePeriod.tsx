@@ -24,7 +24,6 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 	isScheduleName,
 	updateStartDate,
 	updateEndDate,
-	schedulePeriods,
 }) => {
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);

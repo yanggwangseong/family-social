@@ -1,8 +1,9 @@
+import ScheduleDetail from '@/components/screens/schedule/detail/ScheduleDetail';
 import { NextPage } from 'next';
 import React from 'react';
 
 const ScheduleDetailPage: NextPage = () => {
-	return <div>ScheduleDetailPage</div>;
+	return <ScheduleDetail></ScheduleDetail>;
 };
 
 export default ScheduleDetailPage;
