@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
 import Profile from '../profile/Profile';
 import Image from 'next/image';

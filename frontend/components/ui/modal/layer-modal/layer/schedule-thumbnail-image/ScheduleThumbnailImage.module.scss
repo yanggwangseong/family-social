@@ -1,0 +1,28 @@
+.container {
+	@apply my-8 min-h-[500px];
+
+	.form {
+		@apply flex flex-col min-h-[500px];
+
+		.contents_wrap {
+			@apply flex-grow;
+
+			.profile_img_container {
+				@apply relative z-10;
+
+				.image_wrap {
+					@apply relative w-[240px] h-[180px] border border-solid border-customDark;
+
+					.profile_img {
+						@apply brightness-50;
+					}
+				}
+
+				.profile_img_icon_container {
+					@apply absolute top-[50%] left-[50%] border border-solid border-customDark bg-customOrange rounded-full p-3 cursor-pointer;
+					transform: translate(-50%, -50%);
+				}
+			}
+		}
+	}
+}

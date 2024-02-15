@@ -1,8 +1,8 @@
 .schedule_card_container {
-	@apply border border-solid border-customDark flex flex-row gap-4;
+	@apply border border-solid border-customDark flex flex-row gap-4 cursor-pointer;
 
 	.img_container {
-		@apply w-1/4 h-36 relative;
+		@apply w-1/4 h-36 relative border-r border-solid border-customDark cursor-pointer;
 	}
 	.schedule_card_contents_container {
 		@apply flex flex-col justify-between p-4 flex-1;
@@ -16,8 +16,12 @@
 				@apply font-bold text-base;
 			}
 
+			.title_update_icon_container {
+				@apply flex items-center cursor-pointer;
+			}
+
 			.setting_container {
-				@apply ml-auto;
+				@apply ml-auto cursor-pointer relative;
 			}
 		}
 

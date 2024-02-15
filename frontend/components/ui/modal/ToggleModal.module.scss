@@ -1,11 +1,11 @@
 .toggle_modal_container {
-	@apply absolute top-20 left-0 border 
+	@apply absolute top-10 left-0 border 
     border-solid border-customDark bg-white w-80 p-4
     shadow-2xl rounded-tr-[44px] z-50;
 }
 
 .toggle_modal_right_container {
-	@apply absolute top-20 right-0 border
+	@apply absolute top-10 right-0 border
     border-solid border-customDark bg-white w-80 p-4
     shadow-2xl rounded-tl-[44px] z-50;
 }

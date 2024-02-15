@@ -1,5 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import {
+	ApiBody,
+	ApiConsumes,
 	ApiCreatedResponse,
 	ApiForbiddenResponse,
 	ApiNotFoundResponse,
@@ -100,6 +102,40 @@ export const DeleteToursScheduleSwagger = () => {
 		}),
 		ApiForbiddenResponse({
 			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_SCHEDULE}`,
+		}),
+	);
+};
+
+export const PatchScheduleTitleSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 스케줄 여행제목 수정',
+		}),
+		ApiCreatedResponse({
+			description: '여행 제목 수정 성공',
+		}),
+	);
+};
+
+export const PatchScheduleUploadThumbnailImageSwagger = () => {
+	return applyDecorators(
+		ApiConsumes('multipart/form-data'),
+		ApiBody({
+			schema: {
+				type: 'object',
+				properties: {
+					files: {
+						type: 'string',
+						format: 'binary',
+					},
+				},
+			},
+		}),
+		ApiOperation({
+			summary: '특정 스케줄 썸네일 수정하기',
+		}),
+		ApiCreatedResponse({
+			description: '스케줄 썸네일 수정하기 성공',
 		}),
 	);
 };

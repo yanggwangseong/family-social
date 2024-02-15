@@ -12,6 +12,8 @@ import ContentType from './layer/create-schedule/content-type/ContentType';
 import ServiceCategory from './layer/create-schedule/service-category/ServiceCategory';
 import AreaCode from './layer/create-schedule/area-code/AreaCode';
 import TourismDetail from './layer/tourism-detail/TourismDetail';
+import ScheduleDeleteConfirm from './layer/ScheduleDeleteConfirm';
+import ScheduleThumbnailImage from './layer/schedule-thumbnail-image/ScheduleThumbnailImage';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -26,6 +28,8 @@ const StatusLookUpTable = {
 	[LayerMode.serviceCategory]: ServiceCategory,
 	[LayerMode.areaCode]: AreaCode,
 	[LayerMode.tourismDetail]: TourismDetail,
+	[LayerMode.scheduleDeleteConfirm]: ScheduleDeleteConfirm,
+	[LayerMode.scheduleThumbnailImage]: ScheduleThumbnailImage,
 };
 
 interface StatusProps {

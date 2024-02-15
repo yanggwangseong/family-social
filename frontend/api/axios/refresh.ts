@@ -1,9 +1,9 @@
-import { API_URL } from '@/constants/index';
+import { API_URL, SSR_API_URL } from '@/constants/index';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export const axiosRefreshAPI = (() => {
 	const axiosInstance = axios.create({
-		baseURL: API_URL,
+		baseURL: typeof window !== 'undefined' ? API_URL : SSR_API_URL,
 		withCredentials: true,
 	});
 

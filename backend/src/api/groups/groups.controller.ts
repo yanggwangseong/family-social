@@ -29,7 +29,7 @@ import {
 	GetOneScheduleSwagger,
 	GetScheduleListSwagger,
 	UpdateToursScheduleSwagger,
-} from '@/common/decorators/swagger/swagger-schedule.decorrator';
+} from '@/common/decorators/swagger/swagger-schedule.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';

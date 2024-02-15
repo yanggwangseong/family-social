@@ -43,3 +43,12 @@ export const FeedSettingMenu: ToggleMenu[] = [
 		layer: LayerMode.createFeed,
 	},
 ];
+
+export const ScheduleSettingMenu: ToggleMenu[] = [
+	{
+		Icon: AiOutlineDelete,
+		title: '여행일정 삭제',
+		description: '해당 여행 일정을 삭제 할 수 있습니다.',
+		layer: LayerMode.scheduleDeleteConfirm,
+	},
+];

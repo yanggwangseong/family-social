@@ -19,7 +19,7 @@ export type Union<
 type ValueType = string | number | boolean;
 
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
-export const EditMode = ['information', 'visitMessage', 'reset', ''] as const;
+export const EditMode = ['information', 'visitMessage', 'reset'] as const;
 export const LayerMode = {
 	linkInvite: 'linkInvite',
 	emailInvite: 'emailInvite',
@@ -33,6 +33,8 @@ export const LayerMode = {
 	serviceCategory: 'serviceCategory',
 	areaCode: 'areaCode',
 	tourismDetail: 'tourismDetail',
+	scheduleDeleteConfirm: 'scheduleDeleteConfirm',
+	scheduleThumbnailImage: 'scheduleThumbnailImage',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;

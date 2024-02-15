@@ -123,13 +123,29 @@ export class SchedulesService {
 		return schedule;
 	}
 
+	async updateScheduleTitleById(scheduleId: string, scheduleName: string) {
+		return await this.scheduleRepository.updateScheduleTitleById(
+			scheduleId,
+			scheduleName,
+		);
+	}
+
+	async updateScheduleThumbnail(scheduleId: string, imageUrl: string) {
+		return await this.scheduleRepository.updateScheduleThumbnail(
+			scheduleId,
+			imageUrl,
+		);
+	}
+
 	async deleteToursSchedule(scheduleId: string): Promise<void> {
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
 				scheduleId,
 			);
-		periodIds.map(async (item) => await this.deleteTourism(item.id));
+		await Promise.all(
+			periodIds.map(async (item) => await this.deleteTourism(item.id)),
+		);
 
 		// TourismPeriod 다 삭제
 		await this.deleteTourismPeriod(scheduleId);

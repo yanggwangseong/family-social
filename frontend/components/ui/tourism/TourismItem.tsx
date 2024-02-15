@@ -5,18 +5,13 @@ import Image from 'next/image';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineCheck } from 'react-icons/ai';
 import cn from 'classnames';
-import {
-	ContentTypeId,
-	ContentTypeName,
-} from '@/constants/content-type.constant';
-import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
+import { ContentTypeName } from '@/constants/content-type.constant';
+import { periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
-import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
-import { LayerMode } from 'types';
-import { tourDetailAtom } from '@/atoms/tourDetailAtom';
 import HeartAndStar from '../heart-and-star/HeartAndStar';
+import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -25,15 +20,15 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	};
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
-	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
-	const [isContentIdTypeId, setIsContentIdTypeId] =
-		useRecoilState(tourDetailAtom);
-	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
 
 	const [isAddTourism, setIsAddTourism] = useState<string>('');
+
+	const { handleTourismDetailLayerModal } = useTourismDetailLayerModal(
+		tour.title,
+	);
 
 	const handleChagePeriods = (tour: {
 		contentId: string;
@@ -74,21 +69,6 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 		}));
 		setIsPeriods(newPeriods);
 		setIsAddTourism('');
-	};
-
-	const handleTourismDetailLayerModal = (
-		contentId: string,
-		contentTypeId: string,
-	) => {
-		setIsContentIdTypeId({
-			contentId: contentId,
-			contentTypeId: contentTypeId,
-		});
-		setIsShowing(!isShowing);
-		setIsLayer({
-			modal_title: tour.title,
-			layer: LayerMode.tourismDetail,
-		});
 	};
 
 	// 관광 타입이나 행사/축제/ 키워드 검색 어디든 이미 담은 관광 아이템이라면 또 갈일 없으니까 체크 상태 유지 해주기

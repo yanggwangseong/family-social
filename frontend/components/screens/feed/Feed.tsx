@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Feed.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
