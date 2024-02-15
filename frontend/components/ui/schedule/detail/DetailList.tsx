@@ -8,7 +8,6 @@ const ScheduleDetailList: FC<{
 	list: TourismPeriodResponse;
 	index: number;
 }> = ({ list, index }) => {
-	console.log(list.tourisms);
 	return (
 		<div>
 			<div className={styles.list_title_container}>

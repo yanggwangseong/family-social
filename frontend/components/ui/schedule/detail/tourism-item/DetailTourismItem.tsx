@@ -5,12 +5,17 @@ import { BsFillStopwatchFill } from 'react-icons/bs';
 import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
 import { TourismResponse } from '@/shared/interfaces/schedule.interface';
 import { ContentTypeName } from '@/constants/content-type.constant';
+import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
 
 const ScheduleDetailTourismItem: FC<{
 	index: number;
 	lastItemNumber: number;
 	tourism: TourismResponse;
 }> = ({ index, lastItemNumber, tourism }) => {
+	const { handleTourismDetailLayerModal } = useTourismDetailLayerModal(
+		tourism.title,
+	);
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.top_container}>
@@ -30,7 +35,10 @@ const ScheduleDetailTourismItem: FC<{
 					</div>
 					<HeartAndStar></HeartAndStar>
 				</div>
-				<div className={styles.img_container}>
+				<div
+					className={styles.img_container}
+					onClick={() => handleTourismDetailLayerModal(tourism.contentId, '12')}
+				>
 					<Image
 						src={`${tourism.tourismImage}`}
 						width={200}
