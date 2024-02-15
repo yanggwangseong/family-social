@@ -1,0 +1,8 @@
+{
+	// 테스트 파일이 저장되면 적용 범위를 포함하여 테스트를 실행합니다.
+	"jest.runMode": {
+		"type": "on-save",
+		"testFileOnly": true,
+		"coverage": true
+	}
+}
