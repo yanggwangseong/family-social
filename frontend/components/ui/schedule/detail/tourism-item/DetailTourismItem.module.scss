@@ -30,12 +30,12 @@
 			}
 
 			.stay_time {
-				@apply flex items-center gap-4;
+				@apply flex items-center gap-4 text-customGray text-sm;
 			}
 		}
 
 		.img_container {
-			@apply ml-auto border border-solid border-customDark;
+			@apply ml-auto border border-solid border-customDark cursor-pointer;
 		}
 	}
 

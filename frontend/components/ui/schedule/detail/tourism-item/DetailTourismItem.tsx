@@ -23,7 +23,7 @@ const ScheduleDetailTourismItem: FC<{
 					</div>
 					<div className={styles.tour_subject}>{tourism.title}</div>
 					<div className={styles.stay_time}>
-						<BsFillStopwatchFill />
+						<BsFillStopwatchFill color="#0a0a0a" />
 						{`${tourism.stayTime.split(':')[0]}:${
 							tourism.stayTime.split(':')[1]
 						}`}
