@@ -14,6 +14,7 @@ import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
 import { LikeCommentEntity } from './fam-like-comment.entity';
 import { LikeFeedEntity } from './fam-like-feed.entity';
+import { FamMemberChatEntity } from './fam-member-chat.entity';
 import { FamMessageEntity } from './fam-message.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
@@ -128,4 +129,8 @@ export class MemberEntity extends DefaultEntity {
 	// message
 	@OneToMany(() => FamMessageEntity, (fm) => fm.member)
 	messages?: FamMessageEntity[];
+
+	// member-chat
+	@OneToMany(() => FamMemberChatEntity, (fmc) => fmc.member)
+	memberEnterChats?: FamMemberChatEntity[];
 }
