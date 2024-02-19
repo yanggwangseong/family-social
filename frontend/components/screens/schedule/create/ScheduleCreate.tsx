@@ -18,7 +18,7 @@ import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 const ScheduleCreate: FC<{
 	edit?: boolean;
 	scheduleItem?: ScheduleItemResponse;
-}> = ({ edit, scheduleItem }) => {
+}> = ({ edit = false, scheduleItem }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>(
