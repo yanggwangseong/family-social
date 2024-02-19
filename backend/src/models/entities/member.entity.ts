@@ -14,6 +14,7 @@ import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
 import { LikeCommentEntity } from './fam-like-comment.entity';
 import { LikeFeedEntity } from './fam-like-feed.entity';
+import { FamMessageEntity } from './fam-message.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
 import { ScheduleEntity } from './schedule.entity';
@@ -123,4 +124,8 @@ export class MemberEntity extends DefaultEntity {
 	//schedule
 	@OneToMany(() => ScheduleEntity, (sch) => sch.member)
 	memberCreateSchedules?: ScheduleEntity[];
+
+	// message
+	@OneToMany(() => FamMessageEntity, (fm) => fm.member)
+	messages?: FamMessageEntity[];
 }
