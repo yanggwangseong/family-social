@@ -1,13 +1,15 @@
 import {
+	ConnectedSocket,
+	MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 	OnGatewayInit,
+	SubscribeMessage,
 	WebSocketGateway,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-	// ws://localhost:3000/api/chats
 	transports: ['websocket'],
 	namespace: 'chats',
 })
@@ -24,5 +26,18 @@ export class ChatsGateway
 
 	handleConnection(socket: Socket) {
 		console.log(`connect gateway ${socket}`);
+	}
+
+	@SubscribeMessage('enter-chat')
+	enterChat(@ConnectedSocket() socket: Socket) {
+		socket.join('room1');
+	}
+
+	@SubscribeMessage('send-message')
+	sendMessage(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() body: { message: string },
+	) {
+		socket.to('room1').emit('receive-message', body.message);
 	}
 }
