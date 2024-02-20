@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { LikeFeedEntity } from '@/models/entities/fam-like-feed.entity';
+import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
 
 @Injectable()
 export class LikesFeedRepository extends Repository<LikeFeedEntity> {

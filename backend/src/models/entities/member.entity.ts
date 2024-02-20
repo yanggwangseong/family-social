@@ -12,12 +12,12 @@ import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
-import { LikeCommentEntity } from './fam-like-comment.entity';
-import { LikeFeedEntity } from './fam-like-feed.entity';
-import { FamMemberChatEntity } from './fam-member-chat.entity';
-import { FamMessageEntity } from './fam-message.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
+import { LikeCommentEntity } from './like-comment.entity';
+import { LikeFeedEntity } from './like-feed.entity';
+import { MemberChatEntity } from './member-chat.entity';
+import { MessageEntity } from './message.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
@@ -127,10 +127,10 @@ export class MemberEntity extends DefaultEntity {
 	memberCreateSchedules?: ScheduleEntity[];
 
 	// message
-	@OneToMany(() => FamMessageEntity, (fm) => fm.member)
-	messages?: FamMessageEntity[];
+	@OneToMany(() => MessageEntity, (fm) => fm.member)
+	messages?: MessageEntity[];
 
 	// member-chat
-	@OneToMany(() => FamMemberChatEntity, (fmc) => fmc.member)
-	memberEnterChats?: FamMemberChatEntity[];
+	@OneToMany(() => MemberChatEntity, (fmc) => fmc.member)
+	memberEnterChats?: MemberChatEntity[];
 }
