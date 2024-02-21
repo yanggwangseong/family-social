@@ -25,7 +25,12 @@ export class ChatsGateway
 	}
 
 	handleConnection(socket: Socket) {
-		console.log(`connect gateway ${socket}`);
+		console.log(`connect gateway ${socket.data}`);
+	}
+
+	@SubscribeMessage('create-chat')
+	createChat(@ConnectedSocket() socket: Socket) {
+		console.log(socket);
 	}
 
 	@SubscribeMessage('enter-chat')
