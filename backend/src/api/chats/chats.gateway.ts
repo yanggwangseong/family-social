@@ -9,6 +9,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
+
+import { ChatsService } from './chats.service';
+
 @WebSocketGateway({
 	transports: ['websocket'],
 	namespace: 'chats',
@@ -16,6 +20,8 @@ import { Server, Socket } from 'socket.io';
 export class ChatsGateway
 	implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
+	constructor(private readonly chatsService: ChatsService) {}
+
 	afterInit(server: Server) {
 		console.log('Init', server);
 	}
@@ -29,8 +35,11 @@ export class ChatsGateway
 	}
 
 	@SubscribeMessage('create-chat')
-	createChat(@ConnectedSocket() socket: Socket) {
-		console.log(socket);
+	async createChat(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() dto: ChatCreateReqDto,
+	) {
+		return await this.chatsService.createChat(dto);
 	}
 
 	@SubscribeMessage('enter-chat')
