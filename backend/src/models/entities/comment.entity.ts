@@ -3,8 +3,8 @@ import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { DefaultEntity } from './common/default.entity';
-import { LikeCommentEntity } from './fam-like-comment.entity';
 import { FeedEntity } from './feed.entity';
+import { LikeCommentEntity } from './like-comment.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_comment' })

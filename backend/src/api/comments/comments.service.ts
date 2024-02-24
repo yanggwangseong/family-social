@@ -10,7 +10,7 @@ import {
 	ERROR_DELETE_COMMENT,
 } from '@/constants/business-error';
 import { CommentGetListsResDto } from '@/models/dto/comments/res/comment-get-lists-res.dto';
-import { LikeCommentEntity } from '@/models/entities/fam-like-comment.entity';
+import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
 import { ICreateCommentsArgs } from '@/types/args/comment';

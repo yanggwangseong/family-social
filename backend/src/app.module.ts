@@ -8,6 +8,7 @@ import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
 import { TypeOrmModuleOptions } from '@/common/typeorm';
 
 import { AuthModule } from './api/auth/auth.module';
+import { ChatsModule } from './api/chats/chats.module';
 import { CommentsModule } from './api/comments/comments.module';
 import { FamsModule } from './api/fams/fams.module';
 import { FeedsModule } from './api/feeds/feeds.module';
@@ -34,6 +35,7 @@ import { EmailOptions } from './common/config/emailConfig';
 		MediasModule,
 		CommentsModule,
 		ToursModule,
+		ChatsModule,
 	],
 	controllers: [],
 	providers: [],

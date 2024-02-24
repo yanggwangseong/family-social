@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { LikeFeedEntity } from '@/models/entities/fam-like-feed.entity';
 import { FeedEntity } from '@/models/entities/feed.entity';
+import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 

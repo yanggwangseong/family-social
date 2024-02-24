@@ -12,7 +12,7 @@ import {
 
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '../dto/feed/res/feed-res.dto';
-import { LikeFeedEntity } from '../entities/fam-like-feed.entity';
+import { LikeFeedEntity } from '../entities/like-feed.entity';
 
 @Injectable()
 export class FeedsRepository extends Repository<FeedEntity> {

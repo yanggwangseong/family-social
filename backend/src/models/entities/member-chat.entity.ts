@@ -8,11 +8,11 @@ import {
 	PrimaryColumn,
 } from 'typeorm';
 
-import { FamChatEntity } from './fam-chat.entity';
+import { ChatEntity } from './chat.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_member_chat' })
-export class FamMemberChatEntity {
+export class MemberChatEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({
 		nullable: false,
@@ -33,9 +33,9 @@ export class FamMemberChatEntity {
 	@JoinColumn({ name: 'memberId', referencedColumnName: 'id' })
 	member!: MemberEntity;
 
-	@ManyToOne(() => FamChatEntity, (chat) => chat.enteredByChats)
+	@ManyToOne(() => ChatEntity, (chat) => chat.enteredByChats)
 	@JoinColumn({ name: 'chatId', referencedColumnName: 'id' })
-	chat!: FamChatEntity;
+	chat!: ChatEntity;
 
 	@ApiProperty()
 	@CreateDateColumn({

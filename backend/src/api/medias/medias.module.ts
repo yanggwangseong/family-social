@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { FeedMediaEntity } from '@/models/entities/fam-feed-media.entity';
+import { FeedMediaEntity } from '@/models/entities/feed-media.entity';
 import { MediasRepository } from '@/models/repositories/medias.repository';
 
 import { MediasService } from './medias.service';
