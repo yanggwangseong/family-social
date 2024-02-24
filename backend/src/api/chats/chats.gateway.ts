@@ -1,3 +1,4 @@
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 import {
 	ConnectedSocket,
 	MessageBody,
@@ -13,6 +14,16 @@ import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
 import { ChatsService } from './chats.service';
 
+@UsePipes(
+	new ValidationPipe({
+		transform: true,
+		transformOptions: {
+			enableImplicitConversion: true,
+		},
+		whitelist: true,
+		forbidNonWhitelisted: true,
+	}),
+)
 @WebSocketGateway({
 	transports: ['websocket'],
 	namespace: 'chats',
