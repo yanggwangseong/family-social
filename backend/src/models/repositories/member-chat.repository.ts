@@ -1,0 +1,29 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { MemberChatEntity } from '../entities/member-chat.entity';
+
+@Injectable()
+export class MemberChatRepository extends Repository<MemberChatEntity> {
+	constructor(
+		@InjectRepository(MemberChatEntity)
+		private readonly repository: Repository<MemberChatEntity>,
+	) {
+		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	async createMembersEnteredByChat(
+		chatId: string,
+		memberIds: string[],
+	): Promise<void> {
+		await this.repository.insert(
+			memberIds.map((value) => {
+				return {
+					chatId,
+					memberId: value,
+				};
+			}),
+		);
+	}
+}
