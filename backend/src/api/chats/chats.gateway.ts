@@ -1,3 +1,4 @@
+import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
 	ConnectedSocket,
 	MessageBody,
@@ -9,10 +10,22 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+import { SocketCatchHttpExceptionFilter } from '@/common/filter/socket-catch-http.exception-filter';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
 import { ChatsService } from './chats.service';
 
+@UsePipes(
+	new ValidationPipe({
+		transform: true,
+		transformOptions: {
+			enableImplicitConversion: true,
+		},
+		whitelist: true,
+		forbidNonWhitelisted: true,
+	}),
+)
+@UseFilters(SocketCatchHttpExceptionFilter)
 @WebSocketGateway({
 	transports: ['websocket'],
 	namespace: 'chats',
