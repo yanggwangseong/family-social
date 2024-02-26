@@ -14,8 +14,10 @@ import { Socket } from 'socket.io';
 import { SocketCatchHttpExceptionFilter } from '@/common/filter/socket-catch-http.exception-filter';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
+import { MessageCreateReqDto } from '@/models/dto/message/req/message-create-req.dto';
 
 import { ChatsService } from './chats.service';
+import { MessagesService } from '../messages/messages.service';
 
 @UsePipes(
 	new ValidationPipe({
@@ -35,7 +37,10 @@ import { ChatsService } from './chats.service';
 export class ChatsGateway
 	implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
-	constructor(private readonly chatsService: ChatsService) {}
+	constructor(
+		private readonly chatsService: ChatsService,
+		private readonly messagesService: MessagesService,
+	) {}
 
 	afterInit() {}
 
@@ -72,10 +77,27 @@ export class ChatsGateway
 	}
 
 	@SubscribeMessage('send-message')
-	sendMessage(
+	async sendMessage(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() body: { message: string },
+		@MessageBody() dto: MessageCreateReqDto,
 	) {
-		socket.to('room1').emit('receive-message', body.message);
+		const exists = await this.chatsService.checkIfChatExists(dto.chatId);
+
+		if (!exists) {
+			throw new WsException({
+				success: false,
+				timestamp: new Date().toISOString(),
+				status: 404,
+				message: `존재하지 않는 chat 입니다. chatId: ${dto.chatId}`,
+			});
+		}
+
+		const message = await this.messagesService.createMessage({
+			chatId: dto.chatId,
+			message: dto.message,
+			memberId: '31a3ff5a-3715-43ca-a419-2b949a0dee53',
+		});
+
+		socket.to(message.chatId).emit('receive-message', dto.message);
 	}
 }
