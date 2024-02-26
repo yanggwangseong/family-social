@@ -8,6 +8,7 @@ import { ChatsRepository } from '@/models/repositories/chats.repository';
 import { MemberChatRepository } from '@/models/repositories/member-chat.repository';
 import { MessagesRepository } from '@/models/repositories/messages.repository';
 
+import { ChatsController } from './chats.controller';
 import { ChatsGateway } from './chats.gateway';
 import { ChatsService } from './chats.service';
 import { MessagesService } from '../messages/messages.service';
@@ -16,7 +17,7 @@ import { MessagesService } from '../messages/messages.service';
 	imports: [
 		TypeOrmModule.forFeature([ChatEntity, MemberChatEntity, MessageEntity]),
 	],
-	controllers: [],
+	controllers: [ChatsController],
 	providers: [
 		ChatsGateway,
 		ChatsService,
