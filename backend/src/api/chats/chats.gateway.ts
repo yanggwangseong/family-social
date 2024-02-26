@@ -7,11 +7,13 @@ import {
 	OnGatewayInit,
 	SubscribeMessage,
 	WebSocketGateway,
+	WsException,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 
 import { SocketCatchHttpExceptionFilter } from '@/common/filter/socket-catch-http.exception-filter';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
+import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
 
 import { ChatsService } from './chats.service';
 
@@ -35,17 +37,11 @@ export class ChatsGateway
 {
 	constructor(private readonly chatsService: ChatsService) {}
 
-	afterInit(server: Server) {
-		console.log('Init', server);
-	}
+	afterInit() {}
 
-	handleDisconnect(client: Socket) {
-		console.log('disconnect', client);
-	}
+	handleDisconnect() {}
 
-	handleConnection(socket: Socket) {
-		console.log(`connect gateway ${socket.data}`);
-	}
+	handleConnection() {}
 
 	@SubscribeMessage('create-chat')
 	async createChat(
@@ -56,8 +52,23 @@ export class ChatsGateway
 	}
 
 	@SubscribeMessage('enter-chat')
-	enterChat(@ConnectedSocket() socket: Socket) {
-		socket.join('room1');
+	async enterChat(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() dto: ChatEnterReqDto,
+	) {
+		for (const chatId of dto.chatIds) {
+			const exists = await this.chatsService.checkIfChatExists(chatId);
+
+			if (!exists) {
+				throw new WsException({
+					success: false,
+					timestamp: new Date().toISOString(),
+					status: 404,
+					message: `존재하지 않는 chat 입니다. chatId: ${chatId}`,
+				});
+			}
+		}
+		socket.join(dto.chatIds);
 	}
 
 	@SubscribeMessage('send-message')
