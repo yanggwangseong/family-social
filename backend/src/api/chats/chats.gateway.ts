@@ -17,6 +17,7 @@ import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
 import { MessageCreateReqDto } from '@/models/dto/message/req/message-create-req.dto';
 
 import { ChatsService } from './chats.service';
+import { MessagesService } from '../messages/messages.service';
 
 @UsePipes(
 	new ValidationPipe({
@@ -36,7 +37,10 @@ import { ChatsService } from './chats.service';
 export class ChatsGateway
 	implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
-	constructor(private readonly chatsService: ChatsService) {}
+	constructor(
+		private readonly chatsService: ChatsService,
+		private readonly messagesService: MessagesService,
+	) {}
 
 	afterInit() {}
 
@@ -88,6 +92,12 @@ export class ChatsGateway
 			});
 		}
 
-		socket.to(dto.chatId).emit('receive-message', dto.message);
+		const message = await this.messagesService.createMessage({
+			chatId: dto.chatId,
+			message: dto.message,
+			memberId: '31a3ff5a-3715-43ca-a419-2b949a0dee53',
+		});
+
+		socket.to(message.chatId).emit('receive-message', dto.message);
 	}
 }
