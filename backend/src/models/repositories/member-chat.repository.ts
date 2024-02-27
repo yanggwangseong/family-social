@@ -44,4 +44,15 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 			},
 		});
 	}
+
+	async getMembersByChat(chatId: string) {
+		return await this.repository.find({
+			where: {
+				chatId,
+			},
+			relations: {
+				member: true,
+			},
+		});
+	}
 }

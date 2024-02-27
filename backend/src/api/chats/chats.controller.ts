@@ -15,6 +15,14 @@ import { ChatsService } from './chats.service';
 export class ChatsController {
 	constructor(private readonly chatsService: ChatsService) {}
 
+	/**
+	 * @summary 유저가 속한 모든 채팅방 가져오기
+	 *
+	 * @tag chats
+	 * @param {string} sub - 인증된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 채팅방 리스트
+	 */
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);

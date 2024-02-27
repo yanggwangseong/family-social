@@ -12,7 +12,25 @@ export class ChatsService {
 	) {}
 
 	async getMemberBelongToChats(memberId: string) {
-		return await this.memberChatRepository.getMemberBelongToChats(memberId);
+		const chat = await this.memberChatRepository.getMemberBelongToChats(
+			memberId,
+		);
+
+		const result = await Promise.all(
+			chat.map(async (item) => {
+				const chatMembers = await this.memberChatRepository.getMembersByChat(
+					item.chat.id,
+				);
+				return {
+					memberId: item.memberId,
+					chatId: item.chat.id,
+					chatCreateAt: item.chat.createdAt,
+					chatMembers: chatMembers,
+				};
+			}),
+		);
+
+		return result;
 	}
 
 	async createChat(dto: ChatCreateReqDto) {
