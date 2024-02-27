@@ -11,6 +11,10 @@ export class ChatsService {
 		private readonly memberChatRepository: MemberChatRepository,
 	) {}
 
+	async getMemberBelongToChats(memberId: string) {
+		return await this.memberChatRepository.getMemberBelongToChats(memberId);
+	}
+
 	async createChat(dto: ChatCreateReqDto) {
 		const chatId = await this.chatsRepository.createChat();
 
