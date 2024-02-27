@@ -29,11 +29,17 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 
 	async getMemberBelongToChats(memberId: string) {
 		return await this.repository.find({
+			select: {
+				memberId: true,
+				chat: {
+					id: true,
+					createdAt: true,
+				},
+			},
 			where: {
 				memberId,
 			},
 			relations: {
-				member: true,
 				chat: true,
 			},
 		});
