@@ -15,6 +15,10 @@ export class ChatsService {
 		private readonly memberChatRepository: MemberChatRepository,
 	) {}
 
+	async getMessagesByChat(chatId: string, memberId: string) {
+		return this.chatsRepository.getMessagesByChat(chatId, memberId);
+	}
+
 	async getMemberBelongToChats(memberId: string): Promise<GetChatListResDto> {
 		const chat = await this.memberChatRepository.getMemberBelongToChats(
 			memberId,
