@@ -295,4 +295,14 @@ export class AuthService {
 
 		return token;
 	}
+
+	verifyToken(token: string) {
+		try {
+			return this.jwtService.verify(token, {
+				secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+			});
+		} catch (error) {
+			throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);
+		}
+	}
 }
