@@ -32,7 +32,10 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 	async getMemberBelongToChats(
 		memberId: string,
 	): Promise<
-		Omit<MemberBelongToChatsResDto, 'chatMembers' | 'joinMemberCount'>[]
+		Omit<
+			MemberBelongToChatsResDto,
+			'chatMembers' | 'joinMemberCount' | 'recentMessage'
+		>[]
 	> {
 		return await this.repository
 			.find({

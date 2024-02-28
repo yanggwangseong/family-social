@@ -6,7 +6,7 @@ import { MemberProfileImageResDto } from '../../member/res/member-profile-image-
 
 export class ChatMembersResDto extends PickType(MemberChatEntity, [
 	'memberId',
-]) {
+] as const) {
 	@ApiProperty({
 		nullable: false,
 	})

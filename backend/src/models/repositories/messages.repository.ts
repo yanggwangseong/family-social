@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateMessageArgs } from '@/types/args/message';
 
+import { RecentMessageResDto } from '../dto/message/res/recent-message-res.dto';
 import { MessageEntity } from '../entities/message.entity';
 
 @Injectable()
@@ -41,5 +42,23 @@ export class MessagesRepository extends Repository<MessageEntity> {
 					chatId: data.chat.id,
 				};
 			});
+	}
+
+	async getRecentMessageByChat(chatId: string): Promise<RecentMessageResDto> {
+		return await this.repository.findOneOrFail({
+			select: {
+				id: true,
+				createdAt: true,
+				chatId: true,
+				memberId: true,
+				message: true,
+			},
+			where: {
+				chatId,
+			},
+			order: {
+				createdAt: 'DESC',
+			},
+		});
 	}
 }

@@ -5,10 +5,12 @@ import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
 import { MemberBelongToChatsResDto } from '@/models/dto/member-chat/res/member-belong-to-chats-res.dto';
 import { ChatsRepository } from '@/models/repositories/chats.repository';
 import { MemberChatRepository } from '@/models/repositories/member-chat.repository';
+import { MessagesRepository } from '@/models/repositories/messages.repository';
 
 @Injectable()
 export class ChatsService {
 	constructor(
+		private readonly messagesRepository: MessagesRepository,
 		private readonly chatsRepository: ChatsRepository,
 		private readonly memberChatRepository: MemberChatRepository,
 	) {}
@@ -22,12 +24,17 @@ export class ChatsService {
 			chat.map(async (item): Promise<MemberBelongToChatsResDto> => {
 				const [chatMembers, joinMemberCount] =
 					await this.memberChatRepository.getMembersAndCountByChat(item.chatId);
+
+				const recentMessage =
+					await this.messagesRepository.getRecentMessageByChat(item.chatId);
+
 				return {
 					targetMemberId: item.targetMemberId,
 					chatId: item.chatId,
 					chatCreateAt: item.chatCreateAt,
 					chatMembers,
 					joinMemberCount,
+					recentMessage,
 				};
 			}),
 		);

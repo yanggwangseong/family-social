@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { ChatMembersResDto } from './chat-members-res.dto';
+import { RecentMessageResDto } from '../../message/res/recent-message-res.dto';
 
 export class MemberBelongToChatsResDto {
 	@ApiProperty({
@@ -28,4 +29,9 @@ export class MemberBelongToChatsResDto {
 		nullable: false,
 	})
 	joinMemberCount!: number;
+
+	@ApiProperty({
+		nullable: false,
+	})
+	recentMessage!: RecentMessageResDto;
 }
