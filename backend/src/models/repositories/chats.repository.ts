@@ -14,15 +14,46 @@ export class ChatsRepository extends Repository<ChatEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async getMessagesByChat(chatId: string) {
-		return this.repository.findOne({
-			where: {
-				id: chatId,
-			},
-			relations: {
-				messages: true,
-			},
-		});
+	async getMessagesByChat(chatId: string, memberId: string) {
+		return this.repository
+			.findOneOrFail({
+				select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					messages: {
+						id: true,
+						createdAt: true,
+						updatedAt: true,
+						message: true,
+						member: {
+							id: true,
+							username: true,
+							profileImage: true,
+						},
+					},
+				},
+				where: {
+					id: chatId,
+				},
+				relations: {
+					messages: {
+						member: true,
+					},
+				},
+			})
+			.then((data) => {
+				const newMessages = data.messages.map((value) => {
+					return {
+						...value,
+						isMine: memberId === value.member.id ? true : false,
+					};
+				});
+				return {
+					...data,
+					messages: newMessages,
+				};
+			});
 	}
 
 	async createChat(): Promise<{ id: string }> {

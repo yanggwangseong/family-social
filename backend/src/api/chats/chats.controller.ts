@@ -1,8 +1,16 @@
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Param,
+	ParseUUIDPipe,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { GetMemberChatsSwagger } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
+import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -28,5 +36,19 @@ export class ChatsController {
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);
+	}
+
+	@Get('/:chatId/messages')
+	async getMessagesByChatId(
+		@Param('chatId', ParseUUIDPipe) chatId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		const exists = await this.chatsService.checkIfChatExists(chatId);
+
+		if (!exists) {
+			throw EntityNotFoundException('존재하지 않는 chat 입니다');
+		}
+
+		return await this.chatsService.getMessagesByChat(chatId, sub);
 	}
 }
