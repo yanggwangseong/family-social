@@ -27,5 +27,6 @@ import { MembersModule } from '../members/members.module';
 	],
 	controllers: [AuthController],
 	providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+	exports: [AuthService],
 })
 export class AuthModule {}
