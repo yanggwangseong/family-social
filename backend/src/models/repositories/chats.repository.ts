@@ -14,6 +14,17 @@ export class ChatsRepository extends Repository<ChatEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	async getMessagesByChat(chatId: string) {
+		return this.repository.findOne({
+			where: {
+				id: chatId,
+			},
+			relations: {
+				messages: true,
+			},
+		});
+	}
+
 	async createChat(): Promise<{ id: string }> {
 		const chat = await this.repository.insert({
 			id: uuidv4(),
