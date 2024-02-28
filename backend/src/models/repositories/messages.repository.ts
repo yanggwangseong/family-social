@@ -61,4 +61,35 @@ export class MessagesRepository extends Repository<MessageEntity> {
 			},
 		});
 	}
+
+	async getMessagesByChat(chatId: string, memberId: string) {
+		return this.repository
+			.find({
+				select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					message: true,
+					member: {
+						id: true,
+						username: true,
+						profileImage: true,
+					},
+				},
+				where: {
+					chatId,
+				},
+				relations: {
+					member: true,
+				},
+			})
+			.then((data) => {
+				return data.map((value) => {
+					return {
+						...value,
+						isMine: memberId === value.member.id ? true : false,
+					};
+				});
+			});
+	}
 }
