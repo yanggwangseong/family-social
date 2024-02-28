@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { IGetMemberBelongToChatsRes } from '@/types/args/member-chat';
-
 import { ChatMembersResDto } from '../dto/member-chat/res/chat-members-res.dto';
+import { MemberBelongToChatsResDto } from '../dto/member-chat/res/member-belong-to-chats-res.dto';
 import { MemberChatEntity } from '../entities/member-chat.entity';
 
 @Injectable()
@@ -32,22 +31,34 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 
 	async getMemberBelongToChats(
 		memberId: string,
-	): Promise<IGetMemberBelongToChatsRes[]> {
-		return await this.repository.find({
-			select: {
-				memberId: true,
-				chat: {
-					id: true,
-					createdAt: true,
+	): Promise<
+		Omit<MemberBelongToChatsResDto, 'chatMembers' | 'joinMemberCount'>[]
+	> {
+		return await this.repository
+			.find({
+				select: {
+					memberId: true,
+					chat: {
+						id: true,
+						createdAt: true,
+					},
 				},
-			},
-			where: {
-				memberId,
-			},
-			relations: {
-				chat: true,
-			},
-		});
+				where: {
+					memberId,
+				},
+				relations: {
+					chat: true,
+				},
+			})
+			.then((data) => {
+				return data.map((value) => {
+					return {
+						targetMemberId: value.memberId,
+						chatId: value.chat.id,
+						chatCreateAt: value.chat.createdAt.toISOString(),
+					};
+				});
+			});
 	}
 
 	async getMembersAndCountByChat(
