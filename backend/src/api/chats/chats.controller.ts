@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { GetMemberChatsSwagger } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -23,6 +24,7 @@ export class ChatsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 채팅방 리스트
 	 */
+	@GetMemberChatsSwagger()
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);
