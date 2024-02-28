@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
 import { MemberBelongToChatsResDto } from '@/models/dto/member-chat/res/member-belong-to-chats-res.dto';
+import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-list-res.dto';
 import { ChatsRepository } from '@/models/repositories/chats.repository';
 import { MemberChatRepository } from '@/models/repositories/member-chat.repository';
 import { MessagesRepository } from '@/models/repositories/messages.repository';
@@ -15,8 +16,18 @@ export class ChatsService {
 		private readonly memberChatRepository: MemberChatRepository,
 	) {}
 
-	async getMessagesByChat(chatId: string, memberId: string) {
-		return this.chatsRepository.getMessagesByChat(chatId, memberId);
+	async getMessagesByChat(
+		chatId: string,
+		memberId: string,
+	): Promise<GetMessagesListResDto> {
+		const messages = await this.messagesRepository.getMessagesByChat(
+			chatId,
+			memberId,
+		);
+
+		return {
+			list: messages,
+		};
 	}
 
 	async getMemberBelongToChats(memberId: string): Promise<GetChatListResDto> {

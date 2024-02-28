@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateMessageArgs } from '@/types/args/message';
 
+import { MessagesByChatResDto } from '../dto/message/res/messages-by-chat-res.dto';
 import { RecentMessageResDto } from '../dto/message/res/recent-message-res.dto';
 import { MessageEntity } from '../entities/message.entity';
 
@@ -62,7 +63,10 @@ export class MessagesRepository extends Repository<MessageEntity> {
 		});
 	}
 
-	async getMessagesByChat(chatId: string, memberId: string) {
+	async getMessagesByChat(
+		chatId: string,
+		memberId: string,
+	): Promise<MessagesByChatResDto[]> {
 		return this.repository
 			.find({
 				select: {
