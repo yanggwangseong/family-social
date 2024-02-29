@@ -11,11 +11,13 @@ import { MessagesRepository } from '@/models/repositories/messages.repository';
 import { ChatsController } from './chats.controller';
 import { ChatsGateway } from './chats.gateway';
 import { ChatsService } from './chats.service';
+import { AuthModule } from '../auth/auth.module';
 import { MessagesService } from '../messages/messages.service';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([ChatEntity, MemberChatEntity, MessageEntity]),
+		AuthModule,
 	],
 	controllers: [ChatsController],
 	providers: [
