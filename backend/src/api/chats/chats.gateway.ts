@@ -17,6 +17,7 @@ import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
 import { MessageCreateReqDto } from '@/models/dto/message/req/message-create-req.dto';
 
 import { ChatsService } from './chats.service';
+import { AuthService } from '../auth/auth.service';
 import { MessagesService } from '../messages/messages.service';
 
 @UsePipes(
@@ -40,13 +41,32 @@ export class ChatsGateway
 	constructor(
 		private readonly chatsService: ChatsService,
 		private readonly messagesService: MessagesService,
+		private readonly authService: AuthService,
 	) {}
 
 	afterInit() {}
 
 	handleDisconnect() {}
 
-	handleConnection() {}
+	handleConnection(socket: Socket & { sub: string }) {
+		const headers = socket.handshake.headers;
+
+		const rawToken = headers['authorization']!;
+
+		if (!rawToken) {
+			socket.disconnect();
+		}
+
+		try {
+			const token = this.authService.extractTokenFromHeader(rawToken, true);
+			const payload = this.authService.verifyToken(token);
+			socket.sub = payload.sub;
+
+			return true;
+		} catch (error) {
+			socket.disconnect();
+		}
+	}
 
 	@SubscribeMessage('create-chat')
 	async createChat(
@@ -78,7 +98,7 @@ export class ChatsGateway
 
 	@SubscribeMessage('send-message')
 	async sendMessage(
-		@ConnectedSocket() socket: Socket,
+		@ConnectedSocket() socket: Socket & { sub: string },
 		@MessageBody() dto: MessageCreateReqDto,
 	) {
 		const exists = await this.chatsService.checkIfChatExists(dto.chatId);
@@ -92,10 +112,12 @@ export class ChatsGateway
 			});
 		}
 
+		console.log(socket.sub);
+
 		const message = await this.messagesService.createMessage({
 			chatId: dto.chatId,
 			message: dto.message,
-			memberId: '31a3ff5a-3715-43ca-a419-2b949a0dee53',
+			memberId: socket.sub,
 		});
 
 		socket.to(message.chatId).emit('receive-message', dto.message);
