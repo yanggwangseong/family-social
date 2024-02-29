@@ -1,0 +1,40 @@
+.container {
+	@apply absolute bottom-0 right-24 min-w-[338px] min-h-[445px] bg-white border
+    border-solid border-customDark shadow-2xl z-10 rounded-tl-[44px] flex flex-col;
+
+	.top_container {
+		@apply z-20;
+
+		.top_wrap {
+			@apply h-16 px-4 py-3 flex shadow-md;
+
+			.close_btn {
+				@apply ml-auto cursor-pointer text-customDark;
+			}
+		}
+	}
+
+	.body_container {
+		@apply flex flex-col flex-1 p-4;
+
+		.message_container {
+			@apply flex-grow overflow-y-scroll py-2 px-4;
+
+			.message_card_container {
+				@apply flex;
+
+				.description_container {
+					@apply w-1/2 flex;
+
+					.description {
+						@apply bg-gray-200 rounded-xl p-2;
+					}
+				}
+			}
+		}
+	}
+
+	.bottom_container {
+		@apply h-16 flex items-center;
+	}
+}

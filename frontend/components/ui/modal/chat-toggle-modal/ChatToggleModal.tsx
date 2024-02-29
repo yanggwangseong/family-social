@@ -13,6 +13,18 @@ const ChatToggleModal: FC = () => {
 				<div className={styles.profile_container}>
 					<Profile chat={true}></Profile>
 				</div>
+				<div className={styles.profile_container}>
+					<Profile chat={true}></Profile>
+				</div>
+				<div className={styles.profile_container}>
+					<Profile chat={true}></Profile>
+				</div>
+				<div className={styles.profile_container}>
+					<Profile chat={true}></Profile>
+				</div>
+				<div className={styles.profile_container}>
+					<Profile chat={true}></Profile>
+				</div>
 			</div>
 		</div>
 	);
