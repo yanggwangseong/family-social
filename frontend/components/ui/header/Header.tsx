@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FaRegBell } from 'react-icons/fa';
 import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
 import { useModal } from '@/hooks/useModal';
+import cn from 'classnames';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -30,7 +31,9 @@ const Header: FC = () => {
 						<FaRegBell size={22}></FaRegBell>
 					</div>
 					<div
-						className={styles.icon_wrap}
+						className={cn(styles.icon_wrap, {
+							[styles.active]: !!isOpenMessage,
+						})}
 						ref={messageModalWrapperRef}
 						onClick={handleCloseMessageModal}
 					>

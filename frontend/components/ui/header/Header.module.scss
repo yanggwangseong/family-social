@@ -26,6 +26,10 @@
 			&:hover {
 				@apply bg-customOrange cursor-pointer;
 			}
+
+			&.active {
+				@apply bg-customOrange cursor-pointer;
+			}
 		}
 	}
 }
