@@ -21,7 +21,7 @@
 		@apply ml-auto flex gap-3;
 
 		.icon_wrap {
-			@apply w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
+			@apply relative w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
 
 			&:hover {
 				@apply bg-customOrange cursor-pointer;
