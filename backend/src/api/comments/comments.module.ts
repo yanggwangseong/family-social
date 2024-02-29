@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CommentEntity } from '@/models/entities/comment.entity';
-import { LikeCommentEntity } from '@/models/entities/fam-like-comment.entity';
+import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
 

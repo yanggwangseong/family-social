@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '../dto/media/req/media-update-req-dto';
-import { FeedMediaEntity } from '../entities/fam-feed-media.entity';
+import { FeedMediaEntity } from '../entities/feed-media.entity';
 
 @Injectable()
 export class MediasRepository extends Repository<FeedMediaEntity> {

@@ -4,9 +4,9 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
-import { FeedMediaEntity } from './fam-feed-media.entity';
-import { LikeFeedEntity } from './fam-like-feed.entity';
+import { FeedMediaEntity } from './feed-media.entity';
 import { GroupEntity } from './group.entity';
+import { LikeFeedEntity } from './like-feed.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_feed' })

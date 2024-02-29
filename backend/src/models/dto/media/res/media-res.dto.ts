@@ -1,6 +1,6 @@
 import { PickType } from '@nestjs/swagger';
 
-import { FeedMediaEntity } from '@/models/entities/fam-feed-media.entity';
+import { FeedMediaEntity } from '@/models/entities/feed-media.entity';
 
 export class MediaResDto extends PickType(FeedMediaEntity, [
 	'id',

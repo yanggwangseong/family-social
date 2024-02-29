@@ -61,3 +61,5 @@ export const ERROR_NO_PERMISSTION_TO_SCHEDULE =
 	'여행 일정에 접근 할 권한이 없습니다' as const;
 
 export const ERROR_SCHEDULE_NOT_FOUND = '여행 일정을 찾을 수 없습니다' as const;
+
+export const ERROR_CHAT_NOT_FOUND = '존재하지 않는 chat 입니다' as const;

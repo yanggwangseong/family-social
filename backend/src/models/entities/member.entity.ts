@@ -12,10 +12,12 @@ import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
-import { LikeCommentEntity } from './fam-like-comment.entity';
-import { LikeFeedEntity } from './fam-like-feed.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
+import { LikeCommentEntity } from './like-comment.entity';
+import { LikeFeedEntity } from './like-feed.entity';
+import { MemberChatEntity } from './member-chat.entity';
+import { MessageEntity } from './message.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
@@ -123,4 +125,12 @@ export class MemberEntity extends DefaultEntity {
 	//schedule
 	@OneToMany(() => ScheduleEntity, (sch) => sch.member)
 	memberCreateSchedules?: ScheduleEntity[];
+
+	// message
+	@OneToMany(() => MessageEntity, (fm) => fm.member)
+	messages?: MessageEntity[];
+
+	// member-chat
+	@OneToMany(() => MemberChatEntity, (fmc) => fmc.member)
+	memberEnterChats?: MemberChatEntity[];
 }

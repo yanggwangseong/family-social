@@ -281,4 +281,28 @@ export class AuthService {
 
 		res.cookie(tokenName, token, cookieOptions);
 	}
+
+	extractTokenFromHeader(header: string, isBearer: boolean) {
+		const splitToken = header.split(' ');
+
+		const prefix = isBearer ? 'Bearer' : 'Basic';
+
+		if (splitToken.length !== 2 || splitToken[0] !== prefix) {
+			throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);
+		}
+
+		const token = splitToken[1];
+
+		return token;
+	}
+
+	verifyToken(token: string) {
+		try {
+			return this.jwtService.verify(token, {
+				secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+			});
+		} catch (error) {
+			throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);
+		}
+	}
 }
