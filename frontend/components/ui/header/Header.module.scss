@@ -24,11 +24,15 @@
 			@apply relative w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
 
 			&:hover {
-				@apply bg-customOrange cursor-pointer;
+				@apply bg-customOrange;
+
+				.icon {
+					@apply cursor-pointer;
+				}
 			}
 
 			&.active {
-				@apply bg-customOrange cursor-pointer;
+				@apply bg-customOrange;
 			}
 		}
 	}
