@@ -1,11 +1,20 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import styles from './Header.module.scss';
 import Field from '../field/Field';
 import Link from 'next/link';
 import { FaRegBell } from 'react-icons/fa';
 import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
+import { useModal } from '@/hooks/useModal';
+import cn from 'classnames';
+import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 
 const Header: FC = () => {
+	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
+	const {
+		isShowing: isOpenMessage,
+		handleToggleModal: handleCloseMessageModal,
+	} = useModal(messageModalWrapperRef);
+
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
@@ -16,14 +25,24 @@ const Header: FC = () => {
 				<div className={styles.right_icons_container}>
 					<Link href={'/feeds'}>
 						<div className={styles.icon_wrap}>
-							<AiOutlineHome size={22}></AiOutlineHome>
+							<AiOutlineHome className={styles.icon} size={22}></AiOutlineHome>
 						</div>
 					</Link>
 					<div className={styles.icon_wrap}>
-						<FaRegBell size={22}></FaRegBell>
+						<FaRegBell className={styles.icon} size={22}></FaRegBell>
 					</div>
-					<div className={styles.icon_wrap}>
-						<AiOutlineMessage size={22}></AiOutlineMessage>
+					<div
+						className={cn(styles.icon_wrap, {
+							[styles.active]: !!isOpenMessage,
+						})}
+						ref={messageModalWrapperRef}
+						onClick={handleCloseMessageModal}
+					>
+						<AiOutlineMessage
+							className={styles.icon}
+							size={22}
+						></AiOutlineMessage>
+						{isOpenMessage && <ChatToggleModal></ChatToggleModal>}
 					</div>
 				</div>
 			</div>
