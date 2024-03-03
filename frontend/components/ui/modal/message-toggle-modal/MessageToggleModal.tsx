@@ -8,6 +8,7 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import FieldWithTextarea from '../../field/field-area/FieldArea';
 import CustomButton from '../../button/custom-button/CustomButton';
+import MessageBox from '../../message-box/MessageBox';
 
 const MessageToggleModal: FC = () => {
 	const {
@@ -48,30 +49,8 @@ const MessageToggleModal: FC = () => {
 			</div>
 			<div className={styles.body_container}>
 				<div className={styles.message_container}>
-					<div className={styles.message_card_container}>
-						<Profile />
-						<div className={styles.description_container}>
-							<div className={styles.description_wrapper}>
-								<div className={styles.description}>hi</div>
-							</div>
-						</div>
-					</div>
-					<div className={styles.message_card_container}>
-						<Profile />
-						<div className={styles.description_container}>
-							<div className={styles.description_wrapper}>
-								<div className={styles.description}>hello</div>
-							</div>
-						</div>
-					</div>
-					<div className={styles.message_card_container}>
-						<Profile />
-						<div className={styles.description_container}>
-							<div className={styles.description_wrapper}>
-								<div className={styles.description}>zzzz</div>
-							</div>
-						</div>
-					</div>
+					<MessageBox isMine={true}></MessageBox>
+					<MessageBox isMine={false}></MessageBox>
 				</div>
 
 				<div className={styles.bottom_container}>
