@@ -22,10 +22,35 @@ const MessageToggleModal: FC = () => {
 					<div className={styles.message_card_container}>
 						<Profile />
 						<div className={styles.description_container}>
-							<div className={styles.description}>Hello</div>
+							<div className={styles.description_wrapper}>
+								<div className={styles.description}>
+									Hell2323Hell2323Hell2323Hell2323Hell2323Hell2323
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className={styles.message_card_container}>
+						<Profile />
+						<div className={styles.description_container}>
+							<div className={styles.description_wrapper}>
+								<div className={styles.description}>
+									Hell2323Hell2323Hell2323Hell2323Hell2323Hell2323
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className={styles.message_card_container}>
+						<Profile />
+						<div className={styles.description_container}>
+							<div className={styles.description_wrapper}>
+								<div className={styles.description}>
+									Hell2323Hell2323Hell2323Hell2323Hell2323Hell2323
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+
 				<div className={styles.bottom_container}>
 					<div>message</div>
 				</div>
