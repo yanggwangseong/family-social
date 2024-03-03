@@ -3,9 +3,10 @@ import styles from './Profile.module.scss';
 import Image from 'next/image';
 import FeedPublicSelect from '../select/FeedPublicSelect';
 import { Union, feedPublicSelectOptions } from 'types';
+import { ChatListResponse } from '@/shared/interfaces/chat.interface';
 
 const Profile: FC<{
-	chat?: boolean;
+	chat?: ChatListResponse;
 	commentContents?: string;
 	profileImage?: string;
 	username?: string;
@@ -55,10 +56,14 @@ const Profile: FC<{
 				<div className={styles.chat_container}>
 					<div className={styles.chat_card_container}>
 						<div className={styles.chat_top_container}>
-							<div className={styles.chat_username}>우동끼</div>
+							<div className={styles.chat_username}>
+								{chat.recentMessage.memberName}
+							</div>
 							<div className={styles.chat_date}>오후 2:50</div>
 						</div>
-						<div className={styles.chat_message}>롭키</div>
+						<div className={styles.chat_message}>
+							{chat.recentMessage.message}
+						</div>
 					</div>
 				</div>
 			)}
