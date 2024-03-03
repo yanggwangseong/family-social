@@ -1,5 +1,9 @@
 import { MembersResponse } from './member.interface';
 
+export interface GetChatsResponse {
+	list: ChatListResponse[];
+}
+
 export interface ChatListResponse {
 	targetMemberId: string;
 	chatId: string;
@@ -20,4 +24,5 @@ export interface RecentMessageResponse {
 	chatId: string;
 	memberId: string;
 	message: string;
+	memberName: string;
 }
