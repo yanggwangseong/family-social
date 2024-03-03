@@ -46,21 +46,38 @@ export class MessagesRepository extends Repository<MessageEntity> {
 	}
 
 	async getRecentMessageByChat(chatId: string): Promise<RecentMessageResDto> {
-		return await this.repository.findOneOrFail({
-			select: {
-				id: true,
-				createdAt: true,
-				chatId: true,
-				memberId: true,
-				message: true,
-			},
-			where: {
-				chatId,
-			},
-			order: {
-				createdAt: 'DESC',
-			},
-		});
+		return await this.repository
+			.findOneOrFail({
+				select: {
+					id: true,
+					createdAt: true,
+					chatId: true,
+					memberId: true,
+					message: true,
+					member: {
+						username: true,
+					},
+				},
+				where: {
+					chatId,
+				},
+				relations: {
+					member: true,
+				},
+				order: {
+					createdAt: 'DESC',
+				},
+			})
+			.then((data) => {
+				return {
+					id: data.id,
+					createdAt: data.createdAt,
+					chatId: data.chatId,
+					memberId: data.memberId,
+					message: data.message,
+					memberName: data.member.username,
+				};
+			});
 	}
 
 	async getMessagesByChat(
