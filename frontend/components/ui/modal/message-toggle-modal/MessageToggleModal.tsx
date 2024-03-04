@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './MessageToggleModal.module.scss';
 import Profile from '../../profile/Profile';
 import { IoCloseSharp, IoSend } from 'react-icons/io5';
@@ -17,10 +17,13 @@ import {
 } from '@/atoms/messageModalAtom';
 import { useQuery } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
+import { useSocket } from '@/hooks/useSocket';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
+
+	const { socket, isConnected } = useSocket();
 
 	const {
 		register,
@@ -56,6 +59,14 @@ const MessageToggleModal: FC = () => {
 			enabled: !!layer.chatId,
 		},
 	);
+
+	useEffect(() => {
+		if (layer.chatId) {
+			socket.emit('enter-chat', {
+				chatIds: [layer.chatId],
+			});
+		}
+	}, [layer.chatId, socket]);
 
 	if (isLoading) return null;
 	if (!data) return null;
