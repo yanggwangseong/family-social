@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import styles from './MessageBox.module.scss';
 import Profile from '../profile/Profile';
 import cn from 'classnames';
+import { MessageBoxProps } from './message-box.interface';
 
-const MessageBox: FC<{ isMine: boolean }> = ({ isMine }) => {
+const MessageBox: FC<MessageBoxProps> = ({ isMine, message }) => {
 	return (
 		<div
 			className={cn(styles.message_card_container, {
@@ -14,9 +15,7 @@ const MessageBox: FC<{ isMine: boolean }> = ({ isMine }) => {
 
 			<div className={styles.description_container}>
 				<div className={styles.description_wrapper}>
-					<div className={styles.description}>
-						hifffff4987hifffff4987hifffff4987 hifffff4987 hifffff4987
-					</div>
+					<div className={styles.description}>{message.message}</div>
 				</div>
 			</div>
 		</div>

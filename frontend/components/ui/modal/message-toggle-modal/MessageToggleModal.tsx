@@ -9,11 +9,18 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import FieldWithTextarea from '../../field/field-area/FieldArea';
 import CustomButton from '../../button/custom-button/CustomButton';
 import MessageBox from '../../message-box/MessageBox';
-import { useRecoilValue } from 'recoil';
-import { messageModalAtom } from '@/atoms/messageModalAtom';
+import { useRecoilState } from 'recoil';
+import {
+	MessageModalAtomType,
+	MessageModalDefaultValue,
+	messageModalAtom,
+} from '@/atoms/messageModalAtom';
+import { useQuery } from 'react-query';
+import { MessageService } from '@/services/message/message.service';
 
 const MessageToggleModal: FC = () => {
-	const layMode = useRecoilValue(messageModalAtom);
+	const [layer, setLayer] =
+		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
 	const {
 		register,
@@ -36,11 +43,26 @@ const MessageToggleModal: FC = () => {
 		handlesetValueAddEmoji(emojiData, 'message');
 	};
 
+	const handleCloseMessageModal = () => {
+		setLayer(MessageModalDefaultValue);
+	};
+
 	const onSubmit: SubmitHandler<{ message: string }> = data => {};
+
+	const { data, isLoading } = useQuery(
+		['get-messages-chat'],
+		async () => await MessageService.getMessages(layer.chatId),
+		{
+			enabled: !!layer.chatId,
+		},
+	);
+
+	if (isLoading) return null;
+	if (!data) return null;
 
 	return (
 		<>
-			{layMode.isMessageModal && (
+			{layer.isMessageModal && (
 				<div className={styles.container}>
 					<div className={styles.top_container}>
 						<div className={styles.top_wrap}>
@@ -48,15 +70,23 @@ const MessageToggleModal: FC = () => {
 								<Profile />
 							</div>
 							<div>양우성</div>
-							<div className={styles.close_btn}>
+							<div
+								className={styles.close_btn}
+								onClick={handleCloseMessageModal}
+							>
 								<IoCloseSharp size={24} />
 							</div>
 						</div>
 					</div>
 					<div className={styles.body_container}>
 						<div className={styles.message_container}>
-							<MessageBox isMine={true}></MessageBox>
-							<MessageBox isMine={false}></MessageBox>
+							{data.list.map((item, index) => (
+								<MessageBox
+									key={index}
+									isMine={item.isMine}
+									message={item}
+								></MessageBox>
+							))}
 						</div>
 
 						<div className={styles.bottom_container}>
