@@ -34,6 +34,9 @@ import { MessagesService } from '../messages/messages.service';
 @WebSocketGateway({
 	transports: ['websocket'],
 	namespace: 'chats',
+	cors: {
+		credentials: true,
+	},
 })
 export class ChatsGateway
 	implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
@@ -49,17 +52,20 @@ export class ChatsGateway
 	handleDisconnect() {}
 
 	handleConnection(socket: Socket & { sub: string }) {
-		const headers = socket.handshake.headers;
+		//const headers = socket.handshake.headers;
 
-		const rawToken = headers['authorization']!;
+		//const rawToken = headers['authorization']!;
+
+		const rawToken = socket.handshake.auth['authorization'];
 
 		if (!rawToken) {
 			socket.disconnect();
 		}
 
 		try {
-			const token = this.authService.extractTokenFromHeader(rawToken, true);
-			const payload = this.authService.verifyToken(token);
+			//const token = this.authService.extractTokenFromHeader(rawToken, true);
+
+			const payload = this.authService.verifyToken(rawToken);
 			socket.sub = payload.sub;
 
 			return true;
@@ -111,8 +117,6 @@ export class ChatsGateway
 				message: `존재하지 않는 chat 입니다. chatId: ${dto.chatId}`,
 			});
 		}
-
-		console.log(socket.sub);
 
 		const message = await this.messagesService.createMessage({
 			chatId: dto.chatId,
