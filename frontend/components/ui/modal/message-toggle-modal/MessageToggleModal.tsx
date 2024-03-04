@@ -50,7 +50,12 @@ const MessageToggleModal: FC = () => {
 		setLayer(MessageModalDefaultValue);
 	};
 
-	const onSubmit: SubmitHandler<{ message: string }> = data => {};
+	const onSubmit: SubmitHandler<{ message: string }> = data => {
+		socket.emit('send-message', {
+			message: data.message,
+			chatId: layer.chatId,
+		});
+	};
 
 	const { data, isLoading } = useQuery(
 		['get-messages-chat'],
