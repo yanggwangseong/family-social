@@ -11,9 +11,16 @@ import CustomButton from '../../button/custom-button/CustomButton';
 import MessageBox from '../../message-box/MessageBox';
 import { useRecoilValue } from 'recoil';
 import { messageModalAtom } from '@/atoms/messageModalAtom';
+import { useQuery } from 'react-query';
+import { MessageService } from '@/services/message/message.service';
 
 const MessageToggleModal: FC = () => {
 	const layMode = useRecoilValue(messageModalAtom);
+
+	const { data, isLoading } = useQuery(
+		['get-messages-chat'],
+		async () => await MessageService.getMessages(layMode.chatId),
+	);
 
 	const {
 		register,
@@ -38,6 +45,9 @@ const MessageToggleModal: FC = () => {
 
 	const onSubmit: SubmitHandler<{ message: string }> = data => {};
 
+	if (isLoading) return <div>Loading</div>;
+	if (!data) return null;
+
 	return (
 		<>
 			{layMode.isMessageModal && (
@@ -55,8 +65,13 @@ const MessageToggleModal: FC = () => {
 					</div>
 					<div className={styles.body_container}>
 						<div className={styles.message_container}>
-							<MessageBox isMine={true}></MessageBox>
-							<MessageBox isMine={false}></MessageBox>
+							{data.list.map((item, index) => (
+								<MessageBox
+									key={index}
+									isMine={item.isMine}
+									message={item}
+								></MessageBox>
+							))}
 						</div>
 
 						<div className={styles.bottom_container}>
