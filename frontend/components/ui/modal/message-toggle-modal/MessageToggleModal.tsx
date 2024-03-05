@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import styles from './MessageToggleModal.module.scss';
 import Profile from '../../profile/Profile';
 import { IoCloseSharp, IoSend } from 'react-icons/io5';
@@ -69,12 +69,20 @@ const MessageToggleModal: FC = () => {
 
 	useEffect(() => {
 		if (isConnected && layer.chatId) {
-			console.log('채팅방 입장');
 			socket.emit('enter-chat', {
 				chatIds: [layer.chatId],
 			});
 		}
 	}, [isConnected, layer.chatId, socket]);
+
+	const messageContainerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (messageContainerRef.current) {
+			messageContainerRef.current.scrollTop =
+				messageContainerRef.current.scrollHeight;
+		}
+	}, [data]);
 
 	if (isLoading) return null;
 	if (!data) return null;
@@ -98,7 +106,7 @@ const MessageToggleModal: FC = () => {
 						</div>
 					</div>
 					<div className={styles.body_container}>
-						<div className={styles.message_container}>
+						<div ref={messageContainerRef} className={styles.message_container}>
 							{data.list.map((item, index) => (
 								<MessageBox
 									key={index}
