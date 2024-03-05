@@ -1,6 +1,6 @@
 .container {
 	@apply absolute bottom-0 right-24 min-w-[338px] min-h-[445px] border
-    border-solid border-customDark shadow-2xl z-10 rounded-tl-[44px] flex flex-col max-w-[338px] bg-basic;
+    border-solid border-customDark shadow-2xl z-[12] rounded-tl-[44px] flex flex-col max-w-[338px] bg-basic;
 
 	.top_container {
 		@apply z-20;

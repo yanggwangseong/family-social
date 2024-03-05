@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import styles from './MessageToggleModal.module.scss';
 import Profile from '../../profile/Profile';
 import { IoCloseSharp, IoSend } from 'react-icons/io5';
@@ -17,10 +17,13 @@ import {
 } from '@/atoms/messageModalAtom';
 import { useQuery } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
+import { useSocket } from '@/hooks/useSocket';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
+
+	const { socket, isConnected } = useSocket();
 
 	const {
 		register,
@@ -47,15 +50,39 @@ const MessageToggleModal: FC = () => {
 		setLayer(MessageModalDefaultValue);
 	};
 
-	const onSubmit: SubmitHandler<{ message: string }> = data => {};
+	const onSubmit: SubmitHandler<{ message: string }> = data => {
+		socket.emit('send-message', {
+			message: data.message,
+			chatId: layer.chatId,
+		});
+		refetch();
+		reset();
+	};
 
-	const { data, isLoading } = useQuery(
+	const { data, isLoading, refetch } = useQuery(
 		['get-messages-chat'],
 		async () => await MessageService.getMessages(layer.chatId),
 		{
 			enabled: !!layer.chatId,
 		},
 	);
+
+	useEffect(() => {
+		if (isConnected && layer.chatId) {
+			socket.emit('enter-chat', {
+				chatIds: [layer.chatId],
+			});
+		}
+	}, [isConnected, layer.chatId, socket]);
+
+	const messageContainerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (messageContainerRef.current) {
+			messageContainerRef.current.scrollTop =
+				messageContainerRef.current.scrollHeight;
+		}
+	}, [data]);
 
 	if (isLoading) return null;
 	if (!data) return null;
@@ -79,7 +106,7 @@ const MessageToggleModal: FC = () => {
 						</div>
 					</div>
 					<div className={styles.body_container}>
-						<div className={styles.message_container}>
+						<div ref={messageContainerRef} className={styles.message_container}>
 							{data.list.map((item, index) => (
 								<MessageBox
 									key={index}
