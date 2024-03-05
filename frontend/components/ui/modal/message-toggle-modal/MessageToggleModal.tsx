@@ -51,10 +51,15 @@ const MessageToggleModal: FC = () => {
 	};
 
 	const onSubmit: SubmitHandler<{ message: string }> = data => {
-		socket.emit('send-message', {
-			message: data.message,
-			chatId: layer.chatId,
-		});
+		try {
+			socket.emit('send-message', {
+				message: data.message,
+				chatId: layer.chatId,
+			});
+			reset();
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const { data, isLoading } = useQuery(
@@ -66,12 +71,13 @@ const MessageToggleModal: FC = () => {
 	);
 
 	useEffect(() => {
-		if (layer.chatId) {
+		if (isConnected && layer.chatId) {
+			console.log('채팅방 입장');
 			socket.emit('enter-chat', {
 				chatIds: [layer.chatId],
 			});
 		}
-	}, [layer.chatId, socket]);
+	}, [isConnected, layer.chatId, socket]);
 
 	if (isLoading) return null;
 	if (!data) return null;

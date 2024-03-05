@@ -27,8 +27,8 @@ export const useSocket = () => {
 			},
 		});
 
-		socket.on('connect', () => onConnect);
-		socket.on('disconnect', () => onDisConnect);
+		socket.on('connect', onConnect);
+		socket.on('disconnect', onDisConnect);
 
 		return () => {
 			socket.off('connect', onConnect);
