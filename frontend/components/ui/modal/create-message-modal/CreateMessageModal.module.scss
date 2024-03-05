@@ -17,4 +17,20 @@
 			}
 		}
 	}
+
+	.group_chat_container {
+		@apply flex gap-4 cursor-pointer hover:text-customOrange;
+
+		.group_chat_icon_container {
+			@apply border border-solid rounded-full border-customDark p-1;
+		}
+
+		.group_chat_text {
+			@apply flex items-center;
+		}
+	}
+
+	.search_lst_container {
+		@apply flex flex-col gap-4;
+	}
 }
