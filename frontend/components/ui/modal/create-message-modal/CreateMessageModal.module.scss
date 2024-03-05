@@ -1,4 +1,20 @@
 .container {
 	@apply absolute bottom-0 right-24 min-w-[338px] min-h-[445px] border
-    border-solid border-customDark shadow-2xl z-[12] flex flex-col max-w-[338px] bg-basic;
+    border-solid border-customDark shadow-2xl z-[12] flex flex-col max-w-[338px] bg-basic p-4;
+
+	.top_container {
+		@apply z-20;
+
+		.top_wrap {
+			@apply h-16 px-4 py-3 flex;
+
+			.title {
+				@apply text-sm font-medium;
+			}
+
+			.close_btn {
+				@apply ml-auto cursor-pointer text-customDark;
+			}
+		}
+	}
 }
