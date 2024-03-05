@@ -51,18 +51,15 @@ const MessageToggleModal: FC = () => {
 	};
 
 	const onSubmit: SubmitHandler<{ message: string }> = data => {
-		try {
-			socket.emit('send-message', {
-				message: data.message,
-				chatId: layer.chatId,
-			});
-			reset();
-		} catch (error) {
-			console.log(error);
-		}
+		socket.emit('send-message', {
+			message: data.message,
+			chatId: layer.chatId,
+		});
+		refetch();
+		reset();
 	};
 
-	const { data, isLoading } = useQuery(
+	const { data, isLoading, refetch } = useQuery(
 		['get-messages-chat'],
 		async () => await MessageService.getMessages(layer.chatId),
 		{
