@@ -9,10 +9,15 @@ import {
 	MessageModalAtomType,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
+import { createMessageModalAtom } from '@/atoms/createMessageModalAtom';
 
 const ChatToggleModal: FC = () => {
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
+
+	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
+		createMessageModalAtom,
+	);
 
 	const { data, isLoading } = useQuery(
 		['get-chat-list'],
@@ -26,6 +31,10 @@ const ChatToggleModal: FC = () => {
 		});
 	};
 
+	const handleCreateMessageModal = () => {
+		setCreateLayer(true);
+	};
+
 	if (isLoading) return <div>Loading</div>;
 	if (!data) return null;
 
@@ -33,7 +42,10 @@ const ChatToggleModal: FC = () => {
 		<div className={styles.container}>
 			<div className={styles.top_wrap}>
 				<div className={styles.title}>채팅</div>
-				<div className={styles.create_chat_icon_container}>
+				<div
+					className={styles.create_chat_icon_container}
+					onClick={handleCreateMessageModal}
+				>
 					<PiNotePencilDuotone size={24} />
 				</div>
 			</div>
