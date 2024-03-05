@@ -9,6 +9,14 @@
 		.title {
 			@apply font-bold text-xl;
 		}
+
+		.create_chat_icon_container {
+			@apply ml-auto cursor-pointer;
+
+			&:hover {
+				@apply text-customOrange;
+			}
+		}
 	}
 
 	.item_container {

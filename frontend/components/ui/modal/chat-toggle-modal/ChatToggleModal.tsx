@@ -4,6 +4,7 @@ import Profile from '../../profile/Profile';
 import { useQuery } from 'react-query';
 import { ChatService } from '@/services/chat/chat.service';
 import { useRecoilState } from 'recoil';
+import { PiNotePencilDuotone } from 'react-icons/pi';
 import {
 	MessageModalAtomType,
 	messageModalAtom,
@@ -32,6 +33,9 @@ const ChatToggleModal: FC = () => {
 		<div className={styles.container}>
 			<div className={styles.top_wrap}>
 				<div className={styles.title}>채팅</div>
+				<div className={styles.create_chat_icon_container}>
+					<PiNotePencilDuotone size={24} />
+				</div>
 			</div>
 
 			<div className={styles.item_container}>
