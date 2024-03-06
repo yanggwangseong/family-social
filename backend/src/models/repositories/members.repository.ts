@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Like, Not, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
@@ -11,6 +11,8 @@ import {
 	ILoginMemberArgs,
 	IUpdateMemberArgs,
 } from '@/types/args/member';
+
+import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -41,6 +43,9 @@ export class MembersRepository extends Repository<MemberEntity> {
 				id: true,
 				password: true,
 			},
+			relations: {
+				memberGroups: true,
+			},
 			where: {
 				email: email,
 			},
@@ -59,6 +64,26 @@ export class MembersRepository extends Repository<MemberEntity> {
 			select: {
 				signupVerifyToken: true,
 				username: true,
+			},
+		});
+	}
+
+	async findMembersByUserName(
+		username: string,
+		authorMemberId: string,
+	): Promise<MemberProfileImageResDto[]> {
+		return await this.repository.find({
+			select: {
+				id: true,
+				username: true,
+				profileImage: true,
+			},
+			relations: {
+				memberGroups: true,
+			},
+			where: {
+				username: ILike(`${username}%`),
+				id: Not(authorMemberId),
 			},
 		});
 	}

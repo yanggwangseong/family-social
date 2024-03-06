@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	Param,
 	ParseUUIDPipe,
 	Post,
@@ -12,7 +13,10 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-import { UpdateMemberProfileSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import {
+	GetMembersByUserNameSwagger,
+	UpdateMemberProfileSwagger,
+} from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import {
 	BadRequestServiceException,
@@ -36,6 +40,24 @@ import { MembersService } from './members.service';
 @Controller('members')
 export class MembersController {
 	constructor(private readonly membersService: MembersService) {}
+
+	/**
+	 * @summary 유저이름에 해당하는 유저 리스트 검색
+	 *
+	 * @tag members
+	 * @param {string} username   		- 수정 할 memberId
+	 * @param {string} sub   			- 인가된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 검색된 유저정보 리스트
+	 */
+	@GetMembersByUserNameSwagger()
+	@Get(':username')
+	async getMembersByUserName(
+		@Param('username') username: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return this.membersService.findMembersByUserName(username, sub);
+	}
 
 	/**
 	 * @summary 계정 정보 수정 api 추가
