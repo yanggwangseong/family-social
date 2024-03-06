@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { PiNotePencilDuotone } from 'react-icons/pi';
 import {
 	MessageModalAtomType,
+	MessageModalDefaultValue,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
 import { createMessageModalAtom } from '@/atoms/createMessageModalAtom';
@@ -26,6 +27,7 @@ const ChatToggleModal: FC = () => {
 
 	const handleMessageModal = (chatId: string) => {
 		setLayer({
+			...MessageModalDefaultValue,
 			chatId,
 			isMessageModal: true,
 		});

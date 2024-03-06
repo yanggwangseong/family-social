@@ -32,5 +32,9 @@
 
 	.search_lst_container {
 		@apply flex flex-col gap-4;
+
+		.not_found_text {
+			@apply text-center font-light text-customGray text-sm;
+		}
 	}
 }
