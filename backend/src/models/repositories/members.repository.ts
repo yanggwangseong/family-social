@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Like, Not, Repository } from 'typeorm';
+import { ILike, Not, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
