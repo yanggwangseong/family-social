@@ -10,6 +10,11 @@ import { LayerMode } from 'types';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import {
+	PiUserCircleGearDuotone,
+	PiCalendarCheckDuotone,
+	PiArticleDuotone,
+} from 'react-icons/pi';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
@@ -33,9 +38,9 @@ const MainSidebar: FC = () => {
 	return (
 		<div className={styles.sidebar_container}>
 			{/* 사이드 메뉴 */}
-			<Menu link="/feeds" Icon={AiOutlineAudit} menu="피드" />
-			<Menu link="/schedules" Icon={AiOutlineSchedule} menu="여행 일정" />
-			<Menu link="/accounts" Icon={MdOutlineManageAccounts} menu="계정" />
+			<Menu link="/feeds" Icon={PiArticleDuotone} menu="피드" />
+			<Menu link="/schedules" Icon={PiCalendarCheckDuotone} menu="여행 일정" />
+			<Menu link="/accounts" Icon={PiUserCircleGearDuotone} menu="계정" />
 			<div className={styles.sidebar_btn_container}>
 				{isSchedulesRoute ? (
 					<Link
