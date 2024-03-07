@@ -4,6 +4,11 @@ import Field from '../field/Field';
 import Link from 'next/link';
 import { FaRegBell } from 'react-icons/fa';
 import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
+import {
+	PiBellDuotone,
+	PiHouseDuotone,
+	PiMessengerLogoDuotone,
+} from 'react-icons/pi';
 import { useModal } from '@/hooks/useModal';
 import cn from 'classnames';
 import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
@@ -25,11 +30,14 @@ const Header: FC = () => {
 				<div className={styles.right_icons_container}>
 					<Link href={'/feeds'}>
 						<div className={styles.icon_wrap}>
-							<AiOutlineHome className={styles.icon} size={22}></AiOutlineHome>
+							<PiHouseDuotone
+								className={styles.icon}
+								size={22}
+							></PiHouseDuotone>
 						</div>
 					</Link>
 					<div className={styles.icon_wrap}>
-						<FaRegBell className={styles.icon} size={22}></FaRegBell>
+						<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
 					</div>
 					<div
 						className={cn(styles.icon_wrap, {
@@ -38,10 +46,10 @@ const Header: FC = () => {
 						ref={messageModalWrapperRef}
 						onClick={handleCloseMessageModal}
 					>
-						<AiOutlineMessage
+						<PiMessengerLogoDuotone
 							className={styles.icon}
 							size={22}
-						></AiOutlineMessage>
+						></PiMessengerLogoDuotone>
 						{isOpenMessage && <ChatToggleModal></ChatToggleModal>}
 					</div>
 				</div>

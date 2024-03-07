@@ -21,6 +21,17 @@ export const GetMemberChatsSwagger = () => {
 	);
 };
 
+export const PostChatSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '채팅방 생성하기',
+		}),
+		ApiOkResponse({
+			description: '채팅방 생성하기',
+		}),
+	);
+};
+
 export const GetMessagesByChatIdSwagger = () => {
 	return applyDecorators(
 		ApiOperation({

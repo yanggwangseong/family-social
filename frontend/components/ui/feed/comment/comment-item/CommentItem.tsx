@@ -10,6 +10,7 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { commentAtom } from '@/atoms/commentAtom';
 import { useLottieLike } from '@/hooks/useLottieLike';
+import { PiHeartDuotone } from 'react-icons/pi';
 
 const CommentItem: FC<{
 	comment: CommentsResponse;
@@ -110,14 +111,14 @@ const CommentItem: FC<{
 
 					<div className={styles.comment_like_container}>
 						{isLike ? (
-							<AiFillHeart
+							<PiHeartDuotone
 								size={28}
 								color="#FB1F42"
 								className={styles.like_icon}
 								onClick={handleLikeComment}
 							/>
 						) : (
-							<AiOutlineHeart
+							<PiHeartDuotone
 								size={28}
 								className={styles.like_icon}
 								onClick={handleLikeComment}
