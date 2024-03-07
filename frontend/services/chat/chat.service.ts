@@ -7,4 +7,10 @@ export const ChatService = {
 
 		return data;
 	},
+
+	async postChat(memberIds: string[]) {
+		const { data } = await axiosAPI.post(`/chats`, { memberIds });
+
+		return data;
+	},
 };
