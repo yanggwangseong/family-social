@@ -18,6 +18,7 @@ import {
 import { useQuery } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
 import { useSocket } from '@/hooks/useSocket';
+import { ChatService } from '@/services/chat/chat.service';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
@@ -50,17 +51,36 @@ const MessageToggleModal: FC = () => {
 		setLayer(MessageModalDefaultValue);
 	};
 
-	const onSubmit: SubmitHandler<{ message: string }> = data => {
-		socket.emit('send-message', {
-			message: data.message,
-			chatId: layer.chatId,
-		});
-		refetch();
+	const onSubmit: SubmitHandler<{ message: string }> = async data => {
+		if (layer.isNewMessage) {
+			const chat = await ChatService.postChat([
+				'410b7202-660a-4423-a6c3-6377857241cc',
+				'83491506-9047-4cfc-9dec-9f1e2016ae13',
+			]);
+
+			setLayer({
+				isMessageModal: true,
+				isNewMessage: false,
+				chatId: chat.id,
+			});
+
+			socket.emit('send-message', {
+				message: data.message,
+				chatId: chat.id,
+			});
+		} else {
+			socket.emit('send-message', {
+				message: data.message,
+				chatId: layer.chatId,
+			});
+			refetch();
+		}
+
 		reset();
 	};
 
 	const { data, isLoading, refetch } = useQuery(
-		['get-messages-chat'],
+		['get-messages-chat', layer.chatId],
 		async () => await MessageService.getMessages(layer.chatId),
 		{
 			enabled: !!layer.chatId,
@@ -82,10 +102,9 @@ const MessageToggleModal: FC = () => {
 			messageContainerRef.current.scrollTop =
 				messageContainerRef.current.scrollHeight;
 		}
-	}, [data]);
+	}, [data, layer.isMessageModal]);
 
 	if (isLoading) return null;
-	if (!data) return null;
 
 	return (
 		<>
@@ -107,7 +126,7 @@ const MessageToggleModal: FC = () => {
 					</div>
 					<div className={styles.body_container}>
 						<div ref={messageContainerRef} className={styles.message_container}>
-							{data.list.map((item, index) => (
+							{data?.list.map((item, index) => (
 								<MessageBox
 									key={index}
 									isMine={item.isMine}

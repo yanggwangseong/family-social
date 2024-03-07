@@ -2,11 +2,19 @@ import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { ACCESS_TOKEN_KEY, SOCKET_URL } from '../constants';
 import { getCookie } from '@/utils/cookie';
+import { useRecoilState } from 'recoil';
+import {
+	MessageModalAtomType,
+	messageModalAtom,
+} from '@/atoms/messageModalAtom';
 
 export let socket: Socket;
 
 export const useSocket = () => {
 	const [isConnected, setConnected] = useState<boolean>(false);
+
+	const [layer, setLayer] =
+		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
 	const onConnect = () => {
 		setConnected(true);
@@ -34,7 +42,7 @@ export const useSocket = () => {
 			socket.off('connect', onConnect);
 			socket.off('disconnect', onDisConnect);
 		};
-	}, [isConnected]);
+	}, [isConnected, setLayer]);
 
 	return {
 		socket,

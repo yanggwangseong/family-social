@@ -10,16 +10,24 @@ import Profile from '../../profile/Profile';
 import { useQuery } from 'react-query';
 import { useSearch } from '@/hooks/useSearch';
 import { MemberService } from '@/services/member/member.service';
+import {
+	MessageModalAtomType,
+	MessageModalDefaultValue,
+	messageModalAtom,
+} from '@/atoms/messageModalAtom';
 
 const CreateMessageModal: FC = () => {
 	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
 		createMessageModalAtom,
 	);
 
-	const { handleSearch, searchTerm, debounceSearch } = useSearch();
+	const [layer, setLayer] =
+		useRecoilState<MessageModalAtomType>(messageModalAtom);
+
+	const { handleSearch, debounceSearch } = useSearch();
 
 	const { isSuccess, data } = useQuery(
-		['search movies', debounceSearch],
+		['search-chat-members', debounceSearch],
 		() => MemberService.getMembersByUserName(debounceSearch),
 		{
 			enabled: !!debounceSearch,
@@ -28,6 +36,15 @@ const CreateMessageModal: FC = () => {
 
 	const handleCreateMessageModal = () => {
 		setCreateLayer(false);
+	};
+
+	const handleCreateNewMessageModal = () => {
+		setCreateLayer(false);
+		setLayer({
+			chatId: '',
+			isMessageModal: true,
+			isNewMessage: true,
+		});
 	};
 
 	return (
@@ -71,7 +88,9 @@ const CreateMessageModal: FC = () => {
 						<div className={styles.search_lst_container}>
 							{data?.length ? (
 								data.map((item, index) => (
-									<Profile key={index} username={item.username}></Profile>
+									<div key={index} onClick={handleCreateNewMessageModal}>
+										<Profile username={item.username}></Profile>
+									</div>
 								))
 							) : (
 								<div className={styles.not_found_text}>
