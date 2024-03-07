@@ -1,0 +1,25 @@
+import React, { FC } from 'react';
+import styles from './MessageBox.module.scss';
+import Profile from '../profile/Profile';
+import cn from 'classnames';
+import { MessageBoxProps } from './message-box.interface';
+
+const MessageBox: FC<MessageBoxProps> = ({ isMine, message }) => {
+	return (
+		<div
+			className={cn(styles.message_card_container, {
+				[styles.mine_message_card_container]: !!isMine,
+			})}
+		>
+			{!isMine && <Profile />}
+
+			<div className={styles.description_container}>
+				<div className={styles.description_wrapper}>
+					<div className={styles.description}>{message.message}</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default MessageBox;

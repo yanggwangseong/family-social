@@ -1,0 +1,26 @@
+.message_card_container {
+	@apply flex;
+
+	&.mine_message_card_container {
+		@apply flex-row-reverse;
+
+		.description_container {
+			@apply justify-end;
+
+			.description_wrapper {
+				@apply bg-blue-500 text-white;
+			}
+		}
+	}
+
+	.description_container {
+		@apply w-1/2 flex;
+
+		.description_wrapper {
+			@apply bg-gray-200 rounded-xl p-2;
+			.description {
+				@apply inline-block break-all;
+			}
+		}
+	}
+}

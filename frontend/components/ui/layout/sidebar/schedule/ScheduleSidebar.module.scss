@@ -2,7 +2,7 @@
 	@screen 2xl {
 		@apply block;
 	}
-	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-40 block p-4 overflow-y-auto;
+	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-10 block p-4 overflow-y-auto;
 
 	// 버튼 아래에 위치 시키기 위한 컨테이너
 	.container {

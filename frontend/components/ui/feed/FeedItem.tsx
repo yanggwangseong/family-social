@@ -23,6 +23,12 @@ import {
 	mediasLayerModalAtomType,
 } from '@/atoms/mediasLayerModalAtom';
 import { MediaInfo } from '@/shared/interfaces/media.interface';
+import {
+	PiArrowSquareOutDuotone,
+	PiChatDuotone,
+	PiChatTextDuotone,
+	PiHeartDuotone,
+} from 'react-icons/pi';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -187,14 +193,14 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_bottom_container}>
 						<div className={styles.like_container}>
 							{isLike ? (
-								<AiFillHeart
+								<PiHeartDuotone
 									size={28}
 									color="#FB1F42"
 									className={styles.like_icon}
 									onClick={handleLike}
 								/>
 							) : (
-								<AiOutlineHeart
+								<PiHeartDuotone
 									size={28}
 									className={styles.like_icon}
 									onClick={handleLike}
@@ -209,10 +215,10 @@ const FeedItem: FC<FeedItemProps> = ({
 							className={styles.feed_icon_container}
 							onClick={handleToggleCommentWrite}
 						>
-							<GoComment className={styles.feed_icon} size={28} />
+							<PiChatDuotone className={styles.feed_icon} size={28} />
 						</div>
 						<div className={styles.feed_icon_container}>
-							<BsBoxArrowUp className={styles.feed_icon} size={28} />
+							<PiArrowSquareOutDuotone className={styles.feed_icon} size={28} />
 						</div>
 						<div
 							className={styles.comments_link}

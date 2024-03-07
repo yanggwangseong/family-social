@@ -1,8 +1,10 @@
 import {
+	Body,
 	Controller,
 	Get,
 	Param,
 	ParseUUIDPipe,
+	Post,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -11,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	GetMemberChatsSwagger,
 	GetMessagesByChatIdSwagger,
+	PostChatSwagger,
 } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { EntityNotFoundException } from '@/common/exception/service.exception';
@@ -18,6 +21,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ERROR_CHAT_NOT_FOUND } from '@/constants/business-error';
+import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
 import { ChatsService } from './chats.service';
 
@@ -40,6 +44,20 @@ export class ChatsController {
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);
+	}
+
+	/**
+	 * @summary 채팅방 생성하기
+	 *
+	 * @tag chats
+	 * @param {string[]} dto.memberIds - 채팅참여 멤버 아이디들
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 생성된 채팅방 아이디
+	 */
+	@PostChatSwagger()
+	@Post()
+	async postChat(@Body() dto: ChatCreateReqDto) {
+		return await this.chatsService.createChat(dto);
 	}
 
 	/**

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { ERROR_USER_NOT_FOUND } from '@/constants/business-error';
+import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
 import { IUpdateMemberArgs } from '@/types/args/member';
@@ -20,6 +21,16 @@ export class MembersService {
 		}
 
 		return member;
+	}
+
+	async findMembersByUserName(
+		username: string,
+		authorMemberId: string,
+	): Promise<MemberProfileImageResDto[]> {
+		return await this.membersRepository.findMembersByUserName(
+			username,
+			authorMemberId,
+		);
 	}
 
 	async updateMemberProfile({
