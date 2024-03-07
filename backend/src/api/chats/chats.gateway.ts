@@ -79,7 +79,9 @@ export class ChatsGateway
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() dto: ChatCreateReqDto,
 	) {
-		return await this.chatsService.createChat(dto);
+		const chatId = await this.chatsService.createChat(dto);
+
+		socket.emit('chat-created', chatId);
 	}
 
 	@SubscribeMessage('enter-chat')
