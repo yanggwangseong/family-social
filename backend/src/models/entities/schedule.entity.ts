@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
@@ -19,19 +20,25 @@ import { TourismPeriodEntity } from './tourism-period.entity';
 export class ScheduleEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly groupId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly memberId!: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -47,7 +54,9 @@ export class ScheduleEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiPropertyOptional()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -57,12 +66,16 @@ export class ScheduleEntity extends DefaultEntity {
 
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	startPeriod!: Date;
 
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	endPeriod!: Date;
 
 	@ManyToOne(() => GroupEntity, (gr) => gr.schedulesByGroup)

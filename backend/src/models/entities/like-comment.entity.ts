@@ -8,6 +8,8 @@ import {
 	PrimaryColumn,
 } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+
 import { CommentEntity } from './comment.entity';
 import { MemberEntity } from './member.entity';
 
@@ -17,7 +19,9 @@ export class LikeCommentEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly memberId!: string;
 
@@ -25,7 +29,9 @@ export class LikeCommentEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly commentId!: string;
 

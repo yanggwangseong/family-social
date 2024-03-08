@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { CommentEntity } from './comment.entity';
@@ -27,7 +28,9 @@ import { ScheduleEntity } from './schedule.entity';
 export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -36,7 +39,9 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 60, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsEmail()
 	@MaxLength(50)
 	email!: string;
@@ -53,7 +58,9 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -82,7 +89,9 @@ export class MemberEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -99,7 +108,9 @@ export class MemberEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})

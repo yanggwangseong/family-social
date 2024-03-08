@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
@@ -20,7 +22,9 @@ export class FamEntity extends DefaultEntity {
 	role!: roleType;
 
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsBoolean()
 	@Column({
 		type: 'boolean',
@@ -31,13 +35,17 @@ export class FamEntity extends DefaultEntity {
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly memberId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly groupId!: string;
 

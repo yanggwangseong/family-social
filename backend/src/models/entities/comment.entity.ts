@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
@@ -15,7 +16,9 @@ export class CommentEntity extends DefaultEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -39,13 +42,17 @@ export class CommentEntity extends DefaultEntity {
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly feedId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly memberId!: string;
 

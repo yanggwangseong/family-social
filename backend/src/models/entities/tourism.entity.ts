@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
@@ -13,18 +14,24 @@ export class TourismEntity extends DefaultEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly contentId!: string;
 
 	@Column({ type: 'time', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	stayTime!: Date;
 
 	@Column('varchar', { length: 2048 })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -32,7 +39,9 @@ export class TourismEntity extends DefaultEntity {
 
 	@Column('varchar', { length: 120 })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -43,13 +52,17 @@ export class TourismEntity extends DefaultEntity {
 	 */
 	@Column('numeric', { name: 'position', default: 0 })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsNumber()
 	position!: number;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsUUID()
 	public readonly periodId!: string;
 
