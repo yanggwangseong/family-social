@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
@@ -25,7 +26,9 @@ export class FamEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsBoolean()
+	@IsBoolean({
+		message: booleanValidationMessage,
+	})
 	@Column({
 		type: 'boolean',
 		nullable: false,
