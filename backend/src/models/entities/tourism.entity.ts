@@ -3,6 +3,7 @@ import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { numberValidationMessage } from '@/common/validation-message/number-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
@@ -55,7 +56,12 @@ export class TourismEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsNumber()
+	@IsNumber(
+		{},
+		{
+			message: numberValidationMessage,
+		},
+	)
 	position!: number;
 
 	@Column({ type: 'uuid', nullable: false })
