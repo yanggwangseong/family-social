@@ -33,6 +33,7 @@ async function bootstrap() {
 		new ValidationPipe({
 			transform: true,
 			stopAtFirstError: true,
+
 			exceptionFactory: (validationErrors: ValidationError[] = []) => {
 				const { constraints } = validationErrors[0];
 

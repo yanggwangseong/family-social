@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { FeedEntity } from './feed.entity';
 
@@ -23,7 +25,9 @@ export class FeedMediaEntity extends DefaultEntity {
 	@Column('varchar', { length: 2048 })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	url!: string;
 
 	/**

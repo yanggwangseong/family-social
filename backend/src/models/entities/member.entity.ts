@@ -10,6 +10,8 @@ import {
 } from 'class-validator';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
@@ -26,7 +28,9 @@ export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MaxLength(30)
 	username!: string;
 
@@ -39,7 +43,9 @@ export class MemberEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MaxLength(60)
 	@MinLength(10)
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
@@ -48,14 +54,18 @@ export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MaxLength(30)
 	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MaxLength(10)
 	@MinLength(10)
 	signupVerifyToken?: string;
@@ -73,7 +83,9 @@ export class MemberEntity extends DefaultEntity {
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MinLength(4)
 	@MaxLength(2048)
 	profileImage!: string;
@@ -88,7 +100,9 @@ export class MemberEntity extends DefaultEntity {
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MinLength(4)
 	@MaxLength(2048)
 	coverImage!: string;

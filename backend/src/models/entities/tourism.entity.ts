@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
 
@@ -23,13 +25,17 @@ export class TourismEntity extends DefaultEntity {
 	@Column('varchar', { length: 2048 })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	tourismImage!: string;
 
 	@Column('varchar', { length: 120 })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	title!: string;
 
 	/**

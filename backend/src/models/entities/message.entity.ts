@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+
 import { ChatEntity } from './chat.entity';
 import { DefaultEntity } from './common/default.entity';
 import { MemberEntity } from './member.entity';
@@ -24,7 +26,9 @@ export class MessageEntity extends DefaultEntity {
 		nullable: false,
 	})
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@Column({ type: 'text', nullable: false })
 	message!: string;
 

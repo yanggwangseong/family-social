@@ -8,6 +8,8 @@ import {
 } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
@@ -30,7 +32,9 @@ export class ScheduleEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MaxLength(30)
 	scheduleName!: string;
 
@@ -44,7 +48,9 @@ export class ScheduleEntity extends DefaultEntity {
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiPropertyOptional()
 	@IsNotEmpty()
-	@IsString()
+	@IsString({
+		message: stringValidationMessage,
+	})
 	@MinLength(4)
 	@MaxLength(2048)
 	scheduleImage?: string;
