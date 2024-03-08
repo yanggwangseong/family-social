@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { CommentEntity } from './comment.entity';
@@ -19,6 +19,7 @@ export class FeedEntity extends DefaultEntity {
 	@IsString()
 	contents!: string;
 
+	@IsBoolean()
 	@Column({ type: 'boolean', nullable: false, default: true })
 	@ApiProperty({
 		nullable: false,
