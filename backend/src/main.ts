@@ -33,6 +33,15 @@ async function bootstrap() {
 		new ValidationPipe({
 			transform: true,
 			stopAtFirstError: true,
+			exceptionFactory: (validationErrors: ValidationError[] = []) => {
+				const { constraints } = validationErrors[0];
+
+				if (!constraints) return validationErrors;
+
+				const [firstKey] = Object.keys(constraints);
+
+				return BadRequestServiceException(constraints[firstKey]);
+			},
 		}),
 	);
 
