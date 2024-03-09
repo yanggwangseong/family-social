@@ -19,6 +19,12 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
+import {
+	ENV_JWT_ACCESS_TOKEN_EXPIRATION,
+	ENV_JWT_ACCESS_TOKEN_SECRET,
+	ENV_JWT_REFRESH_TOKEN_EXPIRATION,
+	ENV_JWT_REFRESH_TOKEN_SECRET,
+} from '@/constants/env-keys.const';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
@@ -220,9 +226,9 @@ export class AuthService {
 					username: name,
 				},
 				{
-					secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+					secret: this.configService.get<string>(ENV_JWT_ACCESS_TOKEN_SECRET),
 					expiresIn: this.configService.get<string>(
-						'JWT_ACCESS_TOKEN_EXPIRATION',
+						ENV_JWT_ACCESS_TOKEN_EXPIRATION,
 					),
 				},
 			),
@@ -232,9 +238,9 @@ export class AuthService {
 					username: name,
 				},
 				{
-					secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+					secret: this.configService.get<string>(ENV_JWT_REFRESH_TOKEN_SECRET),
 					expiresIn: this.configService.get<string>(
-						'JWT_REFRESH_TOKEN_EXPIRATION',
+						ENV_JWT_REFRESH_TOKEN_EXPIRATION,
 					),
 				},
 			),
@@ -299,7 +305,7 @@ export class AuthService {
 	verifyToken(token: string) {
 		try {
 			return this.jwtService.verify(token, {
-				secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+				secret: this.configService.get<string>(ENV_JWT_ACCESS_TOKEN_SECRET),
 			});
 		} catch (error) {
 			throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);
