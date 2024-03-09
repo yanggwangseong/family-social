@@ -4,6 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+import { ENV_JWT_REFRESH_TOKEN_SECRET } from '@/constants/env-keys.const';
 import { TokenPayload } from '@/types/token';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
 				RefreshTokenStrategy.extractJWT,
 				ExtractJwt.fromAuthHeaderAsBearerToken(),
 			]),
-			secretOrKey: configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+			secretOrKey: configService.get<string>(ENV_JWT_REFRESH_TOKEN_SECRET),
 			passReqToCallback: true,
 		});
 	}

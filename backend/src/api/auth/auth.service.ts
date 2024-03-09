@@ -19,6 +19,15 @@ import {
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 } from '@/constants/business-error';
+import {
+	ENV_ACCESS_TOKEN_COOKIE_NAME,
+	ENV_COOKIE_MAX_AGE,
+	ENV_JWT_ACCESS_TOKEN_EXPIRATION,
+	ENV_JWT_ACCESS_TOKEN_SECRET,
+	ENV_JWT_REFRESH_TOKEN_EXPIRATION,
+	ENV_JWT_REFRESH_TOKEN_SECRET,
+	ENV_REFRESH_TOKEN_COOKIE_NAME,
+} from '@/constants/env-keys.const';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
@@ -65,10 +74,10 @@ export class AuthService {
 		sub: string,
 	): Promise<void> {
 		const accessTokenCookieName = this.configService.get<string>(
-			'ACCESS_TOKEN_COOKIE_NAME',
+			ENV_ACCESS_TOKEN_COOKIE_NAME,
 		);
 		const refreshTokenCookieName = this.configService.get<string>(
-			'REFRESH_TOKEN_COOKIE_NAME',
+			ENV_REFRESH_TOKEN_COOKIE_NAME,
 		);
 
 		res.clearCookie(accessTokenCookieName!);
@@ -220,9 +229,9 @@ export class AuthService {
 					username: name,
 				},
 				{
-					secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+					secret: this.configService.get<string>(ENV_JWT_ACCESS_TOKEN_SECRET),
 					expiresIn: this.configService.get<string>(
-						'JWT_ACCESS_TOKEN_EXPIRATION',
+						ENV_JWT_ACCESS_TOKEN_EXPIRATION,
 					),
 				},
 			),
@@ -232,9 +241,9 @@ export class AuthService {
 					username: name,
 				},
 				{
-					secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+					secret: this.configService.get<string>(ENV_JWT_REFRESH_TOKEN_SECRET),
 					expiresIn: this.configService.get<string>(
-						'JWT_REFRESH_TOKEN_EXPIRATION',
+						ENV_JWT_REFRESH_TOKEN_EXPIRATION,
 					),
 				},
 			),
@@ -258,10 +267,10 @@ export class AuthService {
 
 	ResponseTokenInCookie({ type, token, res }: ITokenInCookieArgs): void {
 		const accessTokenCookieName = this.configService.get<string>(
-			'ACCESS_TOKEN_COOKIE_NAME',
+			ENV_ACCESS_TOKEN_COOKIE_NAME,
 		);
 		const refreshTokenCookieName = this.configService.get<string>(
-			'REFRESH_TOKEN_COOKIE_NAME',
+			ENV_REFRESH_TOKEN_COOKIE_NAME,
 		);
 
 		const tokenName =
@@ -269,7 +278,7 @@ export class AuthService {
 				? refreshTokenCookieName!
 				: accessTokenCookieName!;
 		let cookieOptions: CookieOptions = {
-			maxAge: Number(this.configService.get<number>('COOKIE_MAX_AGE')),
+			maxAge: Number(this.configService.get<number>(ENV_COOKIE_MAX_AGE)),
 		};
 
 		if (type === 'refreshToken') {
@@ -299,7 +308,7 @@ export class AuthService {
 	verifyToken(token: string) {
 		try {
 			return this.jwtService.verify(token, {
-				secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+				secret: this.configService.get<string>(ENV_JWT_ACCESS_TOKEN_SECRET),
 			});
 		} catch (error) {
 			throw UnAuthOrizedException(ERROR_TOKEN_MISMATCH);

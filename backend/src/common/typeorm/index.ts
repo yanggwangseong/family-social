@@ -1,5 +1,15 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import {
+	ENV_DB_DATABASE,
+	ENV_DB_HOST,
+	ENV_DB_PASSWORD,
+	ENV_DB_PORT,
+	ENV_DB_SYNCHRONIZE,
+	ENV_DB_TYPE,
+	ENV_DB_USERNAME,
+} from '@/constants/env-keys.const';
+
 export const TypeOrmModuleOptions = {
 	imports: [ConfigModule],
 	inject: [ConfigService],
@@ -7,14 +17,14 @@ export const TypeOrmModuleOptions = {
 		const NODE_ENV = configService.get('NODE_ENV');
 
 		const option = {
-			type: configService.get('DB_TYPE'),
-			host: configService.get('DB_HOST'),
-			port: Number(configService.get<number>('DB_PORT')),
-			username: configService.get('DB_USERNAME'),
-			database: configService.get('DB_DATABASE'),
-			password: configService.get('DB_PASSWORD'),
+			type: configService.get(ENV_DB_TYPE),
+			host: configService.get(ENV_DB_HOST),
+			port: Number(configService.get<number>(ENV_DB_PORT)),
+			username: configService.get(ENV_DB_USERNAME),
+			database: configService.get(ENV_DB_DATABASE),
+			password: configService.get(ENV_DB_PASSWORD),
 			entities: [__dirname + '/../../**/*.entity.{js,ts}'],
-			synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
+			synchronize: configService.get<boolean>(ENV_DB_SYNCHRONIZE),
 			ssl: NODE_ENV === 'development' ? '' : { rejectUnauthorized: false },
 			...(NODE_ENV === 'development'
 				? { retryAttempts: 10, logging: true }
