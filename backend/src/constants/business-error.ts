@@ -63,3 +63,6 @@ export const ERROR_NO_PERMISSTION_TO_SCHEDULE =
 export const ERROR_SCHEDULE_NOT_FOUND = '여행 일정을 찾을 수 없습니다' as const;
 
 export const ERROR_CHAT_NOT_FOUND = '존재하지 않는 chat 입니다' as const;
+
+export const ERROR_TOKEN_EXPIRED = '토큰이 만료되었습니다' as const;
+export const ERROR_INVALID_TOKEN = '토큰이 유효하지 않습니다' as const;
