@@ -6,3 +6,9 @@ export const ENV_DB_USERNAME = 'DB_USERNAME' as const;
 export const ENV_DB_PASSWORD = 'DB_PASSWORD' as const;
 export const ENV_DB_DATABASE = 'DB_DATABASE' as const;
 export const ENV_DB_SYNCHRONIZE = 'DB_SYNCHRONIZE' as const;
+
+// mail
+export const ENV_MAIL_HOST = 'MAIL_HOST' as const;
+export const ENV_MAIL_PORT = 'MAIL_PORT' as const;
+export const ENV_MAIL_USER = 'MAIL_USER' as const;
+export const ENV_MAIL_PWD = 'MAIL_PWD' as const;
