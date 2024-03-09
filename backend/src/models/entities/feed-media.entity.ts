@@ -2,6 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { numberValidationMessage } from '@/common/validation-message/number-validation-message';
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { FeedEntity } from './feed.entity';
 
@@ -9,8 +14,10 @@ import { FeedEntity } from './feed.entity';
 export class FeedMediaEntity extends DefaultEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly feedId!: string;
 
 	/**
@@ -22,8 +29,12 @@ export class FeedMediaEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048 })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
 	url!: string;
 
 	/**
@@ -31,8 +42,15 @@ export class FeedMediaEntity extends DefaultEntity {
 	 */
 	@Column('numeric', { name: 'position', default: 0 })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsNumber()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsNumber(
+		{},
+		{
+			message: numberValidationMessage,
+		},
+	)
 	position!: number;
 
 	@ManyToOne(() => FeedEntity, (feed) => feed.medias)

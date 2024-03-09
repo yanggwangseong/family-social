@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
+
 import { DefaultEntity } from './common/default.entity';
 import { ScheduleEntity } from './schedule.entity';
 import { TourismEntity } from './tourism.entity';
@@ -10,23 +13,31 @@ import { TourismEntity } from './tourism.entity';
 export class TourismPeriodEntity extends DefaultEntity {
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	period!: Date;
 
 	@Column({ type: 'time', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	startTime!: Date;
 
 	@Column({ type: 'time', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	endTime!: Date;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly scheduleId!: string;
 
 	@ManyToOne(() => ScheduleEntity, (sch) => sch.schedulePeriods)
