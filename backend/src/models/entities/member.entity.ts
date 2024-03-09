@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
+import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
@@ -34,7 +35,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(30)
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	username!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: false })
@@ -43,7 +44,7 @@ export class MemberEntity extends DefaultEntity {
 		message: notEmptyValidationMessage,
 	})
 	@IsEmail()
-	@MaxLength(50)
+	@MaxLength(50, { message: maxLengthValidationMessage })
 	email!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
@@ -51,7 +52,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(60)
+	@MaxLength(60, { message: maxLengthValidationMessage })
 	@MinLength(10)
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
 	password?: string;
@@ -64,7 +65,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(30)
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
@@ -73,7 +74,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(10)
+	@MaxLength(10, { message: maxLengthValidationMessage })
 	@MinLength(10)
 	signupVerifyToken?: string;
 
@@ -96,7 +97,7 @@ export class MemberEntity extends DefaultEntity {
 		message: stringValidationMessage,
 	})
 	@MinLength(4)
-	@MaxLength(2048)
+	@MaxLength(2048, { message: maxLengthValidationMessage })
 	profileImage!: string;
 
 	/**
@@ -115,19 +116,19 @@ export class MemberEntity extends DefaultEntity {
 		message: stringValidationMessage,
 	})
 	@MinLength(4)
-	@MaxLength(2048)
+	@MaxLength(2048, { message: maxLengthValidationMessage })
 	coverImage!: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@MaxLength(30)
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	socialType?: 'kakao' | 'google' | 'naver';
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@MaxLength(60)
+	@MaxLength(60, { message: maxLengthValidationMessage })
 	refreshToken?: string;
 
 	@OneToMany(() => FamEntity, (fa) => fa.member)

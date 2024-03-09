@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
+import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
@@ -23,7 +24,7 @@ export class GroupEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(60)
+	@MaxLength(60, { message: maxLengthValidationMessage })
 	groupName!: string;
 
 	@Column({ type: 'text', nullable: true })
@@ -35,7 +36,7 @@ export class GroupEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(1000)
+	@MaxLength(1000, { message: maxLengthValidationMessage })
 	groupDescription?: string;
 
 	@OneToMany(() => FamEntity, (fa) => fa.group)

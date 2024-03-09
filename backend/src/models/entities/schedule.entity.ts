@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
@@ -43,7 +44,7 @@ export class ScheduleEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(30)
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	scheduleName!: string;
 
 	/**
@@ -62,7 +63,7 @@ export class ScheduleEntity extends DefaultEntity {
 		message: stringValidationMessage,
 	})
 	@MinLength(4)
-	@MaxLength(2048)
+	@MaxLength(2048, { message: maxLengthValidationMessage })
 	scheduleImage?: string;
 
 	@Column({ type: 'date', nullable: false })
