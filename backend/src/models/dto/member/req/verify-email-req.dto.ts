@@ -1,7 +1,7 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
-import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 import { MemberEntity } from '@/models/entities/member.entity';
@@ -19,7 +19,6 @@ export class VerifyEmailReqDto extends PickType(MemberEntity, [
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@MaxLength(10, { message: maxLengthValidationMessage })
-	@MinLength(10)
+	@Length(10, 10, { message: lengthValidationMessage })
 	signupVerifyToken!: string;
 }

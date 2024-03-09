@@ -5,10 +5,10 @@ import {
 	IsUUID,
 	Length,
 	MaxLength,
-	MinLength,
 } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
@@ -18,7 +18,6 @@ import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
-import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 
 @Entity({ name: 'fam_schedule' })
 export class ScheduleEntity extends DefaultEntity {

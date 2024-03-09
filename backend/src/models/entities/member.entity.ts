@@ -7,10 +7,10 @@ import {
 	Length,
 	Matches,
 	MaxLength,
-	MinLength,
 } from 'class-validator';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
@@ -24,7 +24,6 @@ import { LikeFeedEntity } from './like-feed.entity';
 import { MemberChatEntity } from './member-chat.entity';
 import { MessageEntity } from './message.entity';
 import { ScheduleEntity } from './schedule.entity';
-import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -75,8 +74,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(10, { message: maxLengthValidationMessage })
-	@MinLength(10)
+	@Length(10, 10, { message: lengthValidationMessage })
 	signupVerifyToken?: string;
 
 	@Column({ default: false, nullable: false }) // 최초 로그인 여부를 나타내는 플래그
