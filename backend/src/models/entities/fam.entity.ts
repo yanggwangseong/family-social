@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
@@ -41,7 +42,7 @@ export class FamEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
@@ -49,7 +50,7 @@ export class FamEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly groupId!: string;
 
 	@ManyToOne(() => MemberEntity, (member) => member.memberGroups)

@@ -5,6 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
@@ -41,7 +42,7 @@ export class FeedEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly groupId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
@@ -49,7 +50,7 @@ export class FeedEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@OneToMany(() => LikeFeedEntity, (lf) => lf.feed)

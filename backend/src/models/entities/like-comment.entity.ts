@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { CommentEntity } from './comment.entity';
 import { MemberEntity } from './member.entity';
@@ -22,7 +23,7 @@ export class LikeCommentEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@PrimaryColumn('uuid')
@@ -32,7 +33,7 @@ export class LikeCommentEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly commentId!: string;
 
 	@ManyToOne(() => MemberEntity, (member) => member.memberLikesComments)

@@ -3,6 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
 import { ScheduleEntity } from './schedule.entity';
@@ -36,7 +37,7 @@ export class TourismPeriodEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID()
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly scheduleId!: string;
 
 	@ManyToOne(() => ScheduleEntity, (sch) => sch.schedulePeriods)
