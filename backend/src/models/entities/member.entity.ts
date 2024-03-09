@@ -4,6 +4,7 @@ import {
 	IsNotEmpty,
 	IsOptional,
 	IsString,
+	Length,
 	Matches,
 	MaxLength,
 	MinLength,
@@ -23,6 +24,7 @@ import { LikeFeedEntity } from './like-feed.entity';
 import { MemberChatEntity } from './member-chat.entity';
 import { MessageEntity } from './message.entity';
 import { ScheduleEntity } from './schedule.entity';
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
@@ -52,8 +54,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(60, { message: maxLengthValidationMessage })
-	@MinLength(10)
+	@Length(10, 60, { message: lengthValidationMessage })
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
 	password?: string;
 
@@ -96,8 +97,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MinLength(4)
-	@MaxLength(2048, { message: maxLengthValidationMessage })
+	@Length(4, 2048, { message: lengthValidationMessage })
 	profileImage!: string;
 
 	/**
@@ -115,8 +115,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MinLength(4)
-	@MaxLength(2048, { message: maxLengthValidationMessage })
+	@Length(4, 2048, { message: lengthValidationMessage })
 	coverImage!: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: true })

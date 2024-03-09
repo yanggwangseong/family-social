@@ -3,6 +3,7 @@ import {
 	IsNotEmpty,
 	IsString,
 	IsUUID,
+	Length,
 	MaxLength,
 	MinLength,
 } from 'class-validator';
@@ -17,6 +18,7 @@ import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 
 @Entity({ name: 'fam_schedule' })
 export class ScheduleEntity extends DefaultEntity {
@@ -62,8 +64,7 @@ export class ScheduleEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MinLength(4)
-	@MaxLength(2048, { message: maxLengthValidationMessage })
+	@Length(4, 2048, { message: lengthValidationMessage })
 	scheduleImage?: string;
 
 	@Column({ type: 'date', nullable: false })
