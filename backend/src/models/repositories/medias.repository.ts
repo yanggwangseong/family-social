@@ -42,10 +42,11 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 	async updateFeedMedias(
 		media: MediaUpdateReqDto[],
 		feedId: string,
+		qr: QueryRunner,
 	): Promise<[boolean, void]> {
 		const result = Promise.all([
-			await this.deleteFeedMediasByFeedId(feedId),
-			await this.createFeedMedias(media, feedId),
+			await this.deleteFeedMediasByFeedId(feedId, qr),
+			await this.createFeedMedias(media, feedId, qr),
 		]);
 
 		return result;
@@ -53,16 +54,11 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 
 	async deleteFeedMediasByFeedId(
 		feedId: string,
-		manager?: EntityManager,
+		qr: QueryRunner,
 	): Promise<boolean> {
-		if (manager) {
-			const { affected } = await manager.delete(FeedMediaEntity, {
-				feedId: feedId,
-			});
-			return !!affected;
-		}
+		const mediasRepository = this.getMediasRepository(qr);
 
-		const { affected } = await this.delete({
+		const { affected } = await mediasRepository.delete({
 			feedId: feedId,
 		});
 

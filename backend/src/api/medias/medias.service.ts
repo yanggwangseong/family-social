@@ -20,8 +20,9 @@ export class MediasService {
 	async updateFeedMedias(
 		media: MediaUpdateReqDto[],
 		feedId: string,
+		qr: QueryRunner,
 	): Promise<[boolean, void]> {
-		return this.mediasRepository.updateFeedMedias(media, feedId);
+		return this.mediasRepository.updateFeedMedias(media, feedId, qr);
 	}
 
 	async deleteFeedMediasByFeedId(

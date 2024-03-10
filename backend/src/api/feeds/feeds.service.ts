@@ -111,44 +111,42 @@ export class FeedsService {
 	}
 
 	async createFeed(
-		createFeedArgs: ICreateFeedArgs,
+		{ contents, isPublic, groupId, memberId, medias }: ICreateFeedArgs,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feed = await this.feedsRepository.createFeed(
 			{
-				...createFeedArgs,
+				contents,
+				isPublic,
+				groupId,
+				memberId,
 			},
 			qr,
 		);
 
-		await this.mediasService.createFeedMedias(
-			createFeedArgs.medias,
-			feed.id,
-			qr,
-		);
+		await this.mediasService.createFeedMedias(medias, feed.id, qr);
 
 		return feed;
 	}
 
-	async updateFeed({
-		feedId,
-		contents,
-		isPublic,
-		groupId,
-		medias,
-	}: IUpdateFeedArgs) {
+	async updateFeed(
+		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
+		qr: QueryRunner,
+	) {
 		// 피드가 있는지 확인.
 		await this.findFeedByIdOrThrow(feedId);
 
-		//[TODO] transaction 추가
-		const feed = await this.feedsRepository.updateFeed({
-			feedId,
-			contents,
-			isPublic,
-			groupId,
-		});
+		const feed = await this.feedsRepository.updateFeed(
+			{
+				feedId,
+				contents,
+				isPublic,
+				groupId,
+			},
+			qr,
+		);
 
-		await this.mediasService.updateFeedMedias(medias, feedId);
+		await this.mediasService.updateFeedMedias(medias, feedId, qr);
 
 		return feed;
 	}

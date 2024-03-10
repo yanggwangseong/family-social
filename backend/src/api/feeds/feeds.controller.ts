@@ -145,13 +145,16 @@ export class FeedsController {
 		@Body() dto: FeedUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.updateFeed({
-			contents: dto.contents,
-			isPublic: dto.isPublic,
-			groupId: dto.groupId,
-			feedId: feedId,
-			medias: dto.medias,
-		});
+		await this.feedsService.updateFeed(
+			{
+				contents: dto.contents,
+				isPublic: dto.isPublic,
+				groupId: dto.groupId,
+				feedId: feedId,
+				medias: dto.medias,
+			},
+			qr,
+		);
 	}
 
 	/**

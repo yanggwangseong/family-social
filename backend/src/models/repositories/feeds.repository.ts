@@ -166,13 +166,13 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		return this.findOrFailFeedById({ feedId: id });
 	}
 
-	async updateFeed({
-		feedId,
-		contents,
-		isPublic,
-		groupId,
-	}: Omit<IUpdateFeedArgs, 'medias'>): Promise<FeedByIdResDto> {
-		await this.update(
+	async updateFeed(
+		{ feedId, contents, isPublic, groupId }: Omit<IUpdateFeedArgs, 'medias'>,
+		qr: QueryRunner,
+	): Promise<FeedByIdResDto> {
+		const feedsRepository = this.getFeedsRepository(qr);
+
+		await feedsRepository.update(
 			{ id: feedId },
 			{ contents: contents, isPublic: isPublic, groupId: groupId },
 		);
