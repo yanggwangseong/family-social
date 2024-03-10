@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -110,22 +110,22 @@ export class FeedsService {
 		return !like;
 	}
 
-	async createFeed({
-		contents,
-		isPublic,
-		groupId,
-		memberId,
-		medias,
-	}: ICreateFeedArgs): Promise<FeedByIdResDto> {
-		//[TODO] transaction 추가
-		const feed = await this.feedsRepository.createFeed({
-			contents,
-			isPublic,
-			groupId,
-			memberId,
-		});
+	async createFeed(
+		createFeedArgs: ICreateFeedArgs,
+		qr?: QueryRunner,
+	): Promise<FeedByIdResDto> {
+		const feed = await this.feedsRepository.createFeed(
+			{
+				...createFeedArgs,
+			},
+			qr,
+		);
 
-		await this.mediasService.createFeedMedias(medias, feed.id);
+		await this.mediasService.createFeedMedias(
+			createFeedArgs.medias,
+			feed.id,
+			qr,
+		);
 
 		return feed;
 	}

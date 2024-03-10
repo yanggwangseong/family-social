@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FeedEntity } from '@/models/entities/feed.entity';
@@ -21,6 +21,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		private readonly repository: Repository<FeedEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getFeedsRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<FeedEntity>(FeedEntity)
+			: this.repository;
 	}
 
 	async findFeedById(feedId: string): Promise<FeedByIdResDto | null> {
@@ -141,13 +147,13 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		return feed;
 	}
 
-	async createFeed({
-		contents,
-		isPublic,
-		groupId,
-		memberId,
-	}: Omit<ICreateFeedArgs, 'medias'>): Promise<FeedByIdResDto> {
-		const insertResult = await this.repository.insert({
+	async createFeed(
+		{ contents, isPublic, groupId, memberId }: Omit<ICreateFeedArgs, 'medias'>,
+		qr?: QueryRunner,
+	): Promise<FeedByIdResDto> {
+		const feedsRepository = this.getFeedsRepository(qr);
+
+		const insertResult = await feedsRepository.insert({
 			id: uuidv4(),
 			contents: contents,
 			isPublic: isPublic,

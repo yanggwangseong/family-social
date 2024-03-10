@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
@@ -16,12 +16,21 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	getMediasRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<FeedMediaEntity>(FeedMediaEntity)
+			: this.repository;
+	}
+
 	async createFeedMedias(
 		media: MediaCreateReqDto[],
 		feedId: string,
+		qr?: QueryRunner,
 	): Promise<void> {
+		const mediasRepository = this.getMediasRepository(qr);
+
 		media.map(async (media: MediaCreateReqDto) => {
-			await this.repository.insert({
+			await mediasRepository.insert({
 				id: uuidv4(),
 				url: media.url,
 				position: media.position,
