@@ -190,7 +190,7 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.deleteFeed(feedId);
+		await this.feedsService.deleteFeed(feedId, qr);
 	}
 
 	@Post('/test')

@@ -151,41 +151,24 @@ export class FeedsService {
 		return feed;
 	}
 
-	async deleteFeed(feedId: string) {
+	async deleteFeed(feedId: string, qr: QueryRunner) {
 		// 피드가 있는지 확인.
 		await this.findFeedByIdOrThrow(feedId);
 
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
+		const [mediaStatus, feedStatus] = await Promise.all([
+			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
+			await this.feedsRepository.deleteFeed(feedId, qr),
+		]);
 
-		try {
-			const [mediaStatus, feedStatus] = await Promise.all([
-				await this.mediasService.deleteFeedMediasByFeedId(
-					feedId,
-					queryRunner.manager,
-				),
-				await this.feedsRepository.deleteFeed(feedId, queryRunner.manager),
-			]);
+		if (!mediaStatus || !feedStatus)
+			throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
-			if (!mediaStatus || !feedStatus)
-				throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
-
-			const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-			medias.map(async (media) => {
-				const fileName = extractFilePathFromUrl(media.url, 'feed');
-				if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
-				await DeleteS3Media(fileName);
-			});
-
-			await queryRunner.commitTransaction();
-			//s3에 미디어 파일들 삭제.
-		} catch (error) {
-			await queryRunner.rollbackTransaction();
-			throw error;
-		} finally {
-			await queryRunner.release();
-		}
+		const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
+		medias.map(async (media) => {
+			const fileName = extractFilePathFromUrl(media.url, 'feed');
+			if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
+			await DeleteS3Media(fileName);
+		});
 	}
 
 	async findFeedByIdOrThrow(feedId: string): Promise<FeedByIdResDto> {
