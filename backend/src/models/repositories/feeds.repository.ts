@@ -129,12 +129,13 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		};
 	}
 
-	async findOrFailFeedById({
-		feedId,
-	}: {
-		feedId: string;
-	}): Promise<FeedByIdResDto> {
-		const feed = await this.repository.findOneOrFail({
+	async findOrFailFeedById(
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<FeedByIdResDto> {
+		const feedsRepository = this.getFeedsRepository(qr);
+
+		const feed = await feedsRepository.findOneOrFail({
 			where: {
 				id: feedId,
 			},
@@ -163,7 +164,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailFeedById({ feedId: id });
+		return this.findOrFailFeedById(id, qr);
 	}
 
 	async updateFeed(
@@ -177,7 +178,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			{ contents: contents, isPublic: isPublic, groupId: groupId },
 		);
 
-		return this.findOrFailFeedById({ feedId: feedId });
+		return this.findOrFailFeedById(feedId, qr);
 	}
 
 	async deleteFeed(feedId: string, qr?: QueryRunner) {
