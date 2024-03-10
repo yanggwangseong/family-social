@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { QueryRunner } from 'typeorm';
 
+import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateMemberSwagger,
 	LoginMemberSwagger,
@@ -19,6 +21,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
@@ -76,8 +79,12 @@ export class AuthController {
 	 * @returns 유저이름
 	 */
 	@CreateMemberSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Post('sign-up')
-	async createMember(@Body() dto: MemberCreateReqDto) {
+	async createMember(
+		@Body() dto: MemberCreateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
 		return await this.authService.createMember(dto);
 	}
 

@@ -14,7 +14,9 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { QueryRunner } from 'typeorm';
 
+import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
 	DeleteCommentSwagger,
@@ -34,6 +36,7 @@ import { BadRequestServiceException } from '@/common/exception/service.exception
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -100,10 +103,12 @@ export class FeedsController {
 	 * @returns 피드id, 피드 공개/비공개
 	 */
 	@CreateFeedSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async createFeed(
 		@Body() dto: FeedCreateReqDto,
 		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		const feed = await this.feedsService.createFeed({
 			contents: dto.contents,
@@ -133,10 +138,12 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@UpdateFeedSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Put(':feedId')
 	async updateFeed(
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Body() dto: FeedUpdateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		await this.feedsService.updateFeed({
 			contents: dto.contents,
@@ -174,8 +181,12 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@DeleteFeedSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Delete(':feedId')
-	async deleteFeed(@Param('feedId', ParseUUIDPipe) feedId: string) {
+	async deleteFeed(
+		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
 		await this.feedsService.deleteFeed(feedId);
 	}
 

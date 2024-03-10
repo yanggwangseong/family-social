@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { QueryRunner } from 'typeorm';
+import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	GetMemberChatsSwagger,
 	GetMessagesByChatIdSwagger,
@@ -20,6 +22,7 @@ import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { ERROR_CHAT_NOT_FOUND } from '@/constants/business-error';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
@@ -55,8 +58,12 @@ export class ChatsController {
 	 * @returns 생성된 채팅방 아이디
 	 */
 	@PostChatSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Post()
-	async postChat(@Body() dto: ChatCreateReqDto) {
+	async postChat(
+		@Body() dto: ChatCreateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
 		return await this.chatsService.createChat(dto);
 	}
 
