@@ -4,5 +4,8 @@
 		"type": "on-save",
 		"testFileOnly": true,
 		"coverage": true
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
 	}
 }
