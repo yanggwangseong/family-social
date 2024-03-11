@@ -110,13 +110,13 @@ export class FeedsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const feed = await this.feedsService.createFeed({
-			contents: dto.contents,
-			isPublic: dto.isPublic,
-			memberId: sub,
-			groupId: dto.groupId,
-			medias: dto.medias,
-		});
+		const feed = await this.feedsService.createFeed(
+			{
+				...dto,
+				memberId: sub,
+			},
+			qr,
+		);
 
 		return feed;
 	}
@@ -145,13 +145,16 @@ export class FeedsController {
 		@Body() dto: FeedUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.updateFeed({
-			contents: dto.contents,
-			isPublic: dto.isPublic,
-			groupId: dto.groupId,
-			feedId: feedId,
-			medias: dto.medias,
-		});
+		await this.feedsService.updateFeed(
+			{
+				contents: dto.contents,
+				isPublic: dto.isPublic,
+				groupId: dto.groupId,
+				feedId: feedId,
+				medias: dto.medias,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -187,7 +190,7 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.deleteFeed(feedId);
+		await this.feedsService.deleteFeed(feedId, qr);
 	}
 
 	@Post('/test')

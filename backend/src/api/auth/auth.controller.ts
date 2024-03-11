@@ -85,7 +85,7 @@ export class AuthController {
 		@Body() dto: MemberCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.authService.createMember(dto);
+		return await this.authService.createMember(dto, qr);
 	}
 
 	/**

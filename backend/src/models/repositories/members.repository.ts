@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Not, Repository } from 'typeorm';
+import { ILike, Not, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
@@ -21,6 +21,12 @@ export class MembersRepository extends Repository<MemberEntity> {
 		private readonly repository: Repository<MemberEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getMembersRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<MemberEntity>(MemberEntity)
+			: this.repository;
 	}
 
 	async updateRefreshToken({
@@ -144,8 +150,11 @@ export class MembersRepository extends Repository<MemberEntity> {
 	async createMember(
 		{ email, username, password, phoneNumber }: ICreateMemberArgs,
 		signupVerifyToken: string,
+		qr?: QueryRunner,
 	): Promise<MemberResDto | null> {
-		const insertResult = await this.repository.insert({
+		const membersRepository = this.getMembersRepository(qr);
+
+		const insertResult = await membersRepository.insert({
 			id: uuidv4(),
 			email: email,
 			username: username,

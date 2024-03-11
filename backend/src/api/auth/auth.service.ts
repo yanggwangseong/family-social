@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as bcrypt from 'bcryptjs';
 import { CookieOptions, Response } from 'express';
+import { QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -113,7 +114,10 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	async createMember(dto: ICreateMemberArgs): Promise<MemberResDto> {
+	async createMember(
+		dto: ICreateMemberArgs,
+		qr?: QueryRunner,
+	): Promise<MemberResDto> {
 		const member = await this.membersRepository.findMemberByEmail({
 			email: dto.email,
 		});
@@ -126,11 +130,12 @@ export class AuthService {
 				password: await this.EncryptHashData<string>(dto.password!),
 			},
 			await this.EncryptHashData<string>(signupVerifyToken),
+			qr,
 		);
 		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
 		//유저 생성 성공 후 email 인증코드 전송.
-		await this.sendSignUpEmailVerify(dto.email, signupVerifyToken);
+		await this.sendSignUpEmailVerify(dto.email, signupVerifyToken, qr);
 
 		return newMember;
 	}
@@ -155,6 +160,7 @@ export class AuthService {
 	private async sendSignUpEmailVerify(
 		email: string,
 		signupVerifyToken: string,
+		qr?: QueryRunner,
 	): Promise<void> {
 		try {
 			await this.mailerService.sendMail({

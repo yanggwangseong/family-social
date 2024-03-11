@@ -9,3 +9,9 @@ export interface IMembersBelongToGroupArgs {
 	page: number;
 	limit: number;
 }
+
+export interface ICreateGroupArgs {
+	memberId: string;
+	groupName: string;
+	groupDescription?: string;
+}

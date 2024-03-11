@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { ICreateTourismArgs } from '@/types/args/tour';
 
@@ -15,12 +15,22 @@ export class TourismRepository extends Repository<TourismEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async createTourism(tourism: ICreateTourismArgs[]) {
-		await this.repository.insert(tourism);
+	getTourismRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<TourismEntity>(TourismEntity)
+			: this.repository;
 	}
 
-	async deleteTourism(periodId: string) {
-		const { affected } = await this.delete({ periodId: periodId });
+	async createTourism(tourism: ICreateTourismArgs[], qr?: QueryRunner) {
+		const tourismRepository = this.getTourismRepository(qr);
+
+		await tourismRepository.insert(tourism);
+	}
+
+	async deleteTourism(periodId: string, qr?: QueryRunner) {
+		const tourismRepository = this.getTourismRepository(qr);
+
+		const { affected } = await tourismRepository.delete({ periodId: periodId });
 
 		return !!affected;
 	}

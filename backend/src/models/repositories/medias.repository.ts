@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
@@ -16,12 +16,21 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	getMediasRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<FeedMediaEntity>(FeedMediaEntity)
+			: this.repository;
+	}
+
 	async createFeedMedias(
 		media: MediaCreateReqDto[],
 		feedId: string,
+		qr?: QueryRunner,
 	): Promise<void> {
+		const mediasRepository = this.getMediasRepository(qr);
+
 		media.map(async (media: MediaCreateReqDto) => {
-			await this.repository.insert({
+			await mediasRepository.insert({
 				id: uuidv4(),
 				url: media.url,
 				position: media.position,
@@ -33,10 +42,11 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 	async updateFeedMedias(
 		media: MediaUpdateReqDto[],
 		feedId: string,
+		qr?: QueryRunner,
 	): Promise<[boolean, void]> {
 		const result = Promise.all([
-			await this.deleteFeedMediasByFeedId(feedId),
-			await this.createFeedMedias(media, feedId),
+			await this.deleteFeedMediasByFeedId(feedId, qr),
+			await this.createFeedMedias(media, feedId, qr),
 		]);
 
 		return result;
@@ -44,16 +54,11 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 
 	async deleteFeedMediasByFeedId(
 		feedId: string,
-		manager?: EntityManager,
+		qr?: QueryRunner,
 	): Promise<boolean> {
-		if (manager) {
-			const { affected } = await manager.delete(FeedMediaEntity, {
-				feedId: feedId,
-			});
-			return !!affected;
-		}
+		const mediasRepository = this.getMediasRepository(qr);
 
-		const { affected } = await this.delete({
+		const { affected } = await mediasRepository.delete({
 			feedId: feedId,
 		});
 

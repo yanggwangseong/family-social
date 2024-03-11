@@ -12,8 +12,8 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-
 import { QueryRunner } from 'typeorm';
+
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -99,11 +99,14 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.groupsService.createGroup({
-			memberId: sub,
-			groupName: dto.groupName,
-			groupDescription: dto.groupDescription,
-		});
+		return await this.groupsService.createGroup(
+			{
+				memberId: sub,
+				groupName: dto.groupName,
+				groupDescription: dto.groupDescription,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -149,10 +152,13 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.groupsService.deleteGroup({
-			groupId: groupId,
-			memberId: sub,
-		});
+		return await this.groupsService.deleteGroup(
+			{
+				groupId: groupId,
+				memberId: sub,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -370,11 +376,14 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		return await this.schedulesService.createToursSchedule({
-			memberId: sub,
-			groupId,
-			scheduleItem: dto,
-		});
+		return await this.schedulesService.createToursSchedule(
+			{
+				memberId: sub,
+				groupId,
+				scheduleItem: dto,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -410,12 +419,15 @@ export class GroupsController {
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
-		return await this.schedulesService.updateToursSchedule({
-			memberId: sub,
-			groupId,
-			scheduleId: scheduleId,
-			periods: dto,
-		});
+		return await this.schedulesService.updateToursSchedule(
+			{
+				memberId: sub,
+				groupId,
+				scheduleId: scheduleId,
+				periods: dto,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -449,6 +461,6 @@ export class GroupsController {
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
-		return await this.schedulesService.deleteToursSchedule(scheduleId);
+		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
 	}
 }

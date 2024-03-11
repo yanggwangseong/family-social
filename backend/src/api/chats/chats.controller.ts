@@ -9,8 +9,8 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-
 import { QueryRunner } from 'typeorm';
+
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	GetMemberChatsSwagger,
@@ -64,7 +64,7 @@ export class ChatsController {
 		@Body() dto: ChatCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.chatsService.createChat(dto);
+		return await this.chatsService.createChat(dto, qr);
 	}
 
 	/**

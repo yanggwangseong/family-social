@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
@@ -59,12 +60,13 @@ export class ChatsService {
 		};
 	}
 
-	async createChat(dto: ChatCreateReqDto) {
-		const chatId = await this.chatsRepository.createChat();
+	async createChat(dto: ChatCreateReqDto, qr?: QueryRunner) {
+		const chatId = await this.chatsRepository.createChat(qr);
 
 		await this.memberChatRepository.createMembersEnteredByChat(
 			chatId.id,
 			dto.memberIds,
+			qr,
 		);
 		return chatId;
 	}
