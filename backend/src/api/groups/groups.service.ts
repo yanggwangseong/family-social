@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -20,6 +21,7 @@ import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupsRepository } from '@/models/repositories/groups.repository';
 import {
+	ICreateGroupArgs,
 	IDeleteGroupArgs,
 	IMembersBelongToGroupArgs,
 } from '@/types/args/group';
@@ -53,32 +55,35 @@ export class GroupsService {
 	async getMemberBelongToGroups(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {
-		return await this.famsRepository.getMemberBelongToGroups(memberId);
+		return await this.famsRepository.getMemberBelongToGroups(memberId, qr);
 	}
 
-	async createGroup({
-		memberId,
-		groupName,
-		groupDescription,
-	}: {
-		memberId: string;
-		groupName: string;
-		groupDescription?: string;
-	}): Promise<GroupResDto> {
+	async createGroup(
+		createGroupArgs: ICreateGroupArgs,
+		qr?: QueryRunner,
+	): Promise<GroupResDto> {
+		const { memberId, groupName, groupDescription } = createGroupArgs;
+
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
-		const group = await this.groupsRepository.createGroup({
-			groupName,
-			groupDescription,
-		});
+		const group = await this.groupsRepository.createGroup(
+			{
+				groupName,
+				groupDescription,
+			},
+			qr,
+		);
 
-		await this.famsRepository.createFam({
-			memberId: memberId,
-			groupId: group.id,
-			role: 'main',
-			invitationAccepted: true,
-		});
+		await this.famsRepository.createFam(
+			{
+				memberId: memberId,
+				groupId: group.id,
+				role: 'main',
+				invitationAccepted: true,
+			},
+			qr,
+		);
 		return group;
 	}
 

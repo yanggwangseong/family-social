@@ -12,8 +12,8 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-
 import { QueryRunner } from 'typeorm';
+
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -99,11 +99,14 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.groupsService.createGroup({
-			memberId: sub,
-			groupName: dto.groupName,
-			groupDescription: dto.groupDescription,
-		});
+		return await this.groupsService.createGroup(
+			{
+				memberId: sub,
+				groupName: dto.groupName,
+				groupDescription: dto.groupDescription,
+			},
+			qr,
+		);
 	}
 
 	/**

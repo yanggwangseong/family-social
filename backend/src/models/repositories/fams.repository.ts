@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
@@ -23,6 +23,12 @@ export class FamsRepository extends Repository<FamEntity> {
 		private readonly repository: Repository<FamEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getFamsRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<FamEntity>(FamEntity)
+			: this.repository;
 	}
 
 	async getMemberListBelongToGroup({
@@ -164,8 +170,13 @@ export class FamsRepository extends Repository<FamEntity> {
 		return fam;
 	}
 
-	async findOrFailFamById({ famId }: { famId: string }): Promise<FamResDto> {
-		const fam = await this.repository.findOneOrFail({
+	async findOrFailFamById(
+		{ famId }: { famId: string },
+		qr?: QueryRunner,
+	): Promise<FamResDto> {
+		const famsRepository = this.getFamsRepository(qr);
+
+		const fam = await famsRepository.findOneOrFail({
 			where: {
 				id: famId,
 			},
@@ -178,23 +189,20 @@ export class FamsRepository extends Repository<FamEntity> {
 		return fam;
 	}
 
-	async createFam({
-		memberId,
-		groupId,
-		role,
-		invitationAccepted,
-	}: ICreateFamArgs): Promise<FamResDto> {
-		const insertResult = await this.repository.insert({
+	async createFam(
+		createFamArgs: ICreateFamArgs,
+		qr?: QueryRunner,
+	): Promise<FamResDto> {
+		const famsRepository = this.getFamsRepository(qr);
+
+		const insertResult = await famsRepository.insert({
 			id: uuidv4(),
-			memberId: memberId,
-			groupId: groupId,
-			role: role,
-			invitationAccepted: invitationAccepted,
+			...createFamArgs,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailFamById({ famId: id });
+		return this.findOrFailFamById({ famId: id }, qr);
 	}
 
 	async updateFamInvitationAccept({
