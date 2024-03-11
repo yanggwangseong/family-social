@@ -121,7 +121,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 	async deleteGroup(
 		{ groupId }: { groupId: string },
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	): Promise<boolean> {
 		const groupsRepository = this.getGroupsRepository(qr);
 

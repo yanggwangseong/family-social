@@ -461,6 +461,6 @@ export class GroupsController {
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
-		return await this.schedulesService.deleteToursSchedule(scheduleId);
+		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
 	}
 }

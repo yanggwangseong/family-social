@@ -131,7 +131,7 @@ export class FeedsService {
 
 	async updateFeed(
 		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	) {
 		// 피드가 있는지 확인.
 		await this.findFeedByIdOrThrow(feedId);
@@ -151,7 +151,7 @@ export class FeedsService {
 		return feed;
 	}
 
-	async deleteFeed(feedId: string, qr: QueryRunner) {
+	async deleteFeed(feedId: string, qr?: QueryRunner) {
 		// 피드가 있는지 확인.
 		await this.findFeedByIdOrThrow(feedId);
 

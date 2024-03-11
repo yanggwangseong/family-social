@@ -142,21 +142,24 @@ export class SchedulesService {
 		);
 	}
 
-	async deleteToursSchedule(scheduleId: string): Promise<void> {
+	async deleteToursSchedule(
+		scheduleId: string,
+		qr?: QueryRunner,
+	): Promise<void> {
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
 				scheduleId,
 			);
 		await Promise.all(
-			periodIds.map(async (item) => await this.deleteTourism(item.id)),
+			periodIds.map(async (item) => await this.deleteTourism(item.id, qr)),
 		);
 
 		// TourismPeriod 다 삭제
-		await this.deleteTourismPeriod(scheduleId);
+		await this.deleteTourismPeriod(scheduleId, qr);
 
 		// Schedule 삭제
-		await this.scheduleRepository.deleteSchedule(scheduleId);
+		await this.scheduleRepository.deleteSchedule(scheduleId, qr);
 	}
 
 	async findOwnSchedule(

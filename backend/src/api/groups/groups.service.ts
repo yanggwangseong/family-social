@@ -113,7 +113,7 @@ export class GroupsService {
 
 	async deleteGroup(
 		deleteGroupArgs: IDeleteGroupArgs,
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	): Promise<void> {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);

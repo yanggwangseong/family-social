@@ -225,7 +225,7 @@ export class FamsRepository extends Repository<FamEntity> {
 		}: {
 			groupId: string;
 		},
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	): Promise<boolean> {
 		const famsRepository = this.getFamsRepository(qr);
 

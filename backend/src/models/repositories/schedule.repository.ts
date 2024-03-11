@@ -200,8 +200,10 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		await this.update({ id: scheduleId }, { scheduleImage: imageUrl });
 	}
 
-	async deleteSchedule(scheduleId: string): Promise<boolean> {
-		const { affected } = await this.delete({
+	async deleteSchedule(scheduleId: string, qr?: QueryRunner): Promise<boolean> {
+		const scheduleRepository = this.getScheduleRepository(qr);
+
+		const { affected } = await scheduleRepository.delete({
 			id: scheduleId,
 		});
 

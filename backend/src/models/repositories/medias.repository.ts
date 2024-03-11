@@ -42,7 +42,7 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 	async updateFeedMedias(
 		media: MediaUpdateReqDto[],
 		feedId: string,
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	): Promise<[boolean, void]> {
 		const result = Promise.all([
 			await this.deleteFeedMediasByFeedId(feedId, qr),
@@ -54,7 +54,7 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 
 	async deleteFeedMediasByFeedId(
 		feedId: string,
-		qr: QueryRunner,
+		qr?: QueryRunner,
 	): Promise<boolean> {
 		const mediasRepository = this.getMediasRepository(qr);
 
