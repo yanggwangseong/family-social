@@ -24,6 +24,6 @@ import { MediasModule } from '../medias/medias.module';
 })
 export class FeedsModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(FeedExistsMiddleware).forRoutes('*');
+		consumer.apply(FeedExistsMiddleware).forRoutes(FeedsController);
 	}
 }
