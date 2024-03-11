@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { FeedExistsMiddleware } from '@/common/middlewares/feed-exists.middleware';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
@@ -21,4 +22,8 @@ import { MediasModule } from '../medias/medias.module';
 	providers: [FeedsService, FeedsRepository, LikesFeedRepository],
 	exports: [],
 })
-export class FeedsModule {}
+export class FeedsModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(FeedExistsMiddleware).forRoutes('*');
+	}
+}
