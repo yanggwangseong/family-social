@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateScheduleArgs } from '@/types/args/schedule';
@@ -17,6 +17,12 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		private readonly repository: Repository<ScheduleEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getScheduleRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<ScheduleEntity>(ScheduleEntity)
+			: this.repository;
 	}
 
 	async getScheduleListOwnMemberId({
@@ -101,12 +107,17 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		});
 	}
 
-	async findOrFailScheduleById({
-		scheduleId,
-	}: {
-		scheduleId: string;
-	}): Promise<ScheduleByIdResDto> {
-		const schedule = await this.repository.findOneOrFail({
+	async findOrFailScheduleById(
+		{
+			scheduleId,
+		}: {
+			scheduleId: string;
+		},
+		qr?: QueryRunner,
+	): Promise<ScheduleByIdResDto> {
+		const scheduleRepository = this.getScheduleRepository(qr);
+
+		const schedule = await scheduleRepository.findOneOrFail({
 			where: {
 				id: scheduleId,
 			},
@@ -133,14 +144,19 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		return schedule;
 	}
 
-	async createSchedule({
-		memberId,
-		groupId,
-		scheduleName,
-		startPeriod,
-		endPeriod,
-	}: ICreateScheduleArgs) {
-		const insertResult = await this.repository.insert({
+	async createSchedule(
+		{
+			memberId,
+			groupId,
+			scheduleName,
+			startPeriod,
+			endPeriod,
+		}: ICreateScheduleArgs,
+		qr?: QueryRunner,
+	) {
+		const scheduleRepository = this.getScheduleRepository(qr);
+
+		const insertResult = await scheduleRepository.insert({
 			id: uuidv4(),
 			groupId: groupId,
 			memberId: memberId,
@@ -151,21 +167,29 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailScheduleById({ scheduleId: id });
+		return this.findOrFailScheduleById({ scheduleId: id }, qr);
 	}
 
-	async updateScheduleGroup({
-		memberId,
-		groupId,
-		scheduleId,
-	}: {
-		memberId: string;
-		groupId: string;
-		scheduleId: string;
-	}) {
-		await this.update({ id: scheduleId, memberId }, { groupId: groupId });
+	async updateScheduleGroup(
+		{
+			memberId,
+			groupId,
+			scheduleId,
+		}: {
+			memberId: string;
+			groupId: string;
+			scheduleId: string;
+		},
+		qr?: QueryRunner,
+	) {
+		const scheduleRepository = this.getScheduleRepository(qr);
 
-		return this.findOrFailScheduleById({ scheduleId: scheduleId });
+		await scheduleRepository.update(
+			{ id: scheduleId, memberId },
+			{ groupId: groupId },
+		);
+
+		return this.findOrFailScheduleById({ scheduleId: scheduleId }, qr);
 	}
 
 	async updateScheduleTitleById(scheduleId: string, scheduleName: string) {

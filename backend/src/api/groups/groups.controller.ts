@@ -376,11 +376,14 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		return await this.schedulesService.createToursSchedule({
-			memberId: sub,
-			groupId,
-			scheduleItem: dto,
-		});
+		return await this.schedulesService.createToursSchedule(
+			{
+				memberId: sub,
+				groupId,
+				scheduleItem: dto,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -416,12 +419,15 @@ export class GroupsController {
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
-		return await this.schedulesService.updateToursSchedule({
-			memberId: sub,
-			groupId,
-			scheduleId: scheduleId,
-			periods: dto,
-		});
+		return await this.schedulesService.updateToursSchedule(
+			{
+				memberId: sub,
+				groupId,
+				scheduleId: scheduleId,
+				periods: dto,
+			},
+			qr,
+		);
 	}
 
 	/**

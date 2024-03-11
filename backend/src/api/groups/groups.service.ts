@@ -55,7 +55,7 @@ export class GroupsService {
 	async getMemberBelongToGroups(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {
-		return await this.famsRepository.getMemberBelongToGroups(memberId, qr);
+		return await this.famsRepository.getMemberBelongToGroups(memberId);
 	}
 
 	async createGroup(
