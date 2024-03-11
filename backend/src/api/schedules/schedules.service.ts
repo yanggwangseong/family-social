@@ -81,10 +81,11 @@ export class SchedulesService {
 		const createTourismPeriod = await this.createTourismPeriod(
 			scheduleItem.periods,
 			schedule.id,
+			qr,
 		);
 
 		createTourismPeriod.map(
-			async (item) => await this.createTourism(item.tourisms, item.id),
+			async (item) => await this.createTourism(item.tourisms, item.id, qr),
 		);
 
 		return schedule;

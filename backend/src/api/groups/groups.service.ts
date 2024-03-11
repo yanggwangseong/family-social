@@ -84,6 +84,7 @@ export class GroupsService {
 			},
 			qr,
 		);
+
 		return group;
 	}
 
