@@ -119,8 +119,13 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return await this.findOrFailGroupById({ groupId: groupId });
 	}
 
-	async deleteGroup({ groupId }: { groupId: string }): Promise<boolean> {
-		const { affected } = await this.delete({
+	async deleteGroup(
+		{ groupId }: { groupId: string },
+		qr: QueryRunner,
+	): Promise<boolean> {
+		const groupsRepository = this.getGroupsRepository(qr);
+
+		const { affected } = await groupsRepository.delete({
 			id: groupId,
 		});
 

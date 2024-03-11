@@ -219,12 +219,17 @@ export class FamsRepository extends Repository<FamEntity> {
 		return this.findOrFailFamById({ famId: famId });
 	}
 
-	async deleteGroupAllMember({
-		groupId,
-	}: {
-		groupId: string;
-	}): Promise<boolean> {
-		const { affected } = await this.delete({
+	async deleteGroupAllMember(
+		{
+			groupId,
+		}: {
+			groupId: string;
+		},
+		qr: QueryRunner,
+	): Promise<boolean> {
+		const famsRepository = this.getFamsRepository(qr);
+
+		const { affected } = await famsRepository.delete({
 			groupId: groupId,
 		});
 

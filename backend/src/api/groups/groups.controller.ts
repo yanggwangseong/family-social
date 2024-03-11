@@ -152,10 +152,13 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.groupsService.deleteGroup({
-			groupId: groupId,
-			memberId: sub,
-		});
+		return await this.groupsService.deleteGroup(
+			{
+				groupId: groupId,
+				memberId: sub,
+			},
+			qr,
+		);
 	}
 
 	/**

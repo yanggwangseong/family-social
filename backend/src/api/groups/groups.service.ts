@@ -111,7 +111,10 @@ export class GroupsService {
 		});
 	}
 
-	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs): Promise<void> {
+	async deleteGroup(
+		deleteGroupArgs: IDeleteGroupArgs,
+		qr: QueryRunner,
+	): Promise<void> {
 		// 그룹 유/무 체크
 		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
 
@@ -134,12 +137,18 @@ export class GroupsService {
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
-			await this.famsRepository.deleteGroupAllMember({
-				groupId: group.id,
-			}),
-			await this.groupsRepository.deleteGroup({
-				groupId: group.id,
-			}),
+			await this.famsRepository.deleteGroupAllMember(
+				{
+					groupId: group.id,
+				},
+				qr,
+			),
+			await this.groupsRepository.deleteGroup(
+				{
+					groupId: group.id,
+				},
+				qr,
+			),
 		]);
 
 		if (!GroupMemberStatus)
