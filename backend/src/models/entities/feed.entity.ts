@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+
+import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
@@ -15,10 +20,17 @@ export class FeedEntity extends DefaultEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
-	@IsString()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
 	contents!: string;
 
+	@IsBoolean({
+		message: booleanValidationMessage,
+	})
 	@Column({ type: 'boolean', nullable: false, default: true })
 	@ApiProperty({
 		nullable: false,
@@ -27,14 +39,18 @@ export class FeedEntity extends DefaultEntity {
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly groupId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@OneToMany(() => LikeFeedEntity, (lf) => lf.feed)

@@ -4,6 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 
+import {
+	ENV_TOUR_API_END_POINT,
+	ENV_TOUR_API_SERVICE_KEY,
+} from '@/constants/env-keys.const';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -19,9 +23,9 @@ export class ToursService {
 	) {}
 
 	private readonly serviceKey: string =
-		this.configService.get<string>('TOUR_API_SERVICE_KEY') ?? '';
+		this.configService.get<string>(ENV_TOUR_API_SERVICE_KEY) ?? '';
 	private readonly MobileApp: string = 'FAM';
-	private endPoint = this.configService.get<string>('TOUR_API_END_POINT');
+	private endPoint = this.configService.get<string>(ENV_TOUR_API_END_POINT);
 	private listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
 	private MobileOS: string = 'ETC';
 	private _type: string = 'json';

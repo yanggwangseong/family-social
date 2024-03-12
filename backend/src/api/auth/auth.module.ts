@@ -5,6 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
 import { RefreshTokenStrategy } from '@/common/strategies/refreshToken.strategy';
+import {
+	ENV_JWT_ACCESS_TOKEN_EXPIRATION,
+	ENV_JWT_ACCESS_TOKEN_SECRET,
+} from '@/constants/env-keys.const';
 import { MemberEntity } from '@/models/entities/member.entity';
 
 import { AuthController } from './auth.controller';
@@ -16,9 +20,9 @@ import { MembersModule } from '../members/members.module';
 		JwtModule.registerAsync({
 			inject: [ConfigService],
 			useFactory: (configService: ConfigService) => ({
-				secret: configService.get('JWT_ACCESS_TOKEN_SECRET'),
+				secret: configService.get(ENV_JWT_ACCESS_TOKEN_SECRET),
 				signOptions: {
-					expiresIn: `${configService.get('JWT_ACCESS_TOKEN_EXPIRATION')}s`,
+					expiresIn: `${configService.get(ENV_JWT_ACCESS_TOKEN_EXPIRATION)}s`,
 				},
 			}),
 		}),

@@ -3,10 +3,16 @@ import {
 	IsNotEmpty,
 	IsString,
 	IsUUID,
+	Length,
 	MaxLength,
-	MinLength,
 } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
+import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
@@ -17,21 +23,29 @@ import { TourismPeriodEntity } from './tourism-period.entity';
 export class ScheduleEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly groupId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(30)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	scheduleName!: string;
 
 	/**
@@ -43,20 +57,27 @@ export class ScheduleEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiPropertyOptional()
-	@IsNotEmpty()
-	@IsString()
-	@MinLength(4)
-	@MaxLength(2048)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@Length(4, 2048, { message: lengthValidationMessage })
 	scheduleImage?: string;
 
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	startPeriod!: Date;
 
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	endPeriod!: Date;
 
 	@ManyToOne(() => GroupEntity, (gr) => gr.schedulesByGroup)

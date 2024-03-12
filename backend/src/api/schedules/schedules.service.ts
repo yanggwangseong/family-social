@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -62,62 +63,67 @@ export class SchedulesService {
 		return schedule;
 	}
 
-	async createToursSchedule({
-		memberId,
-		groupId,
-		scheduleItem,
-	}: ICreateTourArgs): Promise<ScheduleByIdResDto> {
-		const schedule = await this.scheduleRepository.createSchedule({
-			memberId,
-			groupId,
-			scheduleName: scheduleItem.scheduleName,
-			startPeriod: scheduleItem.startPeriod,
-			endPeriod: scheduleItem.endPeriod,
-		});
+	async createToursSchedule(
+		{ memberId, groupId, scheduleItem }: ICreateTourArgs,
+		qr?: QueryRunner,
+	): Promise<ScheduleByIdResDto> {
+		const schedule = await this.scheduleRepository.createSchedule(
+			{
+				memberId,
+				groupId,
+				scheduleName: scheduleItem.scheduleName,
+				startPeriod: scheduleItem.startPeriod,
+				endPeriod: scheduleItem.endPeriod,
+			},
+			qr,
+		);
 
 		const createTourismPeriod = await this.createTourismPeriod(
 			scheduleItem.periods,
 			schedule.id,
+			qr,
 		);
 
 		createTourismPeriod.map(
-			async (item) => await this.createTourism(item.tourisms, item.id),
+			async (item) => await this.createTourism(item.tourisms, item.id, qr),
 		);
 
 		return schedule;
 	}
 
-	async updateToursSchedule({
-		memberId,
-		groupId,
-		scheduleId,
-		periods,
-	}: IUpdateTourArgs): Promise<ScheduleByIdResDto> {
-		const schedule = await this.scheduleRepository.updateScheduleGroup({
-			memberId,
-			groupId,
-			scheduleId,
-		});
+	async updateToursSchedule(
+		{ memberId, groupId, scheduleId, periods }: IUpdateTourArgs,
+		qr?: QueryRunner,
+	): Promise<ScheduleByIdResDto> {
+		const schedule = await this.scheduleRepository.updateScheduleGroup(
+			{
+				memberId,
+				groupId,
+				scheduleId,
+			},
+			qr,
+		);
 
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
 				scheduleId,
 			);
-		periodIds.map(async (item) => await this.deleteTourism(item.id));
+		periodIds.map(async (item) => await this.deleteTourism(item.id, qr));
 
 		// TourismPeriod 다 삭제
-		await this.deleteTourismPeriod(scheduleId);
+		await this.deleteTourismPeriod(scheduleId, qr);
 
 		// TourismPeriod 생성
 		const createTourismPeriod = await this.createTourismPeriod(
 			periods,
 			schedule.id,
+			qr,
 		);
 
 		// Tourism 생성
 		createTourismPeriod.map(
-			async (item) => await this.createTourism(item.tourisms, item.id),
+			async (item) => await this.createTourism(item.tourisms, item.id, qr),
 		);
 
 		return schedule;
@@ -137,21 +143,24 @@ export class SchedulesService {
 		);
 	}
 
-	async deleteToursSchedule(scheduleId: string): Promise<void> {
+	async deleteToursSchedule(
+		scheduleId: string,
+		qr?: QueryRunner,
+	): Promise<void> {
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
 				scheduleId,
 			);
 		await Promise.all(
-			periodIds.map(async (item) => await this.deleteTourism(item.id)),
+			periodIds.map(async (item) => await this.deleteTourism(item.id, qr)),
 		);
 
 		// TourismPeriod 다 삭제
-		await this.deleteTourismPeriod(scheduleId);
+		await this.deleteTourismPeriod(scheduleId, qr);
 
 		// Schedule 삭제
-		await this.scheduleRepository.deleteSchedule(scheduleId);
+		await this.scheduleRepository.deleteSchedule(scheduleId, qr);
 	}
 
 	async findOwnSchedule(
@@ -175,17 +184,22 @@ export class SchedulesService {
 		return schedule;
 	}
 
-	private async deleteTourismPeriod(scheduleId: string) {
-		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId);
+	async scheduleExistsByScheduleId(scheduleId: string) {
+		return this.scheduleRepository.exist({ where: { id: scheduleId } });
 	}
 
-	private async deleteTourism(periodId: string) {
-		await this.tourismRepository.deleteTourism(periodId);
+	private async deleteTourismPeriod(scheduleId: string, qr?: QueryRunner) {
+		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId, qr);
+	}
+
+	private async deleteTourism(periodId: string, qr?: QueryRunner) {
+		await this.tourismRepository.deleteTourism(periodId, qr);
 	}
 
 	private async createTourismPeriod(
 		periods: TourismPeriodCreateReqDto[],
 		scheduleId: string,
+		qr?: QueryRunner,
 	) {
 		const createTourismPeriod = periods.map((item) => ({
 			id: uuidv4(),
@@ -193,7 +207,10 @@ export class SchedulesService {
 			...item,
 		}));
 
-		await this.tourismPeriodRepository.createTourismPeriod(createTourismPeriod);
+		await this.tourismPeriodRepository.createTourismPeriod(
+			createTourismPeriod,
+			qr,
+		);
 
 		return createTourismPeriod;
 	}
@@ -201,6 +218,7 @@ export class SchedulesService {
 	private async createTourism(
 		tourism: TourismCreateReqDto[],
 		periodId: string,
+		qr?: QueryRunner,
 	) {
 		const createTourisms = tourism.map((item) => ({
 			id: uuidv4(),
@@ -208,6 +226,6 @@ export class SchedulesService {
 			...item,
 		}));
 
-		await this.tourismRepository.createTourism(createTourisms);
+		await this.tourismRepository.createTourism(createTourisms, qr);
 	}
 }

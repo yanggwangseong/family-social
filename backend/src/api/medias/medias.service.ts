@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from 'typeorm';
+import { QueryRunner } from 'typeorm';
 
 import { MediaCreateReqDto } from '@/models/dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '@/models/dto/media/req/media-update-req-dto';
@@ -12,22 +12,24 @@ export class MediasService {
 	async createFeedMedias(
 		media: MediaCreateReqDto[],
 		feedId: string,
+		qr?: QueryRunner,
 	): Promise<void> {
-		return this.mediasRepository.createFeedMedias(media, feedId);
+		return this.mediasRepository.createFeedMedias(media, feedId, qr);
 	}
 
 	async updateFeedMedias(
 		media: MediaUpdateReqDto[],
 		feedId: string,
+		qr?: QueryRunner,
 	): Promise<[boolean, void]> {
-		return this.mediasRepository.updateFeedMedias(media, feedId);
+		return this.mediasRepository.updateFeedMedias(media, feedId, qr);
 	}
 
 	async deleteFeedMediasByFeedId(
 		feedId: string,
-		manager: EntityManager,
+		qr?: QueryRunner,
 	): Promise<boolean> {
-		return this.mediasRepository.deleteFeedMediasByFeedId(feedId, manager);
+		return this.mediasRepository.deleteFeedMediasByFeedId(feedId, qr);
 	}
 
 	async findMediaUrlByFeedId(

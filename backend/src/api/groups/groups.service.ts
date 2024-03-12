@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -20,6 +21,7 @@ import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupsRepository } from '@/models/repositories/groups.repository';
 import {
+	ICreateGroupArgs,
 	IDeleteGroupArgs,
 	IMembersBelongToGroupArgs,
 } from '@/types/args/group';
@@ -56,29 +58,33 @@ export class GroupsService {
 		return await this.famsRepository.getMemberBelongToGroups(memberId);
 	}
 
-	async createGroup({
-		memberId,
-		groupName,
-		groupDescription,
-	}: {
-		memberId: string;
-		groupName: string;
-		groupDescription?: string;
-	}): Promise<GroupResDto> {
+	async createGroup(
+		createGroupArgs: ICreateGroupArgs,
+		qr?: QueryRunner,
+	): Promise<GroupResDto> {
+		const { memberId, groupName, groupDescription } = createGroupArgs;
+
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
-		const group = await this.groupsRepository.createGroup({
-			groupName,
-			groupDescription,
-		});
+		const group = await this.groupsRepository.createGroup(
+			{
+				groupName,
+				groupDescription,
+			},
+			qr,
+		);
 
-		await this.famsRepository.createFam({
-			memberId: memberId,
-			groupId: group.id,
-			role: 'main',
-			invitationAccepted: true,
-		});
+		await this.famsRepository.createFam(
+			{
+				memberId: memberId,
+				groupId: group.id,
+				role: 'main',
+				invitationAccepted: true,
+			},
+			qr,
+		);
+
 		return group;
 	}
 
@@ -93,9 +99,6 @@ export class GroupsService {
 		groupDescription?: string;
 		memberId: string;
 	}): Promise<GroupResDto> {
-		// 그룹 유/무 체크
-		await this.findGroupByIdOrThrow(groupId);
-
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
@@ -106,9 +109,11 @@ export class GroupsService {
 		});
 	}
 
-	async deleteGroup(deleteGroupArgs: IDeleteGroupArgs): Promise<void> {
-		// 그룹 유/무 체크
-		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
+	async deleteGroup(
+		deleteGroupArgs: IDeleteGroupArgs,
+		qr?: QueryRunner,
+	): Promise<void> {
+		const { groupId } = deleteGroupArgs;
 
 		const role = await this.checkRoleOfGroupExists(
 			deleteGroupArgs.groupId,
@@ -120,7 +125,7 @@ export class GroupsService {
 		}
 
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
-			groupId: group.id,
+			groupId,
 		});
 
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
@@ -129,12 +134,18 @@ export class GroupsService {
 		}
 
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
-			await this.famsRepository.deleteGroupAllMember({
-				groupId: group.id,
-			}),
-			await this.groupsRepository.deleteGroup({
-				groupId: group.id,
-			}),
+			await this.famsRepository.deleteGroupAllMember(
+				{
+					groupId,
+				},
+				qr,
+			),
+			await this.groupsRepository.deleteGroup(
+				{
+					groupId,
+				},
+				qr,
+			),
 		]);
 
 		if (!GroupMemberStatus)
@@ -181,5 +192,9 @@ export class GroupsService {
 		}
 
 		return group;
+	}
+
+	async groupExistsByGroupId(groupId: string) {
+		return this.groupsRepository.exist({ where: { id: groupId } });
 	}
 }

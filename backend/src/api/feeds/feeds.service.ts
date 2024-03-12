@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -34,12 +34,6 @@ export class FeedsService {
 	) {}
 
 	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
-		//const feed = await this.feedsRepository.findFeedInfoById(feedId);
-		//const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-
 		const [feed, medias] = await Promise.all([
 			await this.feedsRepository.findFeedInfoById(feedId),
 			await this.mediasService.findMediaUrlByFeedId(feedId),
@@ -93,9 +87,6 @@ export class FeedsService {
 	}
 
 	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
 		const like = await this.likesFeedRepository.findMemberLikesFeed(
 			memberId,
 			feedId,
@@ -110,84 +101,59 @@ export class FeedsService {
 		return !like;
 	}
 
-	async createFeed({
-		contents,
-		isPublic,
-		groupId,
-		memberId,
-		medias,
-	}: ICreateFeedArgs): Promise<FeedByIdResDto> {
-		//[TODO] transaction 추가
-		const feed = await this.feedsRepository.createFeed({
-			contents,
-			isPublic,
-			groupId,
-			memberId,
-		});
+	async createFeed(
+		{ contents, isPublic, groupId, memberId, medias }: ICreateFeedArgs,
+		qr?: QueryRunner,
+	): Promise<FeedByIdResDto> {
+		const feed = await this.feedsRepository.createFeed(
+			{
+				contents,
+				isPublic,
+				groupId,
+				memberId,
+			},
+			qr,
+		);
 
-		await this.mediasService.createFeedMedias(medias, feed.id);
-
-		return feed;
-	}
-
-	async updateFeed({
-		feedId,
-		contents,
-		isPublic,
-		groupId,
-		medias,
-	}: IUpdateFeedArgs) {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
-		//[TODO] transaction 추가
-		const feed = await this.feedsRepository.updateFeed({
-			feedId,
-			contents,
-			isPublic,
-			groupId,
-		});
-
-		await this.mediasService.updateFeedMedias(medias, feedId);
+		await this.mediasService.createFeedMedias(medias, feed.id, qr);
 
 		return feed;
 	}
 
-	async deleteFeed(feedId: string) {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
+	async updateFeed(
+		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
+		qr?: QueryRunner,
+	) {
+		const feed = await this.feedsRepository.updateFeed(
+			{
+				feedId,
+				contents,
+				isPublic,
+				groupId,
+			},
+			qr,
+		);
 
-		const queryRunner = this.dataSource.createQueryRunner();
-		await queryRunner.connect();
-		await queryRunner.startTransaction();
+		await this.mediasService.updateFeedMedias(medias, feedId, qr);
 
-		try {
-			const [mediaStatus, feedStatus] = await Promise.all([
-				await this.mediasService.deleteFeedMediasByFeedId(
-					feedId,
-					queryRunner.manager,
-				),
-				await this.feedsRepository.deleteFeed(feedId, queryRunner.manager),
-			]);
+		return feed;
+	}
 
-			if (!mediaStatus || !feedStatus)
-				throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
+	async deleteFeed(feedId: string, qr?: QueryRunner) {
+		const [mediaStatus, feedStatus] = await Promise.all([
+			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
+			await this.feedsRepository.deleteFeed(feedId, qr),
+		]);
 
-			const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-			medias.map(async (media) => {
-				const fileName = extractFilePathFromUrl(media.url, 'feed');
-				if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
-				await DeleteS3Media(fileName);
-			});
+		if (!mediaStatus || !feedStatus)
+			throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
-			await queryRunner.commitTransaction();
-			//s3에 미디어 파일들 삭제.
-		} catch (error) {
-			await queryRunner.rollbackTransaction();
-			throw error;
-		} finally {
-			await queryRunner.release();
-		}
+		const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
+		medias.map(async (media) => {
+			const fileName = extractFilePathFromUrl(media.url, 'feed');
+			if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
+			await DeleteS3Media(fileName);
+		});
 	}
 
 	async findFeedByIdOrThrow(feedId: string): Promise<FeedByIdResDto> {

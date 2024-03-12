@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
@@ -7,6 +7,7 @@ import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-excepti
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 
 import { AppModule } from './app.module';
+import { BadRequestServiceException } from './common/exception/service.exception';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -28,7 +29,22 @@ async function bootstrap() {
 	app.setGlobalPrefix('api');
 
 	// global pipes
-	app.useGlobalPipes(new ValidationPipe({ transform: true }));
+	app.useGlobalPipes(
+		new ValidationPipe({
+			transform: true,
+			stopAtFirstError: true,
+
+			exceptionFactory: (validationErrors: ValidationError[] = []) => {
+				const { constraints } = validationErrors[0];
+
+				if (!constraints) return validationErrors;
+
+				const [firstKey] = Object.keys(constraints);
+
+				return BadRequestServiceException(constraints[firstKey]);
+			},
+		}),
+	);
 
 	// exception
 	app.useGlobalFilters(new ServiceHttpExceptionFilter());

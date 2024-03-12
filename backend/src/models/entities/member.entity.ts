@@ -4,11 +4,16 @@ import {
 	IsNotEmpty,
 	IsOptional,
 	IsString,
+	Length,
 	Matches,
 	MaxLength,
-	MinLength,
 } from 'class-validator';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
+
+import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
+import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
@@ -25,39 +30,51 @@ import { ScheduleEntity } from './schedule.entity';
 export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(30)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	username!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	@IsEmail()
-	@MaxLength(50)
+	@MaxLength(50, { message: maxLengthValidationMessage })
 	email!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
-	@IsString()
-	@MaxLength(60)
-	@MinLength(10)
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@Length(10, 60, { message: lengthValidationMessage })
 	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
 	password?: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
-	@MaxLength(30)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@IsString()
-	@MaxLength(10)
-	@MinLength(10)
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@Length(10, 10, { message: lengthValidationMessage })
 	signupVerifyToken?: string;
 
 	@Column({ default: false, nullable: false }) // 최초 로그인 여부를 나타내는 플래그
@@ -72,10 +89,13 @@ export class MemberEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
-	@MinLength(4)
-	@MaxLength(2048)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@Length(4, 2048, { message: lengthValidationMessage })
 	profileImage!: string;
 
 	/**
@@ -87,22 +107,25 @@ export class MemberEntity extends DefaultEntity {
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
 	@ApiProperty()
-	@IsNotEmpty()
-	@IsString()
-	@MinLength(4)
-	@MaxLength(2048)
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsString({
+		message: stringValidationMessage,
+	})
+	@Length(4, 2048, { message: lengthValidationMessage })
 	coverImage!: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@MaxLength(30)
+	@MaxLength(30, { message: maxLengthValidationMessage })
 	socialType?: 'kakao' | 'google' | 'naver';
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
 	@ApiProperty()
 	@IsOptional()
-	@MaxLength(60)
+	@MaxLength(60, { message: maxLengthValidationMessage })
 	refreshToken?: string;
 
 	@OneToMany(() => FamEntity, (fa) => fa.member)

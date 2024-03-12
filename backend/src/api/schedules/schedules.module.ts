@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
 import { ScheduleEntity } from '@/models/entities/schedule.entity';
 import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 import { TourismEntity } from '@/models/entities/tourism.entity';
@@ -28,4 +29,8 @@ import { SchedulesService } from './schedules.service';
 	],
 	exports: [SchedulesService],
 })
-export class SchedulesModule {}
+export class SchedulesModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(ScheduleExistsMiddleware).forRoutes(SchedulesController);
+	}
+}

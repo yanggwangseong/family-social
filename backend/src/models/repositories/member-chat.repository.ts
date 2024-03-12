@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { ChatMembersResDto } from '../dto/member-chat/res/chat-members-res.dto';
 import { MemberBelongToChatsResDto } from '../dto/member-chat/res/member-belong-to-chats-res.dto';
@@ -15,11 +15,20 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
+	getMemberChatRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<MemberChatEntity>(MemberChatEntity)
+			: this.repository;
+	}
+
 	async createMembersEnteredByChat(
 		chatId: string,
 		memberIds: string[],
+		qr?: QueryRunner,
 	): Promise<void> {
-		await this.repository.insert(
+		const memberChatRepository = this.getMemberChatRepository(qr);
+
+		await memberChatRepository.insert(
 			memberIds.map((value) => {
 				return {
 					chatId,

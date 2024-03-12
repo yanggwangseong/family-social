@@ -8,6 +8,9 @@ import {
 	PrimaryColumn,
 } from 'typeorm';
 
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
+
 import { ChatEntity } from './chat.entity';
 import { MemberEntity } from './member.entity';
 
@@ -17,16 +20,20 @@ export class MemberChatEntity {
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
 	@PrimaryColumn('uuid')
 	@ApiProperty({
 		nullable: false,
 	})
-	@IsNotEmpty()
-	@IsUUID()
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly chatId!: string;
 
 	@ManyToOne(() => MemberEntity, (member) => member.memberEnterChats)

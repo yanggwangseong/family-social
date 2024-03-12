@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { GroupEntity } from '@/models/entities/group.entity';
+import { ICreateGroupArgs } from '@/types/args/group';
 
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
@@ -13,6 +14,12 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		private readonly repository: Repository<GroupEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getGroupsRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<GroupEntity>(GroupEntity)
+			: this.repository;
 	}
 
 	async findGroupByGroupName({
@@ -55,12 +62,17 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
-	async findOrFailGroupById({
-		groupId,
-	}: {
-		groupId: string;
-	}): Promise<GroupResDto> {
-		const group = await this.repository.findOneOrFail({
+	async findOrFailGroupById(
+		{
+			groupId,
+		}: {
+			groupId: string;
+		},
+		qr?: QueryRunner,
+	): Promise<GroupResDto> {
+		const groupsRepository = this.getGroupsRepository(qr);
+
+		const group = await groupsRepository.findOneOrFail({
 			where: {
 				id: groupId,
 			},
@@ -74,14 +86,13 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
-	async createGroup({
-		groupName,
-		groupDescription,
-	}: {
-		groupName: string;
-		groupDescription?: string;
-	}): Promise<GroupResDto> {
-		const insertResult = await this.repository.insert({
+	async createGroup(
+		{ groupName, groupDescription }: Omit<ICreateGroupArgs, 'memberId'>,
+		qr?: QueryRunner,
+	): Promise<GroupResDto> {
+		const groupsRepository = this.getGroupsRepository(qr);
+
+		const insertResult = await groupsRepository.insert({
 			id: uuidv4(),
 			groupName: groupName,
 			groupDescription: groupDescription,
@@ -89,7 +100,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 		const id: string = insertResult.identifiers[0].id;
 
-		return this.findOrFailGroupById({ groupId: id });
+		return this.findOrFailGroupById({ groupId: id }, qr);
 	}
 
 	async updateGroup({
@@ -108,8 +119,13 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return await this.findOrFailGroupById({ groupId: groupId });
 	}
 
-	async deleteGroup({ groupId }: { groupId: string }): Promise<boolean> {
-		const { affected } = await this.delete({
+	async deleteGroup(
+		{ groupId }: { groupId: string },
+		qr?: QueryRunner,
+	): Promise<boolean> {
+		const groupsRepository = this.getGroupsRepository(qr);
+
+		const { affected } = await groupsRepository.delete({
 			id: groupId,
 		});
 

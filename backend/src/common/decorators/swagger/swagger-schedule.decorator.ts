@@ -114,6 +114,9 @@ export const PatchScheduleTitleSwagger = () => {
 		ApiCreatedResponse({
 			description: '여행 제목 수정 성공',
 		}),
+		ApiNotFoundResponse({
+			description: `${ERROR_SCHEDULE_NOT_FOUND}`,
+		}),
 	);
 };
 
@@ -136,6 +139,9 @@ export const PatchScheduleUploadThumbnailImageSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '스케줄 썸네일 수정하기 성공',
+		}),
+		ApiNotFoundResponse({
+			description: `${ERROR_SCHEDULE_NOT_FOUND}`,
 		}),
 	);
 };
