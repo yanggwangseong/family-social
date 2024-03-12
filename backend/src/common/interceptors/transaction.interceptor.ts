@@ -2,7 +2,6 @@ import {
 	CallHandler,
 	ExecutionContext,
 	Injectable,
-	InternalServerErrorException,
 	NestInterceptor,
 } from '@nestjs/common';
 import { Observable, catchError, tap } from 'rxjs';
@@ -30,7 +29,8 @@ export class TransactionInterceptor implements NestInterceptor {
 			catchError(async (e) => {
 				await qr.rollbackTransaction();
 				await qr.release();
-				throw new InternalServerErrorException(e.message);
+
+				throw e;
 			}),
 			tap(async () => {
 				await qr.commitTransaction();

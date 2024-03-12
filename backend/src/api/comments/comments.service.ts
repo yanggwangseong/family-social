@@ -147,13 +147,14 @@ export class CommentsService {
 		return comment;
 	}
 
+	async commentExistsByCommentId(commentId: string) {
+		return this.commentsRepository.exist({ where: { id: commentId } });
+	}
+
 	async updateLikesCommentId(
 		memberId: string,
 		commentId: string,
 	): Promise<boolean> {
-		// 댓글이 있는지 확인.
-		await this.findCommentByIdOrThrow(commentId);
-
 		const like = await this.likesCommentRepository.findMemberLikesComment(
 			memberId,
 			commentId,

@@ -208,8 +208,7 @@ export class GroupsController {
 		if (sub === memberId) {
 			throw BadRequestServiceException(ERROR_CANNOT_INVITE_SELF);
 		}
-		// 그룹 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
+
 		// 멤버 체크
 		await this.membersService.findMemberByIdOrThrow(memberId);
 
@@ -312,9 +311,6 @@ export class GroupsController {
 		@Param('groupId', ParseUUIDPipe) groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		// 그룹 유/무 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
-
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
@@ -342,9 +338,6 @@ export class GroupsController {
 		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		// 그룹 유/무 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
-
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
@@ -370,9 +363,6 @@ export class GroupsController {
 		@Body() dto: ScheduleCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹 유/무 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
-
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
@@ -407,14 +397,8 @@ export class GroupsController {
 		@Body() dto: TourismPeriodUpdateReqDto[],
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹 유/무 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
-
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
-		//여행 일정 유/무 체크
-		await this.schedulesService.findScheduleById(scheduleId);
 
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
@@ -449,14 +433,8 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹 유/무 체크
-		await this.groupsService.findGroupByIdOrThrow(groupId);
-
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
-		//여행 일정 유/무 체크
-		await this.schedulesService.findScheduleById(scheduleId);
 
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);

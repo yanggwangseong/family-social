@@ -18,12 +18,10 @@ import {
 	PostChatSwagger,
 } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
-import { ERROR_CHAT_NOT_FOUND } from '@/constants/business-error';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
 import { ChatsService } from './chats.service';
@@ -82,12 +80,6 @@ export class ChatsController {
 		@Param('chatId', ParseUUIDPipe) chatId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		const exists = await this.chatsService.checkIfChatExists(chatId);
-
-		if (!exists) {
-			throw EntityNotFoundException(ERROR_CHAT_NOT_FOUND);
-		}
-
 		return await this.chatsService.getMessagesByChat(chatId, sub);
 	}
 }

@@ -81,10 +81,11 @@ export class SchedulesService {
 		const createTourismPeriod = await this.createTourismPeriod(
 			scheduleItem.periods,
 			schedule.id,
+			qr,
 		);
 
 		createTourismPeriod.map(
-			async (item) => await this.createTourism(item.tourisms, item.id),
+			async (item) => await this.createTourism(item.tourisms, item.id, qr),
 		);
 
 		return schedule;
@@ -181,6 +182,10 @@ export class SchedulesService {
 		if (!schedule) throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
 
 		return schedule;
+	}
+
+	async scheduleExistsByScheduleId(scheduleId: string) {
+		return this.scheduleRepository.exist({ where: { id: scheduleId } });
 	}
 
 	private async deleteTourismPeriod(scheduleId: string, qr?: QueryRunner) {

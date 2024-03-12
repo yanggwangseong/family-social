@@ -225,9 +225,6 @@ export class FeedsController {
 		@Body() dto: CommentCreateReqDto,
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 	) {
-		// 피드가 존재 하는지 check;
-		await this.feedsService.findFeedByIdOrThrow(feedId);
-
 		return await this.commentsService.createComment({
 			commentContents: dto.commentContents,
 			replyId: dto.replyId,
@@ -254,11 +251,6 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Param('commentId', ParseUUIDPipe) commentId: string,
 	) {
-		// 피드가 존재 하는지 check;
-		await this.feedsService.findFeedByIdOrThrow(feedId);
-		// 댓글이 존재 하는지 check;
-		await this.commentsService.findCommentByIdOrThrow(commentId);
-
 		return await this.commentsService.updateComment(
 			commentId,
 			dto.commentContents,
@@ -280,11 +272,6 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Param('commentId', ParseUUIDPipe) commentId: string,
 	) {
-		// 피드가 존재 하는지 check;
-		await this.feedsService.findFeedByIdOrThrow(feedId);
-		// 댓글이 존재 하는지 check;
-		await this.commentsService.findCommentByIdOrThrow(commentId);
-
 		return await this.commentsService.deleteComment(commentId);
 	}
 

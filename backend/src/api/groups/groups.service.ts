@@ -84,6 +84,7 @@ export class GroupsService {
 			},
 			qr,
 		);
+
 		return group;
 	}
 
@@ -98,9 +99,6 @@ export class GroupsService {
 		groupDescription?: string;
 		memberId: string;
 	}): Promise<GroupResDto> {
-		// 그룹 유/무 체크
-		await this.findGroupByIdOrThrow(groupId);
-
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
@@ -115,8 +113,7 @@ export class GroupsService {
 		deleteGroupArgs: IDeleteGroupArgs,
 		qr?: QueryRunner,
 	): Promise<void> {
-		// 그룹 유/무 체크
-		const group = await this.findGroupByIdOrThrow(deleteGroupArgs.groupId);
+		const { groupId } = deleteGroupArgs;
 
 		const role = await this.checkRoleOfGroupExists(
 			deleteGroupArgs.groupId,
@@ -128,7 +125,7 @@ export class GroupsService {
 		}
 
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
-			groupId: group.id,
+			groupId,
 		});
 
 		// 그룹 구성원이 main 1명일때만 삭제 가능.
@@ -139,13 +136,13 @@ export class GroupsService {
 		const [GroupMemberStatus, GroupStatus] = await Promise.all([
 			await this.famsRepository.deleteGroupAllMember(
 				{
-					groupId: group.id,
+					groupId,
 				},
 				qr,
 			),
 			await this.groupsRepository.deleteGroup(
 				{
-					groupId: group.id,
+					groupId,
 				},
 				qr,
 			),
@@ -195,5 +192,9 @@ export class GroupsService {
 		}
 
 		return group;
+	}
+
+	async groupExistsByGroupId(groupId: string) {
+		return this.groupsRepository.exist({ where: { id: groupId } });
 	}
 }
