@@ -184,6 +184,10 @@ export class SchedulesService {
 		return schedule;
 	}
 
+	async scheduleExistsByScheduleId(scheduleId: string) {
+		return this.scheduleRepository.exist({ where: { id: scheduleId } });
+	}
+
 	private async deleteTourismPeriod(scheduleId: string, qr?: QueryRunner) {
 		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId, qr);
 	}
