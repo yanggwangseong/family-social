@@ -7,6 +7,7 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { GroupExistsMiddleware } from '@/common/middlewares/group-exists.middleware';
+import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
 import { FamEntity } from '@/models/entities/fam.entity';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { FamsRepository } from '@/models/repositories/fams.repository';
@@ -38,5 +39,20 @@ export class GroupsModule implements NestModule {
 				{ path: 'groups', method: RequestMethod.POST },
 			)
 			.forRoutes(GroupsController);
+
+		consumer.apply(ScheduleExistsMiddleware).forRoutes(
+			{
+				path: 'groups/:groupId/schedules/:scheduleId',
+				method: RequestMethod.GET,
+			},
+			{
+				path: 'groups/:groupId/schedules/:scheduleId',
+				method: RequestMethod.PUT,
+			},
+			{
+				path: 'groups/:groupId/schedules/:scheduleId',
+				method: RequestMethod.DELETE,
+			},
+		);
 	}
 }

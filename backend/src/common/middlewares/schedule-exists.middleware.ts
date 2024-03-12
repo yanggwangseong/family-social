@@ -28,6 +28,7 @@ export class ScheduleExistsMiddleware implements NestMiddleware {
 
 		const scheduleExist =
 			await this.schedulesService.scheduleExistsByScheduleId(scheduleId);
+
 		if (!scheduleExist) throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
 
 		next();
