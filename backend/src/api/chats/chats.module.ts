@@ -1,6 +1,12 @@
-import { Module } from '@nestjs/common';
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ChatExistsMiddleware } from '@/common/middlewares/chat-exists.middleware';
 import { ChatEntity } from '@/models/entities/chat.entity';
 import { MemberChatEntity } from '@/models/entities/member-chat.entity';
 import { MessageEntity } from '@/models/entities/message.entity';
@@ -30,4 +36,11 @@ import { MessagesService } from '../messages/messages.service';
 	],
 	exports: [],
 })
-export class ChatsModule {}
+export class ChatsModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(ChatExistsMiddleware).forRoutes({
+			path: 'chats/:chatId/messages',
+			method: RequestMethod.GET,
+		});
+	}
+}
