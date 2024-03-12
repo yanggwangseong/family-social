@@ -251,9 +251,6 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Param('commentId', ParseUUIDPipe) commentId: string,
 	) {
-		// 댓글이 존재 하는지 check;
-		await this.commentsService.findCommentByIdOrThrow(commentId);
-
 		return await this.commentsService.updateComment(
 			commentId,
 			dto.commentContents,
@@ -275,9 +272,6 @@ export class FeedsController {
 		@Param('feedId', ParseUUIDPipe) feedId: string,
 		@Param('commentId', ParseUUIDPipe) commentId: string,
 	) {
-		// 댓글이 존재 하는지 check;
-		await this.commentsService.findCommentByIdOrThrow(commentId);
-
 		return await this.commentsService.deleteComment(commentId);
 	}
 
