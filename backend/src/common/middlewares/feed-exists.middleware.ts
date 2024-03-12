@@ -12,6 +12,10 @@ export class FeedExistsMiddleware implements NestMiddleware {
 	constructor(private readonly feedsRepository: FeedsRepository) {}
 	async use(req: Request, res: Response, next: NextFunction) {
 		const feedId = req.params.feedId;
+		console.log('feedId=', feedId);
+
+		if (!feedId) throw EntityNotFoundException(ERROR_FEED_NOT_FOUND);
+
 		const schema = Joi.string().guid({
 			version: ['uuidv4'],
 		});

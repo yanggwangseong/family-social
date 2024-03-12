@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FeedExistsMiddleware } from '@/common/middlewares/feed-exists.middleware';
@@ -24,6 +29,13 @@ import { MediasModule } from '../medias/medias.module';
 })
 export class FeedsModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(FeedExistsMiddleware).forRoutes(FeedsController);
+		consumer
+			.apply(FeedExistsMiddleware)
+			.exclude(
+				{ path: 'feeds', method: RequestMethod.GET },
+				{ path: 'feeds', method: RequestMethod.POST },
+				{ path: 'test', method: RequestMethod.POST },
+			)
+			.forRoutes(FeedsController);
 	}
 }

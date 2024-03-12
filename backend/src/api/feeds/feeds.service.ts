@@ -34,12 +34,6 @@ export class FeedsService {
 	) {}
 
 	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
-		//const feed = await this.feedsRepository.findFeedInfoById(feedId);
-		//const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-
 		const [feed, medias] = await Promise.all([
 			await this.feedsRepository.findFeedInfoById(feedId),
 			await this.mediasService.findMediaUrlByFeedId(feedId),
@@ -93,9 +87,6 @@ export class FeedsService {
 	}
 
 	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
 		const like = await this.likesFeedRepository.findMemberLikesFeed(
 			memberId,
 			feedId,
@@ -133,9 +124,6 @@ export class FeedsService {
 		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
 		qr?: QueryRunner,
 	) {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
 		const feed = await this.feedsRepository.updateFeed(
 			{
 				feedId,
@@ -152,9 +140,6 @@ export class FeedsService {
 	}
 
 	async deleteFeed(feedId: string, qr?: QueryRunner) {
-		// 피드가 있는지 확인.
-		await this.findFeedByIdOrThrow(feedId);
-
 		const [mediaStatus, feedStatus] = await Promise.all([
 			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
 			await this.feedsRepository.deleteFeed(feedId, qr),
