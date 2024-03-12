@@ -1,6 +1,12 @@
-import { Module } from '@nestjs/common';
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { GroupExistsMiddleware } from '@/common/middlewares/group-exists.middleware';
 import { FamEntity } from '@/models/entities/fam.entity';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { FamsRepository } from '@/models/repositories/fams.repository';
@@ -23,4 +29,14 @@ import { SchedulesModule } from '../schedules/schedules.module';
 	providers: [GroupsService, GroupsRepository, FamsRepository],
 	exports: [],
 })
-export class GroupsModule {}
+export class GroupsModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(GroupExistsMiddleware)
+			.exclude(
+				{ path: 'groups', method: RequestMethod.GET },
+				{ path: 'groups', method: RequestMethod.POST },
+			)
+			.forRoutes(GroupsController);
+	}
+}
