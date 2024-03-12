@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CommentExistsMiddleware } from '@/common/middlewares/comment-exists.middleware';
 import { FeedExistsMiddleware } from '@/common/middlewares/feed-exists.middleware';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
@@ -37,5 +38,20 @@ export class FeedsModule implements NestModule {
 				{ path: 'test', method: RequestMethod.POST },
 			)
 			.forRoutes(FeedsController);
+
+		consumer.apply(CommentExistsMiddleware).forRoutes(
+			{
+				path: 'feeds/:feedId/comments/:commentId',
+				method: RequestMethod.PUT,
+			},
+			{
+				path: 'feeds/:feedId/comments/:commentId',
+				method: RequestMethod.DELETE,
+			},
+			{
+				path: 'feeds/:feedId/comments/:commentId/likes',
+				method: RequestMethod.PUT,
+			},
+		);
 	}
 }
