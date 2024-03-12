@@ -400,9 +400,6 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		//여행 일정 유/무 체크
-		await this.schedulesService.findScheduleById(scheduleId);
-
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
@@ -438,9 +435,6 @@ export class GroupsController {
 	) {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
-		//여행 일정 유/무 체크
-		await this.schedulesService.findScheduleById(scheduleId);
 
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
