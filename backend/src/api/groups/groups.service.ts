@@ -197,4 +197,8 @@ export class GroupsService {
 
 		return group;
 	}
+
+	async groupExistsByGroupId(groupId: string) {
+		return this.groupsRepository.exist({ where: { id: groupId } });
+	}
 }
