@@ -1,6 +1,8 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, ValidateNested } from 'class-validator';
 
+import { arrayValidationMessage } from '@/common/validation-message/array-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { FeedEntity } from '@/models/entities/feed.entity';
 
@@ -18,6 +20,8 @@ export class FeedCreateReqDto extends PickType(FeedEntity, [
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsArray()
+	@IsArray({ message: arrayValidationMessage })
+	@ValidateNested({ each: true })
+	@Type(() => MediaCreateReqDto)
 	medias!: MediaCreateReqDto[];
 }
