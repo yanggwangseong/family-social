@@ -8,6 +8,7 @@ import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
+import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -33,15 +34,24 @@ async function bootstrap() {
 		new ValidationPipe({
 			transform: true,
 			stopAtFirstError: true,
+			whitelist: true,
+			forbidNonWhitelisted: true,
 
 			exceptionFactory: (validationErrors: ValidationError[] = []) => {
-				const { constraints } = validationErrors[0];
+				//const { constraints } = validationErrors[0];
 
-				if (!constraints) return validationErrors;
+				const validationInstance = new CustomValidationPipe();
 
-				const [firstKey] = Object.keys(constraints);
+				const errors =
+					validationInstance._flattenValidationErrors(validationErrors);
 
-				return BadRequestServiceException(constraints[firstKey]);
+				return BadRequestServiceException(errors.join(','));
+
+				//if (!constraints) return validationErrors;
+
+				//const [firstKey] = Object.keys(constraints);
+
+				//return BadRequestServiceException(constraints[firstKey]);
 			},
 		}),
 	);
