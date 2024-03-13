@@ -1,5 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, ValidateNested } from 'class-validator';
 
 import { arrayValidationMessage } from '@/common/validation-message/array-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -20,5 +21,7 @@ export class TourismPeriodCreateReqDto extends PickType(TourismPeriodEntity, [
 		message: notEmptyValidationMessage,
 	})
 	@IsArray({ message: arrayValidationMessage })
+	@ValidateNested({ each: true })
+	@Type(() => TourismPeriodCreateReqDto)
 	tourisms!: TourismCreateReqDto[];
 }
