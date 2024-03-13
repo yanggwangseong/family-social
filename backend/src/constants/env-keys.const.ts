@@ -30,3 +30,7 @@ export const ENV_REFRESH_TOKEN_COOKIE_NAME =
 //tour-api
 export const ENV_TOUR_API_SERVICE_KEY = 'TOUR_API_SERVICE_KEY' as const;
 export const ENV_TOUR_API_END_POINT = 'TOUR_API_END_POINT' as const;
+
+//throttler
+export const ENV_THROTTLER_TTL = 'THROTTLER_TTL' as const;
+export const ENV_THROTTLER_LIMIT = 'THROTTLER_LIMIT' as const;
