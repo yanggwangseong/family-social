@@ -1,5 +1,6 @@
 import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
@@ -17,7 +18,9 @@ const getSwaggerOptions = () => ({
 });
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+	app.set('trust proxy', true);
+
 	const options = {
 		origin: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -67,6 +70,9 @@ async function bootstrap() {
 
 	// cookie parser
 	app.use(cookieParser());
+
+	// production 나중에 적용
+	//process.env.NODE_ENV === 'production' && app.use(helmet());
 
 	// swagger
 	const config = new DocumentBuilder()
