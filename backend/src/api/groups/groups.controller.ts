@@ -99,11 +99,13 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
+		const { groupName, groupDescription } = dto;
+
 		return await this.groupsService.createGroup(
 			{
 				memberId: sub,
-				groupName: dto.groupName,
-				groupDescription: dto.groupDescription,
+				groupName,
+				groupDescription,
 			},
 			qr,
 		);
@@ -127,10 +129,12 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@Body() dto: GroupUpdateReqDto,
 	) {
+		const { groupName, groupDescription } = dto;
+
 		return await this.groupsService.updateGroup({
-			groupId: groupId,
-			groupName: dto.groupName,
-			groupDescription: dto.groupDescription,
+			groupId,
+			groupName,
+			groupDescription,
 			memberId: sub,
 		});
 	}
@@ -154,7 +158,7 @@ export class GroupsController {
 	) {
 		return await this.groupsService.deleteGroup(
 			{
-				groupId: groupId,
+				groupId,
 				memberId: sub,
 			},
 			qr,
@@ -213,8 +217,8 @@ export class GroupsController {
 		await this.membersService.findMemberByIdOrThrow(memberId);
 
 		await this.famsService.createFamByMemberOfGroup({
-			memberId: memberId,
-			groupId: groupId,
+			memberId,
+			groupId,
 		});
 	}
 
@@ -246,15 +250,15 @@ export class GroupsController {
 
 		// 초대받은 유저인지 체크
 		await this.famsService.checkIfFamExists({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		return await this.famsService.updateFamInvitationAccept({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 			invitationAccepted: dto.invitationAccepted,
 		});
 	}
@@ -278,15 +282,15 @@ export class GroupsController {
 	) {
 		// fam에 존재하는지 확인
 		const fam = await this.famsService.checkIfFamExists({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		await this.famsService.deleteFamByMemberOfGroup({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		return fam;
@@ -407,7 +411,7 @@ export class GroupsController {
 			{
 				memberId: sub,
 				groupId,
-				scheduleId: scheduleId,
+				scheduleId,
 				periods: dto,
 			},
 			qr,
