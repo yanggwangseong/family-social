@@ -33,17 +33,9 @@ export class MembersService {
 		);
 	}
 
-	async updateMemberProfile({
-		memberId,
-		username,
-		phoneNumber,
-		profileImage,
-	}: IUpdateMemberArgs) {
+	async updateMemberProfile(updateMemberArgs: IUpdateMemberArgs) {
 		return await this.membersRepository.updateMemberProfile({
-			memberId,
-			username,
-			phoneNumber,
-			profileImage,
+			...updateMemberArgs,
 		});
 	}
 }

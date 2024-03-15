@@ -31,12 +31,12 @@ export class MembersRepository extends Repository<MemberEntity> {
 
 	async updateRefreshToken({
 		memberId,
-		refreshToken,
+		...rest
 	}: {
 		memberId: string;
 		refreshToken: string;
 	}): Promise<MemberResDto | null> {
-		await this.update({ id: memberId }, { refreshToken: refreshToken });
+		await this.update({ id: memberId }, { ...rest });
 		return this.findMemberById({ memberId: memberId });
 	}
 
@@ -148,7 +148,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async createMember(
-		{ email, username, password, phoneNumber }: ICreateMemberArgs,
+		createMemberArgs: ICreateMemberArgs,
 		signupVerifyToken: string,
 		qr?: QueryRunner,
 	): Promise<MemberResDto | null> {
@@ -156,10 +156,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 
 		const insertResult = await membersRepository.insert({
 			id: uuidv4(),
-			email: email,
-			username: username,
-			password: password,
-			phoneNumber: phoneNumber,
+			...createMemberArgs,
 			signupVerifyToken: signupVerifyToken,
 		});
 
@@ -168,15 +165,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return this.findMemberById({ memberId: id });
 	}
 
-	async updateMemberProfile({
-		memberId,
-		username,
-		phoneNumber,
-		profileImage,
-	}: IUpdateMemberArgs) {
-		await this.update(
-			{ id: memberId },
-			{ username, phoneNumber, profileImage },
-		);
+	async updateMemberProfile({ memberId, ...rest }: IUpdateMemberArgs) {
+		await this.update({ id: memberId }, { ...rest });
 	}
 }
