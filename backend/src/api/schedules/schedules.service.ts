@@ -67,19 +67,21 @@ export class SchedulesService {
 		{ memberId, groupId, scheduleItem }: ICreateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
+		const { scheduleName, periods, startPeriod, endPeriod } = scheduleItem;
+
 		const schedule = await this.scheduleRepository.createSchedule(
 			{
 				memberId,
 				groupId,
-				scheduleName: scheduleItem.scheduleName,
-				startPeriod: scheduleItem.startPeriod,
-				endPeriod: scheduleItem.endPeriod,
+				scheduleName,
+				startPeriod,
+				endPeriod,
 			},
 			qr,
 		);
 
 		const createTourismPeriod = await this.createTourismPeriod(
-			scheduleItem.periods,
+			periods,
 			schedule.id,
 			qr,
 		);
