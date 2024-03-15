@@ -80,11 +80,13 @@ export class MembersController {
 		if (sub !== memberId)
 			throw UnAuthOrizedException(ERROR_AUTHORIZATION_MEMBER);
 
+		const { username, phoneNumber, profileImage } = dto;
+
 		return await this.membersService.updateMemberProfile({
 			memberId,
-			username: dto.username,
-			phoneNumber: dto.phoneNumber,
-			profileImage: dto.profileImage,
+			username,
+			phoneNumber,
+			profileImage,
 		});
 	}
 

@@ -53,7 +53,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 				memberGroups: true,
 			},
 			where: {
-				email: email,
+				email,
 			},
 		});
 	}
@@ -65,7 +65,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}): Promise<VerifyEmailResDto | null> {
 		return await this.repository.findOne({
 			where: {
-				email: email,
+				email,
 			},
 			select: {
 				signupVerifyToken: true,
@@ -138,7 +138,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}): Promise<MemberResDto | null> {
 		return this.repository.findOne({
 			where: {
-				email: email,
+				email,
 			},
 			select: {
 				username: true,

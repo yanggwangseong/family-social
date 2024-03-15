@@ -77,7 +77,7 @@ export class GroupsService {
 
 		await this.famsRepository.createFam(
 			{
-				memberId: memberId,
+				memberId,
 				groupId: group.id,
 				role: 'main',
 				invitationAccepted: true,
@@ -103,9 +103,9 @@ export class GroupsService {
 		await this.checkDuplicateGroupName(memberId, groupName);
 
 		return await this.groupsRepository.updateGroup({
-			groupId: groupId,
-			groupName: groupName,
-			groupDescription: groupDescription,
+			groupId,
+			groupName,
+			groupDescription,
 		});
 	}
 
@@ -113,12 +113,9 @@ export class GroupsService {
 		deleteGroupArgs: IDeleteGroupArgs,
 		qr?: QueryRunner,
 	): Promise<void> {
-		const { groupId } = deleteGroupArgs;
+		const { groupId, memberId } = deleteGroupArgs;
 
-		const role = await this.checkRoleOfGroupExists(
-			deleteGroupArgs.groupId,
-			deleteGroupArgs.memberId,
-		);
+		const role = await this.checkRoleOfGroupExists(groupId, memberId);
 		// 해당 그룹의 권한이 main인지 체크
 		if (role.role !== 'main') {
 			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
