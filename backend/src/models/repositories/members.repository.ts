@@ -95,13 +95,13 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async findMemberById({
-		memberId,
+		memberId: id,
 	}: {
 		memberId: string;
 	}): Promise<MemberResDto | null> {
 		const member = await this.repository.findOne({
 			where: {
-				id: memberId,
+				id,
 			},
 			select: {
 				username: true,
@@ -113,13 +113,13 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async findRefreshTokenById({
-		memberId,
+		memberId: id,
 	}: {
 		memberId: string;
 	}): Promise<(MemberResDto & { refreshToken?: string }) | null> {
 		const member = await this.repository.findOne({
 			where: {
-				id: memberId,
+				id,
 			},
 			select: {
 				username: true,
@@ -138,7 +138,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}): Promise<MemberResDto | null> {
 		return this.repository.findOne({
 			where: {
-				email: email,
+				email,
 			},
 			select: {
 				username: true,

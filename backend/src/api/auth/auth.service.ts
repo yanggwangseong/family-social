@@ -54,6 +54,7 @@ export class AuthService {
 		const member = await this.membersRepository.signInUser(dto);
 
 		if (!member) throw EntityNotFoundException(ERROR_EMAIL_NOT_FOUND);
+
 		const passwordMatches = await this.CompareHashData<string>(
 			dto.password!,
 			member.password!,
@@ -118,8 +119,10 @@ export class AuthService {
 		dto: ICreateMemberArgs,
 		qr?: QueryRunner,
 	): Promise<MemberResDto> {
+		const { email, password } = dto;
+
 		const member = await this.membersRepository.findMemberByEmail({
-			email: dto.email,
+			email,
 		});
 		if (member) throw EntityConflictException(ERROR_USER_ALREADY_EXISTS);
 
@@ -127,7 +130,7 @@ export class AuthService {
 		const newMember = await this.membersRepository.createMember(
 			{
 				...dto,
-				password: await this.EncryptHashData<string>(dto.password!),
+				password: await this.EncryptHashData<string>(password!),
 			},
 			await this.EncryptHashData<string>(signupVerifyToken),
 			qr,
@@ -135,21 +138,23 @@ export class AuthService {
 		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
 		//유저 생성 성공 후 email 인증코드 전송.
-		await this.sendSignUpEmailVerify(dto.email, signupVerifyToken, qr);
+		await this.sendSignUpEmailVerify(email, signupVerifyToken, qr);
 
 		return newMember;
 	}
 
 	async verifyEmail(dto: IVerifyEmailArgs): Promise<VerifyEmailResDto> {
+		const { email, signupVerifyToken } = dto;
+
 		const memberByEmail =
 			await this.membersRepository.findsignupVerifyTokenByEmail({
-				email: dto.email,
+				email,
 			});
 
 		if (!memberByEmail) throw EntityNotFoundException(ERROR_EMAIL_NOT_FOUND);
 
 		const verifyEmailMatches = await this.CompareHashData<string>(
-			dto.signupVerifyToken,
+			signupVerifyToken,
 			memberByEmail.signupVerifyToken!,
 		);
 		if (!verifyEmailMatches)
