@@ -52,7 +52,7 @@ export class FamsRepository extends Repository<FamEntity> {
 				},
 			},
 			where: {
-				groupId: groupId,
+				groupId,
 				invitationAccepted: true,
 			},
 			relations: {
@@ -77,7 +77,7 @@ export class FamsRepository extends Repository<FamEntity> {
 				},
 			},
 			where: {
-				memberId: memberId,
+				memberId,
 				invitationAccepted: true,
 			},
 			relations: {
@@ -95,8 +95,8 @@ export class FamsRepository extends Repository<FamEntity> {
 				role: true,
 			},
 			where: {
-				groupId: groupId,
-				memberId: memberId,
+				groupId,
+				memberId,
 			},
 		});
 
@@ -110,7 +110,7 @@ export class FamsRepository extends Repository<FamEntity> {
 	}): Promise<[FamInvitationsResDto[], number]> {
 		const result = await this.repository.findAndCount({
 			where: {
-				memberId: memberId,
+				memberId,
 				invitationAccepted: false,
 			},
 			select: {
@@ -142,7 +142,7 @@ export class FamsRepository extends Repository<FamEntity> {
 	}): Promise<number> {
 		const memberGroup = await this.repository.count({
 			where: {
-				groupId: groupId,
+				groupId,
 				invitationAccepted: true,
 			},
 		});
@@ -158,8 +158,8 @@ export class FamsRepository extends Repository<FamEntity> {
 		const fam = await this.repository.findOne({
 			where: {
 				id: famId,
-				groupId: groupId,
-				memberId: memberId,
+				groupId,
+				memberId,
 			},
 			select: {
 				id: true,
@@ -212,11 +212,11 @@ export class FamsRepository extends Repository<FamEntity> {
 		groupId,
 	}: IUpdateFamInvitationAcceptArgs): Promise<FamResDto> {
 		await this.update(
-			{ id: famId, memberId: memberId, groupId: groupId },
+			{ id: famId, memberId, groupId },
 			{ invitationAccepted: invitationAccepted },
 		);
 
-		return this.findOrFailFamById({ famId: famId });
+		return this.findOrFailFamById({ famId });
 	}
 
 	async deleteGroupAllMember(
@@ -237,9 +237,8 @@ export class FamsRepository extends Repository<FamEntity> {
 	}
 
 	async deleteFam({
-		groupId,
-		memberId,
 		famId,
+		...rest
 	}: {
 		groupId: string;
 		memberId: string;
@@ -247,8 +246,7 @@ export class FamsRepository extends Repository<FamEntity> {
 	}): Promise<boolean> {
 		const { affected } = await this.delete({
 			id: famId,
-			groupId: groupId,
-			memberId: memberId,
+			...rest,
 		});
 
 		return !!affected;

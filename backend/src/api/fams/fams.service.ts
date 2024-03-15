@@ -20,49 +20,33 @@ import {
 export class FamsService {
 	constructor(private readonly famsRepository: FamsRepository) {}
 
-	async createFamByMemberOfGroup({
-		memberId,
-		groupId,
-	}: {
+	async createFamByMemberOfGroup(createFamArgs: {
 		memberId: string;
 		groupId: string;
 	}): Promise<void> {
 		await this.famsRepository.createFam({
-			memberId: memberId,
-			groupId: groupId,
+			...createFamArgs,
 			role: 'user',
 			invitationAccepted: false,
 		});
 		//[TODO] 그룹 초대 notification
 	}
 
-	async updateFamInvitationAccept({
-		groupId,
-		memberId,
-		famId,
-		invitationAccepted,
-	}: IUpdateFamInvitationAcceptArgs): Promise<FamResDto> {
+	async updateFamInvitationAccept(
+		updateFamInvitationAcceptArgs: IUpdateFamInvitationAcceptArgs,
+	): Promise<FamResDto> {
 		return await this.famsRepository.updateFamInvitationAccept({
-			groupId,
-			memberId,
-			famId,
-			invitationAccepted,
+			...updateFamInvitationAcceptArgs,
 		});
 	}
 
-	async deleteFamByMemberOfGroup({
-		groupId,
-		memberId,
-		famId,
-	}: {
+	async deleteFamByMemberOfGroup(deleteFamByMemberOfGroupArgs: {
 		groupId: string;
 		memberId: string;
 		famId: string;
 	}): Promise<void> {
 		const status = await this.famsRepository.deleteFam({
-			groupId,
-			memberId,
-			famId,
+			...deleteFamByMemberOfGroupArgs,
 		});
 
 		if (!status) throw EntityConflictException(ERROR_DELETE_GROUP_MEMBER);
@@ -82,15 +66,11 @@ export class FamsService {
 		};
 	}
 
-	async checkIfFamExists({
-		groupId,
-		memberId,
-		famId,
-	}: IFindInvitationByFamArgs): Promise<FamResDto> {
+	async checkIfFamExists(
+		findInvitationByFamArgs: IFindInvitationByFamArgs,
+	): Promise<FamResDto> {
 		const fam = await this.famsRepository.findInvitationByFam({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			...findInvitationByFamArgs,
 		});
 
 		if (!fam) {

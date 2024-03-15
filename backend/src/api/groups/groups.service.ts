@@ -89,23 +89,19 @@ export class GroupsService {
 	}
 
 	async updateGroup({
-		groupId,
-		groupName,
-		groupDescription,
 		memberId,
+		...rest
 	}: {
+		memberId: string;
 		groupId: string;
 		groupName: string;
 		groupDescription?: string;
-		memberId: string;
 	}): Promise<GroupResDto> {
 		// 중복된 그룹 이름 체크
-		await this.checkDuplicateGroupName(memberId, groupName);
+		await this.checkDuplicateGroupName(memberId, rest.groupName);
 
 		return await this.groupsRepository.updateGroup({
-			groupId,
-			groupName,
-			groupDescription,
+			...rest,
 		});
 	}
 
@@ -167,8 +163,8 @@ export class GroupsService {
 
 	async checkRoleOfGroupExists(groupId: string, memberId: string) {
 		const role = await this.famsRepository.isMainRoleForMemberInGroup({
-			groupId: groupId,
-			memberId: memberId,
+			groupId,
+			memberId,
 		});
 
 		// 해당 그룹에 로그인한 유저가 속하는 사람인지 체크

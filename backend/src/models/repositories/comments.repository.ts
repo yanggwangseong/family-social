@@ -71,20 +71,10 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		});
 	}
 
-	async createComment({
-		commentContents,
-		replyId,
-		parentId,
-		feedId,
-		memberId,
-	}: ICreateCommentsArgs) {
+	async createComment(createCommentsArgs: ICreateCommentsArgs) {
 		await this.repository.insert({
 			id: uuidv4(),
-			commentContents: commentContents,
-			replyId: replyId,
-			parentId: parentId,
-			feedId: feedId,
-			memberId: memberId,
+			...createCommentsArgs,
 		});
 	}
 
