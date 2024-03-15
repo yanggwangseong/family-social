@@ -143,9 +143,10 @@ export class AuthService {
 		return newMember;
 	}
 
-	async verifyEmail(dto: IVerifyEmailArgs): Promise<VerifyEmailResDto> {
-		const { email, signupVerifyToken } = dto;
-
+	async verifyEmail({
+		email,
+		signupVerifyToken,
+	}: IVerifyEmailArgs): Promise<VerifyEmailResDto> {
 		const memberByEmail =
 			await this.membersRepository.findsignupVerifyTokenByEmail({
 				email,

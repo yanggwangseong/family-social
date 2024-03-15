@@ -33,21 +33,25 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
+	async findFeedInfoById(feedIdArgs: string): Promise<FeedResDto> {
 		const [feed, medias] = await Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedId),
-			await this.mediasService.findMediaUrlByFeedId(feedId),
+			await this.feedsRepository.findFeedInfoById(feedIdArgs),
+			await this.mediasService.findMediaUrlByFeedId(feedIdArgs),
 		]);
 
+		const { id: feedId, contents, isPublic, group, member } = feed;
+		const { id: groupId, groupName } = group;
+		const { id: memberId, username } = member;
+
 		return {
-			feedId: feed.id,
-			contents: feed.contents,
-			isPublic: feed.isPublic,
-			groupId: feed.group.id,
-			groupName: feed.group.groupName,
-			memberId: feed.member.id,
-			username: feed.member.username,
-			medias: medias,
+			feedId,
+			contents,
+			isPublic,
+			groupId,
+			groupName,
+			memberId,
+			username,
+			medias,
 		};
 	}
 

@@ -53,7 +53,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 				memberGroups: true,
 			},
 			where: {
-				email: email,
+				email,
 			},
 		});
 	}
@@ -65,7 +65,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}): Promise<VerifyEmailResDto | null> {
 		return await this.repository.findOne({
 			where: {
-				email: email,
+				email,
 			},
 			select: {
 				signupVerifyToken: true,
@@ -95,13 +95,13 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async findMemberById({
-		memberId: id,
+		memberId,
 	}: {
 		memberId: string;
 	}): Promise<MemberResDto | null> {
 		const member = await this.repository.findOne({
 			where: {
-				id,
+				id: memberId,
 			},
 			select: {
 				username: true,
@@ -113,13 +113,13 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async findRefreshTokenById({
-		memberId: id,
+		memberId,
 	}: {
 		memberId: string;
 	}): Promise<(MemberResDto & { refreshToken?: string }) | null> {
 		const member = await this.repository.findOne({
 			where: {
-				id,
+				id: memberId,
 			},
 			select: {
 				username: true,
