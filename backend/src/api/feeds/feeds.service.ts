@@ -39,18 +39,17 @@ export class FeedsService {
 			await this.mediasService.findMediaUrlByFeedId(feedIdArgs),
 		]);
 
-		const { id: feedId, contents, isPublic, group, member } = feed;
-		const { id: groupId, groupName } = group;
-		const { id: memberId, username } = member;
+		const { id: feedId, group, member, ...feedRest } = feed;
+		const { id: groupId, ...groupRest } = group;
+		const { id: memberId, ...memberRest } = member;
 
 		return {
 			feedId,
-			contents,
-			isPublic,
+			...feedRest,
 			groupId,
-			groupName,
+			...groupRest,
 			memberId,
-			username,
+			...memberRest,
 			medias,
 		};
 	}
@@ -106,15 +105,12 @@ export class FeedsService {
 	}
 
 	async createFeed(
-		{ contents, isPublic, groupId, memberId, medias }: ICreateFeedArgs,
+		{ medias, ...rest }: ICreateFeedArgs,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feed = await this.feedsRepository.createFeed(
 			{
-				contents,
-				isPublic,
-				groupId,
-				memberId,
+				...rest,
 			},
 			qr,
 		);
@@ -124,21 +120,15 @@ export class FeedsService {
 		return feed;
 	}
 
-	async updateFeed(
-		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
-		qr?: QueryRunner,
-	) {
+	async updateFeed({ medias, ...rest }: IUpdateFeedArgs, qr?: QueryRunner) {
 		const feed = await this.feedsRepository.updateFeed(
 			{
-				feedId,
-				contents,
-				isPublic,
-				groupId,
+				...rest,
 			},
 			qr,
 		);
 
-		await this.mediasService.updateFeedMedias(medias, feedId, qr);
+		await this.mediasService.updateFeedMedias(medias, rest.feedId, qr);
 
 		return feed;
 	}

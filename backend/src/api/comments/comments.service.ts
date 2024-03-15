@@ -106,19 +106,9 @@ export class CommentsService {
 		return total ? total : 0;
 	}
 
-	async createComment({
-		commentContents,
-		replyId,
-		parentId,
-		feedId,
-		memberId,
-	}: ICreateCommentsArgs) {
+	async createComment(createCommentsArgs: ICreateCommentsArgs) {
 		return await this.commentsRepository.createComment({
-			commentContents,
-			replyId,
-			parentId,
-			feedId,
-			memberId,
+			...createCommentsArgs,
 		});
 	}
 
