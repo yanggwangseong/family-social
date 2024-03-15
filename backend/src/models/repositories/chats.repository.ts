@@ -21,7 +21,6 @@ export class ChatsRepository extends Repository<ChatEntity> {
 	}
 
 	async createChat(qr?: QueryRunner): Promise<{ id: string }> {
-		if (!qr) console.log('qr notfound');
 		const chatsRepository = this.getChatsRepository(qr);
 
 		const chat = await chatsRepository.insert({
