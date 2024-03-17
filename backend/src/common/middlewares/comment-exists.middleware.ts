@@ -3,9 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 
 import { CommentsService } from '@/api/comments/comments.service';
-import { ERROR_COMMENT_NOT_FOUND } from '@/constants/business-error';
+import {
+	ERROR_COMMENT_NOT_FOUND,
+	ERROR_UUID_PIPE_MESSAGE,
+} from '@/constants/business-error';
 
-import { EntityNotFoundException } from '../exception/service.exception';
+import {
+	BadRequestServiceException,
+	EntityNotFoundException,
+} from '../exception/service.exception';
 
 @Injectable()
 export class CommentExistsMiddleware implements NestMiddleware {
@@ -22,7 +28,7 @@ export class CommentExistsMiddleware implements NestMiddleware {
 		const validationResult = schema.safeParse(commentId);
 
 		if (validationResult.success === false) {
-			throw EntityNotFoundException(ERROR_COMMENT_NOT_FOUND);
+			throw BadRequestServiceException(ERROR_UUID_PIPE_MESSAGE);
 		}
 
 		const commentExist = await this.commentsService.commentExistsByCommentId(

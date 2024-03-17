@@ -3,9 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 
 import { SchedulesService } from '@/api/schedules/schedules.service';
-import { ERROR_SCHEDULE_NOT_FOUND } from '@/constants/business-error';
+import {
+	ERROR_SCHEDULE_NOT_FOUND,
+	ERROR_UUID_PIPE_MESSAGE,
+} from '@/constants/business-error';
 
-import { EntityNotFoundException } from '../exception/service.exception';
+import {
+	BadRequestServiceException,
+	EntityNotFoundException,
+} from '../exception/service.exception';
 
 @Injectable()
 export class ScheduleExistsMiddleware implements NestMiddleware {
@@ -21,7 +27,7 @@ export class ScheduleExistsMiddleware implements NestMiddleware {
 		const validationResult = schema.safeParse(scheduleId);
 
 		if (validationResult.success === false) {
-			throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
+			throw BadRequestServiceException(ERROR_UUID_PIPE_MESSAGE);
 		}
 
 		const scheduleExist =
