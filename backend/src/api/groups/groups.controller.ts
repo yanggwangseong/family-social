@@ -40,6 +40,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import {
 	ERROR_CANNOT_INVITE_SELF,
@@ -194,7 +195,12 @@ export class GroupsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		groupId: string,
-		@Query('page', ParseIntPipe) page: number,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		const limit = 10;
@@ -357,9 +363,17 @@ export class GroupsController {
 	@GetScheduleListSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
-		@Query('page', new DefaultValuePipe(1), new ParseIntPipe())
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
 		page: number,
-		@Query('limit', new DefaultValuePipe(3), new ParseIntPipe())
+		@Query(
+			'limit',
+			new DefaultValuePipe(3),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
 		limit: number,
 		@Param(
 			'groupId',
