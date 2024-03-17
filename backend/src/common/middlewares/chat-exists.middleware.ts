@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import { ChatsService } from '@/api/chats/chats.service';
 import { ERROR_CHAT_NOT_FOUND } from '@/constants/business-error';
@@ -15,13 +15,11 @@ export class ChatExistsMiddleware implements NestMiddleware {
 
 		if (!chatId) throw EntityNotFoundException(ERROR_CHAT_NOT_FOUND);
 
-		const schema = Joi.string().guid({
-			version: ['uuidv4'],
-		});
+		const schema = z.string().uuid();
 
-		const { error } = schema.validate(chatId);
+		const validationResult = schema.safeParse(chatId);
 
-		if (error) {
+		if (validationResult.success === false) {
 			throw EntityNotFoundException(ERROR_CHAT_NOT_FOUND);
 		}
 

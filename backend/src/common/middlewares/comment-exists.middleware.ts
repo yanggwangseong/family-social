@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import { CommentsService } from '@/api/comments/comments.service';
 import { ERROR_COMMENT_NOT_FOUND } from '@/constants/business-error';
@@ -17,13 +17,11 @@ export class CommentExistsMiddleware implements NestMiddleware {
 			throw EntityNotFoundException(ERROR_COMMENT_NOT_FOUND);
 		}
 
-		const schema = Joi.string().guid({
-			version: ['uuidv4'],
-		});
+		const schema = z.string().uuid();
 
-		const { error } = schema.validate(commentId);
+		const validationResult = schema.safeParse(commentId);
 
-		if (error) {
+		if (validationResult.success === false) {
 			throw EntityNotFoundException(ERROR_COMMENT_NOT_FOUND);
 		}
 

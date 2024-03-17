@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import { SchedulesService } from '@/api/schedules/schedules.service';
 import { ERROR_SCHEDULE_NOT_FOUND } from '@/constants/business-error';
@@ -16,13 +16,11 @@ export class ScheduleExistsMiddleware implements NestMiddleware {
 			throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
 		}
 
-		const schema = Joi.string().guid({
-			version: ['uuidv4'],
-		});
+		const schema = z.string().uuid();
 
-		const { error } = schema.validate(scheduleId);
+		const validationResult = schema.safeParse(scheduleId);
 
-		if (error) {
+		if (validationResult.success === false) {
 			throw EntityNotFoundException(ERROR_SCHEDULE_NOT_FOUND);
 		}
 
