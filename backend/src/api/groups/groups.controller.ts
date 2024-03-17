@@ -38,6 +38,7 @@ import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
+import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
@@ -462,7 +463,7 @@ export class GroupsController {
 	 * @returns 일정 아이디
 	 */
 	@UpdateToursScheduleSwagger()
-	@UseGuards(GroupMemberShipGuard)
+	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
@@ -480,9 +481,6 @@ export class GroupsController {
 		@Body() dto: TourismPeriodUpdateReqDto[],
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		//해당 일정 작성자인지 확인
-		await this.schedulesService.findOwnSchedule(scheduleId, sub);
-
 		return await this.schedulesService.updateToursSchedule(
 			{
 				memberId: sub,
@@ -505,7 +503,7 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@DeleteToursScheduleSwagger()
-	@UseGuards(GroupMemberShipGuard)
+	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Delete('/:groupId/schedules/:scheduleId')
 	async deleteToursSchedule(
@@ -514,12 +512,8 @@ export class GroupsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		scheduleId: string,
-		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		//해당 일정 작성자인지 확인
-		await this.schedulesService.findOwnSchedule(scheduleId, sub);
-
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
 	}
 }
