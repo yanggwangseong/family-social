@@ -1,9 +1,11 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
@@ -37,6 +39,8 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -66,7 +70,13 @@ export class FeedsController {
 	 */
 	@GetFeedDetailSwagger()
 	@Get(':feedId')
-	async findFeedById(@Param('feedId', ParseUUIDPipe) feedId: string) {
+	async findFeedById(
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
+	) {
 		return await this.feedsService.findFeedInfoById(feedId);
 	}
 
@@ -84,7 +94,12 @@ export class FeedsController {
 	@Get()
 	async findAllFeed(
 		@Query('options') options: 'TOP' | 'MYFEED' | 'ALL',
-		@Query('page') page: number,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		return await this.feedsService.findAllFeed(page, sub, options);
@@ -141,7 +156,11 @@ export class FeedsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Put(':feedId')
 	async updateFeed(
-		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
 		@Body() dto: FeedUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
@@ -170,7 +189,11 @@ export class FeedsController {
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
 		@CurrentUser('sub') sub: string,
-		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
 	) {
 		return await this.feedsService.updateLikesFeedId(sub, feedId);
 	}
@@ -187,7 +210,11 @@ export class FeedsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Delete(':feedId')
 	async deleteFeed(
-		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		await this.feedsService.deleteFeed(feedId, qr);
@@ -223,7 +250,11 @@ export class FeedsController {
 	async createComment(
 		@CurrentUser('sub') sub: string,
 		@Body() dto: CommentCreateReqDto,
-		@Param('feedId', ParseUUIDPipe) feedId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
 	) {
 		return await this.commentsService.createComment({
 			commentContents: dto.commentContents,
@@ -248,8 +279,16 @@ export class FeedsController {
 	@Put(':feedId/comments/:commentId')
 	async updateComment(
 		@Body() dto: CommentUpdateReqDto,
-		@Param('feedId', ParseUUIDPipe) feedId: string,
-		@Param('commentId', ParseUUIDPipe) commentId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
+		@Param(
+			'commentId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		commentId: string,
 	) {
 		return await this.commentsService.updateComment(
 			commentId,
@@ -269,8 +308,16 @@ export class FeedsController {
 	@DeleteCommentSwagger()
 	@Delete(':feedId/comments/:commentId')
 	async deleteComment(
-		@Param('feedId', ParseUUIDPipe) feedId: string,
-		@Param('commentId', ParseUUIDPipe) commentId: string,
+		@Param(
+			'feedId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		feedId: string,
+		@Param(
+			'commentId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		commentId: string,
 	) {
 		return await this.commentsService.deleteComment(commentId);
 	}
@@ -288,7 +335,11 @@ export class FeedsController {
 	@Put(':feedId/comments/:commentId/likes')
 	async updateLikesCommentId(
 		@CurrentUser('sub') sub: string,
-		@Param('commentId', ParseUUIDPipe) commentId: string,
+		@Param(
+			'commentId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		commentId: string,
 	) {
 		return await this.commentsService.updateLikesCommentId(sub, commentId);
 	}

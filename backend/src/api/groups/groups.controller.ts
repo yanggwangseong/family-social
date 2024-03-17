@@ -1,9 +1,11 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
@@ -38,6 +40,8 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
@@ -125,7 +129,11 @@ export class GroupsController {
 	@UpdateGroupSwagger()
 	@Put(':groupId')
 	async updateGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: GroupUpdateReqDto,
 	) {
@@ -152,7 +160,11 @@ export class GroupsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Delete(':groupId')
 	async deleteGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
@@ -178,8 +190,17 @@ export class GroupsController {
 	@GetMemberListBelongToGroupSwagger()
 	@Get('/:groupId/members')
 	async getMemberListBelongToGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Query('page') page: number,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		const limit = 10;
@@ -205,8 +226,16 @@ export class GroupsController {
 	@Post('/:groupId/members/:memberId/fams')
 	async createFamByMemberOfGroup(
 		@CurrentUser('sub') sub: string,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
 	) {
 		//자기 자신을 초대한지 체크
 		if (sub === memberId) {
@@ -238,9 +267,21 @@ export class GroupsController {
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
 	async updateFamInvitationAccept(
 		@CurrentUser('sub') sub: string,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
-		@Param('famId', ParseUUIDPipe) famId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+		@Param(
+			'famId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
 		//초대 받은 멤버와 인증된 멤버와 같은지 체크
@@ -276,9 +317,21 @@ export class GroupsController {
 	@DeleteFamByMemberOfGroupSwagger()
 	@Delete('/:groupId/members/:memberId/fams/:famId')
 	async deleteFamByMemberOfGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
-		@Param('famId', ParseUUIDPipe) famId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+		@Param(
+			'famId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		famId: string,
 	) {
 		// fam에 존재하는지 확인
 		const fam = await this.famsService.checkIfFamExists({
@@ -310,9 +363,23 @@ export class GroupsController {
 	@GetScheduleListSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
-		@Query('page') page: number,
-		@Query('limit') limit: number = 3,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
+		@Query(
+			'limit',
+			new DefaultValuePipe(3),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		limit: number,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		// 그룹에 속한 사람인지 체크
@@ -338,8 +405,16 @@ export class GroupsController {
 	@GetOneScheduleSwagger()
 	@Get('/:groupId/schedules/:scheduleId')
 	async getOneScheduleById(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		// 그룹에 속한 사람인지 체크
@@ -362,7 +437,11 @@ export class GroupsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Post('/:groupId/schedules')
 	async createToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: ScheduleCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
@@ -395,8 +474,16 @@ export class GroupsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: TourismPeriodUpdateReqDto[],
 		@QueryRunnerDecorator() qr: QueryRunner,
@@ -432,8 +519,16 @@ export class GroupsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Delete('/:groupId/schedules/:scheduleId')
 	async deleteToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {

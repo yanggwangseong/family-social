@@ -36,6 +36,9 @@ async function bootstrap() {
 	app.useGlobalPipes(
 		new ValidationPipe({
 			transform: true,
+			transformOptions: {
+				enableImplicitConversion: false,
+			},
 			stopAtFirstError: true,
 			whitelist: true,
 			forbidNonWhitelisted: true,

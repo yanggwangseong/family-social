@@ -19,6 +19,7 @@ import { BadRequestServiceException } from '@/common/exception/service.exception
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ScheduleUpdateTitleDto } from '@/models/dto/schedule/req/schedule-update-title.dto';
 import { createScheduleThumbnailImageMulterOptions } from '@/utils/upload-media';
 
@@ -43,7 +44,11 @@ export class SchedulesController {
 	@PatchScheduleTitleSwagger()
 	@Patch(':scheduleId/title')
 	async patchScheduleTitle(
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@Body() dto: ScheduleUpdateTitleDto,
 	) {
 		return await this.schedulesService.updateScheduleTitleById(
@@ -68,7 +73,11 @@ export class SchedulesController {
 	)
 	async PatchScheduleUploadThumbnailImage(
 		@UploadedFiles() files: Express.MulterS3.File[],
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 	) {
 		if (!files?.length) {
 			throw BadRequestServiceException(`파일이 없습니다.`);

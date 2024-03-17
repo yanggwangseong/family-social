@@ -3,9 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 
 import { GroupsService } from '@/api/groups/groups.service';
-import { ERROR_GROUP_NOT_FOUND } from '@/constants/business-error';
+import {
+	ERROR_GROUP_NOT_FOUND,
+	ERROR_UUID_PIPE_MESSAGE,
+} from '@/constants/business-error';
 
-import { EntityNotFoundException } from '../exception/service.exception';
+import {
+	BadRequestServiceException,
+	EntityNotFoundException,
+} from '../exception/service.exception';
 
 @Injectable()
 export class GroupExistsMiddleware implements NestMiddleware {
@@ -21,7 +27,7 @@ export class GroupExistsMiddleware implements NestMiddleware {
 		const validationResult = schema.safeParse(groupId);
 
 		if (validationResult.success === false) {
-			throw EntityNotFoundException(ERROR_GROUP_NOT_FOUND);
+			throw BadRequestServiceException(ERROR_UUID_PIPE_MESSAGE);
 		}
 
 		const groupExist = await this.groupsService.groupExistsByGroupId(groupId);
