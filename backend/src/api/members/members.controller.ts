@@ -25,6 +25,7 @@ import {
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
 import {
@@ -74,7 +75,11 @@ export class MembersController {
 	@Put(':memberId')
 	async updateMemberProfile(
 		@Body() dto: MemberUpdateReqDto,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		if (sub !== memberId)
