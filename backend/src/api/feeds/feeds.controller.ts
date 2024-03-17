@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
@@ -38,6 +39,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
@@ -92,7 +94,12 @@ export class FeedsController {
 	@Get()
 	async findAllFeed(
 		@Query('options') options: 'TOP' | 'MYFEED' | 'ALL',
-		@Query('page', ParseIntPipe) page: number,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		return await this.feedsService.findAllFeed(page, sub, options);

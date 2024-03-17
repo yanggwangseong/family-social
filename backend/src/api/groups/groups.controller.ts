@@ -1,9 +1,11 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
@@ -192,7 +194,7 @@ export class GroupsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		groupId: string,
-		@Query('page') page: number,
+		@Query('page', ParseIntPipe) page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		const limit = 10;
@@ -355,8 +357,10 @@ export class GroupsController {
 	@GetScheduleListSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
-		@Query('page') page: number,
-		@Query('limit') limit: number = 3,
+		@Query('page', new DefaultValuePipe(1), new ParseIntPipe())
+		page: number,
+		@Query('limit', new DefaultValuePipe(3), new ParseIntPipe())
+		limit: number,
 		@Param(
 			'groupId',
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
