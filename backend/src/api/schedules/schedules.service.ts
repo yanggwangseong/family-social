@@ -175,6 +175,18 @@ export class SchedulesService {
 		return schedule;
 	}
 
+	async isMineScheduleExists(
+		scheduleId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return await this.scheduleRepository.exist({
+			where: {
+				id: scheduleId,
+				memberId,
+			},
+		});
+	}
+
 	async findScheduleById(scheduleId: string): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.findScheduleById(scheduleId);
 
