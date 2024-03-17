@@ -37,6 +37,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
@@ -403,23 +404,15 @@ export class GroupsController {
 	 * @returns 특정 여행 일정
 	 */
 	@GetOneScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@Get('/:groupId/schedules/:scheduleId')
 	async getOneScheduleById(
-		@Param(
-			'groupId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		groupId: string,
 		@Param(
 			'scheduleId',
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		scheduleId: string,
-		@CurrentUser('sub') sub: string,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		return await this.schedulesService.getOneScheduleById(scheduleId);
 	}
 
@@ -434,6 +427,7 @@ export class GroupsController {
 	 * @returns 일정 아이디
 	 */
 	@CreateToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post('/:groupId/schedules')
 	async createToursSchedule(
@@ -446,9 +440,6 @@ export class GroupsController {
 		@Body() dto: ScheduleCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		return await this.schedulesService.createToursSchedule(
 			{
 				memberId: sub,
@@ -471,6 +462,7 @@ export class GroupsController {
 	 * @returns 일정 아이디
 	 */
 	@UpdateToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
@@ -488,9 +480,6 @@ export class GroupsController {
 		@Body() dto: TourismPeriodUpdateReqDto[],
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
@@ -516,14 +505,10 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@DeleteToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Delete('/:groupId/schedules/:scheduleId')
 	async deleteToursSchedule(
-		@Param(
-			'groupId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		groupId: string,
 		@Param(
 			'scheduleId',
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
@@ -532,9 +517,6 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		//해당 일정 작성자인지 확인
 		await this.schedulesService.findOwnSchedule(scheduleId, sub);
 
