@@ -175,6 +175,18 @@ export class GroupsService {
 		return role;
 	}
 
+	async memberShipOfGroupExists(
+		groupId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return await this.famsRepository.exist({
+			where: {
+				groupId,
+				memberId,
+			},
+		});
+	}
+
 	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {
 		const group = await this.groupsRepository.findGroupById({
 			groupId,
