@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import Joi from 'joi';
+import { z } from 'zod';
 
 import { ERROR_FEED_NOT_FOUND } from '@/constants/business-error';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
@@ -15,13 +15,11 @@ export class FeedExistsMiddleware implements NestMiddleware {
 
 		if (!feedId) throw EntityNotFoundException(ERROR_FEED_NOT_FOUND);
 
-		const schema = Joi.string().guid({
-			version: ['uuidv4'],
-		});
+		const schema = z.string().uuid();
 
-		const { error } = schema.validate(feedId);
+		const validationResult = schema.safeParse(feedId);
 
-		if (error) {
+		if (validationResult.success === false) {
 			throw EntityNotFoundException(ERROR_FEED_NOT_FOUND);
 		}
 
