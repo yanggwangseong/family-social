@@ -160,6 +160,15 @@ export class FeedsService {
 		return feed;
 	}
 
+	async isMineFeedExists(feedId: string, memberId: string): Promise<boolean> {
+		return await this.feedsRepository.exist({
+			where: {
+				id: feedId,
+				memberId,
+			},
+		});
+	}
+
 	private async getMediaUrlAndCommentsByFeedId(
 		feedId: string,
 		memberId: string,
