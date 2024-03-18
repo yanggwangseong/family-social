@@ -36,6 +36,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
@@ -153,6 +154,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@UpdateFeedSwagger()
+	@UseGuards(IsMineFeedGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Put(':feedId')
 	async updateFeed(
@@ -207,6 +209,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@DeleteFeedSwagger()
+	@UseGuards(IsMineFeedGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Delete(':feedId')
 	async deleteFeed(
