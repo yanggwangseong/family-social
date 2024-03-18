@@ -1,8 +1,8 @@
 import { AiOutlineDelete } from 'react-icons/ai';
 import { ToggleMenu } from './toggle-modal.interface';
 import { BsLink45Deg, BsPencil, BsSend } from 'react-icons/bs';
-import { TbDoorExit } from 'react-icons/tb';
 import { LayerMode } from 'types';
+import { PiDoorDuotone } from 'react-icons/pi';
 
 export const InviteMenu: ToggleMenu[] = [
 	{
@@ -21,7 +21,7 @@ export const InviteMenu: ToggleMenu[] = [
 
 export const GroupSettingMenu: ToggleMenu[] = [
 	{
-		Icon: TbDoorExit,
+		Icon: PiDoorDuotone,
 		title: '그룹 삭제',
 		description: '관리자만 그룹을 삭제 할 수 있습니다',
 		layer: LayerMode.groupDeleteConfirm,

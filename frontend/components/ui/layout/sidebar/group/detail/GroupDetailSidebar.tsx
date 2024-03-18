@@ -9,6 +9,11 @@ import {
 	BsHouseDoor,
 } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import {
+	PiUserDuotone,
+	PiHouseDuotone,
+	PiGearSixDuotone,
+} from 'react-icons/pi';
 import { FiSettings } from 'react-icons/fi';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
@@ -50,7 +55,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 
 			<div className={styles.sidebar_member_container}>
 				<div className={styles.icon_container}>
-					<BsPersonFill size={24} color="#707070" />
+					<PiUserDuotone size={24} color="#0a0a0a" />
 				</div>
 				<div className={styles.member_text}>1명</div>
 			</div>
@@ -97,7 +102,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 			<div className={styles.sidebar_home_btn_container}>
 				<div className={styles.home_menu_container}>
 					<div className={styles.icon_container}>
-						<BsHouseDoor size={22} />
+						<PiHouseDuotone size={22} />
 					</div>
 					<div className={styles.home_menu_text}>
 						<div>커뮤니티 홈</div>
@@ -128,7 +133,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 							href={`/groups/${groupId}/edit`}
 						>
 							<div className={styles.icon_container}>
-								<FiSettings size={22} />
+								<PiGearSixDuotone size={22} />
 							</div>
 							<div className={styles.menu_container}>
 								<div>그룹 설정</div>
