@@ -1,18 +1,22 @@
 import { AiOutlineDelete } from 'react-icons/ai';
 import { ToggleMenu } from './toggle-modal.interface';
-import { BsLink45Deg, BsPencil, BsSend } from 'react-icons/bs';
+import { BsPencil } from 'react-icons/bs';
 import { LayerMode } from 'types';
-import { PiDoorDuotone } from 'react-icons/pi';
+import {
+	PiDoorDuotone,
+	PiPaperclipDuotone,
+	PiPaperPlaneTiltDuotone,
+} from 'react-icons/pi';
 
 export const InviteMenu: ToggleMenu[] = [
 	{
-		Icon: BsSend,
+		Icon: PiPaperPlaneTiltDuotone,
 		title: '이메일로 초대하기',
 		description: '사람들에게 이메일 초대를 보냅니다',
 		layer: LayerMode.emailInvite,
 	},
 	{
-		Icon: BsLink45Deg,
+		Icon: PiPaperclipDuotone,
 		title: '링크로 초대하기',
 		description: '링크를 통해서 초대 할 수 있습니다',
 		layer: LayerMode.linkInvite,
