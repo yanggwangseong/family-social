@@ -24,7 +24,11 @@
 			@apply relative w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
 
 			&:hover {
-				@apply bg-customOrange;
+				@apply border-customOrange;
+
+				> svg {
+					@apply fill-customOrange;
+				}
 
 				.icon {
 					@apply cursor-pointer;
@@ -32,7 +36,11 @@
 			}
 
 			&.active {
-				@apply bg-customOrange;
+				@apply border-customOrange;
+
+				> svg {
+					@apply fill-customOrange;
+				}
 			}
 		}
 	}
