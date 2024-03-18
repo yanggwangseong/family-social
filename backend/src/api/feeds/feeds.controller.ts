@@ -36,6 +36,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -279,6 +280,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@UpdateCommentSwagger()
+	@UseGuards(IsMineCommentGuard)
 	@Put(':feedId/comments/:commentId')
 	async updateComment(
 		@Body() dto: CommentUpdateReqDto,
@@ -309,6 +311,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@DeleteCommentSwagger()
+	@UseGuards(IsMineCommentGuard)
 	@Delete(':feedId/comments/:commentId')
 	async deleteComment(
 		@Param(
