@@ -141,6 +141,18 @@ export class CommentsService {
 		return this.commentsRepository.exist({ where: { id: commentId } });
 	}
 
+	async isMineCommentExists(
+		commentId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return this.commentsRepository.exist({
+			where: {
+				id: commentId,
+				memberId,
+			},
+		});
+	}
+
 	async updateLikesCommentId(
 		memberId: string,
 		commentId: string,
