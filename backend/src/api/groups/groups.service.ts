@@ -77,7 +77,7 @@ export class GroupsService {
 
 		await this.famsRepository.createFam(
 			{
-				memberId: memberId,
+				memberId,
 				groupId: group.id,
 				role: 'main',
 				invitationAccepted: true,
@@ -89,23 +89,19 @@ export class GroupsService {
 	}
 
 	async updateGroup({
-		groupId,
-		groupName,
-		groupDescription,
 		memberId,
+		...rest
 	}: {
+		memberId: string;
 		groupId: string;
 		groupName: string;
 		groupDescription?: string;
-		memberId: string;
 	}): Promise<GroupResDto> {
 		// 중복된 그룹 이름 체크
-		await this.checkDuplicateGroupName(memberId, groupName);
+		await this.checkDuplicateGroupName(memberId, rest.groupName);
 
 		return await this.groupsRepository.updateGroup({
-			groupId: groupId,
-			groupName: groupName,
-			groupDescription: groupDescription,
+			...rest,
 		});
 	}
 
@@ -113,12 +109,9 @@ export class GroupsService {
 		deleteGroupArgs: IDeleteGroupArgs,
 		qr?: QueryRunner,
 	): Promise<void> {
-		const { groupId } = deleteGroupArgs;
+		const { groupId, memberId } = deleteGroupArgs;
 
-		const role = await this.checkRoleOfGroupExists(
-			deleteGroupArgs.groupId,
-			deleteGroupArgs.memberId,
-		);
+		const role = await this.checkRoleOfGroupExists(groupId, memberId);
 		// 해당 그룹의 권한이 main인지 체크
 		if (role.role !== 'main') {
 			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
@@ -170,8 +163,8 @@ export class GroupsService {
 
 	async checkRoleOfGroupExists(groupId: string, memberId: string) {
 		const role = await this.famsRepository.isMainRoleForMemberInGroup({
-			groupId: groupId,
-			memberId: memberId,
+			groupId,
+			memberId,
 		});
 
 		// 해당 그룹에 로그인한 유저가 속하는 사람인지 체크
@@ -180,6 +173,18 @@ export class GroupsService {
 		}
 
 		return role;
+	}
+
+	async memberShipOfGroupExists(
+		groupId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return await this.famsRepository.exist({
+			where: {
+				groupId,
+				memberId,
+			},
+		});
 	}
 
 	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {

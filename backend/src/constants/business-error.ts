@@ -52,10 +52,16 @@ export const ERROR_FILE_DIR_NOT_FOUND = '파일 경로를 찾을 수 없습니�
 
 export const ERROR_FEED_NOT_FOUND = '피드를 찾을 수 없습니다' as const;
 
+export const ERROR_NO_PERMISSTION_TO_FEED =
+	'해당 피드에 접근 할 권한이 없습니다' as const;
+
 export const ERROR_COMMENT_NOT_FOUND = '댓글을 찾을 수 없습니다' as const;
 
 export const ERROR_DELETE_COMMENT =
 	'댓글을 삭제하는 도중 에러가 발생했습니다' as const;
+
+export const ERROR_NO_PERMISSTION_TO_COMMENT =
+	'해당 댓글에 접근 할 권한이 없습니다' as const;
 
 export const ERROR_NO_PERMISSTION_TO_SCHEDULE =
 	'여행 일정에 접근 할 권한이 없습니다' as const;
@@ -66,3 +72,8 @@ export const ERROR_CHAT_NOT_FOUND = '존재하지 않는 chat 입니다' as cons
 
 export const ERROR_TOKEN_EXPIRED = '토큰이 만료되었습니다' as const;
 export const ERROR_INVALID_TOKEN = '토큰이 유효하지 않습니다' as const;
+
+//pipe-message
+export const ERROR_UUID_PIPE_MESSAGE = 'uuid형식이 올바르지 않습니다' as const;
+
+export const ERROR_INT_PIPE_MESSAGE = 'number형식이 올바르지 않습니다' as const;

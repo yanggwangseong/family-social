@@ -34,7 +34,7 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 		const tourismPeriodRepository = this.getTourismPeriodRepository(qr);
 
 		const { affected } = await tourismPeriodRepository.delete({
-			scheduleId: scheduleId,
+			scheduleId,
 		});
 
 		return !!affected;
@@ -46,7 +46,7 @@ export class TourismPeriodRepository extends Repository<TourismPeriodEntity> {
 				id: true,
 			},
 			where: {
-				scheduleId: scheduleId,
+				scheduleId,
 			},
 			order: {
 				createdAt: 'asc',

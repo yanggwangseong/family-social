@@ -33,21 +33,24 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findFeedInfoById(feedId: string): Promise<FeedResDto> {
+	async findFeedInfoById(feedIdArgs: string): Promise<FeedResDto> {
 		const [feed, medias] = await Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedId),
-			await this.mediasService.findMediaUrlByFeedId(feedId),
+			await this.feedsRepository.findFeedInfoById(feedIdArgs),
+			await this.mediasService.findMediaUrlByFeedId(feedIdArgs),
 		]);
 
+		const { id: feedId, group, member, ...feedRest } = feed;
+		const { id: groupId, ...groupRest } = group;
+		const { id: memberId, ...memberRest } = member;
+
 		return {
-			feedId: feed.id,
-			contents: feed.contents,
-			isPublic: feed.isPublic,
-			groupId: feed.group.id,
-			groupName: feed.group.groupName,
-			memberId: feed.member.id,
-			username: feed.member.username,
-			medias: medias,
+			feedId,
+			...feedRest,
+			groupId,
+			...groupRest,
+			memberId,
+			...memberRest,
+			medias,
 		};
 	}
 
@@ -102,15 +105,12 @@ export class FeedsService {
 	}
 
 	async createFeed(
-		{ contents, isPublic, groupId, memberId, medias }: ICreateFeedArgs,
+		{ medias, ...rest }: ICreateFeedArgs,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feed = await this.feedsRepository.createFeed(
 			{
-				contents,
-				isPublic,
-				groupId,
-				memberId,
+				...rest,
 			},
 			qr,
 		);
@@ -120,21 +120,15 @@ export class FeedsService {
 		return feed;
 	}
 
-	async updateFeed(
-		{ feedId, contents, isPublic, groupId, medias }: IUpdateFeedArgs,
-		qr?: QueryRunner,
-	) {
+	async updateFeed({ medias, ...rest }: IUpdateFeedArgs, qr?: QueryRunner) {
 		const feed = await this.feedsRepository.updateFeed(
 			{
-				feedId,
-				contents,
-				isPublic,
-				groupId,
+				...rest,
 			},
 			qr,
 		);
 
-		await this.mediasService.updateFeedMedias(medias, feedId, qr);
+		await this.mediasService.updateFeedMedias(medias, rest.feedId, qr);
 
 		return feed;
 	}
@@ -164,6 +158,15 @@ export class FeedsService {
 		}
 
 		return feed;
+	}
+
+	async isMineFeedExists(feedId: string, memberId: string): Promise<boolean> {
+		return await this.feedsRepository.exist({
+			where: {
+				id: feedId,
+				memberId,
+			},
+		});
 	}
 
 	private async getMediaUrlAndCommentsByFeedId(

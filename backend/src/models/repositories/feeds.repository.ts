@@ -149,17 +149,14 @@ export class FeedsRepository extends Repository<FeedEntity> {
 	}
 
 	async createFeed(
-		{ contents, isPublic, groupId, memberId }: Omit<ICreateFeedArgs, 'medias'>,
+		createFeedArgs: Omit<ICreateFeedArgs, 'medias'>,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feedsRepository = this.getFeedsRepository(qr);
 
 		const insertResult = await feedsRepository.insert({
 			id: uuidv4(),
-			contents: contents,
-			isPublic: isPublic,
-			groupId: groupId,
-			memberId: memberId,
+			...createFeedArgs,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
@@ -168,15 +165,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 	}
 
 	async updateFeed(
-		{ feedId, contents, isPublic, groupId }: Omit<IUpdateFeedArgs, 'medias'>,
+		{ feedId, ...rest }: Omit<IUpdateFeedArgs, 'medias'>,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feedsRepository = this.getFeedsRepository(qr);
 
-		await feedsRepository.update(
-			{ id: feedId },
-			{ contents: contents, isPublic: isPublic, groupId: groupId },
-		);
+		await feedsRepository.update({ id: feedId }, { ...rest });
 
 		return this.findOrFailFeedById(feedId, qr);
 	}

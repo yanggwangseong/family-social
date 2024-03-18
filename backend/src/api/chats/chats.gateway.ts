@@ -24,7 +24,7 @@ import { MessagesService } from '../messages/messages.service';
 	new ValidationPipe({
 		transform: true,
 		transformOptions: {
-			enableImplicitConversion: true,
+			enableImplicitConversion: false,
 		},
 		whitelist: true,
 		forbidNonWhitelisted: true,

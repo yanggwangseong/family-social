@@ -145,24 +145,14 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	}
 
 	async createSchedule(
-		{
-			memberId,
-			groupId,
-			scheduleName,
-			startPeriod,
-			endPeriod,
-		}: ICreateScheduleArgs,
+		createScheduleArgs: ICreateScheduleArgs,
 		qr?: QueryRunner,
 	) {
 		const scheduleRepository = this.getScheduleRepository(qr);
 
 		const insertResult = await scheduleRepository.insert({
 			id: uuidv4(),
-			groupId: groupId,
-			memberId: memberId,
-			scheduleName,
-			startPeriod,
-			endPeriod,
+			...createScheduleArgs,
 		});
 
 		const id: string = insertResult.identifiers[0].id;
@@ -184,16 +174,13 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	) {
 		const scheduleRepository = this.getScheduleRepository(qr);
 
-		await scheduleRepository.update(
-			{ id: scheduleId, memberId },
-			{ groupId: groupId },
-		);
+		await scheduleRepository.update({ id: scheduleId, memberId }, { groupId });
 
 		return this.findOrFailScheduleById({ scheduleId: scheduleId }, qr);
 	}
 
 	async updateScheduleTitleById(scheduleId: string, scheduleName: string) {
-		await this.update({ id: scheduleId }, { scheduleName: scheduleName });
+		await this.update({ id: scheduleId }, { scheduleName });
 	}
 
 	async updateScheduleThumbnail(scheduleId: string, imageUrl: string) {
@@ -220,7 +207,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 			},
 			where: {
 				id: scheduleId,
-				memberId: memberId,
+				memberId,
 			},
 		});
 	}

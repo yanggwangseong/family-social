@@ -1,5 +1,6 @@
 import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
@@ -8,6 +9,7 @@ import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
+import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -16,7 +18,9 @@ const getSwaggerOptions = () => ({
 });
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+	app.set('trust proxy', true);
+
 	const options = {
 		origin: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -32,16 +36,28 @@ async function bootstrap() {
 	app.useGlobalPipes(
 		new ValidationPipe({
 			transform: true,
+			transformOptions: {
+				enableImplicitConversion: false,
+			},
 			stopAtFirstError: true,
+			whitelist: true,
+			forbidNonWhitelisted: true,
 
 			exceptionFactory: (validationErrors: ValidationError[] = []) => {
-				const { constraints } = validationErrors[0];
+				//const { constraints } = validationErrors[0];
 
-				if (!constraints) return validationErrors;
+				const validationInstance = new CustomValidationPipe();
 
-				const [firstKey] = Object.keys(constraints);
+				const errors =
+					validationInstance._flattenValidationErrors(validationErrors);
 
-				return BadRequestServiceException(constraints[firstKey]);
+				return BadRequestServiceException(errors.join(','));
+
+				//if (!constraints) return validationErrors;
+
+				//const [firstKey] = Object.keys(constraints);
+
+				//return BadRequestServiceException(constraints[firstKey]);
 			},
 		}),
 	);
@@ -57,6 +73,9 @@ async function bootstrap() {
 
 	// cookie parser
 	app.use(cookieParser());
+
+	// production 나중에 적용
+	//process.env.NODE_ENV === 'production' && app.use(helmet());
 
 	// swagger
 	const config = new DocumentBuilder()

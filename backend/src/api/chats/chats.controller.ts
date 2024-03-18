@@ -22,6 +22,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
 import { ChatsService } from './chats.service';
@@ -77,7 +78,11 @@ export class ChatsController {
 	@GetMessagesByChatIdSwagger()
 	@Get('/:chatId/messages')
 	async getMessagesByChatId(
-		@Param('chatId', ParseUUIDPipe) chatId: string,
+		@Param(
+			'chatId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		chatId: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		return await this.chatsService.getMessagesByChat(chatId, sub);

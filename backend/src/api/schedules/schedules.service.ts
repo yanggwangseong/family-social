@@ -64,22 +64,23 @@ export class SchedulesService {
 	}
 
 	async createToursSchedule(
-		{ memberId, groupId, scheduleItem }: ICreateTourArgs,
+		{ scheduleItem, ...rest }: ICreateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
+		const { scheduleName, periods, startPeriod, endPeriod } = scheduleItem;
+
 		const schedule = await this.scheduleRepository.createSchedule(
 			{
-				memberId,
-				groupId,
-				scheduleName: scheduleItem.scheduleName,
-				startPeriod: scheduleItem.startPeriod,
-				endPeriod: scheduleItem.endPeriod,
+				scheduleName,
+				startPeriod,
+				endPeriod,
+				...rest,
 			},
 			qr,
 		);
 
 		const createTourismPeriod = await this.createTourismPeriod(
-			scheduleItem.periods,
+			periods,
 			schedule.id,
 			qr,
 		);
@@ -92,14 +93,12 @@ export class SchedulesService {
 	}
 
 	async updateToursSchedule(
-		{ memberId, groupId, scheduleId, periods }: IUpdateTourArgs,
+		{ periods, ...rest }: IUpdateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
 		const schedule = await this.scheduleRepository.updateScheduleGroup(
 			{
-				memberId,
-				groupId,
-				scheduleId,
+				...rest,
 			},
 			qr,
 		);
@@ -107,12 +106,12 @@ export class SchedulesService {
 		// Tourism 먼저 다 삭제
 		const periodIds =
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
-				scheduleId,
+				rest.scheduleId,
 			);
 		periodIds.map(async (item) => await this.deleteTourism(item.id, qr));
 
 		// TourismPeriod 다 삭제
-		await this.deleteTourismPeriod(scheduleId, qr);
+		await this.deleteTourismPeriod(rest.scheduleId, qr);
 
 		// TourismPeriod 생성
 		const createTourismPeriod = await this.createTourismPeriod(
@@ -174,6 +173,18 @@ export class SchedulesService {
 		if (!schedule) throw ForBiddenException(ERROR_NO_PERMISSTION_TO_SCHEDULE);
 
 		return schedule;
+	}
+
+	async isMineScheduleExists(
+		scheduleId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return await this.scheduleRepository.exist({
+			where: {
+				id: scheduleId,
+				memberId,
+			},
+		});
 	}
 
 	async findScheduleById(scheduleId: string): Promise<ScheduleByIdResDto> {

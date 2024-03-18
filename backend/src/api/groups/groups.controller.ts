@@ -1,9 +1,11 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
@@ -35,9 +37,13 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
+import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
@@ -99,11 +105,13 @@ export class GroupsController {
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
+		const { groupName, groupDescription } = dto;
+
 		return await this.groupsService.createGroup(
 			{
 				memberId: sub,
-				groupName: dto.groupName,
-				groupDescription: dto.groupDescription,
+				groupName,
+				groupDescription,
 			},
 			qr,
 		);
@@ -123,14 +131,20 @@ export class GroupsController {
 	@UpdateGroupSwagger()
 	@Put(':groupId')
 	async updateGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: GroupUpdateReqDto,
 	) {
+		const { groupName, groupDescription } = dto;
+
 		return await this.groupsService.updateGroup({
-			groupId: groupId,
-			groupName: dto.groupName,
-			groupDescription: dto.groupDescription,
+			groupId,
+			groupName,
+			groupDescription,
 			memberId: sub,
 		});
 	}
@@ -148,13 +162,17 @@ export class GroupsController {
 	@UseInterceptors(TransactionInterceptor)
 	@Delete(':groupId')
 	async deleteGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.groupsService.deleteGroup(
 			{
-				groupId: groupId,
+				groupId,
 				memberId: sub,
 			},
 			qr,
@@ -174,8 +192,17 @@ export class GroupsController {
 	@GetMemberListBelongToGroupSwagger()
 	@Get('/:groupId/members')
 	async getMemberListBelongToGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Query('page') page: number,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
 		@CurrentUser('sub') sub: string,
 	) {
 		const limit = 10;
@@ -201,8 +228,16 @@ export class GroupsController {
 	@Post('/:groupId/members/:memberId/fams')
 	async createFamByMemberOfGroup(
 		@CurrentUser('sub') sub: string,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
 	) {
 		//자기 자신을 초대한지 체크
 		if (sub === memberId) {
@@ -213,8 +248,8 @@ export class GroupsController {
 		await this.membersService.findMemberByIdOrThrow(memberId);
 
 		await this.famsService.createFamByMemberOfGroup({
-			memberId: memberId,
-			groupId: groupId,
+			memberId,
+			groupId,
 		});
 	}
 
@@ -234,9 +269,21 @@ export class GroupsController {
 	@Put('/:groupId/members/:memberId/fams/:famId/accept-invitation')
 	async updateFamInvitationAccept(
 		@CurrentUser('sub') sub: string,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
-		@Param('famId', ParseUUIDPipe) famId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+		@Param(
+			'famId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		famId: string,
 		@Body() dto: AcceptInvitationUpdateReqDto,
 	) {
 		//초대 받은 멤버와 인증된 멤버와 같은지 체크
@@ -246,15 +293,15 @@ export class GroupsController {
 
 		// 초대받은 유저인지 체크
 		await this.famsService.checkIfFamExists({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		return await this.famsService.updateFamInvitationAccept({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 			invitationAccepted: dto.invitationAccepted,
 		});
 	}
@@ -272,21 +319,33 @@ export class GroupsController {
 	@DeleteFamByMemberOfGroupSwagger()
 	@Delete('/:groupId/members/:memberId/fams/:famId')
 	async deleteFamByMemberOfGroup(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('memberId', ParseUUIDPipe) memberId: string,
-		@Param('famId', ParseUUIDPipe) famId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+		@Param(
+			'famId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		famId: string,
 	) {
 		// fam에 존재하는지 확인
 		const fam = await this.famsService.checkIfFamExists({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		await this.famsService.deleteFamByMemberOfGroup({
-			groupId: groupId,
-			memberId: memberId,
-			famId: famId,
+			groupId,
+			memberId,
+			famId,
 		});
 
 		return fam;
@@ -306,9 +365,23 @@ export class GroupsController {
 	@GetScheduleListSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
-		@Query('page') page: number,
-		@Query('limit') limit: number = 3,
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
+		@Query(
+			'limit',
+			new DefaultValuePipe(3),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		limit: number,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		// 그룹에 속한 사람인지 체크
@@ -332,15 +405,15 @@ export class GroupsController {
 	 * @returns 특정 여행 일정
 	 */
 	@GetOneScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@Get('/:groupId/schedules/:scheduleId')
 	async getOneScheduleById(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
-		@CurrentUser('sub') sub: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		return await this.schedulesService.getOneScheduleById(scheduleId);
 	}
 
@@ -355,17 +428,19 @@ export class GroupsController {
 	 * @returns 일정 아이디
 	 */
 	@CreateToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post('/:groupId/schedules')
 	async createToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: ScheduleCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
 		return await this.schedulesService.createToursSchedule(
 			{
 				memberId: sub,
@@ -388,26 +463,29 @@ export class GroupsController {
 	 * @returns 일정 아이디
 	 */
 	@UpdateToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Put('/:groupId/schedules/:scheduleId')
 	async updateToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@CurrentUser('sub') sub: string,
 		@Body() dto: TourismPeriodUpdateReqDto[],
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
-		//해당 일정 작성자인지 확인
-		await this.schedulesService.findOwnSchedule(scheduleId, sub);
-
 		return await this.schedulesService.updateToursSchedule(
 			{
 				memberId: sub,
 				groupId,
-				scheduleId: scheduleId,
+				scheduleId,
 				periods: dto,
 			},
 			qr,
@@ -425,20 +503,17 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@DeleteToursScheduleSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Delete('/:groupId/schedules/:scheduleId')
 	async deleteToursSchedule(
-		@Param('groupId', ParseUUIDPipe) groupId: string,
-		@Param('scheduleId', ParseUUIDPipe) scheduleId: string,
-		@CurrentUser('sub') sub: string,
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		// 그룹에 속한 사람인지 체크
-		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
-
-		//해당 일정 작성자인지 확인
-		await this.schedulesService.findOwnSchedule(scheduleId, sub);
-
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
 	}
 }

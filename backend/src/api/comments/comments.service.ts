@@ -106,19 +106,9 @@ export class CommentsService {
 		return total ? total : 0;
 	}
 
-	async createComment({
-		commentContents,
-		replyId,
-		parentId,
-		feedId,
-		memberId,
-	}: ICreateCommentsArgs) {
+	async createComment(createCommentsArgs: ICreateCommentsArgs) {
 		return await this.commentsRepository.createComment({
-			commentContents,
-			replyId,
-			parentId,
-			feedId,
-			memberId,
+			...createCommentsArgs,
 		});
 	}
 
@@ -149,6 +139,18 @@ export class CommentsService {
 
 	async commentExistsByCommentId(commentId: string) {
 		return this.commentsRepository.exist({ where: { id: commentId } });
+	}
+
+	async isMineCommentExists(
+		commentId: string,
+		memberId: string,
+	): Promise<boolean> {
+		return this.commentsRepository.exist({
+			where: {
+				id: commentId,
+				memberId,
+			},
+		});
 	}
 
 	async updateLikesCommentId(
