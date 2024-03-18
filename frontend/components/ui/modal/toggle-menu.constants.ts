@@ -6,6 +6,8 @@ import {
 	PiDoorDuotone,
 	PiPaperclipDuotone,
 	PiPaperPlaneTiltDuotone,
+	PiTrashDuotone,
+	PiPencilDuotone,
 } from 'react-icons/pi';
 
 export const InviteMenu: ToggleMenu[] = [
@@ -34,14 +36,14 @@ export const GroupSettingMenu: ToggleMenu[] = [
 
 export const FeedSettingMenu: ToggleMenu[] = [
 	{
-		Icon: AiOutlineDelete,
+		Icon: PiTrashDuotone,
 		title: '피드 삭제',
 		description:
 			'피드 작성자 또는 그룹 관리자만 해당 피드를 삭제 할 수 있습니다',
 		layer: LayerMode.feedDeleteConfirm,
 	},
 	{
-		Icon: BsPencil,
+		Icon: PiPencilDuotone,
 		title: '피드 수정',
 		description: '피드를 수정 합니다',
 		layer: LayerMode.createFeed,
