@@ -3,6 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 import {
 	CreateDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
 	ManyToOne,
 	PrimaryColumn,
@@ -15,6 +16,7 @@ import { ChatEntity } from './chat.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_member_chat' })
+@Index(['createdAt'])
 export class MemberChatEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({

@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+} from 'typeorm';
 
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -15,6 +22,8 @@ import { LikeFeedEntity } from './like-feed.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_feed' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class FeedEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: false })
 	@ApiProperty({

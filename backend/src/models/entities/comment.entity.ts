@@ -1,6 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+} from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
@@ -12,6 +19,8 @@ import { LikeCommentEntity } from './like-comment.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_comment' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class CommentEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: false })
 	@ApiProperty({

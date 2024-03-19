@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+} from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
@@ -10,6 +17,8 @@ import { ScheduleEntity } from './schedule.entity';
 import { TourismEntity } from './tourism.entity';
 
 @Entity({ name: 'fam_tourism_period' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class TourismPeriodEntity extends DefaultEntity {
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -13,6 +13,8 @@ import { MemberEntity } from './member.entity';
 export type roleType = 'main' | 'user';
 
 @Entity({ name: 'fam' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class FamEntity extends DefaultEntity {
 	@ApiProperty()
 	@Column({
