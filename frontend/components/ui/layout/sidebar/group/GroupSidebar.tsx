@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import styles from './GroupSidebar.module.scss';
 import {
-	AiOutlineAudit,
-	AiOutlineUsergroupAdd,
-	AiOutlineCompass,
-	AiOutlineTeam,
-} from 'react-icons/ai';
+	PiUsersThreeDuotone,
+	PiUserPlusDuotone,
+	PiUserRectangleDuotone,
+	PiCompassDuotone,
+} from 'react-icons/pi';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
 import Menu from '../menu/Menu';
@@ -20,14 +20,10 @@ const GroupSidebar: FC = () => {
 		<div className={styles.sidebar_container}>
 			<div className={styles.sidebar_title}>그룹</div>
 			{/* 사이드 메뉴 */}
-			<Menu link="/groups/feeds" Icon={AiOutlineAudit} menu="내 피드" />
-			<Menu link="/groups/joins" Icon={AiOutlineTeam} menu="내 그룹" />
-			<Menu
-				link="/groups/requests"
-				Icon={AiOutlineUsergroupAdd}
-				menu="그룹 요청"
-			/>
-			<Menu link="/groups/discover" Icon={AiOutlineCompass} menu="찾아보기" />
+			<Menu link="/groups/feeds" Icon={PiUserRectangleDuotone} menu="내 피드" />
+			<Menu link="/groups/joins" Icon={PiUsersThreeDuotone} menu="내 그룹" />
+			<Menu link="/groups/requests" Icon={PiUserPlusDuotone} menu="그룹 요청" />
+			<Menu link="/groups/discover" Icon={PiCompassDuotone} menu="찾아보기" />
 
 			<div className={styles.sidebar_btn_container}>
 				<CustomButton

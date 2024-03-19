@@ -9,7 +9,7 @@ import ToggleModal from '../modal/ToggleModal';
 import { ScheduleSettingMenu } from '../modal/toggle-menu.constants';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
 import { useRecoilState } from 'recoil';
-import { GoPencil } from 'react-icons/go';
+import { PiPencilDuotone } from 'react-icons/pi';
 import ScheduleUpdateTitle from './update-title/UpdateTitle';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
@@ -87,7 +87,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 									handleUpdateTitle();
 								}}
 							>
-								<GoPencil size={18} color="#0a0a0a" />
+								<PiPencilDuotone size={18} color="#0a0a0a" />
 							</div>
 						</>
 					)}

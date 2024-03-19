@@ -2,8 +2,6 @@ import React, { FC, useRef } from 'react';
 import styles from './Header.module.scss';
 import Field from '../field/Field';
 import Link from 'next/link';
-import { FaRegBell } from 'react-icons/fa';
-import { AiOutlineHome, AiOutlineMessage } from 'react-icons/ai';
 import {
 	PiBellDuotone,
 	PiHouseDuotone,

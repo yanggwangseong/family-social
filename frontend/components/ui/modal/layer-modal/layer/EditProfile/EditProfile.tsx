@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styles from './EditProfile.module.scss';
 import Image from 'next/image';
-import { GoPencil } from 'react-icons/go';
+import { PiPencilDuotone } from 'react-icons/pi';
 import Field from '@/components/ui/field/Field';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -102,7 +102,7 @@ const EditProfile: FC = () => {
 									alt="img"
 								></Image>
 								<div className={styles.profile_img_icon_container}>
-									<GoPencil size={18} color="#0a0a0a" />
+									<PiPencilDuotone size={18} color="#0a0a0a" />
 								</div>
 							</div>
 						</ImageCropper>
