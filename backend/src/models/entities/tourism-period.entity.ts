@@ -19,6 +19,7 @@ import { TourismEntity } from './tourism.entity';
 @Entity({ name: 'fam_tourism_period' })
 @Index(['createdAt'])
 @Index(['updatedAt'])
+@Index(['scheduleId'])
 export class TourismPeriodEntity extends DefaultEntity {
 	@Column({ type: 'date', nullable: false })
 	@ApiProperty()
