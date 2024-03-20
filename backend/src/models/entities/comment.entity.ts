@@ -21,6 +21,8 @@ import { MemberEntity } from './member.entity';
 @Entity({ name: 'fam_comment' })
 @Index(['createdAt'])
 @Index(['updatedAt'])
+@Index(['parentId', 'feedId'])
+@Index(['memberId'])
 export class CommentEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: false })
 	@ApiProperty({
