@@ -13,6 +13,7 @@ import { MemberEntity } from './member.entity';
 @Entity({ name: 'fam_message' })
 @Index(['createdAt'])
 @Index(['updatedAt'])
+@Index(['chatId'])
 export class MessageEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
