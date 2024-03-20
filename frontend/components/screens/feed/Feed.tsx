@@ -229,7 +229,11 @@ const Feed: FC = () => {
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
-							<TabMenu list={feedTabMenus} options={query.options} />
+
+							<div className={styles.tap_menu_container}>
+								<TabMenu list={feedTabMenus} options={query.options} />
+							</div>
+
 							{query.options === 'MYFEED' ? (
 								<MyFeed handleIsLottie={handleIsLottie} />
 							) : (
