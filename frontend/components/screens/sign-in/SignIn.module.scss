@@ -56,7 +56,10 @@
 			}
 
 			.footer_wrap {
-				@apply text-center mb-8 text-customGray text-base;
+				@screen md {
+					@apply text-center mb-8 text-customGray text-base;
+				}
+				@apply text-center mb-[25%] text-customGray text-base;
 
 				.signup {
 					@apply ml-2;
