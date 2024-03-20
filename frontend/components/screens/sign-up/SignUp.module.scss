@@ -1,15 +1,15 @@
 .container {
 	@screen md {
-		@apply flex justify-center h-full;
+		@apply flex justify-center min-h-screen;
 	}
-	@apply p-4 h-full;
+	@apply p-4 min-h-screen;
 
 	.contents_card {
 		@screen md {
 			@apply border border-solid border-customDark px-4 flex flex-col;
 			width: 768px;
 		}
-		@apply w-full flex flex-col;
+		@apply w-full flex flex-col gap-4;
 
 		.contents_wrap {
 			@apply flex-grow;

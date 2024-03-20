@@ -17,7 +17,7 @@ const Home: FC = () => {
 	const [isSplash, setIsSplash] = useState<boolean>(true);
 
 	useEffect(() => {
-		// 3초 후에 isSplash를 false로 변경
+		// 5초 후에 isSplash를 false로 변경
 		const timer = setTimeout(() => {
 			setIsSplash(false);
 		}, 5000);
