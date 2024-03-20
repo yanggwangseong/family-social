@@ -11,17 +11,57 @@
 		.header_left_container {
 			@apply flex;
 			.header_logo {
-				@apply text-4xl font-bold;
+				@screen md {
+					@apply text-4xl;
+				}
+				@apply text-3xl font-bold;
+			}
+
+			.search_field_wrap {
+				@screen md {
+					@apply block;
+				}
+				@apply hidden;
 			}
 		}
 	}
 	@apply h-20 border-customDark border-solid border-b;
 
 	.right_icons_container {
-		@apply ml-auto flex gap-3;
+		@apply ml-auto flex gap-2;
 
 		.icon_wrap {
-			@apply relative w-12 h-12 flex justify-center items-center border border-solid border-customDark rounded-full;
+			@screen md {
+				@apply w-12 h-12;
+			}
+			@apply relative w-10 h-10 flex justify-center items-center border border-solid border-customDark rounded-full;
+
+			&:hover {
+				@apply border-customOrange;
+
+				> svg {
+					@apply fill-customOrange;
+				}
+
+				.icon {
+					@apply cursor-pointer;
+				}
+			}
+
+			&.active {
+				@apply border-customOrange;
+
+				> svg {
+					@apply fill-customOrange;
+				}
+			}
+		}
+
+		.mobile_icon_wrap {
+			@screen md {
+				@apply hidden w-12 h-12;
+			}
+			@apply relative w-10 h-10 flex justify-center items-center border border-solid border-customDark rounded-full;
 
 			&:hover {
 				@apply border-customOrange;
