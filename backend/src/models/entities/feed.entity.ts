@@ -24,6 +24,8 @@ import { MemberEntity } from './member.entity';
 @Entity({ name: 'fam_feed' })
 @Index(['createdAt'])
 @Index(['updatedAt'])
+@Index(['memberId'])
+@Index(['groupId'])
 export class FeedEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: false })
 	@ApiProperty({
