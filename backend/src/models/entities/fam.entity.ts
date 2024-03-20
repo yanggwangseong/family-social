@@ -15,6 +15,8 @@ export type roleType = 'main' | 'user';
 @Entity({ name: 'fam' })
 @Index(['createdAt'])
 @Index(['updatedAt'])
+@Index(['memberId'])
+@Index(['groupId'])
 export class FamEntity extends DefaultEntity {
 	@ApiProperty()
 	@Column({
