@@ -17,6 +17,8 @@ import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_member_chat' })
 @Index(['createdAt'])
+@Index(['memberId'])
+@Index(['chatId'])
 export class MemberChatEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({
