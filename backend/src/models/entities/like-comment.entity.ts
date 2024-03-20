@@ -3,6 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 import {
 	CreateDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
 	ManyToOne,
 	PrimaryColumn,
@@ -15,6 +16,7 @@ import { CommentEntity } from './comment.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_like_comment' })
+@Index(['createdAt'])
 export class LikeCommentEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({

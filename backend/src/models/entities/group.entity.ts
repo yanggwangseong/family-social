@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
 
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -12,6 +12,8 @@ import { FeedEntity } from './feed.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_group' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class GroupEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 60, nullable: false })
 	@ApiProperty({
