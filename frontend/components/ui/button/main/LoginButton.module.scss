@@ -1,7 +1,9 @@
 .container {
 	@screen md {
-		@apply mt-4;
+		@apply mt-4 mx-0;
 	}
+
+	@apply mx-4;
 
 	.link {
 		@screen md {
@@ -10,23 +12,26 @@
 			width: 504px;
 			border-radius: 40px;
 		}
+
+		@apply text-customDark text-center w-full inline-block border border-solid border-customDark py-3 font-bold;
+		border-radius: 40px;
 	}
 
 	.btn_container {
-		@screen md {
-			@apply flex justify-center;
-		}
+		// @screen md {
+		// 	@apply flex justify-center gap-4;
+		// }
+
+		@apply flex justify-center gap-4;
 
 		.icon_container {
-			@screen md {
-				@apply flex justify-center items-center;
-			}
+			@apply flex justify-center items-center;
 		}
 
-		.btn_text {
-			@screen md {
-				@apply ml-2;
-			}
-		}
+		// .btn_text {
+		// 	@screen md {
+		// 		@apply ml-2;
+		// 	}
+		// }
 	}
 }

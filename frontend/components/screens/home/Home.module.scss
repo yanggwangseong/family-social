@@ -17,27 +17,30 @@
 
 	.contents_container {
 		@screen md {
-			@apply p-10 ml-20;
+			@apply p-10 ml-20 text-left block;
 		}
+
+		@apply text-center flex flex-col gap-4;
 
 		.contents_title_wrap {
 			@screen md {
-				@apply text-4xl;
+				@apply text-4xl text-customDark;
 			}
-			@apply text-customDark font-bold;
+			@apply text-customDark font-bold text-4xl;
 		}
 
 		.contents_subtitle {
 			@screen md {
-				@apply text-lg mt-4;
+				@apply text-lg mt-4 font-normal;
 			}
-			@apply text-customGray;
+			@apply text-customGray text-base font-normal;
 		}
 
 		.sign_subject {
 			@screen md {
 				@apply text-lg mt-16 mb-8;
 			}
+			@apply text-base;
 		}
 	}
 
