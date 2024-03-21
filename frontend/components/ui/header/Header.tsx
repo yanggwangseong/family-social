@@ -6,10 +6,15 @@ import {
 	PiBellDuotone,
 	PiHouseDuotone,
 	PiMessengerLogoDuotone,
+	PiMagnifyingGlassDuotone,
+	PiTextOutdentFill,
+	PiTextIndentFill,
 } from 'react-icons/pi';
 import { useModal } from '@/hooks/useModal';
 import cn from 'classnames';
 import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
+import { useRecoilState } from 'recoil';
+import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -18,14 +23,31 @@ const Header: FC = () => {
 		handleToggleModal: handleCloseMessageModal,
 	} = useModal(messageModalWrapperRef);
 
+	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
+		useRecoilState(mainSidebarAtom);
+
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
 				<div className={styles.header_left_container}>
 					<div className={styles.header_logo}>FAM</div>
-					<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
+					<div className={styles.search_field_wrap}>
+						<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
+					</div>
 				</div>
 				<div className={styles.right_icons_container}>
+					<div className={styles.mobile_icon_wrap}>
+						<PiMagnifyingGlassDuotone className={styles.icon} size={22} />
+					</div>
+					<div
+						className={styles.mobile_icon_wrap}
+						onClick={() => setIsLeftSidebarShowing(!isLeftSidebarShowing)}
+					>
+						<PiTextOutdentFill className={styles.icon} size={22} />
+					</div>
+					<div className={styles.mobile_icon_wrap}>
+						<PiTextIndentFill className={styles.icon} size={22} />
+					</div>
 					<Link href={'/feeds'}>
 						<div className={styles.icon_wrap}>
 							<PiHouseDuotone

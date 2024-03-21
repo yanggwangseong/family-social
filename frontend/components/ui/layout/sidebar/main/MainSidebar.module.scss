@@ -1,10 +1,10 @@
 .sidebar_container {
 	@screen 2xl {
-		@apply block;
+		@apply sticky top-0;
+		width: 300px;
 	}
 
-	@apply px-11 pt-3 border-r border-solid border-customDark h-full sticky top-0 z-10 hidden;
-	width: 300px;
+	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
 
 	.sidebar_btn_container {
 		@apply mt-16;
