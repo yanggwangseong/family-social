@@ -13,6 +13,8 @@ import {
 import { useModal } from '@/hooks/useModal';
 import cn from 'classnames';
 import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
+import { useRecoilState } from 'recoil';
+import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -20,6 +22,9 @@ const Header: FC = () => {
 		isShowing: isOpenMessage,
 		handleToggleModal: handleCloseMessageModal,
 	} = useModal(messageModalWrapperRef);
+
+	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
+		useRecoilState(mainSidebarAtom);
 
 	return (
 		<div className={styles.header_container}>
@@ -34,7 +39,10 @@ const Header: FC = () => {
 					<div className={styles.mobile_icon_wrap}>
 						<PiMagnifyingGlassDuotone className={styles.icon} size={22} />
 					</div>
-					<div className={styles.mobile_icon_wrap}>
+					<div
+						className={styles.mobile_icon_wrap}
+						onClick={() => setIsLeftSidebarShowing(!isLeftSidebarShowing)}
+					>
 						<PiTextOutdentFill className={styles.icon} size={22} />
 					</div>
 					<div className={styles.mobile_icon_wrap}>
