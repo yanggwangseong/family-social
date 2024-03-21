@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './MainSidebar.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Menu from '../menu/Menu';
