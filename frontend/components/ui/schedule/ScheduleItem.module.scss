@@ -2,18 +2,31 @@
 	@apply border border-solid border-customDark flex flex-row gap-4 cursor-pointer;
 
 	.img_container {
-		@apply w-1/4 h-36 relative border-r border-solid border-customDark cursor-pointer;
+		@screen md {
+			@apply w-1/4;
+		}
+		@apply w-1/3 h-36 relative border-r border-solid border-customDark cursor-pointer;
 	}
 	.schedule_card_contents_container {
 		@apply flex flex-col justify-between p-4 flex-1;
 
 		.contents_top_container {
-			@apply flex gap-4;
+			@screen md {
+				@apply gap-4;
+			}
+			@apply flex gap-2;
+
 			.d_day {
-				@apply bg-customOrange px-2 py-[1px] border border-solid border-customDark rounded-2xl text-sm;
+				@screen md {
+					@apply text-sm;
+				}
+				@apply bg-customOrange px-2 py-[1px] border border-solid border-customDark rounded-2xl text-xs;
 			}
 			.title {
-				@apply font-bold text-base;
+				@screen md {
+					@apply text-base;
+				}
+				@apply font-bold text-sm;
 			}
 
 			.title_update_icon_container {
@@ -26,7 +39,10 @@
 		}
 
 		.schedule_periods {
-			@apply text-base font-medium;
+			@screen md {
+				@apply text-base;
+			}
+			@apply text-sm font-medium;
 		}
 
 		.update_date {
