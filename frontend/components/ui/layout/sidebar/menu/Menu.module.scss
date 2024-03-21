@@ -1,21 +1,24 @@
 .sidebar_menu_container {
-	@apply flex mt-11 py-4 cursor-pointer relative;
-
-	&:hover {
-		::after {
-			@apply bg-customOrange;
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 254px;
-			transform: translateY(-50%); /* 세로 가운데 정렬을 위한 변환 */
-			width: 4px;
-			height: 50%;
-		}
-		> svg {
-			@apply fill-customOrange;
+	@screen md {
+		&:hover {
+			::after {
+				@apply bg-customOrange;
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 254px;
+				transform: translateY(-50%); /* 세로 가운데 정렬을 위한 변환 */
+				width: 4px;
+				height: 50%;
+			}
+			> svg {
+				@apply fill-customOrange;
+			}
 		}
 	}
+
+	@apply flex mt-11 py-4 cursor-pointer relative;
+
 	&.active {
 		> svg {
 			@apply fill-customOrange;

@@ -225,7 +225,9 @@ const Feed: FC = () => {
 					/>
 
 					{/* 왼쪽 사이드바 */}
+
 					<MainSidebar />
+
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}

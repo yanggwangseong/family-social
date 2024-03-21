@@ -1,5 +1,5 @@
 .feed_card_container {
-	@apply border border-solid border-customDark;
+	@apply border border-solid border-customDark w-full;
 
 	.feed_card_top_container {
 		@apply p-4 flex;
@@ -17,7 +17,7 @@
 		@screen md {
 			@apply w-full;
 		}
-		@apply border-y border-solid border-customDark border-collapse bg-white cursor-pointer w-screen;
+		@apply border-y border-solid border-customDark border-collapse bg-white cursor-pointer w-full;
 		height: 426px;
 
 		.feed_media_wrap {
