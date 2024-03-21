@@ -4,4 +4,5 @@ export interface MenuProps {
 	link: string;
 	Icon: IconType;
 	menu: string;
+	handleCloseMainSidebar: () => void;
 }

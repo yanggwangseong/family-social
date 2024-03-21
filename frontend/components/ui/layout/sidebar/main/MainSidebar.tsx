@@ -22,7 +22,8 @@ const MainSidebar: FC = () => {
 	const { pathname } = router;
 	const isSchedulesRoute = pathname.startsWith('/schedules');
 
-	const isLeftSidebarShowing = useRecoilValue(mainSidebarAtom);
+	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
+		useRecoilState(mainSidebarAtom);
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -38,18 +39,33 @@ const MainSidebar: FC = () => {
 		setIsFeedId(''); // 수정모드 아니게 feedId 전역변수 초기화
 	};
 
+	const handleCloseMainSidebar = () => {
+		isLeftSidebarShowing && setIsLeftSidebarShowing(false);
+	};
+
 	return (
 		<>
 			{isLeftSidebarShowing && (
 				<div className={styles.sidebar_container}>
 					{/* 사이드 메뉴 */}
-					<Menu link="/feeds" Icon={PiArticleDuotone} menu="피드" />
+					<Menu
+						link="/feeds"
+						Icon={PiArticleDuotone}
+						menu="피드"
+						handleCloseMainSidebar={handleCloseMainSidebar}
+					/>
 					<Menu
 						link="/schedules"
 						Icon={PiCalendarCheckDuotone}
 						menu="여행 일정"
+						handleCloseMainSidebar={handleCloseMainSidebar}
 					/>
-					<Menu link="/accounts" Icon={PiUserCircleGearDuotone} menu="계정" />
+					<Menu
+						link="/accounts"
+						Icon={PiUserCircleGearDuotone}
+						menu="계정"
+						handleCloseMainSidebar={handleCloseMainSidebar}
+					/>
 					<div className={styles.sidebar_btn_container}>
 						{isSchedulesRoute ? (
 							<Link
@@ -60,6 +76,7 @@ const MainSidebar: FC = () => {
 									shadow-button-shadow
 									"
 								href={`/schedules/create`}
+								onClick={() => setIsLeftSidebarShowing(false)}
 							>
 								+ 일정 만들기
 							</Link>
@@ -71,7 +88,10 @@ const MainSidebar: FC = () => {
 									rounded-full p-[10px]
 									w-full hover:bg-orange-500
 									"
-								onClick={handleCreateFeed}
+								onClick={() => {
+									setIsLeftSidebarShowing(false);
+									handleCreateFeed();
+								}}
 							>
 								+ 피드
 							</CustomButton>
