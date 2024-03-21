@@ -24,7 +24,11 @@
 	}
 
 	> input[type='text'] {
-		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold;
+		@screen md {
+			@apply text-sm;
+		}
+
+		@apply text-customDark py-1 px-2 w-full focus:outline-none font-bold text-xs;
 
 		&::placeholder {
 			@apply font-normal;
@@ -59,7 +63,7 @@
 }
 
 .error {
-	@apply text-customOrange;
+	@apply text-customOrange font-medium text-sm;
 }
 
 .time_input {

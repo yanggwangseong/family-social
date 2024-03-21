@@ -8,6 +8,10 @@ const Meta: FC<IMeta> = ({ description, title }) => {
 			<Head>
 				<title>{title}</title>
 				<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+				<meta
+					name="viewport"
+					content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+				/>
 				{description ? (
 					<meta
 						itemProp="description"
