@@ -39,12 +39,7 @@ const ScheduleDetailTourismItem: FC<{
 					className={styles.img_container}
 					onClick={() => handleTourismDetailLayerModal(tourism.contentId, '12')}
 				>
-					<Image
-						src={`${tourism.tourismImage}`}
-						width={200}
-						height={150}
-						alt={''}
-					></Image>
+					<Image src={`${tourism.tourismImage}`} fill alt={''}></Image>
 				</div>
 			</div>
 			{lastItemNumber === index && <div className={styles.last_item}></div>}

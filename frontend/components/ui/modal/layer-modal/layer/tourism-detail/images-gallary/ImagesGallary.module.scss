@@ -2,7 +2,11 @@
 	@apply w-full flex flex-wrap;
 
 	.uploaded_swiper {
-		@apply w-full h-[340px] relative border border-solid border-customDark;
+		@screen md {
+			@apply h-[340px];
+		}
+		@apply w-full relative border border-solid border-customDark;
+		height: 35vh;
 
 		.uploaded_swiper_slide {
 			@apply relative;
