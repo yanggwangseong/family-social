@@ -1,11 +1,14 @@
 .schedule_card_container {
-	@apply border border-solid border-customDark flex flex-row gap-4 cursor-pointer;
+	@screen md {
+		@apply gap-4;
+	}
+	@apply border border-solid border-customDark flex flex-row gap-0 cursor-pointer;
 
 	.img_container {
 		@screen md {
-			@apply w-1/4;
+			@apply w-1/4 h-36;
 		}
-		@apply w-1/3 h-36 relative border-r border-solid border-customDark cursor-pointer;
+		@apply w-1/3 h-44 relative border-r border-solid border-customDark cursor-pointer;
 	}
 	.schedule_card_contents_container {
 		@apply flex flex-col justify-between p-4 flex-1;
@@ -15,6 +18,13 @@
 				@apply gap-4;
 			}
 			@apply flex gap-2;
+
+			&.isMobileUpdate {
+				@screen md {
+					@apply flex;
+				}
+				@apply hidden;
+			}
 
 			.d_day {
 				@screen md {
