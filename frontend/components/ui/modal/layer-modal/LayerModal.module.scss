@@ -11,7 +11,10 @@
 	z-index: 999; /* 모달이 다른 요소 위에 나타나도록 설정 */
 
 	.modal_container {
-		@apply w-[650px] bg-white border border-solid border-customDark p-6;
+		@screen md {
+			@apply w-[650px];
+		}
+		@apply w-full bg-white border border-solid border-customDark p-6;
 
 		.modal_top_container {
 			@apply flex;

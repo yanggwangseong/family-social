@@ -6,5 +6,37 @@
 	}
 	.container {
 		@apply mt-2;
+
+		// 개요
+		.intro_container {
+			@screen md {
+				@apply flex-row gap-1;
+			}
+			@apply flex gap-2 flex-col;
+		}
+
+		// 주소
+		.address_container {
+			@screen md {
+				@apply flex-row gap-1;
+			}
+			@apply flex flex-col gap-2;
+		}
+
+		// 전화번호
+		.phone_number_container {
+			@screen md {
+				@apply flex-row gap-1;
+			}
+			@apply flex flex-col gap-2;
+		}
+
+		// 영업시간
+		.store_time_container {
+			@screen md {
+				@apply flex-row gap-1;
+			}
+			@apply flex flex-col gap-2;
+		}
 	}
 }
