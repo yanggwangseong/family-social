@@ -19,14 +19,17 @@
 		}
 
 		.description_container {
-			@apply flex flex-col justify-between;
+			@apply flex flex-col gap-4;
 
 			.tour_content_type_name {
 				@apply text-sm text-customOrange font-medium;
 			}
 
 			.tour_subject {
-				@apply text-xl font-semibold;
+				@screen md {
+					@apply text-xl;
+				}
+				@apply text-lg font-semibold;
 			}
 
 			.stay_time {
@@ -35,7 +38,10 @@
 		}
 
 		.img_container {
-			@apply ml-auto border border-solid border-customDark cursor-pointer;
+			@screen md {
+				@apply h-[150px] w-[200px];
+			}
+			@apply ml-auto border border-solid border-customDark cursor-pointer relative h-[80px] w-[80px];
 		}
 	}
 
