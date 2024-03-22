@@ -2,7 +2,10 @@
 	@apply flex-1;
 
 	.container {
-		@apply flex gap-2;
+		@screen md {
+			@apply flex flex-row gap-2;
+		}
+		@apply flex flex-col gap-2;
 
 		.field_container {
 			@apply flex-1;

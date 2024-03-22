@@ -88,10 +88,12 @@ const Schedule: FC = () => {
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
-							<TabMenu
-								list={scheduleTabMenus}
-								options={'SCHEDULEALL'}
-							></TabMenu>
+							<div className={styles.tab_menu_wrap}>
+								<TabMenu
+									list={scheduleTabMenus}
+									options={'SCHEDULEALL'}
+								></TabMenu>
+							</div>
 							<div className={styles.schedule_container}>
 								{isLoading && <Skeleton />}
 
