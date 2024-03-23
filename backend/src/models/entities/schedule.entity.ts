@@ -6,7 +6,14 @@ import {
 	Length,
 	MaxLength,
 } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+} from 'typeorm';
 
 import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
@@ -20,6 +27,10 @@ import { MemberEntity } from './member.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
 
 @Entity({ name: 'fam_schedule' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
+@Index(['groupId'])
+@Index(['memberId'])
 export class ScheduleEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()

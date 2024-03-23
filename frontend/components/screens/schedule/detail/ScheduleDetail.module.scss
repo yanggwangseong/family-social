@@ -11,7 +11,10 @@
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.detail_container {
-			@apply relative py-8;
+			@screen md {
+				@apply mx-0;
+			}
+			@apply relative py-8 mx-4;
 			flex: 1;
 
 			.main_contents_container {
@@ -23,10 +26,16 @@
 
 				// title
 				.title_container {
-					@apply flex mb-4 gap-4;
+					@screen md {
+						@apply flex flex-row;
+					}
+					@apply flex flex-col mb-4 gap-4;
 
 					.title {
-						@apply font-bold text-3xl;
+						@screen md {
+							@apply text-3xl;
+						}
+						@apply font-bold text-2xl;
 					}
 
 					.title_period {

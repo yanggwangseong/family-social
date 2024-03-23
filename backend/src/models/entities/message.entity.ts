@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
@@ -11,6 +11,9 @@ import { DefaultEntity } from './common/default.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_message' })
+@Index(['createdAt'])
+@Index(['updatedAt'])
+@Index(['chatId'])
 export class MessageEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()

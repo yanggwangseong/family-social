@@ -5,9 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
 
-const Menu: FC<MenuProps> = ({ link, Icon, menu }) => {
+const Menu: FC<MenuProps> = ({ link, Icon, menu, handleCloseMainSidebar }) => {
 	const router = useRouter();
 	const { pathname } = router;
+
+	const onCloseMainSidebar = () => {
+		handleCloseMainSidebar();
+	};
 
 	return (
 		<Link
@@ -15,6 +19,7 @@ const Menu: FC<MenuProps> = ({ link, Icon, menu }) => {
 				[styles.active]: !!pathname.startsWith(link),
 			})}
 			href={link}
+			onClick={onCloseMainSidebar}
 		>
 			<Icon size={40}></Icon>
 			<div className={styles.sidebar_menu_text}>{menu}</div>

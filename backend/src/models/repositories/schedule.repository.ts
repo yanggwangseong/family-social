@@ -45,7 +45,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 				updatedAt: true,
 			},
 			where: {
-				memberId: memberId,
+				memberId,
 			},
 			relations: {
 				schedulePeriods: {

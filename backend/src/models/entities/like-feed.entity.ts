@@ -3,6 +3,7 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 import {
 	CreateDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
 	ManyToOne,
 	PrimaryColumn,
@@ -15,6 +16,7 @@ import { FeedEntity } from './feed.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_like_feed' })
+@Index(['createdAt'])
 export class LikeFeedEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty()

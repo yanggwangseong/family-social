@@ -2,17 +2,19 @@
 	@screen md {
 		@apply h-full;
 	}
-	@apply h-full text-customDark;
+	@apply h-full text-customDark relative;
 
 	//컨텐츠
 	.contents_container {
-		@apply flex relative;
+		@apply flex relative overflow-x-hidden;
 		height: calc(100vh - 80px);
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.detail_container {
-			@apply relative;
-			flex: 1;
+			@screen md {
+				flex: 1;
+			}
+			@apply relative w-full z-10;
 
 			//banner-image
 			.banner_container {
@@ -27,7 +29,10 @@
 				@apply w-full h-full mt-8;
 
 				.account_top_container {
-					@apply flex;
+					@screen md {
+						@apply mx-0;
+					}
+					@apply flex mx-4;
 
 					//profile-image
 					.profile_image_container {
@@ -46,7 +51,10 @@
 
 				//title username
 				.account_title_container {
-					@apply mt-6;
+					@screen md {
+						@apply mx-0;
+					}
+					@apply mt-6 mx-4;
 
 					.username {
 						@apply text-2xl text-customDark font-bold;
@@ -60,6 +68,14 @@
 				//tab-menu
 				.tab_menu_container {
 					@apply mt-7;
+
+					.tab_menu_wrap {
+						@screen md {
+							@apply mx-0;
+						}
+
+						@apply mx-4;
+					}
 				}
 			}
 		}

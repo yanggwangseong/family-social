@@ -8,7 +8,7 @@ import {
 	Matches,
 	MaxLength,
 } from 'class-validator';
-import { Column, Entity, OneToMany, Unique } from 'typeorm';
+import { Column, Entity, Index, OneToMany, Unique } from 'typeorm';
 
 import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
@@ -27,6 +27,8 @@ import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
+@Index(['createdAt'])
+@Index(['updatedAt'])
 export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
 	@ApiProperty()

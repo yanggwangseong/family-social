@@ -225,11 +225,17 @@ const Feed: FC = () => {
 					/>
 
 					{/* 왼쪽 사이드바 */}
+
 					<MainSidebar />
+
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
 							{/* 탭메뉴 */}
-							<TabMenu list={feedTabMenus} options={query.options} />
+
+							<div className={styles.tap_menu_container}>
+								<TabMenu list={feedTabMenus} options={query.options} />
+							</div>
+
 							{query.options === 'MYFEED' ? (
 								<MyFeed handleIsLottie={handleIsLottie} />
 							) : (

@@ -1,5 +1,5 @@
 .feed_card_container {
-	@apply border border-solid border-customDark;
+	@apply border border-solid border-customDark w-full;
 
 	.feed_card_top_container {
 		@apply p-4 flex;
@@ -14,14 +14,17 @@
 	}
 
 	.feed_media_container {
-		@apply w-full relative border-y border-solid border-customDark border-collapse bg-white cursor-pointer;
+		@screen md {
+			@apply w-full;
+		}
+		@apply border-y border-solid border-customDark border-collapse bg-white cursor-pointer w-full;
 		height: 426px;
 
 		.feed_media_wrap {
-			@apply w-full h-full relative;
+			@apply w-full h-full;
 
 			.swiper_container {
-				@apply relative;
+				@apply relative w-full;
 
 				.swiper_button_prev {
 					@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark

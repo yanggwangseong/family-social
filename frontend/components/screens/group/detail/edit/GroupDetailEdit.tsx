@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Header from '@/components/ui/header/Header';
 import GroupDetailSidebar from '@/components/ui/layout/sidebar/group/detail/GroupDetailSidebar';
 import Line from '@/components/ui/line/Line';
-import { PiNotePencilLight } from 'react-icons/pi';
+import { PiNotePencilLight, PiNotePencilDuotone } from 'react-icons/pi';
 import cn from 'classnames';
 import Field from '@/components/ui/field/Field';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
@@ -163,7 +163,7 @@ const GroupDetailEdit: FC = () => {
 													>
 														<div className={styles.btn_wrap}>
 															<div className={styles.icon_container}>
-																<PiNotePencilLight size={22} />
+																<PiNotePencilDuotone size={22} />
 															</div>
 															<div className={styles.btn_text}>편집</div>
 														</div>
@@ -211,7 +211,7 @@ const GroupDetailEdit: FC = () => {
 													>
 														<div className={styles.btn_wrap}>
 															<div className={styles.icon_container}>
-																<PiNotePencilLight size={22} />
+																<PiNotePencilDuotone size={22} />
 															</div>
 															<div className={styles.btn_text}>편집</div>
 														</div>

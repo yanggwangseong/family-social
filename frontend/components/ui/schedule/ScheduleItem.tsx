@@ -9,9 +9,10 @@ import ToggleModal from '../modal/ToggleModal';
 import { ScheduleSettingMenu } from '../modal/toggle-menu.constants';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
 import { useRecoilState } from 'recoil';
-import { GoPencil } from 'react-icons/go';
+import { PiPencilDuotone } from 'react-icons/pi';
 import ScheduleUpdateTitle from './update-title/UpdateTitle';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import cn from 'classnames';
 import { LayerMode } from 'types';
 import { useRouter } from 'next/router';
 
@@ -68,29 +69,14 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 				></Image>
 			</div>
 			<div className={styles.schedule_card_contents_container}>
-				<div className={styles.contents_top_container}>
+				<div
+					className={cn(styles.contents_top_container, {
+						[styles.isMobileUpdate]: !!isUpdateTitle,
+					})}
+				>
 					<div>
 						<div className={styles.d_day}>D-248</div>
 					</div>
-					{isUpdateTitle ? (
-						<ScheduleUpdateTitle
-							handleUpdateTitle={handleUpdateTitle}
-							scheduleId={schedule.id}
-						></ScheduleUpdateTitle>
-					) : (
-						<>
-							<div className={styles.title}>{schedule.scheduleName}</div>
-							<div
-								className={styles.title_update_icon_container}
-								onClick={e => {
-									e.stopPropagation();
-									handleUpdateTitle();
-								}}
-							>
-								<GoPencil size={18} color="#0a0a0a" />
-							</div>
-						</>
-					)}
 					<div
 						className={styles.setting_container}
 						ref={settingModalWrapperRef}
@@ -110,6 +96,27 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 							/>
 						)}
 					</div>
+				</div>
+				<div className={styles.contents_top_container}>
+					{isUpdateTitle ? (
+						<ScheduleUpdateTitle
+							handleUpdateTitle={handleUpdateTitle}
+							scheduleId={schedule.id}
+						></ScheduleUpdateTitle>
+					) : (
+						<>
+							<div className={styles.title}>{schedule.scheduleName}</div>
+							<div
+								className={styles.title_update_icon_container}
+								onClick={e => {
+									e.stopPropagation();
+									handleUpdateTitle();
+								}}
+							>
+								<PiPencilDuotone size={18} color="#0a0a0a" />
+							</div>
+						</>
+					)}
 				</div>
 				<div
 					className={styles.schedule_periods}

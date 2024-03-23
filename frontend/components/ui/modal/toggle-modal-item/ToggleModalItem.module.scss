@@ -1,5 +1,5 @@
 .toggle_modal_item_container {
-	@apply flex p-2 hover:bg-basic rounded-lg cursor-pointer;
+	@apply flex p-2 hover:bg-basic rounded-lg cursor-pointer hover:text-customOrange;
 
 	.icon_container {
 		@apply flex justify-center items-center;
