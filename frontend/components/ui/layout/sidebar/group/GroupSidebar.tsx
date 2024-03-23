@@ -9,8 +9,7 @@ import {
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
 import Menu from '../menu/Menu';
-import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
-import { useRecoilState } from 'recoil';
+import { useMainSidebar } from '@/hooks/useMainSidebar';
 
 const GroupSidebar: FC = () => {
 	const router = useRouter();
@@ -18,12 +17,7 @@ const GroupSidebar: FC = () => {
 		router.push('/groups/create');
 	};
 
-	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
-		useRecoilState(mainSidebarAtom);
-
-	const handleCloseMainSidebar = () => {
-		isLeftSidebarShowing && setIsLeftSidebarShowing(false);
-	};
+	const { isLeftSidebarShowing, handleCloseMainSidebar } = useMainSidebar();
 
 	return (
 		<>
