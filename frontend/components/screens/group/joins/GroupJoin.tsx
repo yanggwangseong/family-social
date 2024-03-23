@@ -6,8 +6,11 @@ import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
 import { BsDot } from 'react-icons/bs';
 import Line from '@/components/ui/line/Line';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
+import GroupItemCard from '@/components/ui/group/item-card/GroupItemCard';
 
 const GroupJoin: FC = () => {
+	const fakeSigninGroup = [0, 1, 2, 3, 4, 5];
+	const fakeManageGroup = [0, 1, 2, 3, 4, 5];
 	return (
 		<Format title={'group-requests'}>
 			<div className={styles.container}>
@@ -25,42 +28,9 @@ const GroupJoin: FC = () => {
 						</div>
 						{/* 가입한 모든 그룹 */}
 						<div className="flex flex-wrap">
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
+							{fakeSigninGroup.map((item, index) => (
+								<GroupItemCard key={index} />
+							))}
 						</div>
 						<Line />
 						<div className={styles.top_title_container}>
@@ -72,24 +42,9 @@ const GroupJoin: FC = () => {
 						</div>
 						{/* 관리중인 모든 그룹 */}
 						<div className="flex flex-wrap">
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
-							<div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3">
-								<GroupProfile
-									group={{
-										id: 'sdfsdf',
-										groupDescription: 'ghggg',
-										groupName: 'sdfsdf',
-									}}
-								/>
-							</div>
+							{fakeManageGroup.map((item, index) => (
+								<GroupItemCard key={index} />
+							))}
 						</div>
 					</div>
 				</div>

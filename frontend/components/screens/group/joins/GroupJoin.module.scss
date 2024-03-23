@@ -12,9 +12,9 @@
 		.main_contents_container {
 			@screen md {
 				@apply mx-32 mt-10;
-				width: 768px;
+				flex: 1;
 			}
-			@apply w-full;
+			@apply w-full z-10 relative;
 
 			.top_title_container {
 				@apply mb-10 flex;
