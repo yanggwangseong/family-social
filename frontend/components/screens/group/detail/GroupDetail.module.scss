@@ -38,10 +38,16 @@
 					@apply w-full;
 
 					.banner_profile_contaienr {
-						@apply flex mt-6;
+						@screen md {
+							@apply mx-0 flex-row gap-0;
+						}
+						@apply flex flex-col gap-4 mt-6 mx-4;
 
 						.banner_profile_right_contaienr {
-							@apply ml-auto;
+							@screen md {
+								@apply ml-auto;
+							}
+							@apply ml-0;
 
 							.toggle_menu_container {
 								@apply flex justify-center items-center relative;
