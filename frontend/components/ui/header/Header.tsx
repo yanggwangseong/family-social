@@ -49,7 +49,7 @@ const Header: FC = () => {
 						<PiTextIndentFill className={styles.icon} size={22} />
 					</div>
 					<Link href={'/feeds'}>
-						<div className={styles.icon_wrap}>
+						<div className={cn(styles.icon_wrap, styles.mobile_hide_icon)}>
 							<PiHouseDuotone
 								className={styles.icon}
 								size={22}
