@@ -24,12 +24,14 @@
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.right_contents_container {
-			@apply relative;
-			flex: 1;
+			@screen md {
+				flex: 1;
+			}
+			@apply relative w-full z-10 my-10;
 
 			.main_contents_container {
 				@screen md {
-					@apply mx-auto mt-10 flex justify-center;
+					@apply mx-auto flex justify-center;
 					width: 768px;
 				}
 				@apply w-full;
@@ -37,7 +39,11 @@
 				.detail_container {
 					@apply w-full;
 					.detail_wrap {
-						@apply border border-solid border-customDark p-4 bg-white shadow-2xl;
+						@screen md {
+							@apply border border-solid border-customDark;
+						}
+
+						@apply border-0 p-4 bg-white shadow-2xl;
 						min-height: 400px;
 						.detail_container_title {
 							@apply font-medium text-xl;
@@ -74,13 +80,19 @@
 								}
 
 								.menu_description_container {
-									@apply flex w-full flex-row;
+									@screen md {
+										@apply flex-row gap-0;
+									}
+									@apply flex w-full flex-col gap-4;
 
 									.edit_btn_container {
-										@apply ml-auto cursor-pointer hover:text-customOrange;
+										@screen md {
+											@apply ml-auto p-0 bg-white border-0 rounded-none;
+										}
+										@apply ml-0 cursor-pointer hover:text-customOrange bg-customOrange px-2 py-1 border border-solid border-customDark rounded;
 
 										.btn_wrap {
-											@apply flex;
+											@apply flex justify-center;
 
 											.icon_container {
 												@apply flex justify-center items-center;
