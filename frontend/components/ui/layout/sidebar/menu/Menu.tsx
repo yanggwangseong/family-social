@@ -12,6 +12,7 @@ const Menu: FC<MenuProps> = ({ link, Icon, menu, handleCloseMainSidebar }) => {
 	const onCloseMainSidebar = () => {
 		handleCloseMainSidebar();
 	};
+
 	return (
 		<Link
 			className={cn(styles.sidebar_menu_container, {
