@@ -7,14 +7,14 @@
 	//컨텐츠
 	.contents_container {
 		@apply flex;
-		height: calc(100vh - 80px);
+		min-height: calc(100vh - 80px);
 
 		.main_contents_container {
 			@screen md {
-				@apply mx-32 mt-10;
+				@apply mx-32 my-10;
 				flex: 1;
 			}
-			@apply w-full z-10 relative;
+			@apply w-full z-10 relative my-10 mx-4;
 
 			.top_title_container {
 				@apply mb-10 flex;
