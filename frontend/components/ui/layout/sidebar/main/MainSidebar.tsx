@@ -1,9 +1,7 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import styles from './MainSidebar.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Menu from '../menu/Menu';
-import { AiOutlineAudit, AiOutlineSchedule } from 'react-icons/ai';
-import { MdOutlineManageAccounts } from 'react-icons/md';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
@@ -15,15 +13,12 @@ import {
 	PiCalendarCheckDuotone,
 	PiArticleDuotone,
 } from 'react-icons/pi';
-import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
+import { useMainSidebar } from '@/hooks/useMainSidebar';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
 	const { pathname } = router;
 	const isSchedulesRoute = pathname.startsWith('/schedules');
-
-	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
-		useRecoilState(mainSidebarAtom);
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -39,9 +34,11 @@ const MainSidebar: FC = () => {
 		setIsFeedId(''); // 수정모드 아니게 feedId 전역변수 초기화
 	};
 
-	const handleCloseMainSidebar = () => {
-		isLeftSidebarShowing && setIsLeftSidebarShowing(false);
-	};
+	const {
+		isLeftSidebarShowing,
+		setIsLeftSidebarShowing,
+		handleCloseMainSidebar,
+	} = useMainSidebar();
 
 	return (
 		<>

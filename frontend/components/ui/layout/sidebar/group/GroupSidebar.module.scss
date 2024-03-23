@@ -1,6 +1,10 @@
 .sidebar_container {
-	@apply px-11 pt-3 border-r border-solid border-customDark h-full sticky top-0 z-10;
-	width: 300px;
+	@screen 2xl {
+		@apply sticky top-0;
+		width: 300px;
+	}
+
+	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
 
 	.sidebar_title {
 		@apply text-2xl font-medium mb-12;

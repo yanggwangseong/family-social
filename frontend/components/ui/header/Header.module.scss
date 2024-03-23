@@ -55,6 +55,14 @@
 					@apply fill-customOrange;
 				}
 			}
+
+			&.mobile_hide_icon {
+				@screen md {
+					@apply flex;
+				}
+
+				@apply hidden;
+			}
 		}
 
 		.mobile_icon_wrap {
