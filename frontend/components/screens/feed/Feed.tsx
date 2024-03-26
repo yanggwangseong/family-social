@@ -23,6 +23,7 @@ import { feedTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 import MyFeed from './my-feed/MyFeed';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
+import { PiPencilDuotone } from 'react-icons/pi';
 
 const Feed: FC = () => {
 	const router = useRouter();
@@ -265,6 +266,9 @@ const Feed: FC = () => {
 									)}
 								</div>
 							)}
+						</div>
+						<div className={styles.mobile_create_feed_btn_container}>
+							<PiPencilDuotone size={28} color="#0a0a0a" />
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
