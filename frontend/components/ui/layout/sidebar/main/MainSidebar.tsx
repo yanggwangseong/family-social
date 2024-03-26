@@ -14,25 +14,14 @@ import {
 	PiArticleDuotone,
 } from 'react-icons/pi';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
+import { useCreateFeed } from '@/hooks/useCreateFeed';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
 	const { pathname } = router;
 	const isSchedulesRoute = pathname.startsWith('/schedules');
 
-	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
-	const [, setIsLayer] = useRecoilState(modalLayerAtom);
-	const [, setIsFeedId] = useRecoilState(feedIdAtom);
-
-	const handleCreateFeed = () => {
-		setIsShowing(!isShowing); // layer modal 보여주기
-		setIsLayer({
-			modal_title: '새 게시물 만들기',
-			layer: LayerMode.createFeed,
-		}); // layer modal 어떤 layer를 보여 줄건지
-
-		setIsFeedId(''); // 수정모드 아니게 feedId 전역변수 초기화
-	};
+	const { handleCreateFeed } = useCreateFeed();
 
 	const {
 		isLeftSidebarShowing,
