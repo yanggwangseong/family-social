@@ -1,5 +1,8 @@
 .select_group_container {
-	@apply h-full relative;
+	@screen md {
+		@apply mx-0;
+	}
+	@apply h-full relative mx-4;
 
 	// 현재 STEP표시
 	.step_title {

@@ -1,5 +1,5 @@
 .period_container {
-	@apply h-full relative;
+	@apply h-full relative mx-4;
 
 	// 현재 STEP표시
 	.step_title {
@@ -16,7 +16,7 @@
 	}
 
 	.period_btn_container {
-		@apply flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
+		@apply w-full flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
 
 		.icon {
 			@apply cursor-pointer;
