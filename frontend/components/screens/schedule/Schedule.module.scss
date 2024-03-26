@@ -36,6 +36,14 @@
 					@apply pt-6 pb-8 flex flex-col gap-10 mx-4;
 				}
 			}
+
+			// mobile-create-schedule-btn
+			.mobile_create_schedule_btn_container {
+				@screen md {
+					@apply hidden;
+				}
+				@apply fixed bottom-6 right-4 border border-solid border-customDark bg-customOrange flex justify-center items-center rounded-full p-4;
+			}
 		}
 	}
 }
