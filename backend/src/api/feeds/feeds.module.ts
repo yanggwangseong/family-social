@@ -35,7 +35,7 @@ export class FeedsModule implements NestModule {
 			.exclude(
 				{ path: 'feeds', method: RequestMethod.GET },
 				{ path: 'feeds', method: RequestMethod.POST },
-				{ path: 'test', method: RequestMethod.POST },
+				{ path: 'feeds/test', method: RequestMethod.POST },
 			)
 			.forRoutes(FeedsController);
 

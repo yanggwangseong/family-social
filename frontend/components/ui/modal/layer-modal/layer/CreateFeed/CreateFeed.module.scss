@@ -70,7 +70,10 @@
 			@apply flex;
 
 			.form_top_group_container {
-				@apply ml-auto -mt-3;
+				@screen md {
+					@apply block;
+				}
+				@apply ml-auto -mt-3 hidden;
 			}
 		}
 
@@ -82,7 +85,11 @@
 			@apply mt-5;
 
 			.swiper {
-				@apply w-full h-72 relative;
+				@screen md {
+					@apply h-72;
+				}
+				@apply w-full relative;
+				height: 30vh;
 			}
 		}
 	}
