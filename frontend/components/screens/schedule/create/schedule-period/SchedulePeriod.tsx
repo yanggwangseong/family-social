@@ -127,7 +127,7 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 						<FaCalendar className={styles.icon} size={22} />
 					</div>
 					{/* 여행기간 */}
-					{/* <Periods isPeriods={isPeriods}></Periods> */}
+					<Periods isPeriods={isPeriods}></Periods>
 				</>
 			)}
 

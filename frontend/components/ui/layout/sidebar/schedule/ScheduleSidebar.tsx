@@ -16,11 +16,13 @@ import { ScheduleService } from '@/services/schedule/schedule.service';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { ScheduleSidebarProps } from './schedule-sidebar.interface';
+import cn from 'classnames';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
 	isScheduleName,
 	isStartEndPeriod,
+	isPage,
 }) => {
 	const router = useRouter();
 
@@ -93,7 +95,11 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	}, [isPeriods]);
 
 	return isSelectedPeriod ? (
-		<div className={styles.right_sidebar_container}>
+		<div
+			className={cn(styles.right_sidebar_container, {
+				[styles.mobile_toruism_sidebar]: isPage === 'tourismPage',
+			})}
+		>
 			<div className={styles.container}>
 				<div className={styles.right_sidebar_contents_wrap}>
 					<div>

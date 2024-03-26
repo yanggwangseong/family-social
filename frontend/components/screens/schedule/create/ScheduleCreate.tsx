@@ -119,6 +119,7 @@ const ScheduleCreate: FC<{
 						isSelecteGroup={isSelecteGroup}
 						isScheduleName={isScheduleName}
 						isStartEndPeriod={isStartEndPeriod}
+						isPage={isPage}
 					/>
 				</div>
 			</div>

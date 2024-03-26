@@ -1,8 +1,12 @@
 .right_sidebar_container {
-	@screen 2xl {
+	@screen lg {
+		@apply block sticky w-[400px] h-full top-0;
+	}
+	@apply w-full border-l border-solid border-customDark fixed bottom-0 z-10 hidden p-4 overflow-y-auto;
+	height: 40vh;
+	&.mobile_toruism_sidebar {
 		@apply block;
 	}
-	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-10 block p-4 overflow-y-auto;
 
 	// 버튼 아래에 위치 시키기 위한 컨테이너
 	.container {

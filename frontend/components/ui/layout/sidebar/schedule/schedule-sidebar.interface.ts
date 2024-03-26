@@ -1,3 +1,5 @@
+import { Union, schdulePages } from 'types';
+
 export interface ScheduleSidebarProps {
 	isSelecteGroup: string;
 	isScheduleName: string;
@@ -5,4 +7,5 @@ export interface ScheduleSidebarProps {
 		startPeriod: string;
 		endPeriod: string;
 	};
+	isPage: Union<typeof schdulePages>;
 }
