@@ -1,9 +1,9 @@
 .right_sidebar_container {
 	@screen lg {
-		@apply block sticky w-[400px] h-full top-0;
+		@apply block sticky w-[400px] h-full top-0 border-l border-solid border-customDark;
 	}
-	@apply w-full border-l border-solid border-customDark fixed bottom-0 z-10 hidden p-4 overflow-y-auto;
-	height: 40vh;
+	@apply w-full border-0 fixed bottom-0 z-10 hidden p-4 bg-basic;
+	height: calc(100vh - 30vh - 80px);
 	&.mobile_toruism_sidebar {
 		@apply block;
 	}
