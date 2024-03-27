@@ -7,14 +7,20 @@
 			@apply flex gap-4 cursor-pointer;
 
 			.img_container {
-				@apply h-[100px] border border-solid border-customDark;
+				@screen md {
+					@apply h-[100px] w-[120px];
+				}
+				@apply border border-solid border-customDark relative h-[45px] w-[45px];
 			}
 
 			.tour_description_container {
-				@apply flex flex-col justify-between;
+				@screen md {
+					@apply flex-col justify-between gap-0;
+				}
+				@apply flex flex-row justify-start flex-wrap gap-2;
 
 				.tour_title {
-					@apply text-base font-bold;
+					@apply text-base font-bold w-full;
 				}
 
 				.tour_addr_container {
@@ -25,7 +31,10 @@
 					}
 
 					.tour_addr {
-						@apply text-xs text-customGray;
+						@screen md {
+							@apply block;
+						}
+						@apply text-xs text-customGray hidden;
 					}
 				}
 			}
@@ -36,7 +45,7 @@
 			@apply flex flex-shrink-0;
 
 			.btn_container {
-				@apply cursor-pointer p-2;
+				@apply cursor-pointer p-1;
 
 				&.active {
 					@apply border border-solid border-customDark bg-customOrange rounded-full;

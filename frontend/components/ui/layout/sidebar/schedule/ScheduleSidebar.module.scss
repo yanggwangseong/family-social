@@ -1,15 +1,19 @@
 .right_sidebar_container {
-	@screen 2xl {
+	@screen lg {
+		@apply block sticky w-[400px] h-full top-0 border-l border-solid border-customDark;
+	}
+	@apply w-full border-0 fixed bottom-0 z-10 hidden p-4 bg-basic;
+	height: calc(100vh - 30vh - 80px);
+	&.mobile_toruism_sidebar {
 		@apply block;
 	}
-	@apply w-[400px] border-l border-solid border-customDark h-full sticky top-0 z-10 block p-4 overflow-y-auto;
 
 	// 버튼 아래에 위치 시키기 위한 컨테이너
 	.container {
 		@apply flex flex-col h-full;
 
-		.right_sidebar_contents_wrap {
-			@apply flex-grow;
+		.fix_container {
+			@apply relative;
 
 			.sidebar_tourism_total_time_container {
 				@apply flex my-4 gap-4 items-center;
@@ -22,6 +26,10 @@
 					@apply text-sm;
 				}
 			}
+		}
+
+		.right_sidebar_contents_wrap {
+			@apply flex-grow overflow-y-auto relative;
 
 			.schedule_tourism_container {
 				.not_found_tourism_container {
@@ -33,10 +41,10 @@
 				}
 			}
 		}
-	}
 
-	// 버튼
-	.right_sidebar_footer_container {
-		@apply mb-2;
+		// 버튼
+		.right_sidebar_footer_container {
+			@apply mb-2;
+		}
 	}
 }

@@ -95,13 +95,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 					}
 				>
 					<div className={styles.img_container}>
-						<Image
-							width={120}
-							height={100}
-							src={tour.firstimage}
-							alt="img"
-							style={{ height: '100px' }}
-						></Image>
+						<Image fill src={tour.firstimage} alt="img"></Image>
 					</div>
 					<div className={styles.tour_description_container}>
 						<div className={styles.tour_title}>{tour.title}</div>

@@ -23,12 +23,16 @@ import { feedTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 import MyFeed from './my-feed/MyFeed';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
+import { PiPencilDuotone } from 'react-icons/pi';
+import { useCreateFeed } from '@/hooks/useCreateFeed';
 
 const Feed: FC = () => {
 	const router = useRouter();
 	const query = router.query as { options: 'TOP' | 'MYFEED' | 'ALL' };
 
 	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
+
+	const { handleCreateFeed } = useCreateFeed();
 
 	// const handleLike = () => {
 	// 	if (lottieRef.current) {
@@ -265,6 +269,12 @@ const Feed: FC = () => {
 									)}
 								</div>
 							)}
+						</div>
+						<div
+							className={styles.mobile_create_feed_btn_container}
+							onClick={handleCreateFeed}
+						>
+							<PiPencilDuotone size={28} color="#0a0a0a" />
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}

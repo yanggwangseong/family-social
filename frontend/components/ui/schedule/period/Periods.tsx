@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment, useRef } from 'react';
 import Field from '@/ui/field/Field';
 import Table from '@/ui/table/Table';
 import styles from './Periods.module.scss';
@@ -13,30 +13,37 @@ const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 				{isPeriods.map((period, index) => {
 					const date = new Date(period.period);
 					return (
-						<tr key={index}>
-							<td className={styles.table_row} align="center">
-								{TranslateDateFormat(date, 'yyyy-MM-dd')}
-							</td>
-							<td className={styles.table_row} align="center">
-								{TranslateDateFormat(date, 'eee')}
-							</td>
-							<td className={styles.table_row} align="center">
-								<Field
-									className="w-full bg-basic"
-									type="time"
-									name="startTime"
-									defaultValue="10:00"
-								/>
-							</td>
-							<td className={styles.table_row} align="center">
-								<Field
-									className="w-full bg-basic"
-									type="time"
-									name="endTime"
-									defaultValue="22:00"
-								/>
-							</td>
-						</tr>
+						<Fragment key={index}>
+							<tr>
+								<td className={styles.table_row} align="center" rowSpan={2}>
+									{TranslateDateFormat(date, 'MM/dd')}
+								</td>
+								<td className={styles.table_row} align="center" rowSpan={2}>
+									{TranslateDateFormat(date, 'eee')}
+								</td>
+								<td
+									className={`${styles.table_row} ${styles.no_boder}`}
+									align="center"
+								>
+									<Field
+										className="w-full bg-basic md:text-base text-sm"
+										type="time"
+										name="startTime"
+										defaultValue="10:00"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td className={styles.table_row} align="center">
+									<Field
+										className="w-full bg-basic md:text-base text-sm"
+										type="time"
+										name="endTime"
+										defaultValue="22:00"
+									/>
+								</td>
+							</tr>
+						</Fragment>
 					);
 				})}
 			</Table>

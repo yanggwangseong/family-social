@@ -89,47 +89,49 @@ const SchedulePeriod: FC<SchedulePeriodProps> = ({
 
 	return (
 		<div className={styles.period_container}>
-			<div className={styles.step_title}>STEP 2</div>
+			<div className={styles.contents_container}>
+				<div className={styles.step_title}>STEP 2</div>
 
-			{isOpen || !pageInit ? (
-				<div>
-					<div className={styles.schedule_name_container}>
-						<div className={styles.title}>여행 이름</div>
-						<div>
-							<Field
-								onChange={e => handleChangeScheduleName(e.target.value)}
-								defaultValue={isScheduleName}
-								placeholder="여행 이름을 작성해주세요."
-							></Field>
+				{isOpen || !pageInit ? (
+					<div>
+						<div className={styles.schedule_name_container}>
+							<div className={styles.title}>여행 이름</div>
+							<div>
+								<Field
+									onChange={e => handleChangeScheduleName(e.target.value)}
+									defaultValue={isScheduleName}
+									placeholder="여행 이름을 작성해주세요."
+								></Field>
+							</div>
 						</div>
+						<div className={styles.title}>여행 일정 선택</div>
+						<div>여행 기간이 어떻게 되시나요?</div>
+						<DatePicker
+							locale={ko}
+							selectsRange={true}
+							startDate={startDate}
+							endDate={endDate}
+							onChange={handleChange}
+							inline
+							isClearable={true}
+						/>
 					</div>
-					<div className={styles.title}>여행 일정 선택</div>
-					<div>여행 기간이 어떻게 되시나요?</div>
-					<DatePicker
-						locale={ko}
-						selectsRange={true}
-						startDate={startDate}
-						endDate={endDate}
-						onChange={handleChange}
-						inline
-						isClearable={true}
-					/>
-				</div>
-			) : (
-				<>
-					<div className={styles.period_btn_container}>
-						<button className="example-custom-input" onClick={handleClick}>
-							{`${TranslateDateFormat(
-								startDate,
-								'yyyy-MM-dd (eee)',
-							)} - ${TranslateDateFormat(endDate, 'yyyy-MM-dd (eee)')}`}
-						</button>
-						<FaCalendar className={styles.icon} size={22} />
-					</div>
-					{/* 여행기간 */}
-					<Periods isPeriods={isPeriods}></Periods>
-				</>
-			)}
+				) : (
+					<>
+						<div className={styles.period_btn_container}>
+							<button className="example-custom-input" onClick={handleClick}>
+								{`${TranslateDateFormat(
+									startDate,
+									'yyyy-MM-dd (eee)',
+								)} - ${TranslateDateFormat(endDate, 'yyyy-MM-dd (eee)')}`}
+							</button>
+							<FaCalendar className={styles.icon} size={22} />
+						</div>
+						{/* 여행기간 */}
+						<Periods isPeriods={isPeriods}></Periods>
+					</>
+				)}
+			</div>
 
 			<div className={styles.button_container}>
 				{isOpen || !pageInit ? (
