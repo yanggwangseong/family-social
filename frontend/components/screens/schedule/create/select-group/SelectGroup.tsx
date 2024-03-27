@@ -17,8 +17,10 @@ const SelectGroup: FC<SelectGroupProps> = ({
 
 	return (
 		<div className={styles.select_group_container}>
-			<div className={styles.step_title}>STEP 1</div>
-			<div className={styles.selectedGroup_title}>그룹선택</div>
+			<div className={styles.top_title_container}>
+				<div className={styles.step_title}>STEP 1</div>
+				<div className={styles.selectedGroup_title}>그룹선택</div>
+			</div>
 			<div className={styles.selectedGroup_groups_container}>
 				{data.map(group => (
 					<div className={styles.group_card_wrap} key={group.id}>
