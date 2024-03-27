@@ -3,7 +3,10 @@
 
 	// 현재 STEP표시
 	.step_title {
-		@apply font-bold text-3xl mb-5;
+		@screen md {
+			@apply text-3xl;
+		}
+		@apply font-bold text-lg mb-5;
 	}
 
 	// 여행 이름
