@@ -1,36 +1,40 @@
 .period_container {
-	@apply h-full relative mx-4;
+	@apply h-full relative mx-4 flex flex-col;
 
-	// 현재 STEP표시
-	.step_title {
-		@screen md {
-			@apply text-3xl;
+	.contents_container {
+		@apply flex-grow overflow-y-auto;
+
+		// 현재 STEP표시
+		.step_title {
+			@screen md {
+				@apply text-3xl;
+			}
+			@apply font-bold text-lg;
 		}
-		@apply font-bold text-lg mb-5;
-	}
 
-	// 여행 이름
-	.schedule_name_container {
-		@apply flex flex-col gap-4 mb-4;
-	}
+		// 여행 이름
+		.schedule_name_container {
+			@apply flex flex-col gap-4 mb-4;
+		}
 
-	.title {
-		@apply font-semibold text-lg;
-	}
+		.title {
+			@apply font-semibold text-lg;
+		}
 
-	.period_btn_container {
-		@apply w-full flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
+		.period_btn_container {
+			@apply w-full flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
 
-		.icon {
-			@apply cursor-pointer;
+			.icon {
+				@apply cursor-pointer;
+			}
 		}
 	}
 
 	.button_container {
-		@screen md {
-			@apply fixed bottom-0 flex gap-4 z-50 bg-basic;
-			width: 768px;
-		}
-		@apply w-full pb-10;
+		// @screen md {
+		// 	@apply fixed bottom-0 flex gap-4 z-50 bg-basic;
+		// 	width: 768px;
+		// }
+		@apply w-full flex gap-4;
 	}
 }
