@@ -12,14 +12,16 @@ const Table: FC<PropsWithChildren<TableProps>> = ({
 				{headerColumns.map((tr, index) => (
 					<tr key={index}>
 						{tr.column.map((data, index) => (
-							<th
-								key={index}
-								className={styles.table_header_column}
-								colSpan={data.colspan}
-								rowSpan={data.rowspan}
-							>
-								{data.item}
-							</th>
+							<>
+								<th
+									key={index}
+									className={styles.table_header_column}
+									colSpan={data.colspan}
+									rowSpan={data.rowspan}
+								>
+									{data.item}
+								</th>
+							</>
 						))}
 					</tr>
 				))}
