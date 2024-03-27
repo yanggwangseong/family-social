@@ -101,7 +101,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 			})}
 		>
 			<div className={styles.container}>
-				<div className={styles.right_sidebar_contents_wrap}>
+				<div className={styles.fix_container}>
 					<div>
 						<SchedulePeriodSelect></SchedulePeriodSelect>
 					</div>
@@ -150,6 +150,8 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 							)}
 						</div>
 					</div>
+				</div>
+				<div className={styles.right_sidebar_contents_wrap}>
 					<div>
 						{isPeriods.map((period, index) => (
 							<div className={styles.schedule_tourism_container} key={index}>

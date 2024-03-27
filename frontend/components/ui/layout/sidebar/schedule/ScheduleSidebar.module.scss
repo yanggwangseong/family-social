@@ -12,8 +12,8 @@
 	.container {
 		@apply flex flex-col h-full;
 
-		.right_sidebar_contents_wrap {
-			@apply flex-grow;
+		.fix_container {
+			@apply relative;
 
 			.sidebar_tourism_total_time_container {
 				@apply flex my-4 gap-4 items-center;
@@ -26,6 +26,10 @@
 					@apply text-sm;
 				}
 			}
+		}
+
+		.right_sidebar_contents_wrap {
+			@apply flex-grow overflow-y-auto relative;
 
 			.schedule_tourism_container {
 				.not_found_tourism_container {
@@ -37,10 +41,10 @@
 				}
 			}
 		}
-	}
 
-	// 버튼
-	.right_sidebar_footer_container {
-		@apply mb-2;
+		// 버튼
+		.right_sidebar_footer_container {
+			@apply mb-2;
+		}
 	}
 }

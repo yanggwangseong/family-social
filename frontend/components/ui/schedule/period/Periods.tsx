@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, Fragment, useRef } from 'react';
 import Field from '@/ui/field/Field';
 import Table from '@/ui/table/Table';
 import styles from './Periods.module.scss';
@@ -13,8 +13,8 @@ const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 				{isPeriods.map((period, index) => {
 					const date = new Date(period.period);
 					return (
-						<>
-							<tr key={index}>
+						<Fragment key={index}>
+							<tr>
 								<td className={styles.table_row} align="center" rowSpan={2}>
 									{TranslateDateFormat(date, 'MM/dd')}
 								</td>
@@ -43,7 +43,7 @@ const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 									/>
 								</td>
 							</tr>
-						</>
+						</Fragment>
 					);
 				})}
 			</Table>
