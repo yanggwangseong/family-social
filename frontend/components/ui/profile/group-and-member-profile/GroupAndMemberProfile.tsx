@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
 import styles from './GroupAndMemberProfile.module.scss';
 import Image from 'next/image';
+import { GroupAndMemberProfileProps } from './group-and-member-profile.interface';
 
-const GroupAndMemberProfile: FC = () => {
+const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
+	groupName,
+	username,
+}) => {
 	return (
 		<div className={styles.container}>
 			<div>
@@ -23,8 +27,8 @@ const GroupAndMemberProfile: FC = () => {
 				</div>
 			</div>
 			<div className={styles.description_container}>
-				<div className={styles.group_name}>토트넘응원그룹</div>
-				<div className={styles.member_name}>양광성</div>
+				<div className={styles.group_name}>{groupName}</div>
+				<div className={styles.member_name}>{username}</div>
 			</div>
 		</div>
 	);

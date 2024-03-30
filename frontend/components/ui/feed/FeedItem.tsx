@@ -29,6 +29,7 @@ import {
 	PiChatTextDuotone,
 	PiHeartDuotone,
 } from 'react-icons/pi';
+import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -95,7 +96,11 @@ const FeedItem: FC<FeedItemProps> = ({
 			<div>
 				<div className={styles.feed_card_container} id={feed.feedId}>
 					<div className={styles.feed_card_top_container}>
-						<Profile username="양광성"></Profile>
+						{/* <Profile username="양광성"></Profile> */}
+						<GroupAndMemberProfile
+							username={feed.username}
+							groupName={feed.groupName}
+						></GroupAndMemberProfile>
 						<div
 							className={styles.feed_card_setting_container}
 							ref={settingModalWrapperRef}
