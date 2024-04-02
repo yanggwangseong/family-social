@@ -24,7 +24,10 @@ const SwiperContainer: FC<SwiperContainerProps> = ({
 
 	return (
 		<Swiper
-			className={styles.swiper_container}
+			className={cn(styles.swiper_container, {
+				[styles.uploaded_swiper]: type === 'create-feed',
+				[styles.form_swiper]: type === 'create-feed-form',
+			})}
 			modules={[Navigation, Pagination, A11y]}
 			pagination={{
 				clickable: true,
@@ -92,6 +95,39 @@ const SwiperContainer: FC<SwiperContainerProps> = ({
 							</div>
 						)}
 
+						<div
+							className={styles.swiper_button_next}
+							ref={navigationPrevRef}
+							onClick={e => {
+								e.stopPropagation();
+								swiperRef.current?.slideNext();
+							}}
+						>
+							<CgArrowRight size={24} />
+						</div>
+
+						<div
+							className={styles.swiper_button_prev}
+							ref={navigationNextRef}
+							onClick={e => {
+								e.stopPropagation();
+								swiperRef.current?.slidePrev();
+							}}
+						>
+							<CgArrowLeft size={24} />
+						</div>
+					</SwiperSlide>
+				))}
+
+			{type === 'create-feed-form' &&
+				list.map((media, index) => (
+					<SwiperSlide key={index} className={styles.swiper_container}>
+						<Image
+							fill
+							src={media}
+							alt="image"
+							style={{ objectFit: 'inherit' }}
+						></Image>
 						<div
 							className={styles.swiper_button_next}
 							ref={navigationPrevRef}

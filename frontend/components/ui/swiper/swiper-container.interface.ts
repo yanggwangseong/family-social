@@ -27,7 +27,15 @@ export interface SwiperContainerCreateFeed {
 	handleExcludeMedia?: (key: number) => void;
 }
 
+export interface SwiperContainerCreateFeedForm {
+	type: 'create-feed-form';
+	list: string[];
+	overrideSwiperOptions?: SwiperOptions;
+	handleExcludeMedia?: (key: number) => void;
+}
+
 export type SwiperContainerProps =
 	| SwiperContainerMediaInfo
 	| SwiperContainerImagesGallary
-	| SwiperContainerCreateFeed;
+	| SwiperContainerCreateFeed
+	| SwiperContainerCreateFeedForm;

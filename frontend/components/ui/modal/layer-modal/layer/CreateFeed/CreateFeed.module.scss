@@ -52,14 +52,6 @@
 
 		.form_swiper_container {
 			@apply mt-5;
-
-			.swiper {
-				@screen md {
-					@apply h-72;
-				}
-				@apply w-full relative;
-				height: 30vh;
-			}
 		}
 	}
 }

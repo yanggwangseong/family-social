@@ -10,12 +10,6 @@ import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 import Profile from '@/components/ui/profile/Profile';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react'; // basic
-import { Swiper as SwiperCore } from 'swiper/types';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	CreateFeedFields,
@@ -249,9 +243,6 @@ const CreateFeed: FC = () => {
 
 	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
 	const dragRef = useRef<HTMLLabelElement | null>(null);
-	const navigationPrevRef = React.useRef(null);
-	const navigationNextRef = React.useRef(null);
-	const swiperRef = useRef<SwiperCore>();
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -412,27 +403,7 @@ const CreateFeed: FC = () => {
 							/>
 						</div>
 						<div className={styles.form_swiper_container}>
-							<Swiper
-								className={styles.swiper}
-								modules={[Navigation, Pagination, A11y]}
-								spaceBetween={50}
-								slidesPerView={1}
-								navigation
-								pagination={{ clickable: true }}
-								onSwiper={swiper => console.log(swiper)}
-								onSlideChange={() => console.log('slide change')}
-							>
-								{isImageUrl.map((url, index) => (
-									<SwiperSlide key={index}>
-										<Image
-											fill
-											src={url}
-											alt="image"
-											style={{ objectFit: 'contain' }}
-										></Image>
-									</SwiperSlide>
-								))}
-							</Swiper>
+							<SwiperContainer list={isImageUrl} type="create-feed-form" />
 						</div>
 
 						<Line />
