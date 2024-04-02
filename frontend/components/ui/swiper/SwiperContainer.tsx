@@ -10,7 +10,10 @@ import Image from 'next/image';
 import styles from './SwiperContainer.module.scss';
 import { SwiperContainerProps } from './swiper-container.interface';
 
-const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
+const SwiperContainer: FC<SwiperContainerProps> = ({
+	list,
+	overrideSwiperOptions,
+}) => {
 	const navigationPrevRef = React.useRef(null);
 	const navigationNextRef = React.useRef(null);
 	const swiperRef = React.useRef<SwiperCore>();
@@ -19,8 +22,6 @@ const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
 		<Swiper
 			className={styles.swiper_container}
 			modules={[Navigation, Pagination, A11y]}
-			spaceBetween={50}
-			slidesPerView={1}
 			pagination={{
 				clickable: true,
 			}}
@@ -31,6 +32,9 @@ const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
 				prevEl: navigationPrevRef.current,
 				nextEl: navigationNextRef.current,
 			}}
+			spaceBetween={50}
+			slidesPerView={1}
+			{...overrideSwiperOptions}
 		>
 			{list.map((media, index) => (
 				<SwiperSlide key={index} className={styles.swiper_container}>

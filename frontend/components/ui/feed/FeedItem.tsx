@@ -109,7 +109,12 @@ const FeedItem: FC<FeedItemProps> = ({
 						onClick={() => handleMedias(feed.medias)}
 					>
 						{/* media swiper */}
-						<SwiperContainer list={feed.medias} />
+						<SwiperContainer
+							list={feed.medias}
+							overrideSwiperOptions={{
+								spaceBetween: 50,
+							}}
+						/>
 					</div>
 					<div className={styles.feed_bottom_container}>
 						<div className={styles.like_container}>
