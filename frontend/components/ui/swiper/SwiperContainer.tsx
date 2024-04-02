@@ -8,9 +8,9 @@ import 'swiper/css/pagination';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
 import Image from 'next/image';
 import styles from './SwiperContainer.module.scss';
-import { MediaInfo } from '@/shared/interfaces/media.interface';
+import { SwiperContainerProps } from './swiper-container.interface';
 
-const SwiperContainer: FC<{ list: MediaInfo[] }> = ({ list }) => {
+const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
 	const navigationPrevRef = React.useRef(null);
 	const navigationNextRef = React.useRef(null);
 	const swiperRef = React.useRef<SwiperCore>();
