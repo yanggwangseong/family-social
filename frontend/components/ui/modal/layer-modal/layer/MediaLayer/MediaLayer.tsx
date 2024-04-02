@@ -27,7 +27,7 @@ const MediaLayer: FC = () => {
 						x
 					</div>
 					<div className={styles.modal_container}>
-						<SwiperContainer list={layer.medias} />
+						<SwiperContainer type="feed-item" list={layer.medias} />
 					</div>
 				</div>
 			)}

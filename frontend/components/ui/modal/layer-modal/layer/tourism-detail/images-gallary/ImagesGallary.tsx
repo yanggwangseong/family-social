@@ -35,6 +35,7 @@ const ImagesGallary: FC<{ images: any[] }> = ({ images }) => {
 					onSwiper={swiper => console.log(swiper)}
 					onSlideChange={() => console.log('slide change')}
 				>
+					{/* [TODO] api에 전달받은 프로퍼티값 수정 */}
 					{images.map((url, index) => (
 						<SwiperSlide key={index} className={styles.uploaded_swiper_slide}>
 							<Image

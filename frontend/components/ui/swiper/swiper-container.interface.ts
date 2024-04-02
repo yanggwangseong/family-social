@@ -7,15 +7,27 @@ import { SwiperOptions } from 'swiper/types';
 // }
 
 export interface SwiperContainerMediaInfo {
+	type: 'feed-item';
 	list: MediaInfo[];
 	overrideSwiperOptions?: SwiperOptions;
+	handleExcludeMedia?: (key: number) => void;
 }
 
 export interface SwiperContainerImagesGallary {
+	type: 'image-gallary';
 	list: any[];
 	overrideSwiperOptions?: SwiperOptions;
+	handleExcludeMedia?: (key: number) => void;
+}
+
+export interface SwiperContainerCreateFeed {
+	type: 'create-feed';
+	list: string[];
+	overrideSwiperOptions?: SwiperOptions;
+	handleExcludeMedia?: (key: number) => void;
 }
 
 export type SwiperContainerProps =
 	| SwiperContainerMediaInfo
-	| SwiperContainerImagesGallary;
+	| SwiperContainerImagesGallary
+	| SwiperContainerCreateFeed;

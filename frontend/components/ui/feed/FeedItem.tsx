@@ -110,6 +110,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					>
 						{/* media swiper */}
 						<SwiperContainer
+							type="feed-item"
 							list={feed.medias}
 							overrideSwiperOptions={{
 								spaceBetween: 50,
