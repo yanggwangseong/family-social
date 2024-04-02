@@ -19,24 +19,6 @@
 		}
 		@apply border-y border-solid border-customDark border-collapse bg-white cursor-pointer w-full;
 		height: 426px;
-
-		.feed_media_wrap {
-			@apply w-full h-full;
-
-			.swiper_container {
-				@apply relative w-full;
-
-				.swiper_button_prev {
-					@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
-					bg-customOrange rounded-full p-2 cursor-pointer;
-				}
-				.swiper_button_next {
-					@apply absolute right-5 
-					z-50 top-1/2 border border-solid border-customDark
-					bg-customOrange rounded-full p-2 cursor-pointer;
-				}
-			}
-		}
 	}
 
 	.feed_bottom_container {
@@ -66,19 +48,4 @@
 			@apply ml-auto flex justify-center items-center font-medium cursor-pointer underline;
 		}
 	}
-}
-
-.swiper-pagination-bullet {
-	width: 12px;
-	height: 12px;
-	background: transparent;
-	border: 1px solid pink;
-	opacity: 1;
-}
-.swiper-pagination-bullet-active {
-	width: 40px;
-	transition: width 0.5s;
-	border-radius: 5px;
-	background: pink;
-	border: 1px solid transparent;
 }

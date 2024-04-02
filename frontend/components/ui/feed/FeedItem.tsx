@@ -1,22 +1,12 @@
 import React, { FC, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
-import Profile from '../profile/Profile';
-import Image from 'next/image';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { GoComment } from 'react-icons/go';
 import { BsBoxArrowUp, BsThreeDots } from 'react-icons/bs';
 import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
 import { FeedItemProps } from './feed-item.interface';
 import Comments from './comment/Comments';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react'; // basic
-import { Swiper as SwiperCore } from 'swiper/types';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+
 import { useRecoilState } from 'recoil';
 import {
 	mediasLayerModalAtom,
@@ -30,6 +20,7 @@ import {
 	PiHeartDuotone,
 } from 'react-icons/pi';
 import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
+import SwiperContainer from '../swiper/SwiperContainer';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -44,6 +35,7 @@ const FeedItem: FC<FeedItemProps> = ({
 	const [isLike, setIsLike] = useState<boolean>(
 		feed.myLike ? feed.myLike : false,
 	);
+
 	const [isToggleComments, setIsToggleComments] = useState<boolean>(false);
 	const [isToggleCommentWrite, setIsToggleCommentWrite] =
 		useState<boolean>(false);
@@ -84,13 +76,6 @@ const FeedItem: FC<FeedItemProps> = ({
 		});
 	};
 
-	const navigationPrevRef = React.useRef(null);
-	const navigationNextRef = React.useRef(null);
-
-	const pageNationRef = React.useRef(null);
-
-	const swiperRef = useRef<SwiperCore>();
-
 	return (
 		<>
 			<div>
@@ -123,77 +108,8 @@ const FeedItem: FC<FeedItemProps> = ({
 						className={styles.feed_media_container}
 						onClick={() => handleMedias(feed.medias)}
 					>
-						<Swiper
-							className={styles.feed_media_wrap}
-							modules={[Navigation, Pagination, A11y]}
-							spaceBetween={50}
-							slidesPerView={1}
-							navigation={{
-								prevEl: navigationPrevRef.current,
-								nextEl: navigationNextRef.current,
-							}}
-							pagination={
-								{
-									//el: pageNationRef.current,
-									//clickable: true,
-									// renderBullet: function (index, className) {
-									// 	console.log(className);
-									// 	return (
-									// 		`<div class=${styles[className]}><span>` +
-									// 		index +
-									// 		'</span></div>'
-									// 	);
-									// },
-								}
-							}
-							onBeforeInit={swiper => {
-								swiperRef.current = swiper;
-							}}
-						>
-							{feed.medias.map((media, index) => (
-								<SwiperSlide key={index} className={styles.swiper_container}>
-									<Image
-										fill
-										src={media.url}
-										alt="image"
-										style={{ objectFit: 'inherit' }}
-									></Image>
-									<div
-										className={styles.swiper_button_next}
-										ref={navigationPrevRef}
-										onClick={e => {
-											e.stopPropagation(); // 이벤트 버블링 중지
-											swiperRef.current?.slideNext();
-										}}
-										//onClick={() => swiperRef.current?.slideNext()}
-									>
-										<CgArrowRight size={24} />
-									</div>
-									<div
-										className={styles.swiper_button_prev}
-										ref={navigationNextRef}
-										onClick={e => {
-											e.stopPropagation(); // 이벤트 버블링 중지
-											swiperRef.current?.slidePrev();
-										}}
-										//onClick={() => swiperRef.current?.slidePrev()}
-									>
-										<CgArrowLeft size={24} />
-									</div>
-								</SwiperSlide>
-							))}
-							{/* <div
-								className="bottom-0 absolute w-56 h-56 bg-white z-50 flex justify-between"
-								ref={pageNationRef}
-							></div> */}
-						</Swiper>
-
-						{/* <Image
-							fill
-							src={'/images/banner/group-base.png'}
-							alt="banner"
-							priority={false}
-						></Image> */}
+						{/* media swiper */}
+						<SwiperContainer list={feed.medias} />
 					</div>
 					<div className={styles.feed_bottom_container}>
 						<div className={styles.like_container}>
