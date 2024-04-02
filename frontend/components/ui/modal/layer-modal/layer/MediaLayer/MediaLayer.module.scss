@@ -24,20 +24,5 @@
 			@apply w-3/5;
 		}
 		@apply flex justify-center items-center w-full h-4/5 bg-white;
-
-		.swiper_container {
-			@apply h-full w-full;
-		}
 	}
-}
-
-.swiper_button_prev {
-	@apply absolute left-5 z-50 top-1/2 border border-solid border-customDark
-    bg-customOrange rounded-full p-2 cursor-pointer;
-}
-
-.swiper_button_next {
-	@apply absolute right-5 
-    z-50 top-1/2 border border-solid border-customDark
-    bg-customOrange rounded-full p-2 cursor-pointer;
 }

@@ -45,6 +45,7 @@ const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
 						className={styles.swiper_button_next}
 						ref={navigationPrevRef}
 						onClick={e => {
+							e.stopPropagation();
 							swiperRef.current?.slideNext();
 						}}
 					>
@@ -55,6 +56,7 @@ const SwiperContainer: FC<SwiperContainerProps> = ({ list }) => {
 						className={styles.swiper_button_prev}
 						ref={navigationNextRef}
 						onClick={e => {
+							e.stopPropagation();
 							swiperRef.current?.slidePrev();
 						}}
 					>
