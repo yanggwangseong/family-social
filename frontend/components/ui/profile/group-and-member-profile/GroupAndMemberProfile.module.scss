@@ -1,0 +1,21 @@
+.container {
+	@apply flex gap-4;
+
+	.group_profile_container {
+		@apply w-[48px] h-[48px] relative border border-solid border-customDark;
+
+		.profile_container {
+			@apply w-[34px] h-[34px] absolute -bottom-1 -right-2 border border-solid border-customDark rounded-full;
+		}
+	}
+
+	.description_container {
+		.group_name {
+			@apply font-bold;
+		}
+
+		.member_name {
+			@apply text-customGray font-medium text-sm;
+		}
+	}
+}

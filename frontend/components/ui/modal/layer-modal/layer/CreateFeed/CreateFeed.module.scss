@@ -67,14 +67,7 @@
 
 	.form {
 		.form_top_wrap {
-			@apply flex;
-
-			.form_top_group_container {
-				@screen md {
-					@apply block;
-				}
-				@apply ml-auto -mt-3 hidden;
-			}
+			@apply flex flex-col gap-4;
 		}
 
 		.form_field_container {

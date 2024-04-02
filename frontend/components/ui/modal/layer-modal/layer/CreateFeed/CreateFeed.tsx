@@ -37,6 +37,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { Union, feedPublicSelectOptions } from 'types';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
+import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
+import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -172,6 +174,7 @@ const CreateFeed: FC = () => {
 		// 	file,
 		// }));
 	};
+
 	const handleExcludeMedia = (key: number) => {
 		setIsFiles(isFiles.filter((file, index) => index !== key));
 	};
@@ -429,7 +432,7 @@ const CreateFeed: FC = () => {
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<div className={styles.form_top_wrap}>
-							<Profile
+							{/* <Profile
 								username="양광성"
 								isPublic={isPublic}
 								onChageIsPublic={handleChageIsPublic}
@@ -442,7 +445,13 @@ const CreateFeed: FC = () => {
 										groupName: '양씨네가족',
 									}}
 								/>
-							</div>
+							</div> */}
+							<GroupAndMemberProfile username="양광성" groupName="양씨네가족" />
+
+							<FeedPublicSelect
+								onChageIsPublic={handleChageIsPublic}
+								isPublic={isPublic}
+							/>
 						</div>
 						{/* <div className="my-5">
 							<select

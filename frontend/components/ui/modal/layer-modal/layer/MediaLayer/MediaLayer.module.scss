@@ -11,12 +11,19 @@
 	z-index: 999; /* 모달이 다른 요소 위에 나타나도록 설정 */
 
 	.modal_close_wrap {
+		@screen md {
+			@apply right-[10%];
+		}
+
 		@apply w-12 h-12 font-light text-xl cursor-pointer text-customDark absolute 
-		top-5 right-[10%] py-2 px-4 border border-solid border-customDark bg-customOrange rounded-full text-center;
+		top-3 right-2 py-2 px-4 border border-solid border-customDark bg-customOrange rounded-full text-center;
 	}
 
 	.modal_container {
-		@apply flex justify-center items-center w-3/5 h-4/5 bg-white;
+		@screen md {
+			@apply w-3/5;
+		}
+		@apply flex justify-center items-center w-full h-4/5 bg-white;
 
 		.swiper_container {
 			@apply h-full w-full;
