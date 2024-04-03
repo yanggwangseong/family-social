@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import styles from './EmailInvite.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Field from '@/components/ui/field/Field';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { validEmail } from '@/components/screens/sign-up/sign-up.constants';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import Line from '@/components/ui/line/Line';
@@ -44,6 +44,10 @@ const EmailInvite: FC = () => {
 
 	const handleExcludeInviteEmail = (email: string) => {
 		setIsInvitedEmails([...isInvitedEmails.filter(item => item !== email)]);
+	};
+
+	const handleSendInviteEmails = () => {
+		console.log('전송');
 	};
 
 	return (
@@ -116,6 +120,8 @@ const EmailInvite: FC = () => {
 					className="mt-8 mb-4 bg-customDark text-customOrange 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px] w-full hover:opacity-80"
+					onClick={() => isInvitedEmails.length > 0 && handleSendInviteEmails()}
+					disabled={!(isInvitedEmails.length > 0)}
 				>
 					보내기
 				</CustomButton>
