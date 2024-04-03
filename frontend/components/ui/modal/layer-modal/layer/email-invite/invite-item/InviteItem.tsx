@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { InviteItemProps } from './invite-item.interface';
 import { PiAtDuotone } from 'react-icons/pi';
+import styles from './InviteItem.module.scss';
 
 const InviteItem: FC<InviteItemProps> = ({
 	handleExcludeInviteEmail,
@@ -11,12 +12,15 @@ const InviteItem: FC<InviteItemProps> = ({
 	};
 
 	return (
-		<div className="flex items-center gap-4">
-			<div>
+		<div className={styles.container}>
+			<div className={styles.icon_container}>
 				<PiAtDuotone size={22} />
 			</div>
-			<div>{email}</div>
-			<div className="ml-auto" onClick={onExcludeInviteEmail}>
+			<div className={styles.invite_email}>{email}</div>
+			<div
+				className={styles.close_btn_container}
+				onClick={onExcludeInviteEmail}
+			>
 				x
 			</div>
 		</div>
