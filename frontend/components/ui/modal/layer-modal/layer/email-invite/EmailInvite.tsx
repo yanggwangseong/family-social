@@ -27,6 +27,7 @@ const EmailInvite: FC = () => {
 			Notify.warning(errors.email?.message ?? '이메일 형식을 확인 해주세요!');
 			return false;
 		}
+
 		const newEmail = getValues('email');
 
 		setIsInvitedEmails(prevEmails => {
@@ -59,9 +60,15 @@ const EmailInvite: FC = () => {
 									value: validEmail,
 									message: '이메일 형식을 확인 해주세요!',
 								},
-								validate: value =>
-									!isInvitedEmails.includes(value) ||
-									'이 이메일 주소는 이미 초대된 리스트에 추가 되었습니다.',
+								validate: value => {
+									if (isInvitedEmails.includes(value)) {
+										return '이 이메일 주소는 이미 초대된 리스트에 추가 되었습니다.';
+									}
+									if (isInvitedEmails.length === 5) {
+										return '최대 5명을 초대 할 수 있습니다';
+									}
+									return true;
+								},
 							})}
 							placeholder="이메일을 입력해주세요!"
 							error={errors.email}
