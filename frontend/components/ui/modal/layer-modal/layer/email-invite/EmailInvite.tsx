@@ -43,19 +43,19 @@ const EmailInvite: FC = () => {
 	};
 
 	return (
-		<div>
-			<div className="flex flex-col gap-4 my-4">
-				<div className="font-medium text-base">이메일 주소 추가</div>
-				<div className=" text-customGray text-sm">
+		<>
+			<div className={styles.container}>
+				<div className={styles.section_title}>이메일 주소 추가</div>
+				<div className={styles.section_sub_title}>
 					이메일 주소를 추가하여 최대 5명을 한 번에 초대 할 수 있습니다.
 				</div>
-				<div className="flex gap-4">
-					<div className="w-full">
+				<div className={styles.invite_field_container}>
+					<div className={styles.field_wrap}>
 						<Field
 							fieldClass={'inline_input'}
 							labelText={'이메일 주소 입력'}
 							{...register('email', {
-								required: '이메일 입력은 필수입니다!',
+								required: true,
 								pattern: {
 									value: validEmail,
 									message: '이메일 형식을 확인 해주세요!',
@@ -64,7 +64,7 @@ const EmailInvite: FC = () => {
 									if (isInvitedEmails.includes(value)) {
 										return '이 이메일 주소는 이미 초대된 리스트에 추가 되었습니다.';
 									}
-									if (isInvitedEmails.length === 5) {
+									if (isInvitedEmails.length === 5 && !!getValues('email')) {
 										return '최대 5명을 초대 할 수 있습니다';
 									}
 									return true;
@@ -74,7 +74,7 @@ const EmailInvite: FC = () => {
 							error={errors.email}
 						></Field>
 					</div>
-					<div className="w-[15%]">
+					<div className={styles.add_invite_email_btn}>
 						<CustomButton
 							type="button"
 							className="bg-customOrange text-customDark text-sm
@@ -89,10 +89,10 @@ const EmailInvite: FC = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-4">
+			<div className={styles.section_container}>
 				{isInvitedEmails.length > 0 && (
 					<>
-						<div className="font-medium text-base">
+						<div className={styles.section_title}>
 							초대받은 사람 {isInvitedEmails.length} 명
 						</div>
 						{isInvitedEmails.map((item, index) => (
@@ -106,7 +106,7 @@ const EmailInvite: FC = () => {
 				)}
 			</div>
 
-			<div className="flex w-full gap-5">
+			<div className={styles.bottom_btn_container}>
 				<CustomButton
 					type="button"
 					className="mt-8 mb-4 bg-customDark text-customOrange 
@@ -125,7 +125,7 @@ const EmailInvite: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</>
 	);
 };
 
