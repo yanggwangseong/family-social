@@ -7,9 +7,13 @@ import { validEmail } from '@/components/screens/sign-up/sign-up.constants';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import Line from '@/components/ui/line/Line';
 import InviteItem from './invite-item/InviteItem';
+import { useRecoilState } from 'recoil';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const EmailInvite: FC = () => {
 	const [isInvitedEmails, setIsInvitedEmails] = useState<string[]>([]);
+
+	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const {
 		register,
@@ -121,6 +125,7 @@ const EmailInvite: FC = () => {
 					className="mt-8 mb-4 bg-white text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px] w-full hover:bg-gray-200"
+					onClick={() => setIsShowing(false)}
 				>
 					취소
 				</CustomButton>
