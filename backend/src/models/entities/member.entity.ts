@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, Index, OneToMany, Unique } from 'typeorm';
 
+import { emailValidationMessage } from '@/common/validation-message/email-validation-message';
 import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -46,7 +47,7 @@ export class MemberEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsEmail()
+	@IsEmail({}, { message: emailValidationMessage })
 	@MaxLength(50, { message: maxLengthValidationMessage })
 	email!: string;
 
