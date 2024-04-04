@@ -10,6 +10,8 @@ import ScheduleItem from '@/components/ui/schedule/ScheduleItem';
 import { useInfiniteQuery } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
+import { PiPencilDuotone } from 'react-icons/pi';
+import Link from 'next/link';
 
 const Schedule: FC = () => {
 	const {
@@ -114,6 +116,12 @@ const Schedule: FC = () => {
 								)}
 							</div>
 						</div>
+						<Link
+							className={styles.mobile_create_schedule_btn_container}
+							href={`/schedules/create`}
+						>
+							<PiPencilDuotone size={28} color="#0a0a0a" />
+						</Link>
 					</div>
 					{/* 오른쪽 사이드바 */}
 					{/* <ScheduleSidebar /> */}

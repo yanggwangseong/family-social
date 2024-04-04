@@ -1,6 +1,10 @@
 .sidebar_container {
-	@apply pt-3 border-r border-solid border-customDark h-full sticky top-0 z-10;
-	width: 300px;
+	@screen 2xl {
+		@apply sticky top-0;
+		width: 300px;
+	}
+
+	@apply w-full pt-3 border-r border-solid border-customDark h-full fixed top-20 z-10 bg-basic;
 
 	.sidebar_member_container {
 		@apply mt-6 flex justify-center;

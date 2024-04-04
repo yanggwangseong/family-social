@@ -16,6 +16,7 @@ import { GroupsRepository } from '@/models/repositories/groups.repository';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
 import { FamsModule } from '../fams/fams.module';
+import { MailsModule } from '../mails/mails.module';
 import { MembersModule } from '../members/members.module';
 import { SchedulesModule } from '../schedules/schedules.module';
 
@@ -25,6 +26,7 @@ import { SchedulesModule } from '../schedules/schedules.module';
 		FamsModule,
 		MembersModule,
 		SchedulesModule,
+		MailsModule,
 	],
 	controllers: [GroupsController],
 	providers: [GroupsService, GroupsRepository, FamsRepository],

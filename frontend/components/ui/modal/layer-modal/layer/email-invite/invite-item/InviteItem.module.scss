@@ -1,0 +1,14 @@
+.container {
+	@apply flex gap-4;
+
+	.icon_container {
+		@apply p-1 border border-solid border-customDark rounded-full;
+	}
+	.invite_email {
+		@apply flex items-center font-medium;
+	}
+
+	.close_btn_container {
+		@apply ml-auto text-customGray text-2xl cursor-pointer;
+	}
+}

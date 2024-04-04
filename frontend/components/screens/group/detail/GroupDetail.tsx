@@ -10,6 +10,7 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import ToggleModal from '@/components/ui/modal/ToggleModal';
 import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
+import { PiPencilDuotone } from 'react-icons/pi';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -36,6 +37,10 @@ const GroupDetail: FC = () => {
 									src={'/images/banner/group-base.png'}
 									alt="banner"
 								></Image>
+								<div className={styles.banner_edit_btn}>
+									<PiPencilDuotone size={22} />
+									<div className={styles.btn_text}>수정</div>
+								</div>
 							</div>
 							<div className={styles.main_contents_container}>
 								<div className={styles.banner_profile_contaienr}>

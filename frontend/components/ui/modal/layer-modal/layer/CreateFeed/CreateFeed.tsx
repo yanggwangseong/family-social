@@ -10,12 +10,6 @@ import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 import Profile from '@/components/ui/profile/Profile';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react'; // basic
-import { Swiper as SwiperCore } from 'swiper/types';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	CreateFeedFields,
@@ -37,6 +31,9 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { Union, feedPublicSelectOptions } from 'types';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
+import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
+import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
+import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -172,6 +169,7 @@ const CreateFeed: FC = () => {
 		// 	file,
 		// }));
 	};
+
 	const handleExcludeMedia = (key: number) => {
 		setIsFiles(isFiles.filter((file, index) => index !== key));
 	};
@@ -245,9 +243,6 @@ const CreateFeed: FC = () => {
 
 	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
 	const dragRef = useRef<HTMLLabelElement | null>(null);
-	const navigationPrevRef = React.useRef(null);
-	const navigationNextRef = React.useRef(null);
-	const swiperRef = useRef<SwiperCore>();
 
 	return (
 		<div className={styles.create_feed_container}>
@@ -296,85 +291,12 @@ const CreateFeed: FC = () => {
 				<div>
 					{isUplaod ? (
 						<div className={styles.uploaded_container}>
-							{/* {isImageUrl.map((url, index) => (
-								<div key={index} className="w-1/2">
-									<div className="relative h-40 border border-solid border-customDark">
-										<Image
-											fill
-											src={url}
-											alt="image"
-											style={{ objectFit: 'contain' }}
-										/>
-									</div>
-								</div>
-								
-							))} */}
-							<Swiper
-								className={styles.uploaded_swiper}
-								modules={[Navigation, Pagination, A11y]}
-								spaceBetween={50}
-								slidesPerView={1}
-								navigation={{
-									prevEl: navigationPrevRef.current,
-									nextEl: navigationNextRef.current,
-								}}
-								onBeforeInit={swiper => {
-									swiperRef.current = swiper;
-								}}
-								pagination={{
-									clickable: true,
-								}}
-								// pagination={{
-								// 	el: paginationRef.current,
-								// 	clickable: true,
-								// 	renderBullet: function (index: number, className: string) {
-								// 		console.log('clss=', className);
-								// 		return (
-								// 			'<span class="' +
-								// 			className +
-								// 			'">' +
-								// 			(index + 1) +
-								// 			'</span>'
-								// 		);
-								// 	},
-								// }}
-								onSwiper={swiper => console.log(swiper)}
-								onSlideChange={() => console.log('slide change')}
-							>
-								{isImageUrl.map((url, index) => (
-									<SwiperSlide
-										key={index}
-										className={styles.uploaded_swiper_slide}
-									>
-										<Image
-											fill
-											src={url}
-											alt="image"
-											style={{ objectFit: 'inherit' }}
-										></Image>
-										<div
-											className={styles.uploaded_close}
-											onClick={() => handleExcludeMedia(index)}
-										>
-											<AiOutlineClose size={24} color="#0a0a0a" />
-										</div>
-										<div
-											className={styles.swiper_button_next}
-											ref={navigationPrevRef}
-											onClick={() => swiperRef.current?.slideNext()}
-										>
-											<CgArrowRight size={24} />
-										</div>
-										<div
-											className={styles.swiper_button_prev}
-											ref={navigationNextRef}
-											onClick={() => swiperRef.current?.slidePrev()}
-										>
-											<CgArrowLeft size={24} />
-										</div>
-									</SwiperSlide>
-								))}
-							</Swiper>
+							{/* media uploaded swiper */}
+							<SwiperContainer
+								type="create-feed"
+								handleExcludeMedia={handleExcludeMedia}
+								list={isImageUrl}
+							/>
 						</div>
 					) : (
 						<>
@@ -429,7 +351,7 @@ const CreateFeed: FC = () => {
 				<div>
 					<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 						<div className={styles.form_top_wrap}>
-							<Profile
+							{/* <Profile
 								username="양광성"
 								isPublic={isPublic}
 								onChageIsPublic={handleChageIsPublic}
@@ -442,7 +364,13 @@ const CreateFeed: FC = () => {
 										groupName: '양씨네가족',
 									}}
 								/>
-							</div>
+							</div> */}
+							<GroupAndMemberProfile username="양광성" groupName="양씨네가족" />
+
+							<FeedPublicSelect
+								onChageIsPublic={handleChageIsPublic}
+								isPublic={isPublic}
+							/>
 						</div>
 						{/* <div className="my-5">
 							<select
@@ -475,27 +403,7 @@ const CreateFeed: FC = () => {
 							/>
 						</div>
 						<div className={styles.form_swiper_container}>
-							<Swiper
-								className={styles.swiper}
-								modules={[Navigation, Pagination, A11y]}
-								spaceBetween={50}
-								slidesPerView={1}
-								navigation
-								pagination={{ clickable: true }}
-								onSwiper={swiper => console.log(swiper)}
-								onSlideChange={() => console.log('slide change')}
-							>
-								{isImageUrl.map((url, index) => (
-									<SwiperSlide key={index}>
-										<Image
-											fill
-											src={url}
-											alt="image"
-											style={{ objectFit: 'contain' }}
-										></Image>
-									</SwiperSlide>
-								))}
-							</Swiper>
+							<SwiperContainer list={isImageUrl} type="create-feed-form" />
 						</div>
 
 						<Line />

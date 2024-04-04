@@ -2,6 +2,13 @@
 	@apply w-full mt-10;
 
 	.table_row {
-		@apply p-4;
+		@screen md {
+			@apply text-base;
+		}
+		@apply py-2 px-1 text-sm border-b border-solid border-customDark;
+
+		&.no_boder {
+			@apply border-none;
+		}
 	}
 }

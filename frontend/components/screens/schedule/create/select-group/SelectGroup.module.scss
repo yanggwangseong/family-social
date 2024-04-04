@@ -1,13 +1,29 @@
 .select_group_container {
-	@apply h-full relative;
-
-	// 현재 STEP표시
-	.step_title {
-		@apply font-bold text-3xl mb-5;
+	@screen md {
+		@apply mx-0;
 	}
+	@apply h-full relative mx-4;
 
-	.selectedGroup_title {
-		@apply font-semibold text-lg;
+	.top_title_container {
+		@screen md {
+			@apply flex-col gap-0 mb-0;
+		}
+		@apply flex flex-row gap-4 mb-4;
+
+		// 현재 STEP표시
+		.step_title {
+			@screen md {
+				@apply text-3xl;
+			}
+			@apply font-bold text-lg;
+		}
+
+		.selectedGroup_title {
+			@screen md {
+				@apply text-lg my-5 block;
+			}
+			@apply font-semibold text-lg my-0 flex items-center;
+		}
 	}
 
 	.selectedGroup_groups_container {

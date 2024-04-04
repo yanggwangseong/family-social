@@ -2,6 +2,9 @@
 	@apply w-full;
 
 	.table_header_column {
-		@apply p-4 font-normal text-customGray;
+		@screen md {
+			@apply text-base;
+		}
+		@apply p-4 font-normal text-customGray border-b border-solid border-customDark text-sm;
 	}
 }
