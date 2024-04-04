@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 import cn from 'classnames';
 import styles from './Field.module.scss';
 import { FieldType } from './field.interface';
+import CustomButton from '../button/custom-button/CustomButton';
 
 const Field = forwardRef<HTMLInputElement, FieldType>(
 	(

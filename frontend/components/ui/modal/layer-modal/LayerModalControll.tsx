@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import EmailInvite from './layer/EmailInvite';
+import EmailInvite from './layer/email-invite/EmailInvite';
 import LinkInvite from './layer/LinkInvite';
 import { LayerMode, Union } from 'types';
 import GroupDeleteConfirm from './layer/GroupDeleteConfirm';

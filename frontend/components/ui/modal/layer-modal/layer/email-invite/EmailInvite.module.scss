@@ -1,0 +1,35 @@
+.container {
+	@apply flex flex-col gap-4 my-4;
+
+	.section_title {
+		@apply font-medium text-base;
+	}
+
+	.section_sub_title {
+		@apply text-customGray text-sm;
+	}
+
+	.invite_field_container {
+		@apply flex gap-4;
+
+		.field_wrap {
+			@apply w-full;
+		}
+
+		.add_invite_email_btn {
+			@apply w-[15%];
+		}
+	}
+}
+
+.section_container {
+	@apply flex flex-col gap-4;
+
+	.section_title {
+		@apply font-medium text-base;
+	}
+}
+
+.bottom_btn_container {
+	@apply flex w-full gap-5;
+}

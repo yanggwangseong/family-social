@@ -126,6 +126,17 @@ export const CreateFamByMemberOfGroupSwagger = () => {
 	);
 };
 
+export const PostInvitedEmailsOfGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 그룹의 email 초대',
+		}),
+		ApiOkResponse({
+			description: '특정 그룹의 email 초대',
+		}),
+	);
+};
+
 export const UpdateFamInvitationAcceptSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
