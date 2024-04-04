@@ -13,6 +13,7 @@ import { MemberEntity } from '@/models/entities/member.entity';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { MailsModule } from '../mails/mails.module';
 import { MembersModule } from '../members/members.module';
 
 @Module({
@@ -27,6 +28,7 @@ import { MembersModule } from '../members/members.module';
 			}),
 		}),
 		MembersModule,
+		MailsModule,
 		TypeOrmModule.forFeature([MemberEntity]),
 	],
 	controllers: [AuthController],

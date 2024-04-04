@@ -28,15 +28,15 @@ import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto'
 import { IRefreshTokenArgs } from '@/types/token';
 
 import { AuthService } from './auth.service';
-import { MembersService } from '../members/members.service';
+import { MailsService } from '../mails/mails.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 	constructor(
-		private readonly membersService: MembersService,
 		private readonly authService: AuthService,
+		private readonly mailsService: MailsService,
 	) {}
 
 	/**
@@ -85,7 +85,13 @@ export class AuthController {
 		@Body() dto: MemberCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.authService.createMember(dto, qr);
+		const { newMember, email, signupVerifyToken } =
+			await this.authService.createMember(dto, qr);
+
+		//유저 생성 성공 후 email 인증코드 전송.
+		await this.mailsService.sendSignUpEmailVerify(email, signupVerifyToken, qr);
+
+		return newMember;
 	}
 
 	/**
