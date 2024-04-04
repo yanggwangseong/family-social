@@ -43,10 +43,26 @@ export class AuthController {
 		private readonly mailsService: MailsService,
 	) {}
 
+	/**
+	 * @summary Google Oauth2 로그인 요청 들어오는 api
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
 	@Get('/google/signin')
 	@UseGuards(GoogleGuard)
 	async googleOauth2Signin() {}
 
+	/**
+	 * @summary Google Oauth2 검증된 후 콜백 api
+	 *
+	 * @tag auth
+	 * @param {GoogleOAuth2Request} req - 검증된 유저 정보를 가지고 있는 객체
+	 * @param {Response} res
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
 	@Get('/google/callback')
 	@UseGuards(GoogleGuard)
 	async googleOauth2CallBack(
