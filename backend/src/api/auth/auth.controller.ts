@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Get,
 	Post,
 	Res,
 	UseGuards,
@@ -18,6 +19,7 @@ import {
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { GoogleGuard } from '@/common/guards/google.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -38,6 +40,14 @@ export class AuthController {
 		private readonly authService: AuthService,
 		private readonly mailsService: MailsService,
 	) {}
+
+	@Get('/google/signin')
+	@UseGuards(GoogleGuard)
+	async googleOauth2Signin() {}
+
+	@Get('/google/callback')
+	@UseGuards(GoogleGuard)
+	async googleOauth2CallBack() {}
 
 	/**
 	 * @summary Local User 로그인
