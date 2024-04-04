@@ -28,8 +28,10 @@ import { TransactionInterceptor } from '@/common/interceptors/transaction.interc
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
+import { ICreateMemberArgs } from '@/types/args/member';
 import { GoogleOAuth2Request } from '@/types/request';
 import { IRefreshTokenArgs } from '@/types/token';
+import { generateRandomCode } from '@/utils/generate-random-code';
 
 import { AuthService } from './auth.service';
 import { MailsService } from '../mails/mails.service';
@@ -52,7 +54,7 @@ export class AuthController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
-	@Get('/google/signin')
+	@Get('/google/sign-in')
 	@UseGuards(GoogleGuard)
 	async googleOauth2Signin() {}
 
@@ -75,6 +77,38 @@ export class AuthController {
 
 		const fullName = firstName + lastName;
 		const Exists = await this.membersService.memberExistsByEmail(email);
+
+		if (Exists) {
+			const { id, username } = Exists;
+
+			const [accessToken, refreshToken] =
+				await this.authService.signatureTokens(id, username);
+
+			await this.authService.setCurrentRefreshToken(id, refreshToken);
+
+			this.authService.ResponseTokenInCookie({
+				type: 'accessToken',
+				token: accessToken,
+				res,
+			});
+			this.authService.ResponseTokenInCookie({
+				type: 'refreshToken',
+				token: refreshToken,
+				res,
+			});
+		} else {
+			const tmpDto: ICreateMemberArgs = {
+				email,
+				username: fullName,
+			};
+			const tmpMember = await this.authService.createMemberWithVerifyToken(
+				tmpDto,
+			);
+
+			res.redirect(
+				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}&profile_img_url=${photo}`,
+			);
+		}
 	}
 
 	/**

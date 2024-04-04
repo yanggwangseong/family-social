@@ -121,30 +121,42 @@ export class AuthService {
 		email: string;
 		signupVerifyToken: string;
 	}> {
-		const { email, password } = dto;
+		const { email } = dto;
 
 		const member = await this.membersRepository.findMemberByEmail({
 			email,
 		});
 		if (member) throw EntityConflictException(ERROR_USER_ALREADY_EXISTS);
 
-		const signupVerifyToken = generateRandomCode(10);
-		const newMember = await this.membersRepository.createMember(
-			{
-				...dto,
-				password: await this.EncryptHashData<string>(password!),
-			},
-			await this.EncryptHashData<string>(signupVerifyToken),
-			qr,
-		);
-		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
-
-		//유저 생성 성공 후 email 인증코드 전송.
-		//await this.sendSignUpEmailVerify(email, signupVerifyToken, qr);
+		const { newMember, signupVerifyToken } =
+			await this.createMemberWithVerifyToken(dto, qr);
 
 		return {
 			newMember,
 			email,
+			signupVerifyToken,
+		};
+	}
+
+	async createMemberWithVerifyToken(dto: ICreateMemberArgs, qr?: QueryRunner) {
+		const { password } = dto;
+
+		const signupVerifyToken = generateRandomCode(10);
+		const newMember = await this.membersRepository.createMember(
+			{
+				...dto,
+				password: await this.EncryptHashData<string>(
+					password ?? signupVerifyToken,
+				),
+			},
+			await this.EncryptHashData<string>(signupVerifyToken),
+			qr,
+		);
+
+		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
+
+		return {
+			newMember,
 			signupVerifyToken,
 		};
 	}
@@ -186,10 +198,7 @@ export class AuthService {
 		return compare;
 	}
 
-	private async signatureTokens(
-		id: string,
-		name: string,
-	): Promise<[string, string]> {
+	async signatureTokens(id: string, name: string): Promise<[string, string]> {
 		const [accessToken, refreshToken]: [string, string] = await Promise.all([
 			await this.jwtService.signAsync(
 				{
@@ -220,7 +229,7 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	private async setCurrentRefreshToken(
+	async setCurrentRefreshToken(
 		id: string,
 		refreshToken: string,
 	): Promise<void> {
