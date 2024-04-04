@@ -33,6 +33,7 @@ import { IRefreshTokenArgs } from '@/types/token';
 
 import { AuthService } from './auth.service';
 import { MailsService } from '../mails/mails.service';
+import { MembersService } from '../members/members.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -41,6 +42,7 @@ export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly mailsService: MailsService,
+		private readonly membersService: MembersService,
 	) {}
 
 	/**
@@ -68,7 +70,12 @@ export class AuthController {
 	async googleOauth2CallBack(
 		@Req() req: GoogleOAuth2Request,
 		@Res({ passthrough: true }) res: Response,
-	) {}
+	) {
+		const { email, photo, firstName, lastName } = req.googleAuthUser;
+
+		const fullName = firstName + lastName;
+		const Exists = await this.membersService.memberExistsByEmail(email);
+	}
 
 	/**
 	 * @summary Local User 로그인

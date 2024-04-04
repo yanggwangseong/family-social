@@ -38,4 +38,10 @@ export class MembersService {
 			...updateMemberArgs,
 		});
 	}
+
+	async memberExistsByEmail(email: string) {
+		return await this.membersRepository.findMemberByEmail({
+			email,
+		});
+	}
 }
