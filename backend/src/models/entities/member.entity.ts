@@ -12,9 +12,11 @@ import { Column, Entity, Index, OneToMany, Unique } from 'typeorm';
 
 import { emailValidationMessage } from '@/common/validation-message/email-validation-message';
 import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
+import { matchesValidationMessage } from '@/common/validation-message/matches-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
+import { PASSWORD_MATCH_PATTERN } from '@/constants/match-pattern.const';
 
 import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
@@ -57,7 +59,9 @@ export class MemberEntity extends DefaultEntity {
 		message: stringValidationMessage,
 	})
 	@Length(10, 60, { message: lengthValidationMessage })
-	@Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/)
+	@Matches(PASSWORD_MATCH_PATTERN, {
+		message: matchesValidationMessage,
+	})
 	password?: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: false })
