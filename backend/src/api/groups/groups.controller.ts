@@ -24,6 +24,7 @@ import {
 	DeleteGroupSwagger,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
+	PostInvitedEmailsOfGroupSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group.decorator';
@@ -50,12 +51,14 @@ import {
 } from '@/constants/business-error';
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
+import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
+import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
 
@@ -69,6 +72,7 @@ export class GroupsController {
 		private readonly famsService: FamsService,
 		private readonly membersService: MembersService,
 		private readonly schedulesService: SchedulesService,
+		private readonly mailsService: MailsService,
 	) {}
 
 	/**
@@ -251,6 +255,22 @@ export class GroupsController {
 			memberId,
 			groupId,
 		});
+	}
+
+	/**
+	 * @summary 특정 그룹의 email 초대
+	 *
+	 * @tag groups
+	 * @param {string[]} dto.invitedEmails - 초대를 보낼 이메일 배열
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PostInvitedEmailsOfGroupSwagger()
+	@Post('/:groupId/invited-emails')
+	async postInvitedEmailsOfGroup(@Body() dto: GroupInvitedEmailsReqDto) {
+		// [TODO] 그룹 존재하는지 middleware에서 확인하고 통과하면 req 객체에 담아주고 CurrentUser데코레이터처럼 데코레이터를 통해서 그룹 정보 가져오기
+
+		await this.mailsService.sendInvitedEmailOfGroup(dto);
 	}
 
 	/**
