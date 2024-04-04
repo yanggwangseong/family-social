@@ -79,8 +79,14 @@ export class AuthController {
 		const Exists = await this.membersService.memberExistsByEmail(email);
 
 		if (Exists) {
-			const { id, username } = Exists;
+			const { id, username, socialType } = Exists;
 
+			// 만약 생성 이력이 있는데 socialType이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
+			if (!socialType) {
+				res.redirect(
+					`http://localhost:3000/signup/social?id=${id}&profile_img_url=${photo}`,
+				);
+			}
 			const [accessToken, refreshToken] =
 				await this.authService.signatureTokens(id, username);
 

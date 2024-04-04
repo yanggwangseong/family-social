@@ -143,6 +143,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 			select: {
 				username: true,
 				id: true,
+				socialType: true,
 			},
 		});
 	}
