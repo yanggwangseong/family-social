@@ -39,9 +39,13 @@ export class MembersService {
 		});
 	}
 
-	async memberExistsByEmail(email: string) {
-		return await this.membersRepository.findMemberByEmail({
-			email,
+	async memberExistsByEmail(
+		email: string,
+	): Promise<(MemberResDto & { isFirstLogin: boolean }) | null> {
+		return await this.membersRepository.findMemberByEmail(email, {
+			id: true,
+			username: true,
+			isFirstLogin: true,
 		});
 	}
 }

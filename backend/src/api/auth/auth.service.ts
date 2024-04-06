@@ -123,9 +123,12 @@ export class AuthService {
 	}> {
 		const { email } = dto;
 
-		const member = await this.membersRepository.findMemberByEmail({
-			email,
-		});
+		const member: MemberResDto | null =
+			await this.membersRepository.findMemberByEmail(email, {
+				id: true,
+				username: true,
+			});
+
 		if (member) throw EntityConflictException(ERROR_USER_ALREADY_EXISTS);
 
 		const { newMember, signupVerifyToken } =

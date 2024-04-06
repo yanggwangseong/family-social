@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Not, QueryRunner, Repository } from 'typeorm';
+import {
+	FindOptionsSelect,
+	ILike,
+	Not,
+	QueryRunner,
+	Repository,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
@@ -131,19 +137,16 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return member;
 	}
 
-	async findMemberByEmail({
-		email,
-	}: {
-		email: string;
-	}): Promise<MemberResDto | null> {
+	async findMemberByEmail(
+		email: string,
+		overrideSelectOptions: FindOptionsSelect<MemberEntity>,
+	) {
 		return this.repository.findOne({
 			where: {
 				email,
 			},
 			select: {
-				username: true,
-				id: true,
-				socialType: true,
+				...overrideSelectOptions,
 			},
 		});
 	}
