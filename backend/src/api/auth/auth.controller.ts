@@ -102,6 +102,8 @@ export class AuthController {
 				token: refreshToken,
 				res,
 			});
+
+			res.redirect(`http://localhost:3000/oauth2/redirect`);
 		} else {
 			const tmpDto: ICreateMemberArgs = {
 				email,
