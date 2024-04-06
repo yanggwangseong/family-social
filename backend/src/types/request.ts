@@ -8,5 +8,5 @@ interface GoogleAuthenticateUser {
 }
 
 export interface GoogleOAuth2Request extends Request {
-	googleAuthUser: GoogleAuthenticateUser;
+	user: GoogleAuthenticateUser;
 }

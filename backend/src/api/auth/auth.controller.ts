@@ -31,7 +31,6 @@ import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto'
 import { ICreateMemberArgs } from '@/types/args/member';
 import { GoogleOAuth2Request } from '@/types/request';
 import { IRefreshTokenArgs } from '@/types/token';
-import { generateRandomCode } from '@/utils/generate-random-code';
 
 import { AuthService } from './auth.service';
 import { MailsService } from '../mails/mails.service';
@@ -73,7 +72,7 @@ export class AuthController {
 		@Req() req: GoogleOAuth2Request,
 		@Res({ passthrough: true }) res: Response,
 	) {
-		const { email, photo, firstName, lastName } = req.googleAuthUser;
+		const { email, photo, firstName, lastName } = req.user;
 
 		const fullName = firstName + lastName;
 		const Exists = await this.membersService.memberExistsByEmail(email);
@@ -87,6 +86,7 @@ export class AuthController {
 					`http://localhost:3000/signup/social?id=${id}&profile_img_url=${photo}`,
 				);
 			}
+
 			const [accessToken, refreshToken] =
 				await this.authService.signatureTokens(id, username);
 
@@ -107,6 +107,7 @@ export class AuthController {
 				email,
 				username: fullName,
 			};
+
 			const tmpMember = await this.authService.createMemberWithVerifyToken(
 				tmpDto,
 			);

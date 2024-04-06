@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
+import { GoogleStrategy } from '@/common/strategies/google.strategy';
 import { RefreshTokenStrategy } from '@/common/strategies/refreshToken.strategy';
 import {
 	ENV_JWT_ACCESS_TOKEN_EXPIRATION,
@@ -32,7 +33,12 @@ import { MembersModule } from '../members/members.module';
 		TypeOrmModule.forFeature([MemberEntity]),
 	],
 	controllers: [AuthController],
-	providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+	providers: [
+		AuthService,
+		AccessTokenStrategy,
+		RefreshTokenStrategy,
+		GoogleStrategy,
+	],
 	exports: [AuthService],
 })
 export class AuthModule {}
