@@ -11,7 +11,9 @@ import { IUpdateMemberArgs } from '@/types/args/member';
 export class MembersService {
 	constructor(private readonly membersRepository: MembersRepository) {}
 
-	async findMemberByIdOrThrow(memberId: string): Promise<MemberResDto> {
+	async findMemberByIdOrThrow(
+		memberId: string,
+	): Promise<MemberProfileImageResDto> {
 		const member = await this.membersRepository.findMemberById({
 			memberId,
 		});

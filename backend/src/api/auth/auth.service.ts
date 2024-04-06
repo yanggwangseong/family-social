@@ -28,6 +28,7 @@ import {
 	ENV_JWT_REFRESH_TOKEN_SECRET,
 	ENV_REFRESH_TOKEN_COOKIE_NAME,
 } from '@/constants/env-keys.const';
+import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
@@ -117,7 +118,7 @@ export class AuthService {
 		dto: ICreateMemberArgs,
 		qr?: QueryRunner,
 	): Promise<{
-		newMember: MemberResDto;
+		newMember: MemberProfileImageResDto;
 		email: string;
 		signupVerifyToken: string;
 	}> {

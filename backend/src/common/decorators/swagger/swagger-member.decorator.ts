@@ -18,7 +18,6 @@ import {
 	ERROR_AUTHORIZATION_MEMBER,
 } from '@/constants/business-error';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
-import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 
 export const LoginMemberSwagger = () => {
@@ -45,7 +44,7 @@ export const CreateMemberSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '멤버 생성 성공',
-			type: MemberResDto,
+			type: MemberProfileImageResDto,
 		}),
 		ApiConflictResponse({
 			description: ERROR_USER_ALREADY_EXISTS,
@@ -108,7 +107,7 @@ export const GetMemberByMemberIdSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '특정 멤버 유저 아이디로 조회 성공',
-			type: MemberResDto,
+			type: MemberProfileImageResDto,
 		}),
 		ApiNotFoundResponse({
 			description: ERROR_USER_NOT_FOUND,

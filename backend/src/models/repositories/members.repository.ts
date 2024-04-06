@@ -41,7 +41,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}: {
 		memberId: string;
 		refreshToken: string;
-	}): Promise<MemberResDto | null> {
+	}): Promise<MemberProfileImageResDto | null> {
 		await this.update({ id: memberId }, { ...rest });
 		return this.findMemberById({ memberId: memberId });
 	}
@@ -104,7 +104,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 		memberId,
 	}: {
 		memberId: string;
-	}): Promise<MemberResDto | null> {
+	}): Promise<MemberProfileImageResDto | null> {
 		const member = await this.repository.findOne({
 			where: {
 				id: memberId,
@@ -112,6 +112,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 			select: {
 				username: true,
 				id: true,
+				profileImage: true,
 			},
 		});
 
@@ -155,7 +156,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 		createMemberArgs: ICreateMemberArgs,
 		signupVerifyToken: string,
 		qr?: QueryRunner,
-	): Promise<MemberResDto | null> {
+	): Promise<MemberProfileImageResDto | null> {
 		const membersRepository = this.getMembersRepository(qr);
 
 		const insertResult = await membersRepository.insert({

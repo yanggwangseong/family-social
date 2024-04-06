@@ -14,6 +14,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import {
+	GetMemberByMemberIdSwagger,
 	GetMembersByUserNameSwagger,
 	UpdateMemberProfileSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
@@ -68,6 +69,7 @@ export class MembersController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 유저 이름 , 유저 아이디
 	 */
+	@GetMemberByMemberIdSwagger()
 	@Get(':memberId')
 	async getMemberByMemberId(@Param('memberId') memberId: string) {
 		return this.membersService.findMemberByIdOrThrow(memberId);
