@@ -100,3 +100,18 @@ export const GetMembersByUserNameSwagger = () => {
 		}),
 	);
 };
+
+export const GetMemberByMemberIdSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 멤버 유저 아이디로 조회',
+		}),
+		ApiCreatedResponse({
+			description: '특정 멤버 유저 아이디로 조회 성공',
+			type: MemberResDto,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_USER_NOT_FOUND,
+		}),
+	);
+};

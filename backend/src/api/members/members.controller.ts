@@ -52,12 +52,25 @@ export class MembersController {
 	 * @returns 검색된 유저정보 리스트
 	 */
 	@GetMembersByUserNameSwagger()
-	@Get(':username')
+	@Get('username/:username')
 	async getMembersByUserName(
 		@Param('username') username: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		return this.membersService.findMembersByUserName(username, sub);
+	}
+
+	/**
+	 * @summary 특정 멤버 유저 아이디로 조회
+	 *
+	 * @tag members
+	 * @param memberId   		- 조회 대상 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 유저 이름 , 유저 아이디
+	 */
+	@Get(':memberId')
+	async getMemberByMemberId(@Param('memberId') memberId: string) {
+		return this.membersService.findMemberByIdOrThrow(memberId);
 	}
 
 	/**
