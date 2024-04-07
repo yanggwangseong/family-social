@@ -9,46 +9,48 @@
 			@apply border border-solid border-customDark px-4 flex flex-col;
 			width: 768px;
 		}
-		@apply w-full h-full flex flex-col gap-4;
+		@apply w-full h-full;
 
-		.contents_wrap {
-			@apply flex-grow;
+		.form {
+			@apply w-full h-full flex flex-col gap-4;
 
-			.signin__header_title {
-				@screen md {
-					@apply text-3xl font-bold mt-10;
+			.contents_wrap {
+				@apply flex-grow;
+
+				.signin__header_title {
+					@screen md {
+						@apply text-3xl font-bold mt-10;
+					}
+					@apply text-customDark text-xl font-bold mt-10 text-center;
 				}
-				@apply text-customDark text-xl font-bold mt-10 text-center;
-			}
 
-			.signin__header_subtitle {
-				@screen md {
-					@apply text-base mt-4;
+				.signin__header_subtitle {
+					@screen md {
+						@apply text-base mt-4;
+					}
+					@apply text-customGray text-sm mt-4 text-center;
 				}
-				@apply text-customGray text-sm mt-4 text-center;
-			}
 
-			.profile_img_selected_container {
-				@apply my-10;
+				.profile_img_selected_container {
+					@apply my-10;
 
-				.profile_img_title {
+					.profile_img_title {
+						@apply text-sm font-semibold;
+					}
+
+					.img_container {
+						@apply flex mt-4 gap-4;
+
+						.profile_img_container {
+							@apply w-1/2 border border-solid border-customDark p-8 flex items-center justify-center flex-col gap-2;
+						}
+					}
+				}
+
+				.section_subtitle {
 					@apply text-sm font-semibold;
 				}
 
-				.img_container {
-					@apply flex mt-4 gap-4;
-
-					.profile_img_container {
-						@apply w-1/2 border border-solid border-customDark p-8 flex items-center justify-center flex-col gap-2;
-					}
-				}
-			}
-
-			.section_subtitle {
-				@apply text-sm font-semibold;
-			}
-
-			.form {
 				.form_label {
 					@apply text-customDark mt-4 mb-2;
 
@@ -58,10 +60,10 @@
 					}
 				}
 			}
-		}
 
-		.footer_wrap {
-			@apply mb-8;
+			.footer_wrap {
+				@apply mb-8;
+			}
 		}
 	}
 }
