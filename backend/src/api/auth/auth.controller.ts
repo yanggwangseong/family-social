@@ -1,7 +1,10 @@
 import {
 	Body,
 	Controller,
+	Get,
+	Patch,
 	Post,
+	Req,
 	Res,
 	UseGuards,
 	UseInterceptors,
@@ -14,21 +17,27 @@ import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator
 import {
 	CreateMemberSwagger,
 	LoginMemberSwagger,
+	PatchSocialSignUpMemberSwagger,
 	VerifyEmailSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { GoogleGuard } from '@/common/guards/google.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
+import { MemberSocialCreateReqDto } from '@/models/dto/member/req/member-social-create-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
+import { ICreateSocialMemberArgs } from '@/types/args/member';
+import { GoogleOAuth2Request } from '@/types/request';
 import { IRefreshTokenArgs } from '@/types/token';
 
 import { AuthService } from './auth.service';
 import { MailsService } from '../mails/mails.service';
+import { MembersService } from '../members/members.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @ApiTags('auth')
@@ -37,7 +46,83 @@ export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
 		private readonly mailsService: MailsService,
+		private readonly membersService: MembersService,
 	) {}
+
+	/**
+	 * @summary Google Oauth2 로그인 요청 들어오는 api
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@Get('/google/sign-in')
+	@UseGuards(GoogleGuard)
+	async googleOauth2Signin() {}
+
+	/**
+	 * @summary Google Oauth2 검증된 후 콜백 api
+	 *
+	 * @tag auth
+	 * @param {GoogleOAuth2Request} req - 검증된 유저 정보를 가지고 있는 객체
+	 * @param {Response} res
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
+	@Get('/google/callback')
+	@UseGuards(GoogleGuard)
+	async googleOauth2CallBack(
+		@Req() req: GoogleOAuth2Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const { email, photo, firstName, lastName } = req.user;
+
+		const fullName = firstName + lastName;
+		const Exists = await this.membersService.memberExistsByEmail(email);
+
+		if (Exists) {
+			const { id, username, isFirstLogin } = Exists;
+
+			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
+			if (!isFirstLogin) {
+				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+			}
+
+			const [accessToken, refreshToken] =
+				await this.authService.signatureTokens(id, username);
+
+			await this.authService.setCurrentRefreshToken(id, refreshToken);
+
+			this.authService.ResponseTokenInCookie({
+				type: 'accessToken',
+				token: accessToken,
+				res,
+			});
+			this.authService.ResponseTokenInCookie({
+				type: 'refreshToken',
+				token: refreshToken,
+				res,
+			});
+
+			res.redirect(`http://localhost:3000/oauth2/redirect`);
+		} else {
+			const tmpDto: ICreateSocialMemberArgs = {
+				email,
+				username: fullName,
+				phoneNumber: '00000000000',
+				profileImage: photo,
+				socialType: 'google',
+			};
+
+			const tmpMember = await this.authService.createMemberWithVerifyToken(
+				tmpDto,
+			);
+
+			res.redirect(
+				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+			);
+		}
+	}
 
 	/**
 	 * @summary Local User 로그인
@@ -92,6 +177,28 @@ export class AuthController {
 		await this.mailsService.sendSignUpEmailVerify(email, signupVerifyToken, qr);
 
 		return newMember;
+	}
+
+	/**
+	 * @summary 소셜 회원가입
+	 *
+	 * @tag auth
+	 * @param {string} dto.id 멤버 아이디
+	 * @param {string} dto.username 유저 이름
+	 * @param {string} dto.profileImage 프로필 이미지
+	 * @param {string} dto.phoneNumber - 휴대폰번호
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PatchSocialSignUpMemberSwagger()
+	@Patch('/social/sign-up')
+	async patchSocialSignUpMember(@Body() dto: MemberSocialCreateReqDto) {
+		const { id: memberId, ...rest } = dto;
+
+		return await this.membersService.updateMemberProfile({
+			memberId,
+			...rest,
+		});
 	}
 
 	/**

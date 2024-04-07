@@ -11,7 +11,9 @@ import { IUpdateMemberArgs } from '@/types/args/member';
 export class MembersService {
 	constructor(private readonly membersRepository: MembersRepository) {}
 
-	async findMemberByIdOrThrow(memberId: string): Promise<MemberResDto> {
+	async findMemberByIdOrThrow(
+		memberId: string,
+	): Promise<MemberProfileImageResDto> {
 		const member = await this.membersRepository.findMemberById({
 			memberId,
 		});
@@ -36,6 +38,16 @@ export class MembersService {
 	async updateMemberProfile(updateMemberArgs: IUpdateMemberArgs) {
 		return await this.membersRepository.updateMemberProfile({
 			...updateMemberArgs,
+		});
+	}
+
+	async memberExistsByEmail(
+		email: string,
+	): Promise<(MemberResDto & { isFirstLogin: boolean }) | null> {
+		return await this.membersRepository.findMemberByEmail(email, {
+			id: true,
+			username: true,
+			isFirstLogin: true,
 		});
 	}
 }

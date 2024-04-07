@@ -30,7 +30,14 @@ export const MemberService = {
 
 	async getMembersByUserName(username: string) {
 		const { data } = await axiosAPI.get<MembersResponse[]>(
-			`/members/${username}`,
+			`/members/username/${username}`,
+		);
+		return data;
+	},
+
+	async getMemberByMemberId(memberId: string) {
+		const { data } = await axiosAPI.get<MembersResponse>(
+			`/members/${memberId}`,
 		);
 		return data;
 	},

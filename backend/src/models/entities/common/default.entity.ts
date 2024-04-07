@@ -1,9 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 import { CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+
+import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 export class DefaultEntity {
 	@ApiProperty()
 	@PrimaryColumn('uuid')
+	@IsUUID(4, { each: true, message: uuidValidationMessage })
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
 	id!: string;
 
 	@ApiProperty()
