@@ -5,8 +5,24 @@ import Format from '@/components/ui/layout/Format';
 import Field from '@/components/ui/field/Field';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
+import { MemberService } from '@/services/member/member.service';
 
 const Social: FC = () => {
+	const router = useRouter();
+	const { id } = router.query as unknown as { id: string };
+
+	const { data, isLoading } = useQuery(
+		['get-member-by-memberId'],
+		async () => await MemberService.getMemberByMemberId(id),
+		{
+			enabled: !!id,
+		},
+	);
+
+	if (!data) return <div>data</div>;
+
 	return (
 		<Format title="social-signup">
 			<div className={styles.container}>
@@ -27,7 +43,7 @@ const Social: FC = () => {
 										className="rounded-full"
 										width={60}
 										height={60}
-										src={'/images/profile/profile.png'}
+										src={data.profileImage}
 										alt="img"
 									></Image>
 									<div>gaengdev</div>
