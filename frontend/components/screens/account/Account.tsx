@@ -15,8 +15,11 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import MyFeed from '../feed/my-feed/MyFeed';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
+import { useRouter } from 'next/router';
 
-const Account: FC = () => {
+const Account: FC<{ email: string }> = ({ email }) => {
+	const router = useRouter();
+
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
