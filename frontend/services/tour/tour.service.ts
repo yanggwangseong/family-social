@@ -97,7 +97,7 @@ export const TourService = {
 			arrange = 'Q';
 		}
 
-		let url = `tours/search/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
+		let url = `search/tours/keyword/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
 
 		const { data } = await axiosAPI.get<TourListResponse>(url);
 		return data;
