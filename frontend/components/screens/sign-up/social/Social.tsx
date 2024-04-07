@@ -5,14 +5,18 @@ import Format from '@/components/ui/layout/Format';
 import Field from '@/components/ui/field/Field';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { MemberService } from '@/services/member/member.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { validPhoneNumber } from '../sign-up.constants';
 import { ProfileImgType, SignUpSocialFields } from './social.interface';
 import cn from 'classnames';
-import { OmitStrict, Union, selectedProfileType } from 'types';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import axios from 'axios';
+import { OmitStrict } from 'types';
+import { AuthService } from '@/services/auth/auth.service';
 
 const Social: FC = () => {
 	const router = useRouter();
@@ -43,6 +47,35 @@ const Social: FC = () => {
 		},
 	);
 
+	const { mutate: socialRegisterSync } = useMutation(
+		['social-register'],
+		async (requestData: OmitStrict<SignUpSocialFields, 'profileImg'>) =>
+			await AuthService.socialRegister({
+				...requestData,
+				profileImage: isProfileImg,
+				memberId: id,
+			}),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess() {
+				Loading.remove();
+				Report.success('성공', `${data?.username}님 환영합니다.`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
 	const handleSelectedProfileImg = (
 		selected: ProfileImgType,
 		imgUrl: string,
@@ -54,8 +87,7 @@ const Social: FC = () => {
 	const onSubmit: SubmitHandler<
 		OmitStrict<SignUpSocialFields, 'profileImg'>
 	> = data => {
-		//registerSync(data);
-		//reset();
+		socialRegisterSync(data);
 	};
 
 	return (
