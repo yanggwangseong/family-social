@@ -191,8 +191,8 @@ export class AuthController {
 	 * @returns void
 	 */
 	@PatchSocialSignUpMemberSwagger()
-	@Patch('social/sign-up')
-	async patchSocialSignUpMember(dto: MemberSocialCreateReqDto) {
+	@Patch('/social/sign-up')
+	async patchSocialSignUpMember(@Body() dto: MemberSocialCreateReqDto) {
 		const { id: memberId, ...rest } = dto;
 
 		return await this.membersService.updateMemberProfile({
