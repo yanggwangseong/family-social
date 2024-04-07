@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './Social.module.scss';
 import Image from 'next/image';
 import Format from '@/components/ui/layout/Format';
@@ -10,11 +10,19 @@ import { useRouter } from 'next/router';
 import { MemberService } from '@/services/member/member.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { validPhoneNumber } from '../sign-up.constants';
-import { SignUpSocialFields } from './social.interface';
+import { ProfileImgType, SignUpSocialFields } from './social.interface';
+import cn from 'classnames';
+import { OmitStrict, Union, selectedProfileType } from 'types';
 
 const Social: FC = () => {
 	const router = useRouter();
 	const { id } = router.query as unknown as { id: string };
+
+	const [isProfileImg, setIsProfileImg] = useState<string>(
+		'/images/profile/profile.png',
+	);
+
+	const [isSelectedImg, setIsSelectedImg] = useState<ProfileImgType>('basic');
 
 	const {
 		register,
@@ -35,8 +43,16 @@ const Social: FC = () => {
 		},
 	);
 
+	const handleSelectedProfileImg = (
+		selected: ProfileImgType,
+		imgUrl: string,
+	) => {
+		setIsProfileImg(imgUrl);
+		setIsSelectedImg(selected);
+	};
+
 	const onSubmit: SubmitHandler<
-		Omit<SignUpSocialFields, 'profileImg'>
+		OmitStrict<SignUpSocialFields, 'profileImg'>
 	> = data => {
 		//registerSync(data);
 		//reset();
@@ -61,7 +77,14 @@ const Social: FC = () => {
 										프로필 이미지 선택
 									</div>
 									<div className={styles.img_container}>
-										<div className={styles.profile_img_container}>
+										<div
+											className={cn(styles.profile_img_container, {
+												[styles.active]: isSelectedImg === 'social',
+											})}
+											onClick={() =>
+												handleSelectedProfileImg('social', data.profileImage)
+											}
+										>
 											<Image
 												className="rounded-full"
 												width={60}
@@ -69,9 +92,19 @@ const Social: FC = () => {
 												src={data.profileImage}
 												alt="img"
 											></Image>
-											<div>{data.username}</div>
+											<div className={styles.username}>{data.username}</div>
 										</div>
-										<div className={styles.profile_img_container}>
+										<div
+											className={cn(styles.profile_img_container, {
+												[styles.active]: isSelectedImg === 'basic',
+											})}
+											onClick={() =>
+												handleSelectedProfileImg(
+													'basic',
+													'/images/profile/profile.png',
+												)
+											}
+										>
 											<Image
 												className="rounded-full"
 												width={60}
@@ -79,7 +112,7 @@ const Social: FC = () => {
 												src={'/images/profile/profile.png'}
 												alt="img"
 											></Image>
-											<div>{data.username}</div>
+											<div className={styles.username}>{data.username}</div>
 										</div>
 									</div>
 								</div>

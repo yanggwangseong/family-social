@@ -43,6 +43,14 @@
 
 						.profile_img_container {
 							@apply w-1/2 border border-solid border-customDark p-8 flex items-center justify-center flex-col gap-2;
+
+							&.active {
+								@apply border-customOrange border-2;
+
+								.username {
+									@apply text-customOrange font-semibold;
+								}
+							}
 						}
 					}
 				}

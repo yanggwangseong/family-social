@@ -40,6 +40,7 @@ export const LayerMode = {
 export const ToggleModalDerection = ['left', 'right'] as const;
 export const feedPublicSelectOptions = ['public', 'private'] as const;
 export const rightSideTabMenus = ['members', 'groups', 'favorites'] as const;
+export const selectedProfileType = ['social', 'basic'] as const;
 export const TabMenus = [
 	'TOP',
 	'MYFEED',
