@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Get,
+	Patch,
 	Post,
 	Req,
 	Res,
@@ -16,6 +17,7 @@ import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator
 import {
 	CreateMemberSwagger,
 	LoginMemberSwagger,
+	PatchSocialSignUpMemberSwagger,
 	VerifyEmailSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -27,6 +29,7 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
+import { MemberSocialCreateReqDto } from '@/models/dto/member/req/member-social-create-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
 import { ICreateSocialMemberArgs } from '@/types/args/member';
 import { GoogleOAuth2Request } from '@/types/request';
@@ -174,6 +177,28 @@ export class AuthController {
 		await this.mailsService.sendSignUpEmailVerify(email, signupVerifyToken, qr);
 
 		return newMember;
+	}
+
+	/**
+	 * @summary 소셜 회원가입
+	 *
+	 * @tag auth
+	 * @param {string} dto.id 멤버 아이디
+	 * @param {string} dto.username 유저 이름
+	 * @param {string} dto.profileImage 프로필 이미지
+	 * @param {string} dto.phoneNumber - 휴대폰번호
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PatchSocialSignUpMemberSwagger()
+	@Patch('social/sign-up')
+	async patchSocialSignUpMember(dto: MemberSocialCreateReqDto) {
+		const { id: memberId, ...rest } = dto;
+
+		return await this.membersService.updateMemberProfile({
+			memberId,
+			...rest,
+		});
 	}
 
 	/**

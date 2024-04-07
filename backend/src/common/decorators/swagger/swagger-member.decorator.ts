@@ -55,6 +55,17 @@ export const CreateMemberSwagger = () => {
 	);
 };
 
+export const PatchSocialSignUpMemberSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '소셜 회원가입',
+		}),
+		ApiCreatedResponse({
+			description: '소셜 회원가입 성공',
+		}),
+	);
+};
+
 export const UpdateMemberProfileSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
