@@ -18,6 +18,7 @@ import { GroupsModule } from './api/groups/groups.module';
 import { MailsModule } from './api/mails/mails.module';
 import { MediasModule } from './api/medias/medias.module';
 import { MembersModule } from './api/members/members.module';
+import { SearchModule } from './api/search/search.module';
 import { ToursModule } from './api/tours/tours.module';
 import { EmailOptions } from './common/config/emailConfig';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
@@ -45,6 +46,7 @@ import {
 		ToursModule,
 		ChatsModule,
 		MailsModule,
+		SearchModule,
 		ThrottlerModule.forRootAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],

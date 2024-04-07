@@ -94,7 +94,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 				memberGroups: true,
 			},
 			where: {
-				username: ILike(`${username}%`),
+				username: ILike(`%${username}%`),
 				id: Not(authorMemberId),
 			},
 		});
