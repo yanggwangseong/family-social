@@ -14,7 +14,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import {
-	GetMembersByUserNameSwagger,
+	GetMemberByEmailSwagger,
+	GetMemberByMemberIdSwagger,
 	UpdateMemberProfileSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -26,6 +27,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { ParseEmailPipe } from '@/common/pipes/parse-email.pipe';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
 import {
@@ -43,21 +45,41 @@ export class MembersController {
 	constructor(private readonly membersService: MembersService) {}
 
 	/**
-	 * @summary 유저이름에 해당하는 유저 리스트 검색
+	 * @summary 특정 멤버 유저 아이디로 조회
 	 *
 	 * @tag members
-	 * @param {string} username   		- 수정 할 memberId
-	 * @param {string} sub   			- 인가된 유저 아이디
+	 * @param memberId   		- 조회 대상 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 검색된 유저정보 리스트
+	 * @returns 유저 이름 , 유저 아이디
 	 */
-	@GetMembersByUserNameSwagger()
-	@Get(':username')
-	async getMembersByUserName(
-		@Param('username') username: string,
+	@GetMemberByMemberIdSwagger()
+	@Get(':memberId')
+	async getMemberByMemberId(
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+	) {
+		return this.membersService.findMemberByIdOrThrow(memberId);
+	}
+
+	/**
+	 * @summary 특정 멤버 유저 이메일로 조회
+	 *
+	 * @tag members
+	 * @param email 조회 대상 유저 이메일
+	 * @param sub 인증된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 이름, 아이디, 프로필, 자기자신인지, 휴대폰 번호
+	 */
+	@GetMemberByEmailSwagger()
+	@Get('email/:email')
+	async getMemberByEmail(
+		@Param('email', new ParseEmailPipe()) email: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		return this.membersService.findMembersByUserName(username, sub);
+		return await this.membersService.findOneMemberByEmail(email, sub);
 	}
 
 	/**

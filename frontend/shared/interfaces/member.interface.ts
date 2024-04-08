@@ -10,3 +10,9 @@ export interface MembersResponse {
 	username: string;
 	profileImage: string;
 }
+
+export interface MemberAccountResponse extends MembersResponse {
+	phoneNumber: string;
+	isMine: boolean;
+	coverImage: string;
+}

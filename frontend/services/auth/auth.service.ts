@@ -1,3 +1,4 @@
+import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/EditProfile/edit-profile.interface';
 import { AuthResponse } from '@/shared/interfaces/auth.interface';
 import { axiosAPI, axiosClassic } from 'api/axios';
 
@@ -20,6 +21,17 @@ export const AuthService = {
 			password,
 			username,
 			phoneNumber,
+		});
+
+		return data;
+	},
+
+	async socialRegister(requestData: UpdateProfileRequest) {
+		const { memberId: id, ...rest } = requestData;
+
+		const { data } = await axiosClassic.patch<void>('/auth/social/sign-up', {
+			id,
+			...rest,
 		});
 
 		return data;

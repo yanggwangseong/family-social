@@ -28,6 +28,7 @@ import {
 	ENV_JWT_REFRESH_TOKEN_SECRET,
 	ENV_REFRESH_TOKEN_COOKIE_NAME,
 } from '@/constants/env-keys.const';
+import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
@@ -117,34 +118,49 @@ export class AuthService {
 		dto: ICreateMemberArgs,
 		qr?: QueryRunner,
 	): Promise<{
-		newMember: MemberResDto;
+		newMember: MemberProfileImageResDto;
 		email: string;
 		signupVerifyToken: string;
 	}> {
-		const { email, password } = dto;
+		const { email } = dto;
 
-		const member = await this.membersRepository.findMemberByEmail({
-			email,
-		});
+		const member: MemberResDto | null =
+			await this.membersRepository.findMemberByEmail(email, {
+				id: true,
+				username: true,
+			});
+
 		if (member) throw EntityConflictException(ERROR_USER_ALREADY_EXISTS);
+
+		const { newMember, signupVerifyToken } =
+			await this.createMemberWithVerifyToken(dto, qr);
+
+		return {
+			newMember,
+			email,
+			signupVerifyToken,
+		};
+	}
+
+	async createMemberWithVerifyToken(dto: ICreateMemberArgs, qr?: QueryRunner) {
+		const { password } = dto;
 
 		const signupVerifyToken = generateRandomCode(10);
 		const newMember = await this.membersRepository.createMember(
 			{
 				...dto,
-				password: await this.EncryptHashData<string>(password!),
+				password: await this.EncryptHashData<string>(
+					password ?? signupVerifyToken,
+				),
 			},
 			await this.EncryptHashData<string>(signupVerifyToken),
 			qr,
 		);
-		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
-		//유저 생성 성공 후 email 인증코드 전송.
-		//await this.sendSignUpEmailVerify(email, signupVerifyToken, qr);
+		if (!newMember) throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
 
 		return {
 			newMember,
-			email,
 			signupVerifyToken,
 		};
 	}
@@ -186,10 +202,7 @@ export class AuthService {
 		return compare;
 	}
 
-	private async signatureTokens(
-		id: string,
-		name: string,
-	): Promise<[string, string]> {
+	async signatureTokens(id: string, name: string): Promise<[string, string]> {
 		const [accessToken, refreshToken]: [string, string] = await Promise.all([
 			await this.jwtService.signAsync(
 				{
@@ -220,7 +233,7 @@ export class AuthService {
 		return [accessToken, refreshToken];
 	}
 
-	private async setCurrentRefreshToken(
+	async setCurrentRefreshToken(
 		id: string,
 		refreshToken: string,
 	): Promise<void> {

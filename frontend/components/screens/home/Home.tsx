@@ -8,6 +8,7 @@ import Link from 'next/link';
 import styles from './Home.module.scss';
 import Image from 'next/image';
 import LoginButton from '@/components/ui/button/main/LoginButton';
+import { API_URL } from '@/constants/index';
 
 const style = {
 	height: '100%',
@@ -59,7 +60,7 @@ const Home: FC = () => {
 								></LoginButton>
 
 								<LoginButton
-									link="/"
+									link={`${API_URL}/auth/google/sign-in`}
 									text="구글 로그인"
 									Icon={FaGoogle}
 									IconColor="4285F4"

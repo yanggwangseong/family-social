@@ -8,6 +8,11 @@ export interface ICreateMemberArgs {
 	phoneNumber: string;
 }
 
+export interface ICreateSocialMemberArgs extends ICreateMemberArgs {
+	profileImage: string;
+	socialType: 'google';
+}
+
 export interface IVerifyEmailArgs extends Pick<ICreateMemberArgs, 'email'> {
 	signupVerifyToken: string;
 }

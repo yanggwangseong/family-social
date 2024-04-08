@@ -12,7 +12,6 @@ import { useSearch } from '@/hooks/useSearch';
 import { MemberService } from '@/services/member/member.service';
 import {
 	MessageModalAtomType,
-	MessageModalDefaultValue,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
 
@@ -28,7 +27,7 @@ const CreateMessageModal: FC = () => {
 
 	const { isSuccess, data } = useQuery(
 		['search-chat-members', debounceSearch],
-		() => MemberService.getMembersByUserName(debounceSearch),
+		async () => await MemberService.getMembersByUserName(debounceSearch),
 		{
 			enabled: !!debounceSearch,
 		},

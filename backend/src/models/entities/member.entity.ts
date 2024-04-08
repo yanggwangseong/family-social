@@ -30,6 +30,7 @@ import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
+@Index(['username'])
 @Index(['createdAt'])
 @Index(['updatedAt'])
 export class MemberEntity extends DefaultEntity {
@@ -64,7 +65,12 @@ export class MemberEntity extends DefaultEntity {
 	})
 	password?: string;
 
-	@Column({ type: 'varchar', length: 30, nullable: false })
+	@Column({
+		type: 'varchar',
+		length: 30,
+		nullable: false,
+		default: '00000000000',
+	})
 	@ApiProperty()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
