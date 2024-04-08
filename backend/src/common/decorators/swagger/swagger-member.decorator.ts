@@ -17,6 +17,7 @@ import {
 	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 	ERROR_AUTHORIZATION_MEMBER,
 } from '@/constants/business-error';
+import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 
@@ -119,6 +120,21 @@ export const GetMemberByMemberIdSwagger = () => {
 		ApiCreatedResponse({
 			description: '특정 멤버 유저 아이디로 조회 성공',
 			type: MemberProfileImageResDto,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_USER_NOT_FOUND,
+		}),
+	);
+};
+
+export const GetMemberByEmailSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 멤버 유저 이메일로 조회',
+		}),
+		ApiCreatedResponse({
+			description: '특정 멤버 유저 이메일로 조회 성공',
+			type: MemberAccountResDto,
 		}),
 		ApiNotFoundResponse({
 			description: ERROR_USER_NOT_FOUND,

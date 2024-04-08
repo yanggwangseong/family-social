@@ -14,6 +14,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 import {
+	GetMemberByEmailSwagger,
 	GetMemberByMemberIdSwagger,
 	UpdateMemberProfileSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
@@ -26,6 +27,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { ParseEmailPipe } from '@/common/pipes/parse-email.pipe';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
 import {
@@ -52,8 +54,32 @@ export class MembersController {
 	 */
 	@GetMemberByMemberIdSwagger()
 	@Get(':memberId')
-	async getMemberByMemberId(@Param('memberId') memberId: string) {
+	async getMemberByMemberId(
+		@Param(
+			'memberId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		memberId: string,
+	) {
 		return this.membersService.findMemberByIdOrThrow(memberId);
+	}
+
+	/**
+	 * @summary 특정 멤버 유저 이메일로 조회
+	 *
+	 * @tag members
+	 * @param email 조회 대상 유저 이메일
+	 * @param sub 인증된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 이름, 아이디, 프로필, 자기자신인지, 휴대폰 번호
+	 */
+	@GetMemberByEmailSwagger()
+	@Get('email/:email')
+	async getMemberByEmail(
+		@Param('email', new ParseEmailPipe()) email: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.membersService.findOneMemberByEmail(email, sub);
 	}
 
 	/**
