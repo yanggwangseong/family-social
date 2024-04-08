@@ -1,5 +1,6 @@
 import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/EditProfile/edit-profile.interface';
 import {
+	MemberAccountResponse,
 	MembersBelongToGroupResponse,
 	MembersResponse,
 } from '@/shared/interfaces/member.interface';
@@ -31,6 +32,13 @@ export const MemberService = {
 	async getMembersByUserName(username: string) {
 		const { data } = await axiosAPI.get<MembersResponse[]>(
 			`/search/members/username/${username}`,
+		);
+		return data;
+	},
+
+	async getMemberByMemberEmail(email: string) {
+		const { data } = await axiosAPI.get<MemberAccountResponse>(
+			`/members/email/${email}`,
 		);
 		return data;
 	},
