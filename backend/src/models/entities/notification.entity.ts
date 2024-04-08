@@ -6,7 +6,14 @@ import {
 	IsUUID,
 	MaxLength,
 } from 'class-validator';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	PrimaryColumn,
+} from 'typeorm';
 
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { maxLengthValidationMessage } from '@/common/validation-message/max-length-validation-message';
@@ -15,8 +22,11 @@ import { stringValidationMessage } from '@/common/validation-message/string-vali
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { DefaultEntity } from './common/default.entity';
+import { MemberEntity } from './member.entity';
+import { NotificationTypeEntity } from './notification-type.entity';
 
 @Entity({ name: 'fam_notification' })
+@Index(['isRead'])
 export class NotificationEntity extends DefaultEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({
@@ -47,6 +57,18 @@ export class NotificationEntity extends DefaultEntity {
 	})
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly senderId!: string;
+
+	@ManyToOne(() => NotificationTypeEntity, (nft) => nft.notifications)
+	@JoinColumn({ name: 'notificationTypeId', referencedColumnName: 'id' })
+	notificationType!: NotificationTypeEntity;
+
+	@ManyToOne(() => MemberEntity, (mb) => mb.recipientNotifications)
+	@JoinColumn({ name: 'recipientId', referencedColumnName: 'id' })
+	recipient!: MemberEntity;
+
+	@ManyToOne(() => MemberEntity, (mb) => mb.senderIdNotifications)
+	@JoinColumn({ name: 'senderId', referencedColumnName: 'id' })
+	sender!: MemberEntity;
 
 	@Column({ type: 'varchar', length: 60, nullable: false })
 	@ApiProperty({
