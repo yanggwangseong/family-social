@@ -5,7 +5,7 @@ import { CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
-export class DefaultEntity {
+export abstract class DefaultEntity {
 	@ApiProperty()
 	@PrimaryColumn('uuid')
 	@IsUUID(4, { each: true, message: uuidValidationMessage })
