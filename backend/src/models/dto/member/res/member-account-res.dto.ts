@@ -6,6 +6,7 @@ export class MemberAccountResDto extends PickType(MemberEntity, [
 	'id',
 	'username',
 	'profileImage',
+	'coverImage',
 	'phoneNumber',
 ] as const) {
 	isMine!: boolean;

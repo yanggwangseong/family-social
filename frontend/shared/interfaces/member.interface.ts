@@ -14,4 +14,5 @@ export interface MembersResponse {
 export interface MemberAccountResponse extends MembersResponse {
 	phoneNumber: string;
 	isMine: boolean;
+	coverImage: string;
 }
