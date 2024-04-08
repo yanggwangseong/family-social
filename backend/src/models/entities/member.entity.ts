@@ -30,6 +30,7 @@ import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
 @Unique(['email'])
+@Index(['username'])
 @Index(['createdAt'])
 @Index(['updatedAt'])
 export class MemberEntity extends DefaultEntity {
