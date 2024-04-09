@@ -11,7 +11,6 @@ export const CommentService = {
 	}: CreateCommentRequest) {
 		const { data } = await axiosAPI.post<void>(`/feeds/${feedId}/comments`, {
 			commentContents: commentContents,
-			feedId,
 			replyId,
 			parentId,
 			feedWriterId,
