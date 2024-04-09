@@ -15,8 +15,8 @@ export const useFeedLike = ({
 }) => {
 	const { mutate: feedLikeSync } = useMutation(
 		['feed-like'],
-		(data: { feedId: string; page: number }) =>
-			FeedService.updateLike(data.feedId),
+		(data: { feedId: string; page: number; feedWriterId: string }) =>
+			FeedService.updateLike(data.feedId, data.feedWriterId),
 		{
 			onMutate: variable => {
 				//Loading.hourglass();
@@ -50,8 +50,12 @@ export const useFeedLike = ({
 		},
 	);
 
-	const handleUpdateLike = (feedId: string, page: number) => {
-		feedLikeSync({ feedId, page });
+	const handleUpdateLike = (
+		feedId: string,
+		page: number,
+		feedWriterId: string,
+	) => {
+		feedLikeSync({ feedId, page, feedWriterId });
 	};
 
 	return { handleUpdateLike };

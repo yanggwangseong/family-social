@@ -1,15 +1,10 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
-import { CommentEntity } from '@/models/entities/comment.entity';
 
-export class CommentCreateReqDto extends PickType(CommentEntity, [
-	'commentContents',
-	'replyId',
-	'parentId',
-] as const) {
+export class FeedLikeUpdateReqDto {
 	@ApiProperty()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,

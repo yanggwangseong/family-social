@@ -8,6 +8,7 @@ import CommentForm from '../../form/CommentForm';
 const Comments: FC<CommentsProps> = ({
 	comments,
 	feedId,
+	feedWriterId,
 	isToggleCommentWrite,
 	onCommentRefetch,
 	onLikeComment,
@@ -20,7 +21,11 @@ const Comments: FC<CommentsProps> = ({
 					<Profile />
 					<div className={styles.comment_write_form}>
 						{/* comment form */}
-						<CommentForm onCommentRefetch={onCommentRefetch} feedId={feedId} />
+						<CommentForm
+							onCommentRefetch={onCommentRefetch}
+							feedId={feedId}
+							feedWriterId={feedWriterId}
+						/>
 					</div>
 				</div>
 			)}
@@ -32,6 +37,7 @@ const Comments: FC<CommentsProps> = ({
 					depth={0}
 					onCommentRefetch={onCommentRefetch}
 					feedId={feedId}
+					feedWriterId={feedWriterId}
 					onLikeComment={onLikeComment}
 				/>
 			))}

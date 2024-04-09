@@ -47,7 +47,7 @@ const FeedItem: FC<FeedItemProps> = ({
 	} = useModal(settingModalWrapperRef);
 
 	const handleLike = () => {
-		onLike(feed.feedId, page);
+		onLike(feed.feedId, page, feed.memberId);
 		setIsLike(!isLike);
 	};
 
@@ -162,6 +162,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					<Comments
 						comments={feed.comments}
 						feedId={feed.feedId}
+						feedWriterId={feed.memberId}
 						isToggleCommentWrite={isToggleCommentWrite}
 						onCommentRefetch={handleCommentRefetch}
 						onLikeComment={handleLikeComment}

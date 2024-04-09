@@ -1,6 +1,7 @@
 interface CommentFormProps {
 	onCommentRefetch: () => void;
 	feedId: string;
+	feedWriterId: string;
 	parentId?: string;
 	replyId?: string;
 	commentId?: string;
