@@ -162,6 +162,7 @@ const FeedItem: FC<FeedItemProps> = ({
 					<Comments
 						comments={feed.comments}
 						feedId={feed.feedId}
+						feedWriterId={feed.memberId}
 						isToggleCommentWrite={isToggleCommentWrite}
 						onCommentRefetch={handleCommentRefetch}
 						onLikeComment={handleLikeComment}
