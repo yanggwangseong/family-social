@@ -52,8 +52,10 @@ export const FeedService = {
 		return data;
 	},
 
-	async updateLike(feedId: string) {
-		const { data } = await axiosAPI.put(`/feeds/${feedId}/likes`);
+	async updateLike(feedId: string, feedWriterId: string) {
+		const { data } = await axiosAPI.put(`/feeds/${feedId}/likes`, {
+			feedWriterId,
+		});
 
 		return data;
 	},
