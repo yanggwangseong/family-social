@@ -18,6 +18,7 @@ import { GroupsModule } from './api/groups/groups.module';
 import { MailsModule } from './api/mails/mails.module';
 import { MediasModule } from './api/medias/medias.module';
 import { MembersModule } from './api/members/members.module';
+import { NotificationsModule } from './api/notifications/notifications.module';
 import { SearchModule } from './api/search/search.module';
 import { ToursModule } from './api/tours/tours.module';
 import { EmailOptions } from './common/config/emailConfig';
@@ -47,6 +48,7 @@ import {
 		ChatsModule,
 		MailsModule,
 		SearchModule,
+		NotificationsModule,
 		ThrottlerModule.forRootAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],

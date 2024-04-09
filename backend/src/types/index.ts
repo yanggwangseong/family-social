@@ -32,8 +32,4 @@ export type Union<
 
 type ValueType = string | number | boolean;
 
-export const AlarmType = [
-	'comment_on_my_post',
-	'like_on_my_post',
-	'unlike_on_my_post',
-] as const;
+export const AlarmType = ['comment_on_my_post', 'like_on_my_post'] as const;
