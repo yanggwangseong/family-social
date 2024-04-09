@@ -22,7 +22,10 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 	}
 
 	async createNotification(
-		overrideInsertFeilds: QueryDeepPartialEntity<NotificationEntity>,
+		overrideInsertFeilds: Omit<
+			QueryDeepPartialEntity<NotificationEntity>,
+			'id'
+		>,
 		qr?: QueryRunner,
 	) {
 		const scheduleRepository = this.getScheduleRepository(qr);

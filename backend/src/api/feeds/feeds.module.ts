@@ -17,12 +17,14 @@ import { FeedsController } from './feeds.controller';
 import { FeedsService } from './feeds.service';
 import { CommentsModule } from '../comments/comments.module';
 import { MediasModule } from '../medias/medias.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
 	imports: [
 		TypeOrmModule.forFeature([FeedEntity, LikeFeedEntity]),
 		MediasModule,
 		CommentsModule,
+		NotificationsModule,
 	],
 	controllers: [FeedsController],
 	providers: [FeedsService, FeedsRepository, LikesFeedRepository],
