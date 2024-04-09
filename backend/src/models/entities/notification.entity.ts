@@ -128,5 +128,5 @@ export class NotificationEntity extends DefaultEntity {
 	@IsBoolean({
 		message: booleanValidationMessage,
 	})
-	isRead!: boolean;
+	isRead: boolean = false;
 }
