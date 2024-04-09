@@ -43,10 +43,14 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
-import { COMMENT_ON_MY_POST_TITLE } from '@/constants/notification.const';
+import {
+	COMMENT_ON_MY_POST_TITLE,
+	LIKE_ON_MY_POST_TITLE,
+} from '@/constants/notification.const';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
+import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 
@@ -194,14 +198,26 @@ export class FeedsController {
 	@LikesFeedSwagger()
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
-		@CurrentUser('sub') sub: string,
+		@CurrentUser() { sub, username }: { sub: string; username: string },
 		@Param(
 			'feedId',
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		feedId: string,
+		@Body() dto: FeedLikeUpdateReqDto,
 	) {
-		return await this.feedsService.updateLikesFeedId(sub, feedId);
+		const isUpdateLike = await this.feedsService.updateLikesFeedId(sub, feedId);
+
+		await this.notificationsService.createNotification({
+			notificationType: 'like_on_my_post',
+			recipientId: dto.feedWriterId,
+			senderId: sub,
+			notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+			notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+			notificationFeedId: feedId,
+		});
+
+		return isUpdateLike;
 	}
 
 	/**
@@ -271,7 +287,7 @@ export class FeedsController {
 			memberId: sub,
 		});
 
-		await this.notificationsService.createCommentOnMyPostNotification({
+		await this.notificationsService.createNotification({
 			notificationType: 'comment_on_my_post',
 			recipientId: dto.feedWriterId,
 			senderId: sub,
