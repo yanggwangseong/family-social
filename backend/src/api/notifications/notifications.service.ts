@@ -4,6 +4,7 @@ import { NotificationTypeRepository } from '@/models/repositories/notification-t
 import { NotificationsRepository } from '@/models/repositories/notifications.repository';
 import { AlarmType, Union } from '@/types';
 import { ICreateNotificationArgs } from '@/types/args/notification';
+import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
 export class NotificationsService {
@@ -11,6 +12,24 @@ export class NotificationsService {
 		private readonly notificationsRepository: NotificationsRepository,
 		private readonly notificationTypeRepository: NotificationTypeRepository,
 	) {}
+
+	async getNotificationByMemberId({
+		memberId,
+		page,
+		limit,
+	}: {
+		memberId: string;
+		page: number;
+		limit: number;
+	}) {
+		const { take, skip } = getOffset({ page, limit });
+
+		return await this.notificationsRepository.getNotifications({
+			recipientId: memberId,
+			take,
+			skip,
+		});
+	}
 
 	async createNotification(notificationArgs: ICreateNotificationArgs) {
 		const { notificationType, ...rest } = notificationArgs;
