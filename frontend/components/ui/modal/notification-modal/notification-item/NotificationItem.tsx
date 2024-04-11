@@ -3,7 +3,10 @@ import styles from './NotificationItem.module.scss';
 import Image from 'next/image';
 import { NotificationItemProps } from './notification-item.interface';
 
-const NotificationItem: FC<NotificationItemProps> = ({ notificationItem }) => {
+const NotificationItem: FC<NotificationItemProps> = ({
+	notificationItem,
+	isDescription = false,
+}) => {
 	return (
 		<div className={styles.notification_item_container}>
 			<div>
@@ -23,6 +26,11 @@ const NotificationItem: FC<NotificationItemProps> = ({ notificationItem }) => {
 				<div className={styles.notification_title}>
 					{notificationItem.notificationTitle}
 				</div>
+				{isDescription && (
+					<div className={styles.notification_description}>
+						{notificationItem.notificationDescription}
+					</div>
+				)}
 				<div className={styles.notification_date}>
 					{notificationItem.createdAt}
 				</div>

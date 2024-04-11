@@ -12,6 +12,10 @@
 			@apply font-semibold text-sm;
 		}
 
+		.notification_description {
+			@apply text-customGray text-sm;
+		}
+
 		.notification_date {
 			@apply font-normal text-customGray text-sm;
 		}

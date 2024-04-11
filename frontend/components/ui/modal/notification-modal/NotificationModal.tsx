@@ -30,7 +30,11 @@ const NotificationModal: FC = () => {
 						<div className={styles.not_found_text}>알람이 없습니다.</div>
 					) : (
 						data.list.map((list, index) => (
-							<NotificationItem notificationItem={list} key={index} />
+							<NotificationItem
+								key={index}
+								notificationItem={list}
+								isDescription={false}
+							/>
 						))
 					)}
 				</div>
