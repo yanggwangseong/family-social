@@ -16,6 +16,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
+import { Union, isReadOptions } from '@/types';
 
 import { NotificationsService } from './notifications.service';
 
@@ -32,7 +33,8 @@ export class NotificationsController {
 	 * @tag feeds
 	 * @param page 페이징을 위한 page 번호
 	 * @param limit 가져올 갯수
-	 * @param sub  - 인증된 사용자의 아이디
+	 * @param sub   인증된 사용자의 아이디
+	 * @param is_read_status 'ALL', 'READ', 'NOTREAD'
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns {Promise<NotificationPaginateResDto>} 자신에게 온 알람 리스트
 	 */
@@ -46,6 +48,7 @@ export class NotificationsController {
 			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
 		)
 		page: number,
+
 		@Query(
 			'limit',
 			new DefaultValuePipe(10),
@@ -54,9 +57,13 @@ export class NotificationsController {
 			}),
 		)
 		limit: number,
+
+		@Query('is_read_status')
+		is_read_options: Union<typeof isReadOptions>,
 	): Promise<NotificationPaginateResDto> {
 		return await this.notificationsService.getNotificationByMemberId({
 			memberId: sub,
+			readOptions: is_read_options,
 			page,
 			limit,
 		});
