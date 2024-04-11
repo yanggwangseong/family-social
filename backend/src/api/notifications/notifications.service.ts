@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { FindOptionsWhere } from 'typeorm';
 
 import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
+import { NotificationEntity } from '@/models/entities/notification.entity';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
 import { NotificationsRepository } from '@/models/repositories/notifications.repository';
-import { AlarmType, Union } from '@/types';
+import { AlarmType, Union, isReadOptions } from '@/types';
 import { ICreateNotificationArgs } from '@/types/args/notification';
 import { getOffset } from '@/utils/getOffset';
 
@@ -16,17 +18,31 @@ export class NotificationsService {
 
 	async getNotificationByMemberId({
 		memberId,
+		readOptions,
 		page,
 		limit,
 	}: {
 		memberId: string;
+		readOptions: Union<typeof isReadOptions>;
 		page: number;
 		limit: number;
 	}): Promise<NotificationPaginateResDto> {
 		const { take, skip } = getOffset({ page, limit });
 
-		const [list, count] = await this.notificationsRepository.getNotifications({
+		const whereOverride: FindOptionsWhere<NotificationEntity> = {
 			recipientId: memberId,
+		};
+
+		if (readOptions === 'READ') {
+			whereOverride.isRead = true;
+		}
+
+		if (readOptions === 'NOTREAD') {
+			whereOverride.isRead = false;
+		}
+
+		const [list, count] = await this.notificationsRepository.getNotifications({
+			whereOverride,
 			take,
 			skip,
 		});

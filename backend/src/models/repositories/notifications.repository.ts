@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
+
+import { Union, isReadOptions } from '@/types';
 
 import { NotificationResDto } from '../dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '../entities/notification.entity';
@@ -38,11 +40,11 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 	}
 
 	async getNotifications({
-		recipientId,
+		whereOverride,
 		take,
 		skip,
 	}: {
-		recipientId: string;
+		whereOverride: FindOptionsWhere<NotificationEntity>;
 		take: number;
 		skip: number;
 	}): Promise<[NotificationResDto[], number]> {
@@ -55,6 +57,7 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 				notificationTitle: true,
 				notificationDescription: true,
 				notificationFeedId: true,
+				isRead: true,
 				createdAt: true,
 				sender: {
 					id: true,
@@ -63,8 +66,7 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 				},
 			},
 			where: {
-				recipientId,
-				isRead: false,
+				...whereOverride,
 			},
 			relations: {
 				sender: true,
