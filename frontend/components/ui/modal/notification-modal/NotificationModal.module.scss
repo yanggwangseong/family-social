@@ -25,5 +25,9 @@
 
 	.item_container {
 		@apply mt-8 flex flex-col;
+
+		.not_found_text {
+			@apply text-center text-customGray text-sm;
+		}
 	}
 }
