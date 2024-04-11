@@ -15,6 +15,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
+import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 
 import { NotificationsService } from './notifications.service';
 
@@ -33,7 +34,7 @@ export class NotificationsController {
 	 * @param limit 가져올 갯수
 	 * @param sub  - 인증된 사용자의 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns {Promise<NotificationResDto[]>} 자신에게 온 알람 리스트
+	 * @returns {Promise<NotificationPaginateResDto>} 자신에게 온 알람 리스트
 	 */
 	@GetNotificationListSwagger()
 	@Get()
@@ -53,7 +54,7 @@ export class NotificationsController {
 			}),
 		)
 		limit: number,
-	) {
+	): Promise<NotificationPaginateResDto> {
 		return await this.notificationsService.getNotificationByMemberId({
 			memberId: sub,
 			page,

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
 import { NotificationsRepository } from '@/models/repositories/notifications.repository';
 import { AlarmType, Union } from '@/types';
@@ -21,14 +22,20 @@ export class NotificationsService {
 		memberId: string;
 		page: number;
 		limit: number;
-	}) {
+	}): Promise<NotificationPaginateResDto> {
 		const { take, skip } = getOffset({ page, limit });
 
-		return await this.notificationsRepository.getNotifications({
+		const [list, count] = await this.notificationsRepository.getNotifications({
 			recipientId: memberId,
 			take,
 			skip,
 		});
+
+		return {
+			list,
+			page,
+			totalPage: Math.ceil(count / take),
+		};
 	}
 
 	async createNotification(notificationArgs: ICreateNotificationArgs) {

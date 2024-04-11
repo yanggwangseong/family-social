@@ -45,8 +45,8 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 		recipientId: string;
 		take: number;
 		skip: number;
-	}): Promise<NotificationResDto[]> {
-		return await this.repository.find({
+	}): Promise<[NotificationResDto[], number]> {
+		return await this.repository.findAndCount({
 			select: {
 				id: true,
 				notificationTypeId: true,
