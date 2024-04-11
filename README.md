@@ -29,6 +29,8 @@ prefix로 `/api`를 붙입니다.
 }
 ```
 
+#### local 개발 환경에서 docker로 Redis aws 환경에서 aws ElasticCache
+
 ## TODO 프로젝트 완성 프리뷰 gif로 보여주기
 
 ## TODO 프로젝트 디렉토리 구조
