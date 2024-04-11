@@ -15,6 +15,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
+import { ParseIsReadOptionsPipe } from '@/common/pipes/parse-is-read-options.pipe';
 import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 import { Union, isReadOptions } from '@/types';
 
@@ -58,7 +59,7 @@ export class NotificationsController {
 		)
 		limit: number,
 
-		@Query('is_read_options')
+		@Query('is_read_options', new ParseIsReadOptionsPipe())
 		is_read_options: Union<typeof isReadOptions>,
 	): Promise<NotificationPaginateResDto> {
 		return await this.notificationsService.getNotificationByMemberId({
