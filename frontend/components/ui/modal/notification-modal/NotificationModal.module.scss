@@ -1,0 +1,29 @@
+.container {
+	@apply absolute top-14 right-0 border
+    border-solid border-customDark bg-white w-[360px] p-4
+    shadow-2xl z-[999];
+
+	.top_wrap {
+		@apply flex;
+
+		.title {
+			@apply font-bold text-xl;
+		}
+
+		.top_right_container {
+			@apply ml-auto cursor-pointer;
+
+			.right_text {
+				@apply text-base font-medium;
+			}
+
+			&:hover {
+				@apply text-customOrange;
+			}
+		}
+	}
+
+	.item_container {
+		@apply mt-8 flex flex-col;
+	}
+}
