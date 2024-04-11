@@ -5,10 +5,10 @@ import Image from 'next/image';
 
 const NotificationItem: FC = () => {
 	return (
-		<div className="flex gap-4">
+		<div className={styles.notification_item_container}>
 			<div>
 				<Image
-					className="rounded-full border border-solid border-customDark"
+					className={styles.profile_img}
 					width={40}
 					height={40}
 					src={'/images/profile/profile.png'}
@@ -16,11 +16,11 @@ const NotificationItem: FC = () => {
 				></Image>
 			</div>
 
-			<div className="flex flex-col gap-2 w-full">
-				<div className="font-semibold text-sm">
+			<div className={styles.description_container}>
+				<div className={styles.notification_title}>
 					Alexandre mentioned you in a
 				</div>
-				<div className=" font-light text-customGray text-sm">2024-04-02</div>
+				<div className={styles.notification_date}>2024-04-02</div>
 			</div>
 		</div>
 	);
