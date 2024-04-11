@@ -64,6 +64,7 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 			},
 			where: {
 				recipientId,
+				isRead: false,
 			},
 			relations: {
 				sender: true,
