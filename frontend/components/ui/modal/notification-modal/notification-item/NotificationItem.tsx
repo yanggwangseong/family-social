@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import styles from './NotificationItem.module.scss';
-import Profile from '@/components/ui/profile/Profile';
 import Image from 'next/image';
+import { NotificationItemProps } from './notification-item.interface';
 
-const NotificationItem: FC = () => {
+const NotificationItem: FC<NotificationItemProps> = ({ notificationItem }) => {
 	return (
 		<div className={styles.notification_item_container}>
 			<div>
@@ -11,16 +11,21 @@ const NotificationItem: FC = () => {
 					className={styles.profile_img}
 					width={40}
 					height={40}
-					src={'/images/profile/profile.png'}
+					src={
+						notificationItem.sender.profileImage ??
+						'/images/profile/profile.png'
+					}
 					alt="img"
 				></Image>
 			</div>
 
 			<div className={styles.description_container}>
 				<div className={styles.notification_title}>
-					Alexandre mentioned you in a
+					{notificationItem.notificationTitle}
 				</div>
-				<div className={styles.notification_date}>2024-04-02</div>
+				<div className={styles.notification_date}>
+					{notificationItem.createdAt}
+				</div>
 			</div>
 		</div>
 	);

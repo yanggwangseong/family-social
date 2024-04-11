@@ -3,6 +3,7 @@ import styles from './NotificationModal.module.scss';
 import { useQuery } from 'react-query';
 import { NotificationService } from '@/services/notification/notification.service';
 import Skeleton from '../../skeleton/Skeleton';
+import NotificationItem from './notification-item/NotificationItem';
 
 const NotificationModal: FC = () => {
 	const { data, isLoading } = useQuery(
@@ -25,7 +26,9 @@ const NotificationModal: FC = () => {
 					{data.list.length === 0 ? (
 						<div className={styles.not_found_text}>알람이 없습니다.</div>
 					) : (
-						<div>items</div>
+						data.list.map((list, index) => (
+							<NotificationItem notificationItem={list} key={index} />
+						))
 					)}
 				</div>
 			)}
