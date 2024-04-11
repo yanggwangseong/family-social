@@ -15,13 +15,21 @@ import cn from 'classnames';
 import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 import { useRecoilState } from 'recoil';
 import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
+import NotificationModal from '../modal/notification-modal/NotificationModal';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
+	const notificationModalWrapperRef = useRef<HTMLDivElement>(null);
+
 	const {
 		isShowing: isOpenMessage,
 		handleToggleModal: handleCloseMessageModal,
 	} = useModal(messageModalWrapperRef);
+
+	const {
+		isShowing: isOpenNotification,
+		handleToggleModal: handleCloseNotificationModal,
+	} = useModal(notificationModalWrapperRef);
 
 	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
 		useRecoilState(mainSidebarAtom);
@@ -56,8 +64,15 @@ const Header: FC = () => {
 							></PiHouseDuotone>
 						</div>
 					</Link>
-					<div className={styles.icon_wrap}>
+					<div
+						className={cn(styles.icon_wrap, {
+							[styles.active]: !!isOpenNotification,
+						})}
+						ref={notificationModalWrapperRef}
+						onClick={handleCloseNotificationModal}
+					>
 						<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
+						{isOpenNotification && <NotificationModal />}
 					</div>
 					<div
 						className={cn(styles.icon_wrap, {
@@ -70,7 +85,7 @@ const Header: FC = () => {
 							className={styles.icon}
 							size={22}
 						></PiMessengerLogoDuotone>
-						{isOpenMessage && <ChatToggleModal></ChatToggleModal>}
+						{isOpenMessage && <ChatToggleModal />}
 					</div>
 				</div>
 			</div>

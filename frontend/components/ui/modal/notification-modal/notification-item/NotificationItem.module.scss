@@ -1,0 +1,23 @@
+.notification_item_container {
+	@apply flex gap-4 hover:bg-gray-50 cursor-pointer rounded py-2 px-2;
+
+	.profile_img {
+		@apply rounded-full border border-solid border-customDark;
+	}
+
+	.description_container {
+		@apply flex flex-col gap-2 w-full;
+
+		.notification_title {
+			@apply font-semibold text-sm;
+		}
+
+		.notification_description {
+			@apply text-customGray text-sm;
+		}
+
+		.notification_date {
+			@apply font-normal text-customGray text-sm;
+		}
+	}
+}

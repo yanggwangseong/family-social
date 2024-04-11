@@ -75,8 +75,11 @@ export const ERROR_INVALID_TOKEN = '토큰이 유효하지 않습니다' as cons
 
 //pipe-message
 export const ERROR_UUID_PIPE_MESSAGE = 'uuid형식이 올바르지 않습니다' as const;
-
 export const ERROR_INT_PIPE_MESSAGE = 'number형식이 올바르지 않습니다' as const;
+export const ERROR_BOOLEAN_PIPE_MESSAGE =
+	'boolean형식이 올바르지 않습니다' as const;
 
 export const ERROR_EMAIL_PIPE_MESSAGE =
 	'이메일 형식이 올바르지 않습니다' as const;
+export const ERROR_IS_READ_OPTIONS_PIPE_MESSAGE =
+	'options의 값이 올바르지 않습니다' as const;

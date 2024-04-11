@@ -12,6 +12,7 @@ export class NotificationResDto extends PickType(NotificationEntity, [
 	'notificationTitle',
 	'notificationDescription',
 	'notificationFeedId',
+	'isRead',
 	'createdAt',
 ] as const) {
 	@ApiProperty({
