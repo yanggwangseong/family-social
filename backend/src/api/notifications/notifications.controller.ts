@@ -58,7 +58,7 @@ export class NotificationsController {
 		)
 		limit: number,
 
-		@Query('is_read_status')
+		@Query('is_read_options')
 		is_read_options: Union<typeof isReadOptions>,
 	): Promise<NotificationPaginateResDto> {
 		return await this.notificationsService.getNotificationByMemberId({

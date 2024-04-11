@@ -1,23 +1,3 @@
-/**
- * enum type 대신 union type
- * @name Union
- * @example
- * const a = ['a','b'] as const;
- * const b = { a:'a', b: 'b'} as const;
- * Union<typeof a>	// 'a' | 'b'
- * Union<typeof b>	// 'a' | 'b'
- *
- */
-export type Union<
-	T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>,
-> = T extends ReadonlyArray<ValueType>
-	? T[number]
-	: T extends { [k: string]: infer U }
-	? U
-	: never;
-
-type ValueType = string | number | boolean;
-
 //type EditModeType = (typeof EditMode)[keyof typeof EditMode];
 export const EditMode = ['information', 'visitMessage', 'reset'] as const;
 export const LayerMode = {
@@ -57,6 +37,7 @@ export const schdulePages = [
 	'periodPage',
 	'tourismPage',
 ] as const;
+export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;
 
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
@@ -79,3 +60,23 @@ export type OmitStrict<T, K extends keyof T> = T extends any
 export type Reverse<T extends any[]> = T extends [infer F, ...infer Rest]
 	? [...Reverse<Rest>, F]
 	: [];
+
+/**
+ * enum type 대신 union type
+ * @name Union
+ * @example
+ * const a = ['a','b'] as const;
+ * const b = { a:'a', b: 'b'} as const;
+ * Union<typeof a>	// 'a' | 'b'
+ * Union<typeof b>	// 'a' | 'b'
+ *
+ */
+export type Union<
+	T extends { [k: string]: ValueType } | ReadonlyArray<ValueType>,
+> = T extends ReadonlyArray<ValueType>
+	? T[number]
+	: T extends { [k: string]: infer U }
+	? U
+	: never;
+
+type ValueType = string | number | boolean;

@@ -14,6 +14,7 @@ export interface NotificationItem {
 	notificationTitle: string;
 	notificationDescription: string;
 	notificationFeedId: string;
+	isRead: boolean;
 	createdAt: string;
 	sender: MembersResponse;
 }

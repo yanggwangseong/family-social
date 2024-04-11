@@ -4,11 +4,12 @@ import { useQuery } from 'react-query';
 import { NotificationService } from '@/services/notification/notification.service';
 import Skeleton from '../../skeleton/Skeleton';
 import NotificationItem from './notification-item/NotificationItem';
+import Link from 'next/link';
 
 const NotificationModal: FC = () => {
 	const { data, isLoading } = useQuery(
 		['get-notifications'],
-		async () => await NotificationService.getNotifications(),
+		async () => await NotificationService.getNotifications('NOTREAD'),
 	);
 
 	return (
@@ -16,7 +17,9 @@ const NotificationModal: FC = () => {
 			<div className={styles.top_wrap}>
 				<div className={styles.title}>알람</div>
 				<div className={styles.top_right_container}>
-					<div className={styles.right_text}>전체보기</div>
+					<Link className={styles.right_text} href={`/notifications`}>
+						전체보기
+					</Link>
 				</div>
 			</div>
 			{isLoading && <Skeleton />}
