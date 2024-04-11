@@ -66,3 +66,21 @@ export const feedTabMenus: TabeMenuListType[] = [
 		title: 'ALL',
 	},
 ];
+
+export const notificationsTabMenus: TabeMenuListType[] = [
+	{
+		link: '/notifications?options=ALL',
+		options: 'ALL',
+		title: '전체',
+	},
+	{
+		link: '/notifications?options=READ',
+		options: 'READ',
+		title: '읽음',
+	},
+	{
+		link: '/notifications?options=NOTREAD',
+		options: 'NOTREAD',
+		title: '안읽음',
+	},
+];
