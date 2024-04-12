@@ -6,8 +6,11 @@ import LayerModal from '@/ui/modal/layer-modal/LayerModal';
 import MediaLayer from '../modal/layer-modal/layer/MediaLayer/MediaLayer';
 import MessageToggleModal from '../modal/message-toggle-modal/MessageToggleModal';
 import CreateMessageModal from '../modal/create-message-modal/CreateMessageModal';
+import { useSseEventSource } from '@/hooks/useSseEventSource';
 
 const Format: FC<PropsWithChildren<IMeta>> = ({ children, ...meta }) => {
+	const { isSseListening } = useSseEventSource('/sse/notifications');
+
 	return (
 		<>
 			<Meta {...meta} />
