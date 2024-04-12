@@ -9,11 +9,14 @@ import { AlarmType, Union, isReadOptions } from '@/types';
 import { ICreateNotificationArgs } from '@/types/args/notification';
 import { getOffset } from '@/utils/getOffset';
 
+import { ServerSentEventsService } from '../server-sent-events/server-sent-events.service';
+
 @Injectable()
 export class NotificationsService {
 	constructor(
 		private readonly notificationsRepository: NotificationsRepository,
 		private readonly notificationTypeRepository: NotificationTypeRepository,
+		private readonly serverSentEventsService: ServerSentEventsService,
 	) {}
 
 	async getNotificationByMemberId({
@@ -65,6 +68,8 @@ export class NotificationsService {
 			notificationTypeId,
 			...rest,
 		});
+
+		this.serverSentEventsService.emitNotificationChangeEvent(rest.recipientId);
 	}
 
 	async findNotificationIdByNotificationType(
