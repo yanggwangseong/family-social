@@ -20,6 +20,7 @@ import { MediasModule } from './api/medias/medias.module';
 import { MembersModule } from './api/members/members.module';
 import { NotificationsModule } from './api/notifications/notifications.module';
 import { SearchModule } from './api/search/search.module';
+import { ServerSentEventsModule } from './api/server-sent-events/server-sent-events.module';
 import { ToursModule } from './api/tours/tours.module';
 import { EmailOptions } from './common/config/emailConfig';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
@@ -49,6 +50,7 @@ import {
 		MailsModule,
 		SearchModule,
 		NotificationsModule,
+		ServerSentEventsModule,
 		ThrottlerModule.forRootAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],
