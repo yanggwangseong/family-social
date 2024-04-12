@@ -16,9 +16,17 @@ const CommentItem: FC<{
 	comment: CommentsResponse;
 	depth: number;
 	feedId: string;
+	feedWriterId: string;
 	onCommentRefetch: () => void;
 	onLikeComment: (commentId: string) => void;
-}> = ({ comment, depth, onCommentRefetch, feedId, onLikeComment }) => {
+}> = ({
+	comment,
+	depth,
+	onCommentRefetch,
+	feedId,
+	feedWriterId,
+	onLikeComment,
+}) => {
 	const [isReply, setIsReply] = useState<boolean>(false);
 	const [isSeeMore, setIsSeeMore] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -137,6 +145,7 @@ const CommentItem: FC<{
 					<CommentForm
 						onCommentRefetch={onCommentRefetch}
 						feedId={feedId}
+						feedWriterId={feedWriterId}
 						replyId={replyId}
 						parentId={parentId}
 						commentId={comment.id}
@@ -153,6 +162,7 @@ const CommentItem: FC<{
 					<CommentForm
 						onCommentRefetch={onCommentRefetch}
 						feedId={feedId}
+						feedWriterId={feedWriterId}
 						replyId={replyId}
 						parentId={parentId}
 						commentId={comment.id}
@@ -168,6 +178,7 @@ const CommentItem: FC<{
 							comment={child}
 							depth={depth + 1}
 							feedId={feedId}
+							feedWriterId={feedWriterId}
 							onCommentRefetch={onCommentRefetch}
 							onLikeComment={onLikeComment}
 						></CommentItem>

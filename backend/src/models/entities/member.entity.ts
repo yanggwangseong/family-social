@@ -26,6 +26,7 @@ import { LikeCommentEntity } from './like-comment.entity';
 import { LikeFeedEntity } from './like-feed.entity';
 import { MemberChatEntity } from './member-chat.entity';
 import { MessageEntity } from './message.entity';
+import { NotificationEntity } from './notification.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_member' })
@@ -169,4 +170,12 @@ export class MemberEntity extends DefaultEntity {
 	// member-chat
 	@OneToMany(() => MemberChatEntity, (fmc) => fmc.member)
 	memberEnterChats?: MemberChatEntity[];
+
+	// recipient-notification
+	@OneToMany(() => NotificationEntity, (nt) => nt.recipient)
+	recipientNotifications?: NotificationEntity[];
+
+	// sender-notification
+	@OneToMany(() => NotificationEntity, (nt) => nt.sender)
+	senderIdNotifications?: NotificationEntity[];
 }

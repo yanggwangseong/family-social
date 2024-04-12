@@ -19,6 +19,7 @@ import styles from './CommentForm.module.scss';
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
 	feedId,
+	feedWriterId,
 	parentId,
 	replyId,
 	isEdit,
@@ -111,9 +112,10 @@ const CommentForm: FC<CommentFormProps> = ({
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
 		createCommentSync({
 			commentContents: data.commentContents,
-			feedId: feedId,
-			parentId: parentId,
-			replyId: replyId,
+			feedId,
+			parentId,
+			replyId,
+			feedWriterId,
 		});
 	};
 

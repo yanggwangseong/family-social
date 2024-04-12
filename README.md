@@ -28,3 +28,15 @@ prefix로 `/api`를 붙입니다.
   data: "Hello World!"
 }
 ```
+
+#### local 개발 환경에서 docker로 Redis aws 환경에서 aws ElasticCache
+
+## TODO 프로젝트 완성 프리뷰 gif로 보여주기
+
+## TODO 프로젝트 디렉토리 구조
+
+## TODO 프로젝트 인프라 그림
+
+## 기본적인 프로젝트 설명과 해당 프로젝트에서 사용하는 기술 socket.io, redis, sse 어떻게 적재적소로 사용 했는지에 대해
+
+## 추후 추가 할 기능들에 대한 서술
