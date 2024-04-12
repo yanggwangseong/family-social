@@ -33,7 +33,7 @@ export const axiosAPI = (() => {
 		(config: InternalAxiosRequestConfig) => {
 			// client side
 			if (typeof window !== 'undefined') {
-				const accessToken = getCookie(ACCESS_TOKEN_KEY as string);
+				const accessToken = getCookie(ACCESS_TOKEN_KEY!);
 
 				if (accessToken) {
 					config.headers.setAuthorization(`Bearer ${accessToken}`);
