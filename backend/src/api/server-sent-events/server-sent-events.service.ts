@@ -12,4 +12,18 @@ export class ServerSentEventsService {
 	emitNotificationChangeEvent(memberId: string) {
 		this.members$.next({ memberId });
 	}
+
+	SubscribeNotifications(memberId: string) {
+		return this.observer.pipe(
+			filter((member) => member.memberId === memberId),
+
+			map(() => {
+				return {
+					data: {
+						message: `새로운 알람이 도착했습니다`,
+					},
+				} as MessageEvent;
+			}),
+		);
+	}
 }
