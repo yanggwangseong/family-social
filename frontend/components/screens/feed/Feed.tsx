@@ -273,13 +273,14 @@ const Feed: FC = () => {
 								</div>
 							)}
 						</div>
-						<motion.div
+						<div
 							className={styles.mobile_create_feed_btn_container}
 							onClick={handleCreateFeed}
-							{...BUTTONGESTURE}
 						>
-							<PiPencilDuotone size={28} color="#0a0a0a" />
-						</motion.div>
+							<motion.div {...BUTTONGESTURE}>
+								<PiPencilDuotone size={28} color="#0a0a0a" />
+							</motion.div>
+						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
 					<RightSidebar />

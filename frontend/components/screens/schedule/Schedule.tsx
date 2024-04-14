@@ -11,7 +11,9 @@ import { useInfiniteQuery } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { PiPencilDuotone } from 'react-icons/pi';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
 
 const Schedule: FC = () => {
 	const {
@@ -120,7 +122,9 @@ const Schedule: FC = () => {
 							className={styles.mobile_create_schedule_btn_container}
 							href={`/schedules/create`}
 						>
-							<PiPencilDuotone size={28} color="#0a0a0a" />
+							<motion.div {...BUTTONGESTURE}>
+								<PiPencilDuotone size={28} color="#0a0a0a" />
+							</motion.div>
 						</Link>
 					</div>
 					{/* 오른쪽 사이드바 */}
