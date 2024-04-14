@@ -25,7 +25,8 @@ import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
 import { PiPencilDuotone } from 'react-icons/pi';
 import { useCreateFeed } from '@/hooks/useCreateFeed';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
 
 const Feed: FC = () => {
 	const router = useRouter();
@@ -272,12 +273,13 @@ const Feed: FC = () => {
 								</div>
 							)}
 						</div>
-						<div
+						<motion.div
 							className={styles.mobile_create_feed_btn_container}
 							onClick={handleCreateFeed}
+							{...BUTTONGESTURE}
 						>
 							<PiPencilDuotone size={28} color="#0a0a0a" />
-						</div>
+						</motion.div>
 					</div>
 					{/* 오른쪽 사이드바 */}
 					<RightSidebar />
