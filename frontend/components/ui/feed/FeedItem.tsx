@@ -21,11 +21,13 @@ import {
 } from 'react-icons/pi';
 import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '../swiper/SwiperContainer';
+import { Variants, motion } from 'framer-motion';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
 	onLike,
 	page,
+	index,
 	onRefetch,
 	onLikeComment,
 }) => {
@@ -78,7 +80,12 @@ const FeedItem: FC<FeedItemProps> = ({
 
 	return (
 		<>
-			<div>
+			<motion.div
+				initial={{ opacity: 0, y: 20 }} // 초기 상태
+				animate={{ opacity: 1, y: 0 }} // 애니메이션 후 상태
+				exit={{ opacity: 0, y: -20 }} // 사라질 때의 상태
+				transition={{ duration: 0.5, delay: index * 0.1 }} // 애니메이션 지속시간과 딜레이 설정
+			>
 				<div className={styles.feed_card_container} id={feed.feedId}>
 					<div className={styles.feed_card_top_container}>
 						{/* <Profile username="양광성"></Profile> */}
@@ -168,7 +175,7 @@ const FeedItem: FC<FeedItemProps> = ({
 						onLikeComment={handleLikeComment}
 					/>
 				)}
-			</div>
+			</motion.div>
 		</>
 	);
 };

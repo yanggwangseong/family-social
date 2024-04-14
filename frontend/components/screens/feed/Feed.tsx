@@ -25,6 +25,7 @@ import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
 import { PiPencilDuotone } from 'react-icons/pi';
 import { useCreateFeed } from '@/hooks/useCreateFeed';
+import { AnimatePresence } from 'framer-motion';
 
 const Feed: FC = () => {
 	const router = useRouter();
@@ -246,18 +247,19 @@ const Feed: FC = () => {
 								<div className={styles.feed_container}>
 									{isLoading && <Skeleton />}
 									{data?.pages.map((page, pageIndex) => (
-										<React.Fragment key={pageIndex}>
-											{page.list.map(feed => (
+										<AnimatePresence key={pageIndex}>
+											{page.list.map((feed, index) => (
 												<FeedItem
 													key={feed.feedId}
 													feed={feed}
+													index={index}
 													onLike={handleUpdateLike}
 													page={page.page}
 													onRefetch={handleRefetch}
 													onLikeComment={handleLikeComment}
 												/>
 											))}
-										</React.Fragment>
+										</AnimatePresence>
 									))}
 
 									{isRefetching && (
