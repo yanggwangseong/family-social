@@ -4,6 +4,10 @@
 		width: 300px;
 	}
 
+	@screen md {
+		width: 300px;
+	}
+
 	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
 
 	.sidebar_btn_container {
