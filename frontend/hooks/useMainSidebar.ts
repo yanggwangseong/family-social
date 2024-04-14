@@ -9,7 +9,9 @@ export const useMainSidebar = () => {
 	const [isMobile, setIsMobile] = useState(false);
 
 	const handleCloseMainSidebar = () => {
-		isLeftSidebarShowing && setIsLeftSidebarShowing(false);
+		if (isMobile) {
+			isLeftSidebarShowing && setIsLeftSidebarShowing(false);
+		}
 	};
 
 	useEffect(() => {
