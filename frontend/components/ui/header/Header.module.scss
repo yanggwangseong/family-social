@@ -14,7 +14,7 @@
 				@screen md {
 					@apply text-4xl;
 				}
-				@apply text-3xl font-bold;
+				@apply text-3xl font-bold cursor-pointer;
 			}
 
 			.search_field_wrap {

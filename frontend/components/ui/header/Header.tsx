@@ -39,25 +39,28 @@ const Header: FC = () => {
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
-				<div className={styles.header_left_container}>
-					<div className={styles.header_logo}>FAM</div>
+				<Link href={'/feeds'} className={styles.header_left_container}>
+					<motion.div {...BUTTONGESTURE} className={styles.header_logo}>
+						FAM
+					</motion.div>
 					<div className={styles.search_field_wrap}>
 						<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
 					</div>
-				</div>
+				</Link>
 				<div className={styles.right_icons_container}>
-					<div className={styles.mobile_icon_wrap}>
+					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiMagnifyingGlassDuotone className={styles.icon} size={22} />
-					</div>
-					<div
+					</motion.div>
+					<motion.div
+						{...BUTTONGESTURE}
 						className={styles.mobile_icon_wrap}
 						onClick={() => setIsLeftSidebarShowing(!isLeftSidebarShowing)}
 					>
 						<PiTextOutdentFill className={styles.icon} size={22} />
-					</div>
-					<div className={styles.mobile_icon_wrap}>
+					</motion.div>
+					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiTextIndentFill className={styles.icon} size={22} />
-					</div>
+					</motion.div>
 					<Link href={'/feeds'}>
 						<motion.div
 							{...BUTTONGESTURE}
