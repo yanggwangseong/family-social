@@ -16,6 +16,8 @@ import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 import { useRecoilState } from 'recoil';
 import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 import NotificationModal from '../modal/notification-modal/NotificationModal';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { motion } from 'framer-motion';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -57,14 +59,18 @@ const Header: FC = () => {
 						<PiTextIndentFill className={styles.icon} size={22} />
 					</div>
 					<Link href={'/feeds'}>
-						<div className={cn(styles.icon_wrap, styles.mobile_hide_icon)}>
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, styles.mobile_hide_icon)}
+						>
 							<PiHouseDuotone
 								className={styles.icon}
 								size={22}
 							></PiHouseDuotone>
-						</div>
+						</motion.div>
 					</Link>
-					<div
+					<motion.div
+						{...BUTTONGESTURE}
 						className={cn(styles.icon_wrap, {
 							[styles.active]: !!isOpenNotification,
 						})}
@@ -73,8 +79,9 @@ const Header: FC = () => {
 					>
 						<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
 						{isOpenNotification && <NotificationModal />}
-					</div>
-					<div
+					</motion.div>
+					<motion.div
+						{...BUTTONGESTURE}
 						className={cn(styles.icon_wrap, {
 							[styles.active]: !!isOpenMessage,
 						})}
@@ -86,7 +93,7 @@ const Header: FC = () => {
 							size={22}
 						></PiMessengerLogoDuotone>
 						{isOpenMessage && <ChatToggleModal />}
-					</div>
+					</motion.div>
 				</div>
 			</div>
 		</div>
