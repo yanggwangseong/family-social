@@ -166,7 +166,6 @@ const CommentForm: FC<CommentFormProps> = ({
 					</CustomButton>
 				</div>
 			</div>
-			<MentionFieldArea />
 		</form>
 	);
 };
