@@ -18,33 +18,35 @@ const GroupJoin: FC = () => {
 				<Header />
 				<div className={styles.contents_container}>
 					<GroupSidebar />
-					<div className={styles.main_contents_container}>
-						<div className={styles.top_title_container}>
-							<div className={styles.top_title}>가입한 모든 그룹</div>
-							<div className={styles.top_title_icon_container}>
-								<BsDot size={22} color="#707070"></BsDot>
+					<div className={styles.detail_container}>
+						<div className={styles.main_contents_container}>
+							<div className={styles.top_title_container}>
+								<div className={styles.top_title}>가입한 모든 그룹</div>
+								<div className={styles.top_title_icon_container}>
+									<BsDot size={22} color="#707070"></BsDot>
+								</div>
+								<div className={styles.top_title_count}>2개</div>
 							</div>
-							<div className={styles.top_title_count}>2개</div>
-						</div>
-						{/* 가입한 모든 그룹 */}
-						<div className="flex flex-wrap">
-							{fakeSigninGroup.map((item, index) => (
-								<GroupItemCard key={index} />
-							))}
-						</div>
-						<Line />
-						<div className={styles.top_title_container}>
-							<div className={styles.top_title}>관리 중인 그룹</div>
-							<div className={styles.top_title_icon_container}>
-								<BsDot size={22} color="#707070"></BsDot>
+							{/* 가입한 모든 그룹 */}
+							<div className="flex flex-wrap">
+								{fakeSigninGroup.map((item, index) => (
+									<GroupItemCard key={index} />
+								))}
 							</div>
-							<div className={styles.top_title_count}>2개</div>
-						</div>
-						{/* 관리중인 모든 그룹 */}
-						<div className="flex flex-wrap">
-							{fakeManageGroup.map((item, index) => (
-								<GroupItemCard key={index} />
-							))}
+							<Line />
+							<div className={styles.top_title_container}>
+								<div className={styles.top_title}>관리 중인 그룹</div>
+								<div className={styles.top_title_icon_container}>
+									<BsDot size={22} color="#707070"></BsDot>
+								</div>
+								<div className={styles.top_title_count}>2개</div>
+							</div>
+							{/* 관리중인 모든 그룹 */}
+							<div className="flex flex-wrap">
+								{fakeManageGroup.map((item, index) => (
+									<GroupItemCard key={index} />
+								))}
+							</div>
 						</div>
 					</div>
 				</div>

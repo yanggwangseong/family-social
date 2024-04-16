@@ -6,28 +6,34 @@
 
 	//컨텐츠
 	.contents_container {
-		@apply flex;
+		@apply flex relative;
 		height: calc(100vh - 80px);
+		overflow-y: auto;
 
-		.main_contents_container {
-			@screen md {
-				@apply mx-32 my-10;
-				width: 768px;
-			}
-			@apply w-full z-10 relative my-10 mx-4;
+		.detail_container {
+			@apply relative;
+			flex: 1;
 
-			.top_title_container {
-				@apply mb-10 flex;
-				.top_title {
-					@apply font-medium text-xl;
+			.main_contents_container {
+				@screen md {
+					@apply mx-32 my-10;
+					width: 768px;
 				}
+				@apply w-full z-10 relative my-10 mx-4;
 
-				.top_title_icon_container {
-					@apply flex justify-center items-center;
-				}
+				.top_title_container {
+					@apply mb-10 flex;
+					.top_title {
+						@apply font-medium text-xl;
+					}
 
-				.top_title_count {
-					@apply flex justify-center items-center text-xl text-customGray;
+					.top_title_icon_container {
+						@apply flex justify-center items-center;
+					}
+
+					.top_title_count {
+						@apply flex justify-center items-center text-xl text-customGray;
+					}
 				}
 			}
 		}

@@ -10,6 +10,8 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
 import Menu from '../menu/Menu';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
 
 const GroupSidebar: FC = () => {
 	const router = useRouter();
@@ -52,7 +54,10 @@ const GroupSidebar: FC = () => {
 						/>
 					</div>
 
-					<div className={styles.sidebar_btn_container}>
+					<motion.div
+						{...BUTTONGESTURE}
+						className={styles.sidebar_btn_container}
+					>
 						<CustomButton
 							type="button"
 							className="mt-0 md:mt-8 bg-customOrange text-customDark 
@@ -64,7 +69,7 @@ const GroupSidebar: FC = () => {
 						>
 							+ 새 그룹 만들기
 						</CustomButton>
-					</div>
+					</motion.div>
 				</div>
 			)}
 		</>
