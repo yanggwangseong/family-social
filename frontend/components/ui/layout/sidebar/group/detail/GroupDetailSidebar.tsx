@@ -114,7 +114,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 					</div>
 					<motion.div
 						className={styles.sidebar_home_btn_container}
-						onClick={() => setIsLeftSidebarShowing(false)}
+						onClick={handleCloseMainSidebar}
 						{...INLINEBUTTONGESTURE}
 					>
 						<div className={styles.home_menu_container}>
@@ -148,7 +148,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 								<Link
 									className={styles.menu_item_container}
 									href={`/groups/${groupId}/edit`}
-									onClick={() => setIsLeftSidebarShowing(false)}
+									onClick={handleCloseMainSidebar}
 								>
 									<div className={styles.icon_container}>
 										<PiGearSixDuotone size={22} />

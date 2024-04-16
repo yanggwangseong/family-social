@@ -69,7 +69,7 @@ const MainSidebar: FC = () => {
 									shadow-button-shadow
 									"
 								href={`/schedules/create`}
-								onClick={() => setIsLeftSidebarShowing(false)}
+								onClick={handleCloseMainSidebar}
 							>
 								+ 일정 만들기
 							</Link>
@@ -82,7 +82,7 @@ const MainSidebar: FC = () => {
 									w-full hover:bg-orange-500
 									"
 								onClick={() => {
-									setIsLeftSidebarShowing(false);
+									handleCloseMainSidebar();
 									handleCreateFeed();
 								}}
 							>
