@@ -4,6 +4,10 @@
 		width: 300px;
 	}
 
+	@screen md {
+		width: 300px;
+	}
+
 	@apply w-full pt-3 border-r border-solid border-customDark h-full fixed top-20 z-10 bg-basic;
 
 	.sidebar_member_container {

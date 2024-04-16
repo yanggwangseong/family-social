@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 
 const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
@@ -99,7 +101,9 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 							className={styles.toggle_menu_icon_container}
 							ref={settingModalWrapperRef}
 						>
-							<BsThreeDots size={22} onClick={handleCloseSettingModal} />
+							<motion.div {...BUTTONGESTURE}>
+								<BsThreeDots size={22} onClick={handleCloseSettingModal} />
+							</motion.div>
 							{isOpenSetting && (
 								<ToggleModal
 									list={GroupSettingMenu}
@@ -108,9 +112,10 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 							)}
 						</div>
 					</div>
-					<div
+					<motion.div
 						className={styles.sidebar_home_btn_container}
 						onClick={() => setIsLeftSidebarShowing(false)}
+						{...INLINEBUTTONGESTURE}
 					>
 						<div className={styles.home_menu_container}>
 							<div className={styles.icon_container}>
@@ -120,7 +125,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 								<div>커뮤니티 홈</div>
 							</div>
 						</div>
-					</div>
+					</motion.div>
 
 					<Line />
 
@@ -139,7 +144,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 							</div>
 						</div>
 						{isToggleSetting && (
-							<>
+							<motion.div {...INLINEBUTTONGESTURE}>
 								<Link
 									className={styles.menu_item_container}
 									href={`/groups/${groupId}/edit`}
@@ -155,7 +160,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 										</div>
 									</div>
 								</Link>
-							</>
+							</motion.div>
 						)}
 					</div>
 				</div>
