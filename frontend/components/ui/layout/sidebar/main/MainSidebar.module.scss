@@ -10,7 +10,11 @@
 
 	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
 
+	.contents_wrap {
+		@apply flex flex-col justify-around h-[60vh];
+	}
+
 	.sidebar_btn_container {
-		@apply mt-16;
+		@apply mt-auto;
 	}
 }

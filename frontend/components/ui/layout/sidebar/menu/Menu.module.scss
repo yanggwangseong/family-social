@@ -1,38 +1,49 @@
 .sidebar_menu_container {
 	@screen md {
 		&:hover {
-			::after {
-				@apply bg-customOrange;
-				content: '';
-				position: absolute;
-				top: 50%;
-				left: 254px;
-				transform: translateY(-50%); /* 세로 가운데 정렬을 위한 변환 */
-				width: 4px;
-				height: 50%;
-			}
+			// ::after {
+			// 	@apply bg-customOrange;
+			// 	content: '';
+			// 	position: absolute;
+			// 	top: 50%;
+			// 	left: 254px;
+			// 	transform: translateY(-50%); /* 세로 가운데 정렬을 위한 변환 */
+			// 	width: 4px;
+			// 	height: 50%;
+			// }
 			> svg {
 				@apply fill-customOrange;
 			}
 		}
 	}
 
-	@screen md {
-		@apply mt-11;
-	}
-
-	@apply flex mt-6 py-4 cursor-pointer relative;
+	@apply flex cursor-pointer relative;
 
 	&.active {
-		> svg {
-			@apply fill-customOrange;
+		.menu_container {
+			> svg {
+				@apply fill-customOrange;
+			}
 		}
 		.sidebar_menu_text {
 			@apply text-customOrange;
 		}
 	}
 
-	.sidebar_menu_text {
-		@apply font-medium text-lg ml-10 flex justify-center items-center;
+	.menu_container {
+		@apply flex cursor-pointer relative w-full;
+		&:hover {
+			> svg {
+				@apply fill-customOrange;
+			}
+
+			.icon {
+				@apply cursor-pointer;
+			}
+		}
+
+		.sidebar_menu_text {
+			@apply font-medium text-lg ml-10 flex justify-center items-center;
+		}
 	}
 }

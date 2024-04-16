@@ -15,6 +15,8 @@ import {
 } from 'react-icons/pi';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
 import { useCreateFeed } from '@/hooks/useCreateFeed';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
@@ -34,25 +36,30 @@ const MainSidebar: FC = () => {
 			{isLeftSidebarShowing && (
 				<div className={styles.sidebar_container}>
 					{/* 사이드 메뉴 */}
-					<Menu
-						link="/feeds"
-						Icon={PiArticleDuotone}
-						menu="피드"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/schedules"
-						Icon={PiCalendarCheckDuotone}
-						menu="여행 일정"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/accounts"
-						Icon={PiUserCircleGearDuotone}
-						menu="계정"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<div className={styles.sidebar_btn_container}>
+					<div className={styles.contents_wrap}>
+						<Menu
+							link="/feeds"
+							Icon={PiArticleDuotone}
+							menu="피드"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/schedules"
+							Icon={PiCalendarCheckDuotone}
+							menu="여행 일정"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/accounts"
+							Icon={PiUserCircleGearDuotone}
+							menu="계정"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+					</div>
+					<motion.div
+						{...BUTTONGESTURE}
+						className={styles.sidebar_btn_container}
+					>
 						{isSchedulesRoute ? (
 							<Link
 								className="mt-8 bg-customOrange text-customDark 
@@ -82,7 +89,7 @@ const MainSidebar: FC = () => {
 								+ 피드
 							</CustomButton>
 						)}
-					</div>
+					</motion.div>
 				</div>
 			)}
 		</>

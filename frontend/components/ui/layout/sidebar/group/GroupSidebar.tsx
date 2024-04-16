@@ -25,30 +25,32 @@ const GroupSidebar: FC = () => {
 				<div className={styles.sidebar_container}>
 					<div className={styles.sidebar_title}>그룹</div>
 					{/* 사이드 메뉴 */}
-					<Menu
-						link="/groups/feeds"
-						Icon={PiUserRectangleDuotone}
-						menu="내 피드"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/groups/joins"
-						Icon={PiUsersThreeDuotone}
-						menu="내 그룹"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/groups/requests"
-						Icon={PiUserPlusDuotone}
-						menu="그룹 요청"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/groups/discover"
-						Icon={PiCompassDuotone}
-						menu="찾아보기"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
+					<div className={styles.contents_wrap}>
+						<Menu
+							link="/groups/feeds"
+							Icon={PiUserRectangleDuotone}
+							menu="내 피드"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/groups/joins"
+							Icon={PiUsersThreeDuotone}
+							menu="내 그룹"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/groups/requests"
+							Icon={PiUserPlusDuotone}
+							menu="그룹 요청"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/groups/discover"
+							Icon={PiCompassDuotone}
+							menu="찾아보기"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+					</div>
 
 					<div className={styles.sidebar_btn_container}>
 						<CustomButton
