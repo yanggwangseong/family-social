@@ -8,7 +8,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 const ScheduleDetailList: FC<{
 	list: TourismPeriodResponse;
 	index: number;
-}> = ({ list, index }) => {
+	isSelectedPeriod: string;
+}> = ({ list, index, isSelectedPeriod }) => {
 	return (
 		<div>
 			<div className={styles.list_title_container}>
@@ -19,6 +20,7 @@ const ScheduleDetailList: FC<{
 				</div>
 			</div>
 			<motion.div
+				key={isSelectedPeriod}
 				initial="hidden"
 				animate="visible"
 				exit={{ opacity: 0, transition: { duration: 1 } }}
