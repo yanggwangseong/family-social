@@ -113,36 +113,40 @@ const SignUp: FC = () => {
 								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
 							</motion.div>
 							<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-								<div>Email</div>
-								<Field
-									{...register('email', {
-										required: '이메일 입력은 필수입니다!',
-										pattern: {
-											value: validEmail,
-											message: '이메일 형식을 확인 해주세요!',
-										},
-									})}
-									placeholder="이메일을 입력해주세요!"
-									error={errors.email}
-								/>
-								<div className={styles.form_label}>비밀번호</div>
-								<Field
-									{...register('password', {
-										required: '비밀번호 입력은 필수입니다!',
-										pattern: {
-											value: validPassword,
-											message: '영문,숫자,특수문자를 포함하여 작성해주세요',
-										},
-										minLength: {
-											value: 10,
-											message: '최소 비밀번호는 10자 이상입니다.',
-										},
-									})}
-									placeholder="비밀번호를 입력해주세요!"
-									error={errors.password}
-									type={'password'}
-									autoComplete="off"
-								/>
+								<div>
+									<div className={styles.form_label}>Email</div>
+									<Field
+										{...register('email', {
+											required: '이메일 입력은 필수입니다!',
+											pattern: {
+												value: validEmail,
+												message: '이메일 형식을 확인 해주세요!',
+											},
+										})}
+										placeholder="이메일을 입력해주세요!"
+										error={errors.email}
+									/>
+								</div>
+								<div>
+									<div className={styles.form_label}>비밀번호</div>
+									<Field
+										{...register('password', {
+											required: '비밀번호 입력은 필수입니다!',
+											pattern: {
+												value: validPassword,
+												message: '영문,숫자,특수문자를 포함하여 작성해주세요',
+											},
+											minLength: {
+												value: 10,
+												message: '최소 비밀번호는 10자 이상입니다.',
+											},
+										})}
+										placeholder="비밀번호를 입력해주세요!"
+										error={errors.password}
+										type={'password'}
+										autoComplete="off"
+									/>
+								</div>
 								<div className={styles.form_label}>비밀번호 확인</div>
 								<Field
 									{...register('passwordCompare', {
