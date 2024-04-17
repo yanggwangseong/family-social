@@ -7,7 +7,7 @@
 	//컨텐츠
 	.contents_container {
 		@apply flex relative;
-		min-height: calc(100vh - 80px);
+		height: calc(100vh - 80px);
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.detail_container {
