@@ -12,6 +12,18 @@ import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+
+const visible = {
+	opacity: 1,
+	y: 0,
+	transition: { duration: 0.5 },
+};
+
+const itemVariants = {
+	hidden: { opacity: 0, y: 10 },
+	visible,
+};
 
 const SignIn: FC = () => {
 	const {
@@ -58,11 +70,30 @@ const SignIn: FC = () => {
 			<div className={styles.container}>
 				<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 					<div className={styles.contents_card}>
-						<div className={styles.contents_wrap}>
-							<div className={styles.signin__header_title}>로그인</div>
-							<div className={styles.signin__header_subtitle}>
+						<motion.div
+							className={styles.contents_wrap}
+							initial="hidden"
+							animate="visible"
+							exit={{ opacity: 0, transition: { duration: 1 } }}
+							variants={{
+								visible: { transition: { staggerChildren: 0.3 } },
+							}}
+						>
+							<motion.div
+								className={styles.signin__header_title}
+								variants={{
+									hidden: { opacity: 0, y: -20 },
+									visible,
+								}}
+							>
+								로그인
+							</motion.div>
+							<motion.div
+								className={styles.signin__header_subtitle}
+								variants={itemVariants}
+							>
 								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
-							</div>
+							</motion.div>
 							<div className={styles.label_field}>이메일</div>
 							<Field
 								{...register('email', {
@@ -93,7 +124,7 @@ const SignIn: FC = () => {
 								type={'password'}
 								autoComplete="off"
 							/>
-						</div>
+						</motion.div>
 						<div className={styles.footer_wrap}>
 							<CustomButton
 								type="submit"
