@@ -46,6 +46,10 @@
 					//top_btn
 					.top_btn_container {
 						@apply ml-auto flex flex-row gap-2;
+
+						.log_out_text {
+							@apply w-full text-sm;
+						}
 					}
 				}
 

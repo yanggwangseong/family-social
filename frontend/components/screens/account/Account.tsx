@@ -105,7 +105,7 @@ const Account: FC<{ email: string }> = ({ email }) => {
 													onClick={handleLogOut}
 												>
 													<IoLogOutOutline size={24} />
-													로그아웃
+													<div className={styles.log_out_text}>로그아웃</div>
 												</CustomButton>
 											</div>
 										)}
