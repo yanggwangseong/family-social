@@ -76,7 +76,7 @@ const SignIn: FC = () => {
 							animate="visible"
 							exit={{ opacity: 0, transition: { duration: 1 } }}
 							variants={{
-								visible: { transition: { staggerChildren: 0.3 } },
+								visible: { transition: { staggerChildren: 0.2 } },
 							}}
 						>
 							<motion.div

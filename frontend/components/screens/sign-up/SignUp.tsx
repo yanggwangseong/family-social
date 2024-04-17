@@ -97,12 +97,15 @@ const SignUp: FC = () => {
 							animate="visible"
 							exit={{ opacity: 0, transition: { duration: 1 } }}
 							variants={{
-								visible: { transition: { staggerChildren: 0.3 } },
+								visible: { transition: { staggerChildren: 0.2 } },
 							}}
 						>
 							<motion.div
 								className={styles.signin__header_title}
-								variants={itemVariants}
+								variants={{
+									hidden: { opacity: 0, y: -20 },
+									visible,
+								}}
 							>
 								회원가입
 							</motion.div>
@@ -113,7 +116,7 @@ const SignUp: FC = () => {
 								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
 							</motion.div>
 							<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-								<div>
+								<motion.div variants={itemVariants}>
 									<div className={styles.form_label}>Email</div>
 									<Field
 										{...register('email', {
@@ -126,8 +129,8 @@ const SignUp: FC = () => {
 										placeholder="이메일을 입력해주세요!"
 										error={errors.email}
 									/>
-								</div>
-								<div>
+								</motion.div>
+								<motion.div variants={itemVariants}>
 									<div className={styles.form_label}>비밀번호</div>
 									<Field
 										{...register('password', {
@@ -146,48 +149,54 @@ const SignUp: FC = () => {
 										type={'password'}
 										autoComplete="off"
 									/>
-								</div>
-								<div className={styles.form_label}>비밀번호 확인</div>
-								<Field
-									{...register('passwordCompare', {
-										required: '비밀번호 확인은 필수입니다!',
-										validate: value =>
-											value === password || '비밀번호와 일치하지 않습니다', // 비밀번호 확인과 일치하는지 검증
-									})}
-									placeholder="비밀번호 확인을 입력 해주세요!"
-									error={errors.passwordCompare}
-									type={'password'}
-									autoComplete="off"
-								/>
-								<div className={styles.form_label}>이름</div>
-								<Field
-									{...register('username', {
-										required: '이름은 필수입니다!',
-										minLength: {
-											value: 2,
-											message: '최소 이름은 2자 이상입니다.',
-										},
-									})}
-									placeholder="이름을 입력 해주세요!"
-									error={errors.username}
-								/>
-								<div className={styles.form_label}>전화번호</div>
-								<Field
-									{...register('phoneNumber', {
-										required: '전화번호는 필수입니다',
-										minLength: {
-											value: 11,
-											message: '전화번호는 11자리 입니다.',
-										},
-										pattern: {
-											value: validPhoneNumber,
-											message: '휴대폰번호 형식을 확인해주세요!',
-										},
-									})}
-									maxLength={11}
-									placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
-									error={errors.phoneNumber}
-								/>
+								</motion.div>
+								<motion.div variants={itemVariants}>
+									<div className={styles.form_label}>비밀번호 확인</div>
+									<Field
+										{...register('passwordCompare', {
+											required: '비밀번호 확인은 필수입니다!',
+											validate: value =>
+												value === password || '비밀번호와 일치하지 않습니다', // 비밀번호 확인과 일치하는지 검증
+										})}
+										placeholder="비밀번호 확인을 입력 해주세요!"
+										error={errors.passwordCompare}
+										type={'password'}
+										autoComplete="off"
+									/>
+								</motion.div>
+								<motion.div variants={itemVariants}>
+									<div className={styles.form_label}>이름</div>
+									<Field
+										{...register('username', {
+											required: '이름은 필수입니다!',
+											minLength: {
+												value: 2,
+												message: '최소 이름은 2자 이상입니다.',
+											},
+										})}
+										placeholder="이름을 입력 해주세요!"
+										error={errors.username}
+									/>
+								</motion.div>
+								<motion.div variants={itemVariants}>
+									<div className={styles.form_label}>전화번호</div>
+									<Field
+										{...register('phoneNumber', {
+											required: '전화번호는 필수입니다',
+											minLength: {
+												value: 11,
+												message: '전화번호는 11자리 입니다.',
+											},
+											pattern: {
+												value: validPhoneNumber,
+												message: '휴대폰번호 형식을 확인해주세요!',
+											},
+										})}
+										maxLength={11}
+										placeholder="휴대폰 번호를 '-'를 제외하고 입력 해주세요."
+										error={errors.phoneNumber}
+									/>
+								</motion.div>
 
 								<CustomButton
 									type="submit"
