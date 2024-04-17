@@ -6,6 +6,17 @@ import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
 import { TourismResponse } from '@/shared/interfaces/schedule.interface';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
+import { motion } from 'framer-motion';
+import { easeOutAnimation } from '@/utils/animation/ease-out';
+const visible = {
+	opacity: 1,
+	y: 0,
+	transition: { duration: 0.5 },
+};
+const itemVariants = {
+	hidden: { opacity: 0, y: 10 },
+	visible,
+};
 
 const ScheduleDetailTourismItem: FC<{
 	index: number;
@@ -17,7 +28,7 @@ const ScheduleDetailTourismItem: FC<{
 	);
 
 	return (
-		<div className={styles.container}>
+		<motion.div variants={itemVariants} className={styles.container}>
 			<div className={styles.top_container}>
 				<div className={styles.tourism_index}>{index}</div>
 			</div>
@@ -43,7 +54,7 @@ const ScheduleDetailTourismItem: FC<{
 				</div>
 			</div>
 			{lastItemNumber === index && <div className={styles.last_item}></div>}
-		</div>
+		</motion.div>
 	);
 };
 
