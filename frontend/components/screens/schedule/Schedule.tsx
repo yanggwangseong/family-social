@@ -30,6 +30,7 @@ const Schedule: FC = () => {
 			await ScheduleService.getScheduleList(
 				pageParam,
 				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+				4,
 			),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
