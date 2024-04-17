@@ -15,8 +15,13 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import cn from 'classnames';
 import { LayerMode } from 'types';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
+import { easeOutAnimation } from '@/utils/animation/ease-out';
 
-const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
+const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
+	schedule,
+	index,
+}) => {
 	const router = useRouter();
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
@@ -52,7 +57,8 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 	};
 
 	return (
-		<div
+		<motion.div
+			{...easeOutAnimation(index)}
 			className={styles.schedule_card_container}
 			id={schedule.id}
 			onClick={() => handleChangePageScheduleDetail(schedule.id)}
@@ -126,7 +132,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse }> = ({ schedule }) => {
 					'yyyy-MM-dd',
 				)}`}</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

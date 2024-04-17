@@ -102,11 +102,15 @@ const Schedule: FC = () => {
 								{isLoading && <Skeleton />}
 
 								{data?.pages.map((page, pageIndex) => (
-									<React.Fragment key={pageIndex}>
-										{page.list.map(schedule => (
-											<ScheduleItem key={schedule.id} schedule={schedule} />
+									<AnimatePresence key={pageIndex}>
+										{page.list.map((schedule, index) => (
+											<ScheduleItem
+												key={schedule.id}
+												index={index}
+												schedule={schedule}
+											/>
 										))}
-									</React.Fragment>
+									</AnimatePresence>
 								))}
 
 								{isRefetching && (
