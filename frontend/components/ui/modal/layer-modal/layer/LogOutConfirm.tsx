@@ -8,6 +8,8 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 
 const LogOutConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -44,7 +46,7 @@ const LogOutConfirm: FC = () => {
 		logoutSync();
 	};
 	return (
-		<div>
+		<motion.div variants={toggleVariant}>
 			<div className="my-10 text-sm text-customGray">
 				정말 로그아웃 하시겠습니까?
 			</div>
@@ -69,7 +71,7 @@ const LogOutConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
