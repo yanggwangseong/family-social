@@ -36,6 +36,7 @@ import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-prof
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 import { motion } from 'framer-motion';
 import { toggleVariant } from '@/utils/animation/toggle-variant';
+import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -247,10 +248,7 @@ const CreateFeed: FC = () => {
 	const dragRef = useRef<HTMLLabelElement | null>(null);
 
 	return (
-		<motion.div
-			className={styles.create_feed_container}
-			variants={toggleVariant}
-		>
+		<LayerModalVariantWrapper className={styles.create_feed_container}>
 			{isFeedPage === 'selectGroup' && (
 				<div>
 					<div className={styles.selectedGroup_title}>그룹선택</div>
@@ -457,7 +455,7 @@ const CreateFeed: FC = () => {
 					</form>
 				</div>
 			)}
-		</motion.div>
+		</LayerModalVariantWrapper>
 	);
 };
 

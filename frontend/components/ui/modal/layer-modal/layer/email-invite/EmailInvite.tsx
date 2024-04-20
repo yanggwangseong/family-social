@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
 import { motion } from 'framer-motion';
 import { toggleVariant } from '@/utils/animation/toggle-variant';
+import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const EmailInvite: FC = () => {
 	const [isInvitedEmails, setIsInvitedEmails] = useState<string[]>([]);
@@ -53,7 +54,7 @@ const EmailInvite: FC = () => {
 	};
 
 	return (
-		<motion.div variants={toggleVariant}>
+		<LayerModalVariantWrapper>
 			<div className={styles.container}>
 				<div className={styles.section_title}>이메일 주소 추가</div>
 				<div className={styles.section_sub_title}>
@@ -138,7 +139,7 @@ const EmailInvite: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</motion.div>
+		</LayerModalVariantWrapper>
 	);
 };
 

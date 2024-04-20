@@ -10,6 +10,7 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import React, { FC } from 'react';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
+import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const GroupDeleteConfirm: FC = () => {
 	const { groupId } = router.query as { groupId: string };
@@ -44,7 +45,7 @@ const GroupDeleteConfirm: FC = () => {
 		deleteGroupSync();
 	};
 	return (
-		<motion.div variants={toggleVariant}>
+		<LayerModalVariantWrapper>
 			<div className="my-10 text-sm text-customGray">
 				정말 그룹을 삭제하시겠습니까?
 			</div>
@@ -69,7 +70,7 @@ const GroupDeleteConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</motion.div>
+		</LayerModalVariantWrapper>
 	);
 };
 

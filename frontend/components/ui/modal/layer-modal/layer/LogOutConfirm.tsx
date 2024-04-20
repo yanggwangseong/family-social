@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { toggleVariant } from '@/utils/animation/toggle-variant';
+import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const LogOutConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -46,7 +47,7 @@ const LogOutConfirm: FC = () => {
 		logoutSync();
 	};
 	return (
-		<motion.div variants={toggleVariant}>
+		<LayerModalVariantWrapper>
 			<div className="my-10 text-sm text-customGray">
 				정말 로그아웃 하시겠습니까?
 			</div>
@@ -71,7 +72,7 @@ const LogOutConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</motion.div>
+		</LayerModalVariantWrapper>
 	);
 };
 

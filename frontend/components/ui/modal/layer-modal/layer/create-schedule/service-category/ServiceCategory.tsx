@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
 import cn from 'classnames';
 import { modalAtom } from '@/atoms/modalAtom';
+import LayerModalVariantWrapper from '../../LayerModalVariantWrapper';
 
 const ServiceCategory: FC = () => {
 	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
@@ -113,7 +114,7 @@ const ServiceCategory: FC = () => {
 	};
 
 	return (
-		<div className={styles.container}>
+		<LayerModalVariantWrapper className={styles.container}>
 			<div className={styles.wrap}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.service_category_container}>
@@ -193,7 +194,7 @@ const ServiceCategory: FC = () => {
 					</CustomButton>
 				</div>
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 
