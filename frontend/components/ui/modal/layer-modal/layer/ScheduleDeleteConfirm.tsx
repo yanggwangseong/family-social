@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useMutation } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 
 const ScheduleDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -54,7 +56,7 @@ const ScheduleDeleteConfirm: FC = () => {
 	};
 
 	return (
-		<div>
+		<motion.div variants={toggleVariant}>
 			<div className="my-10 text-sm text-customGray">
 				정말 해당 여행일정을 삭제하시겠습니까?
 			</div>
@@ -79,7 +81,7 @@ const ScheduleDeleteConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
