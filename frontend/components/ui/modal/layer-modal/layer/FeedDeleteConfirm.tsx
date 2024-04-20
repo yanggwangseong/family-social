@@ -8,6 +8,8 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useMutation } from 'react-query';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { FeedService } from '@/services/feed/feed.service';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 
 const FeedDeleteConfirm: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -50,7 +52,7 @@ const FeedDeleteConfirm: FC = () => {
 	};
 
 	return (
-		<div>
+		<motion.div variants={toggleVariant}>
 			<div className="my-10 text-sm text-customGray">
 				정말 해당 피드를 삭제하시겠습니까?
 			</div>
@@ -75,7 +77,7 @@ const FeedDeleteConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
