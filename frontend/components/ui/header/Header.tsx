@@ -61,7 +61,7 @@ const Header: FC = () => {
 					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiTextIndentFill className={styles.icon} size={22} />
 					</motion.div>
-					<Link href={'/feeds'}>
+					<Link className={styles.icon_parent} href={'/feeds'}>
 						<motion.div
 							{...BUTTONGESTURE}
 							className={cn(styles.icon_wrap, styles.mobile_hide_icon)}
@@ -73,7 +73,7 @@ const Header: FC = () => {
 						</motion.div>
 					</Link>
 					<motion.div
-						className="relative"
+						className={styles.icon_parent}
 						initial={false}
 						animate={isOpenNotification ? 'open' : 'closed'}
 						ref={notificationModalWrapperRef}
@@ -91,18 +91,24 @@ const Header: FC = () => {
 						<NotificationModal isOpenNotification={isOpenNotification} />
 					</motion.div>
 					<motion.div
-						{...BUTTONGESTURE}
-						className={cn(styles.icon_wrap, {
-							[styles.active]: !!isOpenMessage,
-						})}
+						className={styles.icon_parent}
+						initial={false}
+						animate={isOpenMessage ? 'open' : 'closed'}
 						ref={messageModalWrapperRef}
 						onClick={handleCloseMessageModal}
 					>
-						<PiMessengerLogoDuotone
-							className={styles.icon}
-							size={22}
-						></PiMessengerLogoDuotone>
-						{isOpenMessage && <ChatToggleModal />}
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, {
+								[styles.active]: !!isOpenMessage,
+							})}
+						>
+							<PiMessengerLogoDuotone
+								className={styles.icon}
+								size={22}
+							></PiMessengerLogoDuotone>
+						</motion.div>
+						<ChatToggleModal isOpenMessage={isOpenMessage} />
 					</motion.div>
 				</div>
 			</div>
