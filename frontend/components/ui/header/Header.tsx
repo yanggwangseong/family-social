@@ -73,15 +73,22 @@ const Header: FC = () => {
 						</motion.div>
 					</Link>
 					<motion.div
-						{...BUTTONGESTURE}
-						className={cn(styles.icon_wrap, {
-							[styles.active]: !!isOpenNotification,
-						})}
+						className="relative"
+						initial={false}
+						animate={isOpenNotification ? 'open' : 'closed'}
 						ref={notificationModalWrapperRef}
 						onClick={handleCloseNotificationModal}
 					>
-						<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
-						{isOpenNotification && <NotificationModal />}
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, {
+								[styles.active]: !!isOpenNotification,
+							})}
+						>
+							<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
+						</motion.div>
+
+						<NotificationModal isOpenNotification={isOpenNotification} />
 					</motion.div>
 					<motion.div
 						{...BUTTONGESTURE}
