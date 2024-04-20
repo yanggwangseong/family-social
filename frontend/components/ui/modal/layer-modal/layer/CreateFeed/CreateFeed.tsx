@@ -34,6 +34,8 @@ import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
 import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -245,7 +247,10 @@ const CreateFeed: FC = () => {
 	const dragRef = useRef<HTMLLabelElement | null>(null);
 
 	return (
-		<div className={styles.create_feed_container}>
+		<motion.div
+			className={styles.create_feed_container}
+			variants={toggleVariant}
+		>
 			{isFeedPage === 'selectGroup' && (
 				<div>
 					<div className={styles.selectedGroup_title}>그룹선택</div>
@@ -452,7 +457,7 @@ const CreateFeed: FC = () => {
 					</form>
 				</div>
 			)}
-		</div>
+		</motion.div>
 	);
 };
 
