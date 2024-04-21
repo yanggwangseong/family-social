@@ -28,5 +28,6 @@ export const useMainSidebar = () => {
 		isLeftSidebarShowing,
 		setIsLeftSidebarShowing,
 		handleCloseMainSidebar,
+		isMobile,
 	};
 };
