@@ -11,8 +11,13 @@ import {
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
 import { createMessageModalAtom } from '@/atoms/createMessageModalAtom';
+import { motion } from 'framer-motion';
+import {
+	toggleVariant,
+	toggleWrapperVariant,
+} from '@/utils/animation/toggle-variant';
 
-const ChatToggleModal: FC = () => {
+const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
@@ -41,8 +46,12 @@ const ChatToggleModal: FC = () => {
 	if (!data) return null;
 
 	return (
-		<div className={styles.container}>
-			<div className={styles.top_wrap}>
+		<motion.div
+			className={styles.container}
+			variants={toggleWrapperVariant}
+			style={{ pointerEvents: isOpenMessage ? 'auto' : 'none' }}
+		>
+			<motion.div className={styles.top_wrap} variants={toggleVariant}>
 				<div className={styles.title}>채팅</div>
 				<div
 					className={styles.create_chat_icon_container}
@@ -50,9 +59,9 @@ const ChatToggleModal: FC = () => {
 				>
 					<PiNotePencilDuotone size={24} />
 				</div>
-			</div>
+			</motion.div>
 
-			<div className={styles.item_container}>
+			<motion.div className={styles.item_container} variants={toggleVariant}>
 				{data.list.map((item, index) => (
 					<div
 						key={index}
@@ -62,8 +71,8 @@ const ChatToggleModal: FC = () => {
 						<Profile chat={item}></Profile>
 					</div>
 				))}
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 };
 

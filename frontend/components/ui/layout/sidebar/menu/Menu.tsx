@@ -4,6 +4,8 @@ import { MenuProps } from './menu.interface';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { motion } from 'framer-motion';
 
 const Menu: FC<MenuProps> = ({ link, Icon, menu, handleCloseMainSidebar }) => {
 	const router = useRouter();
@@ -21,8 +23,10 @@ const Menu: FC<MenuProps> = ({ link, Icon, menu, handleCloseMainSidebar }) => {
 			href={link}
 			onClick={onCloseMainSidebar}
 		>
-			<Icon size={40}></Icon>
-			<div className={styles.sidebar_menu_text}>{menu}</div>
+			<motion.div {...BUTTONGESTURE} className={styles.menu_container}>
+				<Icon size={40}></Icon>
+				<div className={styles.sidebar_menu_text}>{menu}</div>
+			</motion.div>
 		</Link>
 	);
 };

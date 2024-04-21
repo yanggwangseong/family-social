@@ -13,6 +13,7 @@ import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useMutation } from 'react-query';
 import { modalAtom } from '@/atoms/modalAtom';
 import { useRecoilState } from 'recoil';
+import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const ScheduleThumbnailImage: FC = () => {
 	const { isFiles, handleUploadImage, uploadImage } = useUploadImage();
@@ -66,7 +67,7 @@ const ScheduleThumbnailImage: FC = () => {
 	};
 
 	return (
-		<div className={styles.container}>
+		<LayerModalVariantWrapper className={styles.container}>
 			<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.profile_img_container}>
@@ -97,7 +98,7 @@ const ScheduleThumbnailImage: FC = () => {
 					수정하기
 				</CustomButton>
 			</form>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

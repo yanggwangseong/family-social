@@ -5,12 +5,25 @@
 	}
 
 	@screen md {
+		@apply top-20;
 		width: 300px;
 	}
 
-	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
+	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-0 z-50 fixed bg-basic block;
+
+	// mobile_close
+	.mobile_close_btn {
+		@screen md {
+			@apply hidden;
+		}
+		@apply justify-end text-4xl cursor-pointer flex;
+	}
+
+	.contents_wrap {
+		@apply flex flex-col justify-around h-[60vh];
+	}
 
 	.sidebar_btn_container {
-		@apply mt-16;
+		@apply mt-auto;
 	}
 }

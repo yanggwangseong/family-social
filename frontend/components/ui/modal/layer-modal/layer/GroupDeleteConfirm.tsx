@@ -1,13 +1,16 @@
 import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { GroupService } from '@/services/group/group.service';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import router from 'next/router';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import React, { FC } from 'react';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
+import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const GroupDeleteConfirm: FC = () => {
 	const { groupId } = router.query as { groupId: string };
@@ -42,7 +45,7 @@ const GroupDeleteConfirm: FC = () => {
 		deleteGroupSync();
 	};
 	return (
-		<div>
+		<LayerModalVariantWrapper>
 			<div className="my-10 text-sm text-customGray">
 				정말 그룹을 삭제하시겠습니까?
 			</div>
@@ -67,7 +70,7 @@ const GroupDeleteConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

@@ -3,11 +3,13 @@ import styles from './DetailList.module.scss';
 import { TourismPeriodResponse } from '@/shared/interfaces/schedule.interface';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import ScheduleDetailTourismItem from './tourism-item/DetailTourismItem';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const ScheduleDetailList: FC<{
 	list: TourismPeriodResponse;
 	index: number;
-}> = ({ list, index }) => {
+	isSelectedPeriod: string;
+}> = ({ list, index, isSelectedPeriod }) => {
 	return (
 		<div>
 			<div className={styles.list_title_container}>
@@ -17,14 +19,24 @@ const ScheduleDetailList: FC<{
 					{TranslateDateFormat(new Date(list.period), 'yyyy-MM-dd (eee)')}
 				</div>
 			</div>
-			{list.tourisms.map((tour, index) => (
-				<ScheduleDetailTourismItem
-					key={index}
-					index={index + 1}
-					lastItemNumber={list.tourisms.length}
-					tourism={tour}
-				></ScheduleDetailTourismItem>
-			))}
+			<motion.div
+				key={isSelectedPeriod}
+				initial="hidden"
+				animate="visible"
+				exit={{ opacity: 0, transition: { duration: 1 } }}
+				variants={{
+					visible: { transition: { staggerChildren: 0.1 } },
+				}}
+			>
+				{list.tourisms.map((tour, index) => (
+					<ScheduleDetailTourismItem
+						key={index}
+						index={index + 1}
+						lastItemNumber={list.tourisms.length}
+						tourism={tour}
+					></ScheduleDetailTourismItem>
+				))}
+			</motion.div>
 		</div>
 	);
 };

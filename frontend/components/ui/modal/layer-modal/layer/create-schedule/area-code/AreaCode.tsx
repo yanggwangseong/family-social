@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { areaCodeAtom } from '@/atoms/areaCodeAtom';
 import cn from 'classnames';
 import { modalAtom } from '@/atoms/modalAtom';
+import LayerModalVariantWrapper from '../../LayerModalVariantWrapper';
 
 const AreaCode: FC = () => {
 	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
@@ -49,7 +50,7 @@ const AreaCode: FC = () => {
 	if (!data) return <div>loading</div>;
 
 	return (
-		<div className={styles.container}>
+		<LayerModalVariantWrapper className={styles.container}>
 			<div className={styles.wrap}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.area_code_container}>
@@ -112,7 +113,7 @@ const AreaCode: FC = () => {
 					</CustomButton>
 				</div>
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

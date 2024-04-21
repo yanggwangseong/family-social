@@ -16,6 +16,8 @@ import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 import { useRecoilState } from 'recoil';
 import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 import NotificationModal from '../modal/notification-modal/NotificationModal';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { motion } from 'framer-motion';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -37,56 +39,77 @@ const Header: FC = () => {
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
-				<div className={styles.header_left_container}>
-					<div className={styles.header_logo}>FAM</div>
+				<Link href={'/feeds'} className={styles.header_left_container}>
+					<motion.div {...BUTTONGESTURE} className={styles.header_logo}>
+						FAM
+					</motion.div>
 					<div className={styles.search_field_wrap}>
 						<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
 					</div>
-				</div>
+				</Link>
 				<div className={styles.right_icons_container}>
-					<div className={styles.mobile_icon_wrap}>
+					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiMagnifyingGlassDuotone className={styles.icon} size={22} />
-					</div>
-					<div
+					</motion.div>
+					<motion.div
+						{...BUTTONGESTURE}
 						className={styles.mobile_icon_wrap}
 						onClick={() => setIsLeftSidebarShowing(!isLeftSidebarShowing)}
 					>
 						<PiTextOutdentFill className={styles.icon} size={22} />
-					</div>
-					<div className={styles.mobile_icon_wrap}>
+					</motion.div>
+					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiTextIndentFill className={styles.icon} size={22} />
-					</div>
-					<Link href={'/feeds'}>
-						<div className={cn(styles.icon_wrap, styles.mobile_hide_icon)}>
+					</motion.div>
+					<Link className={styles.icon_parent} href={'/feeds'}>
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, styles.mobile_hide_icon)}
+						>
 							<PiHouseDuotone
 								className={styles.icon}
 								size={22}
 							></PiHouseDuotone>
-						</div>
+						</motion.div>
 					</Link>
-					<div
-						className={cn(styles.icon_wrap, {
-							[styles.active]: !!isOpenNotification,
-						})}
+					<motion.div
+						className={styles.icon_parent}
+						initial={false}
+						animate={isOpenNotification ? 'open' : 'closed'}
 						ref={notificationModalWrapperRef}
 						onClick={handleCloseNotificationModal}
 					>
-						<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
-						{isOpenNotification && <NotificationModal />}
-					</div>
-					<div
-						className={cn(styles.icon_wrap, {
-							[styles.active]: !!isOpenMessage,
-						})}
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, {
+								[styles.active]: !!isOpenNotification,
+							})}
+						>
+							<PiBellDuotone className={styles.icon} size={22}></PiBellDuotone>
+						</motion.div>
+
+						<NotificationModal isOpenNotification={isOpenNotification} />
+					</motion.div>
+					<motion.div
+						className={styles.icon_parent}
+						initial={false}
+						animate={isOpenMessage ? 'open' : 'closed'}
 						ref={messageModalWrapperRef}
 						onClick={handleCloseMessageModal}
 					>
-						<PiMessengerLogoDuotone
-							className={styles.icon}
-							size={22}
-						></PiMessengerLogoDuotone>
-						{isOpenMessage && <ChatToggleModal />}
-					</div>
+						<motion.div
+							{...BUTTONGESTURE}
+							className={cn(styles.icon_wrap, {
+								[styles.active]: !!isOpenMessage,
+							})}
+						>
+							<PiMessengerLogoDuotone
+								className={styles.icon}
+								size={22}
+							></PiMessengerLogoDuotone>
+						</motion.div>
+						<ChatToggleModal isOpenMessage={isOpenMessage} />
+					</motion.div>
 				</div>
 			</div>
 		</div>

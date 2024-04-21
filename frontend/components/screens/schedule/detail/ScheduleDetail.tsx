@@ -74,6 +74,7 @@ const ScheduleDetail: FC = () => {
 													key={index}
 													list={item}
 													index={index}
+													isSelectedPeriod={isSelectedPeriod}
 												></ScheduleDetailList>
 											))}
 									</div>

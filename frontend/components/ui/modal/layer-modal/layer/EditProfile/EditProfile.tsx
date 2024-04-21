@@ -20,6 +20,7 @@ import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
 import { MemberService } from '@/services/member/member.service';
 import { useUploadImage } from '@/hooks/useUploadImage';
+import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const EditProfile: FC = () => {
 	const { isFiles, handleUploadImage, uploadImage } = useUploadImage();
@@ -88,7 +89,7 @@ const EditProfile: FC = () => {
 	};
 
 	return (
-		<div className={styles.edit_profile_container}>
+		<LayerModalVariantWrapper className={styles.edit_profile_container}>
 			<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.profile_img_container}>
@@ -154,7 +155,7 @@ const EditProfile: FC = () => {
 					수정하기
 				</CustomButton>
 			</form>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

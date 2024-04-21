@@ -12,6 +12,7 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import { TourSearchProps } from './tour-search.interface';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { motion } from 'framer-motion';
 
 const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 	const [isKeyword, setIsKeyword] = useState<string>('');
@@ -93,7 +94,16 @@ const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 			<div className={styles.tourism_item_container}>
 				{isLoading && <Skeleton />}
 				{data?.pages.map((page, pageIndex) => (
-					<React.Fragment key={pageIndex}>
+					<motion.div
+						className={styles.tourism_item_wrap}
+						key={pageIndex}
+						initial="hidden"
+						animate="visible"
+						exit={{ opacity: 0, transition: { duration: 1 } }}
+						variants={{
+							visible: { transition: { staggerChildren: 0.1 } },
+						}}
+					>
 						{page.items.item.map((tour: any, index: number) => (
 							<TourismItem
 								key={index}
@@ -101,7 +111,7 @@ const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 								onChangePeriods={handleChangePeriods}
 							/>
 						))}
-					</React.Fragment>
+					</motion.div>
 				))}
 			</div>
 		</div>

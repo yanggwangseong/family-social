@@ -3,21 +3,32 @@ import mainLandingAnimation from '@/assets/lottie/landing.json';
 import splashAnimation from '@/assets/lottie/splash.json';
 import Lottie from 'lottie-react';
 import { FaGoogle, FaSignInAlt } from 'react-icons/fa';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './Home.module.scss';
 import Image from 'next/image';
 import LoginButton from '@/components/ui/button/main/LoginButton';
 import { API_URL } from '@/constants/index';
+import { motion } from 'framer-motion';
 
 const style = {
 	height: '100%',
+};
+const visible = {
+	opacity: 1,
+	y: 0,
+	transition: { duration: 0.5 },
+};
+
+const itemVariants = {
+	hidden: { opacity: 0, y: 10 },
+	visible,
 };
 
 const Home: FC = () => {
 	const [isSplash, setIsSplash] = useState<boolean>(true);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		// 5초 후에 isSplash를 false로 변경
 		const timer = setTimeout(() => {
 			setIsSplash(false);
@@ -44,41 +55,70 @@ const Home: FC = () => {
 									animationData={mainLandingAnimation}
 								/>
 							</div>
-							<div className={styles.contents_container}>
-								<div className={styles.contents_title_wrap}>팸 커뮤니티</div>
-								<div className={styles.contents_subtitle}>
+
+							<motion.div
+								className={styles.contents_container}
+								initial="hidden"
+								animate="visible"
+								exit={{ opacity: 0, transition: { duration: 1 } }}
+								variants={{
+									visible: { transition: { staggerChildren: 0.3 } },
+								}}
+							>
+								<motion.div
+									className={styles.contents_title_wrap}
+									variants={{
+										hidden: { opacity: 0, y: -20 },
+										visible,
+									}}
+								>
+									팸 커뮤니티
+								</motion.div>
+								<motion.div
+									className={styles.contents_subtitle}
+									variants={itemVariants}
+								>
 									함께 콘텐츠를 연결하고 공유하세요.
-								</div>
-								<div className={styles.sign_subject}>Sign in to Fam</div>
+								</motion.div>
+								<motion.div
+									className={styles.sign_subject}
+									variants={itemVariants}
+								>
+									Sign in to Fam
+								</motion.div>
+								<motion.div
+									className={styles.button_container}
+									variants={itemVariants}
+								>
+									<LoginButton
+										link="signin"
+										text="로그인"
+										Icon={FaSignInAlt}
+										IconColor="DB4437"
+										IconSize={24}
+									></LoginButton>
 
-								<LoginButton
-									link="signin"
-									text="로그인"
-									Icon={FaSignInAlt}
-									IconColor="DB4437"
-									IconSize={24}
-								></LoginButton>
+									<LoginButton
+										link={`${API_URL}/auth/google/sign-in`}
+										text="구글 로그인"
+										Icon={FaGoogle}
+										IconColor="4285F4"
+										IconSize={24}
+									></LoginButton>
 
-								<LoginButton
-									link={`${API_URL}/auth/google/sign-in`}
-									text="구글 로그인"
-									Icon={FaGoogle}
-									IconColor="4285F4"
-									IconSize={24}
-								></LoginButton>
+									<LoginButton
+										link="/"
+										text="네이버 로그인"
+										imgUrn="/images/naver/naver_btn.png"
+									></LoginButton>
 
-								<LoginButton
-									link="/"
-									text="네이버 로그인"
-									imgUrn="/images/naver/naver_btn.png"
-								></LoginButton>
-
-								<LoginButton
-									link="/"
-									text="카카오 로그인"
-									imgUrn="/images/kakao/kakao_btn.png"
-								></LoginButton>
-							</div>
+									<LoginButton
+										link="/"
+										text="카카오 로그인"
+										imgUrn="/images/kakao/kakao_btn.png"
+									></LoginButton>
+								</motion.div>
+							</motion.div>
 						</div>
 					</div>
 				</Format>

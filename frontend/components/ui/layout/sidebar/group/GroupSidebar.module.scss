@@ -4,13 +4,30 @@
 		width: 300px;
 	}
 
-	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-20 z-50 fixed bg-basic;
+	@screen md {
+		@apply top-20;
+		width: 300px;
+	}
+
+	@apply w-full px-11 pt-3 border-r border-solid border-customDark h-full top-0 z-50 fixed bg-basic;
+
+	// mobile_close
+	.mobile_close_btn {
+		@screen md {
+			@apply hidden;
+		}
+		@apply justify-end text-4xl cursor-pointer flex;
+	}
 
 	.sidebar_title {
 		@apply text-2xl font-medium mb-12;
 	}
 
+	.contents_wrap {
+		@apply flex flex-col justify-around h-[50vh];
+	}
+
 	.sidebar_btn_container {
-		@apply mt-16;
+		@apply mt-auto;
 	}
 }
