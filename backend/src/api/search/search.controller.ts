@@ -46,7 +46,11 @@ export class SearchController {
 			sub,
 		);
 
-		return await this.membersService.findMembersByUserName(username, sub);
+		return await this.membersService.findMembersByUserName(
+			username,
+			sub,
+			groupIds,
+		);
 	}
 
 	/**

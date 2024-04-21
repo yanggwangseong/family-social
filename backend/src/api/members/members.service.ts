@@ -51,10 +51,12 @@ export class MembersService {
 	async findMembersByUserName(
 		username: string,
 		authorMemberId: string,
+		groupIds: string[],
 	): Promise<MemberProfileImageResDto[]> {
 		return await this.membersRepository.findMembersByUserName(
 			username,
 			authorMemberId,
+			groupIds,
 		);
 	}
 

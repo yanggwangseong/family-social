@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
 	FindOptionsSelect,
 	ILike,
+	In,
 	Not,
 	QueryRunner,
 	Repository,
@@ -83,6 +84,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	async findMembersByUserName(
 		username: string,
 		authorMemberId: string,
+		groupIds: string[],
 	): Promise<MemberProfileImageResDto[]> {
 		return await this.repository.find({
 			select: {
@@ -97,6 +99,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 				username: ILike(`%${username}%`),
 				id: Not(authorMemberId),
 				memberGroups: {
+					id: In(groupIds),
 					invitationAccepted: true,
 				},
 			},
