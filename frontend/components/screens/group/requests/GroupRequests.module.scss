@@ -11,7 +11,7 @@
 
 		.main_contents_container {
 			@screen md {
-				@apply mx-32;
+				@apply mx-auto;
 				width: 768px;
 			}
 			@apply w-full my-10 mx-4;

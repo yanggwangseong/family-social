@@ -89,20 +89,21 @@ const FeedItem: FC<FeedItemProps> = ({
 							username={feed.username}
 							groupName={feed.groupName}
 						></GroupAndMemberProfile>
-						<div
+						<motion.div
 							className={styles.feed_card_setting_container}
+							initial={false}
+							animate={isOpenSetting ? 'open' : 'closed'}
 							ref={settingModalWrapperRef}
 						>
 							<BsThreeDots size={24} onClick={handleCloseSettingModal} />
-							{isOpenSetting && (
-								<ToggleModal
-									list={FeedSettingMenu}
-									onClose={handleCloseSettingModal}
-									direction="right"
-									feedId={feed.feedId}
-								/>
-							)}
-						</div>
+
+							<ToggleModal
+								list={FeedSettingMenu}
+								onClose={handleCloseSettingModal}
+								direction="right"
+								feedId={feed.feedId}
+							/>
+						</motion.div>
 					</div>
 					<div className={styles.feed_description_container}>
 						{feed.contents}

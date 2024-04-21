@@ -33,11 +33,7 @@ const MainSidebar: FC = () => {
 
 	return (
 		<>
-			<motion.div
-				className={styles.sidebar_container}
-				ref={sidebarScope}
-				initial={{ transform: 'translateX(-100%)' }} // 초기 상태: 왼쪽으로 이동하여 숨김
-			>
+			<motion.div className={styles.sidebar_container} ref={sidebarScope}>
 				<motion.div>
 					<motion.div
 						className={styles.mobile_close_btn}
