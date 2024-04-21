@@ -11,15 +11,17 @@
 		overflow-y: auto;
 
 		.detail_container {
-			@apply relative;
-			flex: 1;
+			@screen md {
+				flex: 1;
+			}
+			@apply relative w-full;
 
 			.main_contents_container {
 				@screen md {
-					@apply mx-32 my-10;
+					@apply mx-auto my-10 px-0;
 					width: 768px;
 				}
-				@apply w-full z-10 relative my-10 mx-4;
+				@apply w-full z-10 relative my-10 px-4;
 
 				.top_title_container {
 					@apply mb-10 flex;
