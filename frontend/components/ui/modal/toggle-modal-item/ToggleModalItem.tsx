@@ -4,6 +4,8 @@ import { ToggleMenu } from '../toggle-modal.interface';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
 
 const ToggleModalItem: FC<ToggleMenu> = ({
 	Icon,
@@ -19,7 +21,7 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 	const [, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	return (
-		<div
+		<motion.div
 			className={styles.toggle_modal_item_container}
 			onClick={() => {
 				if (onClose) {
@@ -32,6 +34,7 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 					onClose(); //toggle modal 닫기
 				}
 			}}
+			variants={toggleVariant}
 		>
 			<div className={styles.icon_container}>
 				<Icon size={22} />
@@ -40,7 +43,7 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 				<div>{title}</div>
 				<div className={styles.menu_description}>{description}</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
