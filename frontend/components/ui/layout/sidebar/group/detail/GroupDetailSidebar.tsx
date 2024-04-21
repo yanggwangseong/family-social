@@ -87,42 +87,44 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 				<Line />
 
 				<div className={styles.sidebar_btn_container}>
-					<div
+					<motion.div
 						className={styles.toggle_menu_btn_container}
+						initial={false}
+						animate={isOpenInvitation ? 'open' : 'closed'}
 						ref={invitationModalWrapperRef}
 					>
 						<CustomButton
 							type="button"
 							className="bg-customOrange text-customDark 
-					font-bold border border-solid border-customDark 
-					rounded-full p-[10px] w-full
-					hover:bg-orange-500
-					"
+							font-bold border border-solid border-customDark 
+							rounded-full p-[10px] w-full
+							hover:bg-orange-500
+							"
 							onClick={handleCloseInvitationModal}
 						>
 							+ 초대하기
 						</CustomButton>
-						{isOpenInvitation && (
-							<ToggleModal
-								list={InviteMenu}
-								onClose={handleCloseInvitationModal}
-							/>
-						)}
-					</div>
-					<div
+
+						<ToggleModal
+							list={InviteMenu}
+							onClose={handleCloseInvitationModal}
+						/>
+					</motion.div>
+					<motion.div
 						className={styles.toggle_menu_icon_container}
+						initial={false}
+						animate={isOpenSetting ? 'open' : 'closed'}
 						ref={settingModalWrapperRef}
 					>
 						<motion.div {...BUTTONGESTURE}>
 							<BsThreeDots size={22} onClick={handleCloseSettingModal} />
 						</motion.div>
-						{isOpenSetting && (
-							<ToggleModal
-								list={GroupSettingMenu}
-								onClose={handleCloseSettingModal}
-							/>
-						)}
-					</div>
+
+						<ToggleModal
+							list={GroupSettingMenu}
+							onClose={handleCloseSettingModal}
+						/>
+					</motion.div>
 				</div>
 				<motion.div
 					className={styles.sidebar_home_btn_container}
