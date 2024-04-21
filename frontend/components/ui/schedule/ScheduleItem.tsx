@@ -83,8 +83,10 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 					<div>
 						<div className={styles.d_day}>D-248</div>
 					</div>
-					<div
+					<motion.div
 						className={styles.setting_container}
+						initial={false}
+						animate={isOpenSetting ? 'open' : 'closed'}
 						ref={settingModalWrapperRef}
 					>
 						<BsThreeDots
@@ -94,14 +96,13 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 								handleClickSettingModal();
 							}}
 						/>
-						{isOpenSetting && (
-							<ToggleModal
-								list={ScheduleSettingMenu}
-								onClose={handleCloseSettingModal}
-								direction="right"
-							/>
-						)}
-					</div>
+
+						<ToggleModal
+							list={ScheduleSettingMenu}
+							onClose={handleCloseSettingModal}
+							direction="right"
+						/>
+					</motion.div>
 				</div>
 				<div className={styles.contents_top_container}>
 					{isUpdateTitle ? (
