@@ -96,8 +96,46 @@ export class MembersRepository extends Repository<MemberEntity> {
 			where: {
 				username: ILike(`%${username}%`),
 				id: Not(authorMemberId),
+				memberGroups: {
+					invitationAccepted: true,
+				},
 			},
 		});
+	}
+
+	async findGroupIdsBelongToMyGroup(memberId: string) {
+		return await this.repository
+			.findOne({
+				select: {
+					id: true,
+					memberGroups: {
+						id: true,
+					},
+				},
+				relations: {
+					memberGroups: true,
+				},
+				where: {
+					id: memberId,
+					memberGroups: {
+						invitationAccepted: true,
+					},
+				},
+			})
+			.then((data) => {
+				if (!data)
+					return {
+						groupIds: [],
+					};
+				if (!data.memberGroups || data.memberGroups.length === 0) {
+					return {
+						groupIds: [],
+					};
+				}
+				return {
+					groupIds: data.memberGroups.map((data) => data.id),
+				};
+			});
 	}
 
 	async findMemberById({

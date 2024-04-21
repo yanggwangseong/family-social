@@ -58,6 +58,10 @@ export class MembersService {
 		);
 	}
 
+	async findGroupIdsBelongToMyGroup(memberId: string) {
+		return await this.membersRepository.findGroupIdsBelongToMyGroup(memberId);
+	}
+
 	async updateMemberProfile(updateMemberArgs: IUpdateMemberArgs) {
 		return await this.membersRepository.updateMemberProfile({
 			...updateMemberArgs,
