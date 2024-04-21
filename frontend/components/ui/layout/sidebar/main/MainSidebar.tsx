@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import styles from './MainSidebar.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Menu from '../menu/Menu';
@@ -11,8 +11,9 @@ import {
 } from 'react-icons/pi';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
 import { useCreateFeed } from '@/hooks/useCreateFeed';
-import { motion, useAnimate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { useMenuAnimation } from '@/hooks/useMenuAnimation';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
@@ -28,19 +29,7 @@ const MainSidebar: FC = () => {
 		isMobile,
 	} = useMainSidebar();
 
-	const [sidebarScope, animate] = useAnimate();
-
-	useEffect(() => {
-		animate(
-			sidebarScope.current,
-			{
-				transform: isLeftSidebarShowing
-					? 'translateX(0%)'
-					: 'translateX(-100%)',
-			},
-			{ ease: [0.08, 0.65, 0.53, 0.96], duration: 0.6 },
-		);
-	}, [animate, isLeftSidebarShowing, sidebarScope]);
+	const { sidebarScope } = useMenuAnimation(isLeftSidebarShowing);
 
 	return (
 		<>
@@ -53,7 +42,6 @@ const MainSidebar: FC = () => {
 					<motion.div
 						className={styles.mobile_close_btn}
 						onClick={handleCloseMainSidebar}
-						whileTap={{ scale: 0.97 }}
 					>
 						x
 					</motion.div>
