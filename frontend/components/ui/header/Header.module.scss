@@ -22,6 +22,10 @@
 					@apply block;
 				}
 				@apply hidden relative;
+
+				.search_lst_container {
+					@apply absolute w-[300px] h-[300px] bg-red-500;
+				}
 			}
 		}
 	}

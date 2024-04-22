@@ -22,6 +22,7 @@ import { useSearch } from '@/hooks/useSearch';
 import { useQuery } from 'react-query';
 import { MemberService } from '@/services/member/member.service';
 import SearchBox from '../search-box/SearchBox';
+import NotFoundSearchMember from '../not-found/search-member/NotFoundSearchMember';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -64,7 +65,15 @@ const Header: FC = () => {
 							onChange={handleSearch}
 						></Field>
 						{/* [TODO] 검색 결과 폼 컴포넌트 생성하기 */}
-						{debounceSearch && <SearchBox />}
+						{debounceSearch && (
+							<div className={styles.search_lst_container}>
+								{data?.length ? (
+									data.map((item, index) => <SearchBox key={index} />)
+								) : (
+									<NotFoundSearchMember />
+								)}
+							</div>
+						)}
 					</div>
 				</Link>
 				<div className={styles.right_icons_container}>
