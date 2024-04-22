@@ -18,6 +18,9 @@ import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 import NotificationModal from '../modal/notification-modal/NotificationModal';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { motion } from 'framer-motion';
+import { useSearch } from '@/hooks/useSearch';
+import { useQuery } from 'react-query';
+import { MemberService } from '@/services/member/member.service';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -36,6 +39,16 @@ const Header: FC = () => {
 	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
 		useRecoilState(mainSidebarAtom);
 
+	const { handleSearch, debounceSearch } = useSearch();
+
+	const { isSuccess, data } = useQuery(
+		['search-chat-members', debounceSearch],
+		async () => await MemberService.getMembersByUserName(debounceSearch),
+		{
+			enabled: !!debounceSearch,
+		},
+	);
+
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
@@ -44,7 +57,12 @@ const Header: FC = () => {
 						FAM
 					</motion.div>
 					<div className={styles.search_field_wrap}>
-						<Field style={{ marginLeft: '40px' }} fieldClass={'input'}></Field>
+						<Field
+							style={{ marginLeft: '40px' }}
+							fieldClass={'input'}
+							onChange={handleSearch}
+						></Field>
+						{/* [TODO] 검색 결과 폼 컴포넌트 생성하기 */}
 					</div>
 				</Link>
 				<div className={styles.right_icons_container}>
