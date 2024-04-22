@@ -25,6 +25,7 @@ import SearchBox from '../search-box/SearchBox';
 import NotFoundSearchMember from '../not-found/search-member/NotFoundSearchMember';
 import Profile from '../profile/Profile';
 import { useRouter } from 'next/router';
+import { useSearchBoxAnimation } from '@/hooks/useSearchBoxAnimation';
 
 const Header: FC = () => {
 	const router = useRouter();
@@ -54,6 +55,8 @@ const Header: FC = () => {
 		},
 	);
 
+	const { searchBoxScope } = useSearchBoxAnimation(debounceSearch);
+
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
@@ -68,27 +71,42 @@ const Header: FC = () => {
 							onChange={handleSearch}
 						></Field>
 						{/* [TODO] 검색 결과 폼 컴포넌트 생성하기 */}
-						{debounceSearch && (
-							<div className={styles.search_lst_container}>
-								{data?.length ? (
-									data.map((item, index) => (
-										<motion.div
-											className={styles.search_profile_wrap}
-											{...INLINEBUTTONGESTURE}
-											key={index}
-											onClick={() => router.push(`/accounts/${item.email}`)}
-										>
-											<Profile
-												username={item.username}
-												email={item.email}
-											></Profile>
-										</motion.div>
-									))
-								) : (
-									<NotFoundSearchMember />
-								)}
-							</div>
-						)}
+
+						<motion.div
+							className={styles.search_lst_container}
+							ref={searchBoxScope}
+						>
+							{data?.length ? (
+								data.map((item, index) => (
+									<motion.div
+										className={styles.search_profile_wrap}
+										{...INLINEBUTTONGESTURE}
+										key={index}
+										onClick={() => router.push(`/accounts/${item.email}`)}
+									>
+										<Profile
+											username={item.username}
+											email={item.email}
+										></Profile>
+									</motion.div>
+								))
+							) : (
+								<NotFoundSearchMember />
+							)}
+							{/* {data?.map((item, index) => (
+								<motion.div
+									className={styles.search_profile_wrap}
+									{...INLINEBUTTONGESTURE}
+									key={index}
+									onClick={() => router.push(`/accounts/${item.email}`)}
+								>
+									<Profile
+										username={item.username}
+										email={item.email}
+									></Profile>
+								</motion.div>
+							))} */}
+						</motion.div>
 					</div>
 				</Link>
 				<div className={styles.right_icons_container}>
