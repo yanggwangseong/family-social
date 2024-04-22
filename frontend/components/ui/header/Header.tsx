@@ -16,13 +16,14 @@ import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 import { useRecoilState } from 'recoil';
 import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 import NotificationModal from '../modal/notification-modal/NotificationModal';
-import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { motion } from 'framer-motion';
 import { useSearch } from '@/hooks/useSearch';
 import { useQuery } from 'react-query';
 import { MemberService } from '@/services/member/member.service';
 import SearchBox from '../search-box/SearchBox';
 import NotFoundSearchMember from '../not-found/search-member/NotFoundSearchMember';
+import Profile from '../profile/Profile';
 
 const Header: FC = () => {
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,40 @@ const Header: FC = () => {
 						{debounceSearch && (
 							<div className={styles.search_lst_container}>
 								{data?.length ? (
-									data.map((item, index) => <SearchBox key={index} />)
+									data.map((item, index) => (
+										<>
+											<motion.div
+												className={styles.search_profile_wrap}
+												{...INLINEBUTTONGESTURE}
+												key={index}
+											>
+												<Profile
+													username={item.username}
+													email={item.email}
+												></Profile>
+											</motion.div>
+											<motion.div
+												className={styles.search_profile_wrap}
+												key={index}
+												{...INLINEBUTTONGESTURE}
+											>
+												<Profile
+													username={item.username}
+													email={item.email}
+												></Profile>
+											</motion.div>
+											<motion.div
+												className={styles.search_profile_wrap}
+												key={index}
+												{...INLINEBUTTONGESTURE}
+											>
+												<Profile
+													username={item.username}
+													email={item.email}
+												></Profile>
+											</motion.div>
+										</>
+									))
 								) : (
 									<NotFoundSearchMember />
 								)}
