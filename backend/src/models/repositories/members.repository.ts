@@ -20,6 +20,7 @@ import {
 } from '@/types/args/member';
 
 import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '../dto/member/res/member-search-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -85,7 +86,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 		username: string,
 		authorMemberId: string,
 		groupIds: string[],
-	): Promise<MemberProfileImageResDto[]> {
+	): Promise<MemberSearchResDto[]> {
 		return await this.repository.find({
 			select: {
 				id: true,

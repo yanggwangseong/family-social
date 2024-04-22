@@ -5,6 +5,7 @@ import { ERROR_USER_NOT_FOUND } from '@/constants/business-error';
 import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { MemberSearchResDto } from '@/models/dto/member/res/member-search-res.dto';
 import { MembersRepository } from '@/models/repositories/members.repository';
 import { IUpdateMemberArgs } from '@/types/args/member';
 
@@ -52,7 +53,7 @@ export class MembersService {
 		username: string,
 		authorMemberId: string,
 		groupIds: string[],
-	): Promise<MemberProfileImageResDto[]> {
+	): Promise<MemberSearchResDto[]> {
 		return await this.membersRepository.findMembersByUserName(
 			username,
 			authorMemberId,
