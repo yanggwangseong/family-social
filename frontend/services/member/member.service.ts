@@ -3,6 +3,7 @@ import {
 	MemberAccountResponse,
 	MembersBelongToGroupResponse,
 	MembersResponse,
+	SearchMemberResponse,
 } from '@/shared/interfaces/member.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -30,7 +31,7 @@ export const MemberService = {
 	},
 
 	async getMembersByUserName(username: string) {
-		const { data } = await axiosAPI.get<MembersResponse[]>(
+		const { data } = await axiosAPI.get<SearchMemberResponse[]>(
 			`/search/members/username/${username}`,
 		);
 		return data;

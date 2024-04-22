@@ -1,6 +1,6 @@
 //헤더
 .header_container {
-	@apply sticky top-0 z-50 bg-basic w-full;
+	@apply sticky top-0 z-[60] bg-basic w-full;
 	.header_wrap {
 		@screen md {
 			@apply mx-11;
@@ -21,7 +21,18 @@
 				@screen md {
 					@apply block;
 				}
-				@apply hidden;
+				@apply hidden relative;
+
+				.search_lst_container {
+					@apply absolute w-[360px] top-14 border border-solid border-customDark bg-white p-4 shadow-2xl;
+
+					.search_profile_wrap {
+						@apply p-4;
+						&:hover {
+							@apply bg-gray-50 rounded-lg;
+						}
+					}
+				}
 			}
 		}
 	}

@@ -16,3 +16,7 @@ export interface MemberAccountResponse extends MembersResponse {
 	isMine: boolean;
 	coverImage: string;
 }
+
+export interface SearchMemberResponse extends MembersResponse {
+	email: string;
+}

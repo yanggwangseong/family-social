@@ -42,6 +42,7 @@ const NotificationContainer: FC = () => {
 									data.list.map((list, index) => (
 										<NotificationItem
 											key={index}
+											index={index}
 											notificationItem={list}
 											isDescription={true}
 										/>

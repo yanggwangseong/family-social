@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
 	FindOptionsSelect,
 	ILike,
+	In,
 	Not,
 	QueryRunner,
 	Repository,
@@ -19,6 +20,7 @@ import {
 } from '@/types/args/member';
 
 import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '../dto/member/res/member-search-res.dto';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -83,21 +85,64 @@ export class MembersRepository extends Repository<MemberEntity> {
 	async findMembersByUserName(
 		username: string,
 		authorMemberId: string,
-	): Promise<MemberProfileImageResDto[]> {
+		groupIds: string[],
+	): Promise<MemberSearchResDto[]> {
 		return await this.repository.find({
 			select: {
 				id: true,
 				username: true,
 				profileImage: true,
+				email: true,
 			},
 			relations: {
 				memberGroups: true,
 			},
 			where: {
-				username: ILike(`%${username}%`),
+				username: ILike(`${username}%`),
 				id: Not(authorMemberId),
+				memberGroups: {
+					groupId: In(groupIds),
+					invitationAccepted: true,
+				},
 			},
 		});
+	}
+
+	async findGroupIdsBelongToMyGroup(memberId: string) {
+		return await this.repository
+			.findOne({
+				select: {
+					id: true,
+					memberGroups: {
+						id: true,
+						memberId: true,
+						groupId: true,
+					},
+				},
+				relations: {
+					memberGroups: true,
+				},
+				where: {
+					id: memberId,
+					memberGroups: {
+						invitationAccepted: true,
+					},
+				},
+			})
+			.then((data) => {
+				if (!data)
+					return {
+						groupIds: [],
+					};
+				if (!data.memberGroups || data.memberGroups.length === 0) {
+					return {
+						groupIds: [],
+					};
+				}
+				return {
+					groupIds: data.memberGroups.map((data) => data.groupId),
+				};
+			});
 	}
 
 	async findMemberById({

@@ -42,7 +42,15 @@ export class SearchController {
 		@Param('username') username: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		return this.membersService.findMembersByUserName(username, sub);
+		const { groupIds } = await this.membersService.findGroupIdsBelongToMyGroup(
+			sub,
+		);
+
+		return await this.membersService.findMembersByUserName(
+			username,
+			sub,
+			groupIds,
+		);
 	}
 
 	/**

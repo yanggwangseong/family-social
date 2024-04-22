@@ -19,6 +19,7 @@ import {
 } from '@/constants/business-error';
 import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '@/models/dto/member/res/member-search-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 
 export const LoginMemberSwagger = () => {
@@ -106,7 +107,7 @@ export const GetMembersByUserNameSwagger = () => {
 		}),
 		ApiOkResponse({
 			description: '검색된 유저 리스트 가져오기',
-			type: MemberProfileImageResDto,
+			type: MemberSearchResDto,
 			isArray: true,
 		}),
 	);
