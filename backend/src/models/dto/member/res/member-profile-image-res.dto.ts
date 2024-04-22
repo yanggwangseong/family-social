@@ -6,4 +6,5 @@ export class MemberProfileImageResDto extends PickType(MemberEntity, [
 	'username',
 	'id',
 	'profileImage',
+	'email',
 ] as const) {}

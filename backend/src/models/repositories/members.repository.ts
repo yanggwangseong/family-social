@@ -91,15 +91,16 @@ export class MembersRepository extends Repository<MemberEntity> {
 				id: true,
 				username: true,
 				profileImage: true,
+				email: true,
 			},
 			relations: {
 				memberGroups: true,
 			},
 			where: {
-				username: ILike(`%${username}%`),
+				username: ILike(`${username}%`),
 				id: Not(authorMemberId),
 				memberGroups: {
-					id: In(groupIds),
+					groupId: In(groupIds),
 					invitationAccepted: true,
 				},
 			},
@@ -113,6 +114,8 @@ export class MembersRepository extends Repository<MemberEntity> {
 					id: true,
 					memberGroups: {
 						id: true,
+						memberId: true,
+						groupId: true,
 					},
 				},
 				relations: {
@@ -136,7 +139,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 					};
 				}
 				return {
-					groupIds: data.memberGroups.map((data) => data.id),
+					groupIds: data.memberGroups.map((data) => data.groupId),
 				};
 			});
 	}
