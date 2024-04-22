@@ -1,6 +1,6 @@
 //헤더
 .header_container {
-	@apply sticky top-0 z-50 bg-basic w-full;
+	@apply sticky top-0 z-[60] bg-basic w-full;
 	.header_wrap {
 		@screen md {
 			@apply mx-11;
