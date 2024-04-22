@@ -24,8 +24,10 @@ import { MemberService } from '@/services/member/member.service';
 import SearchBox from '../search-box/SearchBox';
 import NotFoundSearchMember from '../not-found/search-member/NotFoundSearchMember';
 import Profile from '../profile/Profile';
+import { useRouter } from 'next/router';
 
 const Header: FC = () => {
+	const router = useRouter();
 	const messageModalWrapperRef = useRef<HTMLDivElement>(null);
 	const notificationModalWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -70,38 +72,17 @@ const Header: FC = () => {
 							<div className={styles.search_lst_container}>
 								{data?.length ? (
 									data.map((item, index) => (
-										<>
-											<motion.div
-												className={styles.search_profile_wrap}
-												{...INLINEBUTTONGESTURE}
-												key={index}
-											>
-												<Profile
-													username={item.username}
-													email={item.email}
-												></Profile>
-											</motion.div>
-											<motion.div
-												className={styles.search_profile_wrap}
-												key={index}
-												{...INLINEBUTTONGESTURE}
-											>
-												<Profile
-													username={item.username}
-													email={item.email}
-												></Profile>
-											</motion.div>
-											<motion.div
-												className={styles.search_profile_wrap}
-												key={index}
-												{...INLINEBUTTONGESTURE}
-											>
-												<Profile
-													username={item.username}
-													email={item.email}
-												></Profile>
-											</motion.div>
-										</>
+										<motion.div
+											className={styles.search_profile_wrap}
+											{...INLINEBUTTONGESTURE}
+											key={index}
+											onClick={() => router.push(`/accounts/${item.email}`)}
+										>
+											<Profile
+												username={item.username}
+												email={item.email}
+											></Profile>
+										</motion.div>
 									))
 								) : (
 									<NotFoundSearchMember />
