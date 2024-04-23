@@ -27,7 +27,7 @@
 					@apply absolute w-[360px] top-14 border border-solid border-customDark bg-white p-4 shadow-2xl;
 
 					.search_profile_wrap {
-						@apply p-4;
+						@apply p-4 cursor-pointer;
 						&:hover {
 							@apply bg-gray-50 rounded-lg;
 						}
