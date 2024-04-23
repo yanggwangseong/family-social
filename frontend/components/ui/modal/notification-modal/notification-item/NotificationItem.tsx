@@ -4,16 +4,19 @@ import Image from 'next/image';
 import { NotificationItemProps } from './notification-item.interface';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
+import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 
 const NotificationItem: FC<NotificationItemProps> = ({
 	notificationItem,
 	isDescription = false,
 	index,
 }) => {
+	// notificationItem.notificationFeedId
 	return (
 		<motion.div
 			className={styles.notification_item_container}
 			{...easeOutAnimation(index)}
+			{...INLINEBUTTONGESTURE}
 		>
 			<div>
 				<Image

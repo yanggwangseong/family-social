@@ -60,8 +60,12 @@ const Header: FC = () => {
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
-				<Link href={'/feeds'} className={styles.header_left_container}>
-					<motion.div {...BUTTONGESTURE} className={styles.header_logo}>
+				<div className={styles.header_left_container}>
+					<motion.div
+						{...BUTTONGESTURE}
+						className={styles.header_logo}
+						onClick={() => router.push(`/feeds`)}
+					>
 						FAM
 					</motion.div>
 					<div className={styles.search_field_wrap}>
@@ -108,7 +112,7 @@ const Header: FC = () => {
 							))} */}
 						</motion.div>
 					</div>
-				</Link>
+				</div>
 				<div className={styles.right_icons_container}>
 					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>
 						<PiMagnifyingGlassDuotone className={styles.icon} size={22} />
