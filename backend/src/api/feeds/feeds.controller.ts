@@ -85,8 +85,11 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		feedId: string,
+		@CurrentUser('sub') sub: string,
 	) {
-		return await this.feedsService.findFeedInfoById(feedId);
+		const result = await this.feedsService.findFeedInfoById(feedId, sub);
+
+		return result;
 	}
 
 	/**

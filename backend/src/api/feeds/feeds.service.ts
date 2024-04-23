@@ -33,10 +33,13 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
-	async findFeedInfoById(feedIdArgs: string): Promise<FeedResDto> {
-		const [feed, medias] = await Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedIdArgs),
-			await this.mediasService.findMediaUrlByFeedId(feedIdArgs),
+	async findFeedInfoById(
+		feedIdArgs: string,
+		memberIdArgs: string,
+	): Promise<FeedResDto> {
+		const [feed, [medias, comments]] = await Promise.all([
+			this.feedsRepository.findFeedInfoById(feedIdArgs),
+			this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
 		]);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
@@ -51,6 +54,7 @@ export class FeedsService {
 			memberId,
 			...memberRest,
 			medias,
+			comments,
 		};
 	}
 
@@ -76,8 +80,8 @@ export class FeedsService {
 
 				return {
 					...feed,
-					medias: medias,
-					comments: comments,
+					medias,
+					comments,
 				};
 			}),
 		);
