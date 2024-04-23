@@ -14,6 +14,7 @@ import {
 	MessageModalAtomType,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
+import NotFoundSearchMember from '../../not-found/search-member/NotFoundSearchMember';
 
 const CreateMessageModal: FC = () => {
 	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
@@ -92,9 +93,7 @@ const CreateMessageModal: FC = () => {
 									</div>
 								))
 							) : (
-								<div className={styles.not_found_text}>
-									해당 멤버를 찾을 수 없습니다.
-								</div>
+								<NotFoundSearchMember />
 							)}
 						</div>
 					)}

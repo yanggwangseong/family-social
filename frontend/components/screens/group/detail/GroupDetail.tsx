@@ -11,6 +11,7 @@ import ToggleModal from '@/components/ui/modal/ToggleModal';
 import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
 import { PiPencilDuotone } from 'react-icons/pi';
+import { motion } from 'framer-motion';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -47,8 +48,10 @@ const GroupDetail: FC = () => {
 									{/* 프로필 */}
 									<Profile username="양광성" role="관리자" />
 									<div className={styles.banner_profile_right_contaienr}>
-										<div
+										<motion.div
 											className={styles.toggle_menu_container}
+											initial={false}
+											animate={isOpenInvitation ? 'open' : 'closed'}
 											ref={invitationModalWrapperRef}
 										>
 											<CustomButton
@@ -62,14 +65,13 @@ const GroupDetail: FC = () => {
 											>
 												+ 초대하기
 											</CustomButton>
-											{isOpenInvitation && (
-												// toggle modal
-												<ToggleModal
-													list={InviteMenu}
-													onClose={handleCloseInvitationModal}
-												/>
-											)}
-										</div>
+
+											{/*  toggle modal */}
+											<ToggleModal
+												list={InviteMenu}
+												onClose={handleCloseInvitationModal}
+											/>
+										</motion.div>
 									</div>
 								</div>
 							</div>

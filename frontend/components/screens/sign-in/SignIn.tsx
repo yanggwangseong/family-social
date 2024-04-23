@@ -12,6 +12,18 @@ import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+
+const visible = {
+	opacity: 1,
+	y: 0,
+	transition: { duration: 0.5 },
+};
+
+const itemVariants = {
+	hidden: { opacity: 0, y: 10 },
+	visible,
+};
 
 const SignIn: FC = () => {
 	const {
@@ -58,42 +70,65 @@ const SignIn: FC = () => {
 			<div className={styles.container}>
 				<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 					<div className={styles.contents_card}>
-						<div className={styles.contents_wrap}>
-							<div className={styles.signin__header_title}>로그인</div>
-							<div className={styles.signin__header_subtitle}>
+						<motion.div
+							className={styles.contents_wrap}
+							initial="hidden"
+							animate="visible"
+							exit={{ opacity: 0, transition: { duration: 1 } }}
+							variants={{
+								visible: { transition: { staggerChildren: 0.2 } },
+							}}
+						>
+							<motion.div
+								className={styles.signin__header_title}
+								variants={{
+									hidden: { opacity: 0, y: -20 },
+									visible,
+								}}
+							>
+								로그인
+							</motion.div>
+							<motion.div
+								className={styles.signin__header_subtitle}
+								variants={itemVariants}
+							>
 								이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.
-							</div>
-							<div className={styles.label_field}>이메일</div>
-							<Field
-								{...register('email', {
-									required: '이메일 입력은 필수입니다!',
-									pattern: {
-										value: validEmail,
-										message: '이메일 형식을 확인 해주세요!',
-									},
-								})}
-								placeholder="이메일을 입력해주세요!"
-								error={errors.email}
-							/>
-							<div className={styles.form_label}>비밀번호</div>
-							<Field
-								{...register('password', {
-									required: '비밀번호 입력은 필수입니다!',
-									pattern: {
-										value: validPassword,
-										message: '영문,숫자,특수문자를 포함하여 작성해주세요',
-									},
-									minLength: {
-										value: 10,
-										message: '최소 비밀번호는 10자 이상입니다.',
-									},
-								})}
-								placeholder="비밀번호를 입력해주세요!"
-								error={errors.password}
-								type={'password'}
-								autoComplete="off"
-							/>
-						</div>
+							</motion.div>
+							<motion.div variants={itemVariants}>
+								<div className={styles.label_field}>이메일</div>
+								<Field
+									{...register('email', {
+										required: '이메일 입력은 필수입니다!',
+										pattern: {
+											value: validEmail,
+											message: '이메일 형식을 확인 해주세요!',
+										},
+									})}
+									placeholder="이메일을 입력해주세요!"
+									error={errors.email}
+								/>
+							</motion.div>
+							<motion.div variants={itemVariants}>
+								<div className={styles.form_label}>비밀번호</div>
+								<Field
+									{...register('password', {
+										required: '비밀번호 입력은 필수입니다!',
+										pattern: {
+											value: validPassword,
+											message: '영문,숫자,특수문자를 포함하여 작성해주세요',
+										},
+										minLength: {
+											value: 10,
+											message: '최소 비밀번호는 10자 이상입니다.',
+										},
+									})}
+									placeholder="비밀번호를 입력해주세요!"
+									error={errors.password}
+									type={'password'}
+									autoComplete="off"
+								/>
+							</motion.div>
+						</motion.div>
 						<div className={styles.footer_wrap}>
 							<CustomButton
 								type="submit"

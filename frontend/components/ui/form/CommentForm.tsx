@@ -15,6 +15,7 @@ import { CommentService } from '@/services/comment/comment.service';
 import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
 import styles from './CommentForm.module.scss';
+import MentionFieldArea from '../field/field-area/mention-field-area/MentionFieldArea';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,

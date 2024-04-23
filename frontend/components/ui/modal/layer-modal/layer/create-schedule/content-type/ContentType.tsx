@@ -10,6 +10,7 @@ import cn from 'classnames';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
+import LayerModalVariantWrapper from '../../LayerModalVariantWrapper';
 
 const ContentType: FC = () => {
 	const [isAtomContentId, setIsAtomContentId] = useRecoilState(contentIdsAtom);
@@ -45,7 +46,7 @@ const ContentType: FC = () => {
 	}, [isAtomContentId]);
 
 	return (
-		<div className={styles.container}>
+		<LayerModalVariantWrapper className={styles.container}>
 			<div className={styles.wrap}>
 				<div className={styles.contents_wrap}>
 					<div className={styles.content_type_container}>
@@ -99,7 +100,7 @@ const ContentType: FC = () => {
 					</CustomButton>
 				</div>
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

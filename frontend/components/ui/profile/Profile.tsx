@@ -10,6 +10,7 @@ const Profile: FC<{
 	commentContents?: string;
 	profileImage?: string;
 	username?: string;
+	email?: string;
 	role?: string;
 	isPublic?: Union<typeof feedPublicSelectOptions>;
 	onChageIsPublic?: (status: Union<typeof feedPublicSelectOptions>) => void;
@@ -18,6 +19,7 @@ const Profile: FC<{
 	commentContents,
 	profileImage,
 	username,
+	email,
 	role,
 	isPublic,
 	onChageIsPublic,
@@ -44,6 +46,7 @@ const Profile: FC<{
 				)}
 
 				{username && <div className={styles.profile_username}>양광성</div>}
+				{email && <div className={styles.profile_email}>{email}</div>}
 				{isPublic && (
 					<FeedPublicSelect
 						onChageIsPublic={onChageIsPublic}

@@ -21,11 +21,14 @@ import {
 } from 'react-icons/pi';
 import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '../swiper/SwiperContainer';
+import { Variants, motion } from 'framer-motion';
+import { easeOutAnimation } from '@/utils/animation/ease-out';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
 	onLike,
 	page,
+	index,
 	onRefetch,
 	onLikeComment,
 }) => {
@@ -78,7 +81,7 @@ const FeedItem: FC<FeedItemProps> = ({
 
 	return (
 		<>
-			<div>
+			<motion.div {...easeOutAnimation(index)}>
 				<div className={styles.feed_card_container} id={feed.feedId}>
 					<div className={styles.feed_card_top_container}>
 						{/* <Profile username="양광성"></Profile> */}
@@ -86,20 +89,21 @@ const FeedItem: FC<FeedItemProps> = ({
 							username={feed.username}
 							groupName={feed.groupName}
 						></GroupAndMemberProfile>
-						<div
+						<motion.div
 							className={styles.feed_card_setting_container}
+							initial={false}
+							animate={isOpenSetting ? 'open' : 'closed'}
 							ref={settingModalWrapperRef}
 						>
 							<BsThreeDots size={24} onClick={handleCloseSettingModal} />
-							{isOpenSetting && (
-								<ToggleModal
-									list={FeedSettingMenu}
-									onClose={handleCloseSettingModal}
-									direction="right"
-									feedId={feed.feedId}
-								/>
-							)}
-						</div>
+
+							<ToggleModal
+								list={FeedSettingMenu}
+								onClose={handleCloseSettingModal}
+								direction="right"
+								feedId={feed.feedId}
+							/>
+						</motion.div>
 					</div>
 					<div className={styles.feed_description_container}>
 						{feed.contents}
@@ -168,7 +172,7 @@ const FeedItem: FC<FeedItemProps> = ({
 						onLikeComment={handleLikeComment}
 					/>
 				)}
-			</div>
+			</motion.div>
 		</>
 	);
 };

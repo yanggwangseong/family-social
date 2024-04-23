@@ -2,13 +2,30 @@ import React, { FC } from 'react';
 import styles from './NotificationItem.module.scss';
 import Image from 'next/image';
 import { NotificationItemProps } from './notification-item.interface';
+import { motion } from 'framer-motion';
+import { easeOutAnimation } from '@/utils/animation/ease-out';
+import { useRouter } from 'next/router';
 
 const NotificationItem: FC<NotificationItemProps> = ({
 	notificationItem,
 	isDescription = false,
+	index,
 }) => {
+	const router = useRouter();
+
+	const handleFeedDetailPage = (feedId: string) => {
+		router.push(`/feeds/${feedId}`);
+	};
+
 	return (
-		<div className={styles.notification_item_container}>
+		<motion.div
+			className={styles.notification_item_container}
+			{...easeOutAnimation(index)}
+			onClick={() => {
+				notificationItem.notificationFeedId &&
+					handleFeedDetailPage(notificationItem.notificationFeedId);
+			}}
+		>
 			<div>
 				<Image
 					className={styles.profile_img}
@@ -35,7 +52,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
 					{notificationItem.createdAt}
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

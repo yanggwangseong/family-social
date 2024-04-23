@@ -3,6 +3,8 @@ import styles from './ToggleModal.module.scss';
 import ToggleModalItem from './toggle-modal-item/ToggleModalItem';
 import { ToggleModalProps } from './toggle-modal.interface';
 import cn from 'classnames';
+import { motion } from 'framer-motion';
+import { toggleWrapperVariant } from '@/utils/animation/toggle-variant';
 
 const ToggleModal: FC<ToggleModalProps> = ({
 	list,
@@ -11,12 +13,13 @@ const ToggleModal: FC<ToggleModalProps> = ({
 	feedId,
 }) => {
 	return (
-		<div
+		<motion.div
 			className={cn({
 				[styles.toggle_modal_container]: direction && direction === 'left',
 				[styles.toggle_modal_right_container]:
 					direction && direction === 'right',
 			})}
+			variants={toggleWrapperVariant}
 		>
 			{/* menu */}
 			{list.map((item, index) => (
@@ -30,7 +33,7 @@ const ToggleModal: FC<ToggleModalProps> = ({
 					feedId={feedId}
 				/>
 			))}
-		</div>
+		</motion.div>
 	);
 };
 

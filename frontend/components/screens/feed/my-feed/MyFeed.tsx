@@ -6,6 +6,7 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
+import { AnimatePresence } from 'framer-motion';
 
 const MyFeed: FC<{
 	handleIsLottie: (status: boolean) => void;
@@ -89,10 +90,11 @@ const MyFeed: FC<{
 		<div className={styles.feed_container}>
 			{isLoading && <Skeleton />}
 			{data?.pages.map((page, pageIndex) => (
-				<React.Fragment key={pageIndex}>
-					{page.list.map(feed => (
+				<AnimatePresence key={pageIndex}>
+					{page.list.map((feed, index) => (
 						<FeedItem
 							key={feed.feedId}
+							index={index}
 							feed={feed}
 							onLike={handleUpdateLike}
 							page={page.page}
@@ -100,7 +102,7 @@ const MyFeed: FC<{
 							onLikeComment={handleLikeComment}
 						/>
 					))}
-				</React.Fragment>
+				</AnimatePresence>
 			))}
 			{isRefetching && (
 				<React.Fragment>

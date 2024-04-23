@@ -7,6 +7,12 @@ import {
 import { useRecoilState } from 'recoil';
 
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
+import { motion } from 'framer-motion';
+import cn from 'classnames';
+import {
+	toggleVariant,
+	toggleWrapperVariant,
+} from '@/utils/animation/toggle-variant';
 
 const MediaLayer: FC = () => {
 	const [layer, setLayer] =
@@ -21,16 +27,28 @@ const MediaLayer: FC = () => {
 
 	return (
 		<>
-			{layer.isShowing && (
-				<div className={styles.modal_mask}>
-					<div className={styles.modal_close_wrap} onClick={handleCloseModal}>
-						x
-					</div>
-					<div className={styles.modal_container}>
-						<SwiperContainer type="feed-item" list={layer.medias} />
-					</div>
+			<motion.div
+				className={cn(styles.container, {
+					[styles.modal_mask]: !!layer.isShowing,
+				})}
+				initial={false}
+				animate={layer.isShowing ? 'open' : 'closed'}
+			>
+				<div className={styles.modal_close_wrap} onClick={handleCloseModal}>
+					x
 				</div>
-			)}
+				<motion.div
+					className={styles.modal_container}
+					variants={toggleWrapperVariant}
+				>
+					<motion.div
+						className={styles.modal_media_layer_container}
+						variants={toggleVariant}
+					>
+						<SwiperContainer type="feed-item" list={layer.medias} />
+					</motion.div>
+				</motion.div>
+			</motion.div>
 		</>
 	);
 };

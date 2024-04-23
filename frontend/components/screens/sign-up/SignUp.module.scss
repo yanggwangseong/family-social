@@ -28,15 +28,6 @@
 				@apply text-customGray text-base mt-4;
 			}
 			.form {
-				> div:nth-child(1) {
-					@apply text-customDark mt-8 mb-2;
-
-					&::after {
-						@apply text-customOrange;
-						content: '*';
-					}
-				}
-
 				.form_label {
 					@apply text-customDark mt-4 mb-2;
 

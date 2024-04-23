@@ -8,6 +8,11 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import cn from 'classnames';
 import styles from './ScheduleDetailSelect.module.scss';
 import { TourismPeriodResponse } from '@/shared/interfaces/schedule.interface';
+import { motion } from 'framer-motion';
+import {
+	toggleVariant,
+	toggleWrapperVariant,
+} from '@/utils/animation/toggle-variant';
 
 const ScheduleDetailSelect: FC<{
 	schedulePeriods: TourismPeriodResponse[];
@@ -26,8 +31,16 @@ const ScheduleDetailSelect: FC<{
 	};
 
 	return (
-		<div className={styles.select_container}>
-			<div className={styles.toggle_container} onClick={handleSelectToggle}>
+		<motion.div
+			className={styles.select_container}
+			initial={false}
+			animate={isSelectToggle ? 'open' : 'closed'}
+		>
+			<motion.div
+				className={styles.toggle_container}
+				whileTap={{ scale: 0.97 }}
+				onClick={handleSelectToggle}
+			>
 				<div>
 					<AiOutlineSchedule size={22} />
 				</div>
@@ -47,48 +60,56 @@ const ScheduleDetailSelect: FC<{
 						<MdKeyboardArrowUp size={22} />
 					)}
 				</div>
-			</div>
-			{isSelectToggle && (
-				<div className={styles.select_layer_modal_container}>
-					<div className={styles.modal_title_container}>
-						<div>
-							<AiOutlineEye size={22} />
-						</div>
-						<div className={styles.modal_title}>여행 일정별 계획</div>
-					</div>
+			</motion.div>
 
-					<div
+			<motion.div
+				className={styles.select_layer_modal_container}
+				variants={toggleWrapperVariant}
+				style={{ pointerEvents: isSelectToggle ? 'auto' : 'none' }}
+			>
+				<motion.div
+					className={styles.modal_title_container}
+					variants={toggleVariant}
+				>
+					<div>
+						<AiOutlineEye size={22} />
+					</div>
+					<div className={styles.modal_title}>여행 일정별 계획</div>
+				</motion.div>
+
+				<motion.div
+					className={cn(styles.select_item, {
+						[styles.active]: isSelectedPeriod === 'ALL',
+					})}
+					variants={toggleVariant}
+					onClick={() => handleSelectedPeriod('ALL')}
+				>
+					{`전체일정`}
+					{isSelectedPeriod === 'ALL' && (
+						<div className={styles.icon_container}>
+							<AiOutlineCheck size={14} color="#e5855d" />
+						</div>
+					)}
+				</motion.div>
+				{schedulePeriods.map((period, index) => (
+					<motion.div
+						key={index}
 						className={cn(styles.select_item, {
-							[styles.active]: isSelectedPeriod === 'ALL',
+							[styles.active]: isSelectedPeriod === period.period,
 						})}
-						onClick={() => handleSelectedPeriod('ALL')}
+						variants={toggleVariant}
+						onClick={() => handleSelectedPeriod(period.period)}
 					>
-						{`전체일정`}
-						{isSelectedPeriod === 'ALL' && (
+						{`${index + 1}일차 ${period.period}`}
+						{isSelectedPeriod === period.period && (
 							<div className={styles.icon_container}>
 								<AiOutlineCheck size={14} color="#e5855d" />
 							</div>
 						)}
-					</div>
-					{schedulePeriods.map((period, index) => (
-						<div
-							key={index}
-							className={cn(styles.select_item, {
-								[styles.active]: isSelectedPeriod === period.period,
-							})}
-							onClick={() => handleSelectedPeriod(period.period)}
-						>
-							{`${index + 1}일차 ${period.period}`}
-							{isSelectedPeriod === period.period && (
-								<div className={styles.icon_container}>
-									<AiOutlineCheck size={14} color="#e5855d" />
-								</div>
-							)}
-						</div>
-					))}
-				</div>
-			)}
-		</div>
+					</motion.div>
+				))}
+			</motion.div>
+		</motion.div>
 	);
 };
 

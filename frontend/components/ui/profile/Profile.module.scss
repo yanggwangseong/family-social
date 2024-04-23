@@ -10,6 +10,10 @@
 		@apply font-bold;
 	}
 
+	.profile_email {
+		@apply text-sm text-customGray;
+	}
+
 	.profile_role {
 		@apply text-sm text-customGray;
 	}

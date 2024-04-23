@@ -20,6 +20,7 @@ import {
 	IoChevronDownOutline,
 	IoChevronUp,
 } from 'react-icons/io5';
+import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const TourismDetail: FC = () => {
 	const [isDescription, setIsDescription] = useState<boolean>(false);
@@ -39,7 +40,7 @@ const TourismDetail: FC = () => {
 	};
 
 	return (
-		<div className={styles.tourism_detail_container}>
+		<LayerModalVariantWrapper className={styles.tourism_detail_container}>
 			<div className="flex gap-2">
 				<div className={styles.contentTypeName}>
 					{
@@ -131,7 +132,7 @@ const TourismDetail: FC = () => {
 					)
 				)}
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

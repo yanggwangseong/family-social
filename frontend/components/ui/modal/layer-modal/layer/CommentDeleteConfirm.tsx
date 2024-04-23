@@ -8,6 +8,9 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+import { toggleVariant } from '@/utils/animation/toggle-variant';
+import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const CommentDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -49,7 +52,7 @@ const CommentDeleteConfirm: FC = () => {
 		deleteCommentSync();
 	};
 	return (
-		<div>
+		<LayerModalVariantWrapper>
 			<div className="my-10 text-sm text-customGray">
 				정말 해당 댓글을 삭제하시겠습니까?
 			</div>
@@ -74,7 +77,7 @@ const CommentDeleteConfirm: FC = () => {
 					취소
 				</CustomButton>
 			</div>
-		</div>
+		</LayerModalVariantWrapper>
 	);
 };
 

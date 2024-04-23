@@ -21,6 +21,8 @@ import {
 } from './group-update.interface';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEditMode } from '@/hooks/useEditMode';
+import { motion } from 'framer-motion';
+import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
@@ -131,21 +133,21 @@ const GroupDetailEdit: FC = () => {
 														</div>
 														<div className={styles.btn_container}>
 															<CustomButton
+																className="mt-8 mb-4 bg-customDark text-customOrange 
+															font-bold border border-solid border-customDark 
+															rounded-full p-[10px] hover:opacity-80 w-full"
+																type="submit"
+															>
+																저장
+															</CustomButton>
+															<CustomButton
 																className="mt-8 mb-4 bg-white text-customDark 
 															font-bold border border-solid border-customDark 
-															rounded-full p-[10px] w-1/2 hover:opacity-80"
+															rounded-full p-[10px] hover:opacity-80 w-full"
 																type="button"
 																onClick={() => handleEdit('reset')}
 															>
 																취소
-															</CustomButton>
-															<CustomButton
-																className="mt-8 mb-4 bg-customDark text-customOrange 
-															font-bold border border-solid border-customDark 
-															rounded-full p-[10px] w-1/2 hover:opacity-80"
-																type="submit"
-															>
-																저장
 															</CustomButton>
 														</div>
 													</form>
@@ -161,12 +163,15 @@ const GroupDetailEdit: FC = () => {
 															isMode === 'reset' && handleEdit('information')
 														}
 													>
-														<div className={styles.btn_wrap}>
+														<motion.div
+															className={styles.btn_wrap}
+															{...INLINEBUTTONGESTURE}
+														>
 															<div className={styles.icon_container}>
 																<PiNotePencilDuotone size={22} />
 															</div>
 															<div className={styles.btn_text}>편집</div>
-														</div>
+														</motion.div>
 													</div>
 												</div>
 											)}
@@ -209,12 +214,15 @@ const GroupDetailEdit: FC = () => {
 															isMode === 'reset' && handleEdit('visitMessage')
 														}
 													>
-														<div className={styles.btn_wrap}>
+														<motion.div
+															className={styles.btn_wrap}
+															{...INLINEBUTTONGESTURE}
+														>
 															<div className={styles.icon_container}>
 																<PiNotePencilDuotone size={22} />
 															</div>
 															<div className={styles.btn_text}>편집</div>
-														</div>
+														</motion.div>
 													</div>
 												</div>
 											)}

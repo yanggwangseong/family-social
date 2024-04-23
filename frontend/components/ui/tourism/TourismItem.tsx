@@ -12,6 +12,17 @@ import { useRouter } from 'next/router';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import HeartAndStar from '../heart-and-star/HeartAndStar';
 import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
+import { motion } from 'framer-motion';
+
+const visible = {
+	opacity: 1,
+	y: 0,
+	transition: { duration: 0.5 },
+};
+const itemVariants = {
+	hidden: { opacity: 0, y: 10 },
+	visible,
+};
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -86,7 +97,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	}, [isPeriods, isSelectedPeriod, tour.contentid]);
 
 	return (
-		<div className={styles.container}>
+		<motion.div variants={itemVariants} className={styles.container}>
 			<div className={styles.tour_item_card}>
 				<div
 					className={styles.tour_img_title_container}
@@ -136,7 +147,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 					)}
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

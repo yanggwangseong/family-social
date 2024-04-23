@@ -167,7 +167,7 @@ const MessageToggleModal: FC = () => {
 											},
 										})}
 										fieldClass="hidden_border_textarea"
-										placeholder="댓글을 입력 하세요."
+										placeholder="메세지를 입력 하세요."
 									></FieldWithTextarea>
 									<div className={styles.comment_btn_container}>
 										<CustomButton

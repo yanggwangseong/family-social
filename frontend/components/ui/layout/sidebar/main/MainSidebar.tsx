@@ -2,10 +2,6 @@ import React, { FC } from 'react';
 import styles from './MainSidebar.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Menu from '../menu/Menu';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
-import { LayerMode } from 'types';
-import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
@@ -15,6 +11,9 @@ import {
 } from 'react-icons/pi';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
 import { useCreateFeed } from '@/hooks/useCreateFeed';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { useMenuAnimation } from '@/hooks/useMenuAnimation';
 
 const MainSidebar: FC = () => {
 	const router = useRouter();
@@ -27,32 +26,46 @@ const MainSidebar: FC = () => {
 		isLeftSidebarShowing,
 		setIsLeftSidebarShowing,
 		handleCloseMainSidebar,
+		isMobile,
 	} = useMainSidebar();
+
+	const { sidebarScope } = useMenuAnimation(isLeftSidebarShowing);
 
 	return (
 		<>
-			{isLeftSidebarShowing && (
-				<div className={styles.sidebar_container}>
+			<motion.div className={styles.sidebar_container} ref={sidebarScope}>
+				<motion.div>
+					<motion.div
+						className={styles.mobile_close_btn}
+						onClick={handleCloseMainSidebar}
+					>
+						x
+					</motion.div>
 					{/* 사이드 메뉴 */}
-					<Menu
-						link="/feeds"
-						Icon={PiArticleDuotone}
-						menu="피드"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/schedules"
-						Icon={PiCalendarCheckDuotone}
-						menu="여행 일정"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<Menu
-						link="/accounts"
-						Icon={PiUserCircleGearDuotone}
-						menu="계정"
-						handleCloseMainSidebar={handleCloseMainSidebar}
-					/>
-					<div className={styles.sidebar_btn_container}>
+					<motion.div className={styles.contents_wrap}>
+						<Menu
+							link="/feeds"
+							Icon={PiArticleDuotone}
+							menu="피드"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/schedules"
+							Icon={PiCalendarCheckDuotone}
+							menu="여행 일정"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/accounts"
+							Icon={PiUserCircleGearDuotone}
+							menu="계정"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+					</motion.div>
+					<motion.div
+						{...BUTTONGESTURE}
+						className={styles.sidebar_btn_container}
+					>
 						{isSchedulesRoute ? (
 							<Link
 								className="mt-8 bg-customOrange text-customDark 
@@ -62,7 +75,7 @@ const MainSidebar: FC = () => {
 									shadow-button-shadow
 									"
 								href={`/schedules/create`}
-								onClick={() => setIsLeftSidebarShowing(false)}
+								onClick={handleCloseMainSidebar}
 							>
 								+ 일정 만들기
 							</Link>
@@ -75,16 +88,16 @@ const MainSidebar: FC = () => {
 									w-full hover:bg-orange-500
 									"
 								onClick={() => {
-									setIsLeftSidebarShowing(false);
+									handleCloseMainSidebar();
 									handleCreateFeed();
 								}}
 							>
 								+ 피드
 							</CustomButton>
 						)}
-					</div>
-				</div>
-			)}
+					</motion.div>
+				</motion.div>
+			</motion.div>
 		</>
 	);
 };
