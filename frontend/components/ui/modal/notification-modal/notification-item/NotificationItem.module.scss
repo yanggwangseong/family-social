@@ -1,5 +1,5 @@
 .notification_item_container {
-	@apply flex gap-4 cursor-pointer rounded-lg py-3 px-3;
+	@apply flex gap-4 hover:bg-gray-50 cursor-pointer rounded-lg py-3 px-3;
 
 	.profile_img {
 		@apply rounded-full border border-solid border-customDark;
