@@ -21,7 +21,19 @@
 					@apply mx-auto;
 					width: 768px;
 				}
-				@apply w-full h-full mt-8 z-10;
+				@apply w-full h-full py-8 z-10;
+
+				.back_space_container {
+					@screen md {
+						@apply mx-0;
+					}
+
+					@apply mb-12 mx-2;
+				}
+
+				.feed_container {
+					@apply pb-12;
+				}
 			}
 		}
 	}

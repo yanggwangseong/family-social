@@ -10,48 +10,68 @@ import { FeedService } from '@/services/feed/feed.service';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
 import FeedItem from '@/components/ui/feed/FeedItem';
+import { useFeedLike } from '@/hooks/useFeedLike';
+import { useLottieLike } from '@/hooks/useLottieLike';
+import LottieLike from '@/components/ui/lottie/LottieLike';
+import { useCommentLike } from '@/hooks/useCommentLike';
 
 const FeedDetail: FC = () => {
 	const router = useRouter();
 	const { feedId } = router.query as { feedId: string };
 
-	const { data, isLoading } = useQuery(
-		['get-feed-by-id'],
+	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
+
+	const { data, isLoading, refetch } = useQuery(
+		['get-feed-by-id', feedId],
 		async () => await FeedService.getFeedById(feedId),
 		{
 			enabled: !!feedId,
 		},
 	);
-	console.log(data);
+
+	const handleRefetch = (pageValue: number) => {
+		refetch();
+	};
+
+	const { handleUpdateLike } = useFeedLike({ handleRefetch, handleIsLottie });
+
+	const { handleLikeComment } = useCommentLike({
+		handleRefetch,
+		handleIsLottie,
+	});
+
 	return (
 		<Format title={'feed'}>
 			<div className={styles.container}>
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
+					<LottieLike
+						lottieRef={lottieRef}
+						onLottieComplete={handleLottieComplete}
+					/>
+
 					{/* 왼쪽 사이드바 */}
 					<MainSidebar />
 					<div className={styles.detail_container}>
 						<div className={styles.main_contents_container}>
-							<div>
+							<div className={styles.back_space_container}>
 								<BackSpace title="Back" link="/notifications"></BackSpace>
 							</div>
-							{/* <AnimatePresence>
-								{
-									data && (
+							<div className={styles.feed_container}>
+								<AnimatePresence>
+									{data && (
 										<FeedItem
-													
-													feed={data}
-													index={0}
-													onLike={handleUpdateLike}
-													page={page.page}
-													onRefetch={handleRefetch}
-													onLikeComment={handleLikeComment}
-												/>
-									)
-								}
-							
-							</AnimatePresence> */}
+											feed={data}
+											index={0}
+											onLike={handleUpdateLike}
+											page={1}
+											onRefetch={handleRefetch}
+											onLikeComment={handleLikeComment}
+										/>
+									)}
+								</AnimatePresence>
+							</div>
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
