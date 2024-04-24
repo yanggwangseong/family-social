@@ -12,6 +12,8 @@ import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
 import { PiPencilDuotone } from 'react-icons/pi';
 import { motion } from 'framer-motion';
+import TabMenu from '@/components/ui/tab-menu/TabMenu';
+import { groupTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -74,6 +76,11 @@ const GroupDetail: FC = () => {
 										</motion.div>
 									</div>
 								</div>
+								{/* 탭 메뉴 */}
+								<div className={styles.tap_menu_container}>
+									<TabMenu list={groupTabMenus} options={'GROUPFEED'} />
+								</div>
+								<div>피드</div>
 							</div>
 						</div>
 					</div>

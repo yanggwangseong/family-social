@@ -54,6 +54,13 @@
 							}
 						}
 					}
+
+					.tap_menu_container {
+						@screen md {
+							@apply mx-0;
+						}
+						@apply mx-2 z-10 mt-8 mb-6;
+					}
 				}
 			}
 		}

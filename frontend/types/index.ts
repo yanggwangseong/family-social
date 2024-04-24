@@ -33,6 +33,9 @@ export const TabMenus = [
 	'FESTIVAL',
 	'NOTREAD',
 	'READ',
+	'GROUPFEED',
+	'GROUPMEMBER',
+	'GROUPEVENT',
 ] as const;
 export const schdulePages = [
 	'selectGroupPage',
