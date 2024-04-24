@@ -45,12 +45,23 @@
 
 						.banner_profile_right_contaienr {
 							@screen md {
-								@apply ml-auto;
+								@apply ml-auto flex gap-4;
 							}
-							@apply ml-0;
+							@apply ml-0 block;
+
+							.create_feed_btn {
+								@screen md {
+									@apply block w-[200px];
+								}
+								@apply hidden;
+							}
 
 							.toggle_menu_container {
-								@apply flex justify-center items-center relative;
+								@screen md {
+									@apply w-[200px];
+								}
+
+								@apply flex justify-center items-center relative w-full;
 							}
 						}
 					}

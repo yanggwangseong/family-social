@@ -50,6 +50,18 @@ const GroupDetail: FC = () => {
 									{/* 프로필 */}
 									<Profile username="양광성" role="관리자" />
 									<div className={styles.banner_profile_right_contaienr}>
+										<div className={styles.create_feed_btn}>
+											<CustomButton
+												type="button"
+												className="bg-customOrange text-customDark 
+												font-bold border border-solid border-customDark 
+												rounded-full w-full py-[10px] px-7
+												hover:bg-orange-500
+												"
+											>
+												+ 피드
+											</CustomButton>
+										</div>
 										<motion.div
 											className={styles.toggle_menu_container}
 											initial={false}
