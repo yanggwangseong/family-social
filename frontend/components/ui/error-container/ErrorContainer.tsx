@@ -1,11 +1,13 @@
 import React, { FC } from 'react';
 import { ErrorContainerProps } from './error-container.interface';
+import errorAnimation from '@/assets/lottie/errorboundary.json';
+import Lottie from 'lottie-react';
 
 const ErrorContainer: FC<ErrorContainerProps> = ({ title, handleGoMain }) => {
 	return (
 		<div>
-			<h1>{title}</h1>
-			<h3>서비스 에러가 발생 하였습니다.</h3>
+			<Lottie animationData={errorAnimation} loop={true} />
+			<h3>{title}</h3>
 			<p>
 				<br />
 				죄송합니다.

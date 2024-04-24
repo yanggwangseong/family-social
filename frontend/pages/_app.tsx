@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		<QueryClientProvider client={queryClient.current}>
 			<Hydrate state={pageProps.dehydratedState}>
 				<RecoilRoot>
-					<ErrorBoundary title="ErrorPage">
+					<ErrorBoundary title="에러가 발생했습니다">
 						<Component {...pageProps} />
 						{process.env.NODE_ENV === 'development' && (
 							<ReactQueryDevtools initialIsOpen={false} />
