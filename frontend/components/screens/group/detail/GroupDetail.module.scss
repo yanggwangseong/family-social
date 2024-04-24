@@ -70,9 +70,17 @@
 						@screen md {
 							@apply mx-0;
 						}
-						@apply mx-2 z-10 mt-8 mb-6;
+						@apply mx-4 z-10 mt-8 mb-6;
 					}
 				}
+			}
+
+			// mobile-create-feed-btn
+			.mobile_create_feed_btn_container {
+				@screen md {
+					@apply hidden;
+				}
+				@apply fixed bottom-6 right-4 border border-solid border-customDark bg-customOrange flex justify-center items-center rounded-full p-4 z-30;
 			}
 		}
 	}

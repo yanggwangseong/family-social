@@ -14,10 +14,14 @@ import { PiPencilDuotone } from 'react-icons/pi';
 import { motion } from 'framer-motion';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import { groupTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { useCreateFeed } from '@/hooks/useCreateFeed';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
+
+	const { handleCreateFeed } = useCreateFeed();
 
 	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
 	const {
@@ -94,6 +98,14 @@ const GroupDetail: FC = () => {
 								</div>
 								<div>피드</div>
 							</div>
+						</div>
+						<div
+							className={styles.mobile_create_feed_btn_container}
+							onClick={handleCreateFeed}
+						>
+							<motion.div {...BUTTONGESTURE}>
+								<PiPencilDuotone size={28} color="#0a0a0a" />
+							</motion.div>
 						</div>
 					</div>
 				</div>
