@@ -164,6 +164,7 @@ const GroupDetail: FC = () => {
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
+												onClick={handleCreateFeed}
 											>
 												+ 피드
 											</CustomButton>
