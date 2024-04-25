@@ -25,6 +25,7 @@ import { FeedService } from '@/services/feed/feed.service';
 import { GroupService } from '@/services/group/group.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import FeedItem from '@/components/ui/feed/FeedItem';
+import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -33,7 +34,7 @@ const GroupDetail: FC = () => {
 		options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT';
 	};
 
-	const [observedPost, setObservedPost] = useState('');
+	//const [observedPost, setObservedPost] = useState('');
 
 	const { groupId } = router.query as { groupId: string };
 
@@ -55,22 +56,14 @@ const GroupDetail: FC = () => {
 		isError,
 		isRefetching,
 		refetch,
-	} = useInfiniteQuery(
-		['feeds'],
+	} = useFeedIntersectionObserver(
+		['group-feeds', groupId],
 		async ({ pageParam = 1 }) =>
 			await GroupService.getFeedsOfGroup(
 				pageParam,
 				query.options ?? 'GROUPFEED',
 				groupId,
 			),
-		{
-			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.page !== allPosts[0].totalPage
-					? lastPage.page + 1
-					: undefined;
-			},
-			enabled: !!groupId,
-		},
 	);
 
 	const handleRefetch = (pageValue: number) => {
@@ -84,46 +77,46 @@ const GroupDetail: FC = () => {
 		handleIsLottie,
 	});
 
-	useEffect(() => {
-		const observeElement = (element: HTMLElement | null) => {
-			if (!element) return;
-			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
-			const observer = new IntersectionObserver(
-				// entries는 IntersectionObserverEntry 인스턴스의 배열
-				entries => {
-					console.log('entries', entries);
-					// isIntersecting: 관찰 대상의 교차 상태(Boolean)
-					if (entries[0].isIntersecting === true) {
-						console.log('마지막 포스트에 왔습니다');
-						fetchNextPage();
-						observer.unobserve(element); //이전에 observe 하고 있던걸 없애준다.
-					}
-				},
-				{ threshold: 1 },
-			);
-			// 대상 요소의 관찰을 시작
-			observer.observe(element);
-		};
+	// useEffect(() => {
+	// 	const observeElement = (element: HTMLElement | null) => {
+	// 		if (!element) return;
+	// 		// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
+	// 		const observer = new IntersectionObserver(
+	// 			// entries는 IntersectionObserverEntry 인스턴스의 배열
+	// 			entries => {
+	// 				console.log('entries', entries);
+	// 				// isIntersecting: 관찰 대상의 교차 상태(Boolean)
+	// 				if (entries[0].isIntersecting === true) {
+	// 					console.log('마지막 포스트에 왔습니다');
+	// 					fetchNextPage();
+	// 					observer.unobserve(element); //이전에 observe 하고 있던걸 없애준다.
+	// 				}
+	// 			},
+	// 			{ threshold: 1 },
+	// 		);
+	// 		// 대상 요소의 관찰을 시작
+	// 		observer.observe(element);
+	// 	};
 
-		//포스트가 없다면 return
-		if (
-			!data?.pages[data?.pages.length - 1].list ||
-			data?.pages[data?.pages.length - 1].list.length === 0
-		)
-			return;
-		//posts 배열안에 마지막 post에 id를 가져옵니다.
-		const id =
-			data?.pages[data?.pages.length - 1].list[
-				data?.pages[data?.pages.length - 1].list.length - 1
-			].feedId;
-		//posts 배열에 post가 추가되서 마지막 post가 바뀌었다면
-		// 바뀐 post중 마지막post를 observedPost로
-		if (id !== observedPost) {
-			setObservedPost(id);
-			observeElement(document.getElementById(id));
-		}
-		return () => {};
-	}, [data, fetchNextPage, observedPost]);
+	// 	//포스트가 없다면 return
+	// 	if (
+	// 		!data?.pages[data?.pages.length - 1].list ||
+	// 		data?.pages[data?.pages.length - 1].list.length === 0
+	// 	)
+	// 		return;
+	// 	//posts 배열안에 마지막 post에 id를 가져옵니다.
+	// 	const id =
+	// 		data?.pages[data?.pages.length - 1].list[
+	// 			data?.pages[data?.pages.length - 1].list.length - 1
+	// 		].feedId;
+	// 	//posts 배열에 post가 추가되서 마지막 post가 바뀌었다면
+	// 	// 바뀐 post중 마지막post를 observedPost로
+	// 	if (id !== observedPost) {
+	// 		setObservedPost(id);
+	// 		observeElement(document.getElementById(id));
+	// 	}
+	// 	return () => {};
+	// }, [data, fetchNextPage, observedPost]);
 
 	return (
 		<Format title={'group-detail'}>
