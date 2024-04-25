@@ -6,13 +6,15 @@
 
 	//컨텐츠
 	.contents_container {
-		@apply flex;
+		@apply flex relative overflow-x-hidden;
 		height: calc(100vh - 80px);
 		overflow-y: auto; /* 스크롤 가능한 컨테이너로 만듭니다. 이걸 해주어야 왼쪽 사이드바 sticky가 먹음 */
 
 		.detail_container {
-			@apply relative;
-			flex: 1;
+			@screen md {
+				flex: 1;
+			}
+			@apply relative w-full z-10;
 
 			.main {
 				@apply h-full;
@@ -45,16 +47,47 @@
 
 						.banner_profile_right_contaienr {
 							@screen md {
-								@apply ml-auto;
+								@apply ml-auto flex gap-4;
 							}
-							@apply ml-0;
+							@apply ml-0 block;
+
+							.create_feed_btn {
+								@screen md {
+									@apply block w-[200px];
+								}
+								@apply hidden;
+							}
 
 							.toggle_menu_container {
-								@apply flex justify-center items-center relative;
+								@screen md {
+									@apply w-[200px];
+								}
+
+								@apply flex justify-center items-center relative w-full;
 							}
 						}
 					}
+
+					.tap_menu_container {
+						@screen md {
+							@apply mx-0;
+						}
+						@apply mx-4 z-10 mt-8 mb-6;
+					}
+
+					// feed container
+					.feed_container {
+						@apply pt-6 pb-8 flex flex-col gap-10 z-10;
+					}
 				}
+			}
+
+			// mobile-create-feed-btn
+			.mobile_create_feed_btn_container {
+				@screen md {
+					@apply hidden;
+				}
+				@apply fixed bottom-6 right-4 border border-solid border-customDark bg-customOrange flex justify-center items-center rounded-full p-4 z-30;
 			}
 		}
 	}
