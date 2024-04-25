@@ -61,7 +61,14 @@ export class FeedsService {
 	async findAllFeed(
 		page: number,
 		memberId: string,
-		options: 'TOP' | 'MYFEED' | 'ALL',
+		options:
+			| 'TOP'
+			| 'MYFEED'
+			| 'ALL'
+			| 'GROUPFEED'
+			| 'GROUPMEMBER'
+			| 'GROUPEVENT',
+		groupId?: string,
 	): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset({ page });
 		const { list, count } = await this.feedsRepository.findAllFeed({
@@ -69,6 +76,7 @@ export class FeedsService {
 			skip,
 			memberId,
 			options,
+			groupId,
 		});
 
 		const mappedList = await Promise.all(

@@ -28,7 +28,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 	],
 	controllers: [FeedsController],
 	providers: [FeedsService, FeedsRepository, LikesFeedRepository],
-	exports: [],
+	exports: [FeedsService],
 })
 export class FeedsModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
