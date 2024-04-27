@@ -1,5 +1,11 @@
 import { atom } from 'recoil';
 
+export const areaCodeDefaultValue = {
+	areaCodeMain: '',
+	areaCodeMainName: '',
+	areaCodeSub: '',
+	areaCodeSubName: '',
+};
 export interface areaCodeAtomType {
 	areaCodeMain: string;
 	areaCodeMainName: string;
@@ -8,11 +14,6 @@ export interface areaCodeAtomType {
 }
 
 export const areaCodeAtom = atom<areaCodeAtomType>({
-	default: {
-		areaCodeMain: '',
-		areaCodeMainName: '',
-		areaCodeSub: '',
-		areaCodeSubName: '',
-	},
+	default: areaCodeDefaultValue,
 	key: 'areaCode',
 });
