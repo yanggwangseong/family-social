@@ -10,11 +10,10 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 
 import { ToursService } from './tours.service';
 
-@UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
+@UseInterceptors(LoggingInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('tours')
 @Controller('tours')
@@ -155,12 +154,16 @@ export class ToursController {
 	async getHttpTourApiFestivalSchedule(
 		@Query('numOfRows') numOfRows: number,
 		@Query('pageNo') pageNo: number,
+		@Query('areaCode') areaCode: number,
+		@Query('sigunguCode') sigunguCode: number,
 		@Query('eventStartDate') eventStartDate: string,
 	) {
 		return await this.toursService.getHttpTourApiFestivalSchedule({
 			numOfRows,
 			pageNo,
 			eventStartDate,
+			areaCode,
+			sigunguCode,
 		});
 	}
 }

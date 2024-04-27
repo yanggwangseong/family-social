@@ -239,15 +239,19 @@ export class ToursService {
 		numOfRows,
 		pageNo,
 		eventStartDate,
+		areaCode,
+		sigunguCode,
 	}: {
 		numOfRows: number;
 		pageNo: number;
 		eventStartDate: string;
+		areaCode: number;
+		sigunguCode: number;
 	}) {
 		const arrange = 'A';
 		const httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}`;
+		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
