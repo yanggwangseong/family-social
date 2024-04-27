@@ -12,4 +12,18 @@
 			@apply w-3/4 flex items-center;
 		}
 	}
+
+	// 검색 버튼
+	.search_btn_container {
+		@apply my-10;
+	}
+
+	// 관광 아이템
+	.tourism_item_container {
+		@apply mt-10;
+
+		.tourism_item_wrap {
+			@apply flex flex-col gap-4;
+		}
+	}
 }

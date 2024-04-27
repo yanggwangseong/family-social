@@ -109,12 +109,14 @@ export const TourService = {
 		areaCode,
 		sigunguCode,
 		isSelected,
+		eventStartDate,
 	}: {
 		numOfRows: number;
 		pageNo: number;
 		areaCode: string;
 		sigunguCode: string;
 		isSelected: orderSelectOptionsKeys;
+		eventStartDate: string;
 	}) {
 		let arrange = 'O';
 		if (isSelected === 'orderSubject') {
@@ -125,7 +127,10 @@ export const TourService = {
 			arrange = 'Q';
 		}
 
-		let url = `tours/festival?arrange=${arrange}&numOfRows=${numOfRows}&pageNo=${pageNo}&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+		let url = `tours/festival?arrange=${arrange}
+		&numOfRows=${numOfRows}&pageNo=${pageNo}
+		&areaCode=${areaCode}&sigunguCode=${sigunguCode}
+		&eventStartDate=${eventStartDate}`;
 		const { data } = await axiosAPI.get<TourListResponse>(url);
 		return data;
 	},
