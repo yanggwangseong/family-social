@@ -103,6 +103,33 @@ export const TourService = {
 		return data;
 	},
 
+	async searchTourFestivalList({
+		pageNo,
+		numOfRows,
+		areaCode,
+		sigunguCode,
+		isSelected,
+	}: {
+		numOfRows: number;
+		pageNo: number;
+		areaCode: string;
+		sigunguCode: string;
+		isSelected: orderSelectOptionsKeys;
+	}) {
+		let arrange = 'O';
+		if (isSelected === 'orderSubject') {
+			arrange = 'O';
+		} else if (isSelected === 'orderCreated') {
+			arrange = 'R';
+		} else if (isSelected === 'orderUpdated') {
+			arrange = 'Q';
+		}
+
+		let url = `tours/festival?arrange=${arrange}&numOfRows=${numOfRows}&pageNo=${pageNo}&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+		const { data } = await axiosAPI.get<TourListResponse>(url);
+		return data;
+	},
+
 	async getTourDetail(contentId: string, contentTypeId: string) {
 		const url = `tours/${contentId}/common-information?numOfRows=10&pageNo=1&contentTypeId=${contentTypeId}`;
 
