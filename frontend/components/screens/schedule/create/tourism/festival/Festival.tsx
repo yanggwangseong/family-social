@@ -7,12 +7,19 @@ import { LayerMode } from 'types';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { areaCodeAtom, areaCodeDefaultValue } from '@/atoms/areaCodeAtom';
+import SelectBox from '@/components/ui/select/SelectBox';
+import { optionsLists } from '../tourism.constants';
+import { useSelect } from '@/hooks/useSelect';
+import { orderSelectOptionsKeys } from '../tourism.interface';
 
 const Festival: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [isAreaCode, setIsAreaCode] = useRecoilState(areaCodeAtom);
+
+	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
+		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
 
 	const [startDate, setDateRange] = useState<Date>(new Date());
 
@@ -64,6 +71,18 @@ const Festival: FC = () => {
 				onChange={handleChange}
 				showIcon
 			/>
+			<div>
+				<div>
+					<SelectBox
+						options={optionsLists}
+						onChangeSelected={handleChangeSelected}
+						onSelectToggle={handleSelectToggle}
+						isToggle={isToggle}
+						isSelected={isSelected}
+						comment={`행사정보 정렬`}
+					></SelectBox>
+				</div>
+			</div>
 		</div>
 	);
 };
