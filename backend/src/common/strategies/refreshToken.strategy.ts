@@ -27,16 +27,16 @@ export class RefreshTokenStrategy extends PassportStrategy(
 	}
 
 	validate(req: Request, payload: TokenPayload) {
-		if (!req.cookies.Authentication)
+		if (!req.signedCookies.Authentication)
 			throw UnAuthOrizedException(ERROR_TOKEN_EXPIRED);
 
-		const refreshToken = req.cookies.Authentication;
+		const refreshToken = req.signedCookies.Authentication;
 		return { ...payload, refreshToken };
 	}
 
 	private static extractJWT(req: Request): string | null {
-		if (req.cookies && 'Authentication' in req.cookies) {
-			return req.cookies.Authentication;
+		if (req.signedCookies && 'Authentication' in req.signedCookies) {
+			return req.signedCookies.Authentication;
 		}
 		return null;
 	}

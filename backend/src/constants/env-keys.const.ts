@@ -26,6 +26,7 @@ export const ENV_COOKIE_MAX_AGE = 'COOKIE_MAX_AGE' as const;
 export const ENV_ACCESS_TOKEN_COOKIE_NAME = 'ACCESS_TOKEN_COOKIE_NAME' as const;
 export const ENV_REFRESH_TOKEN_COOKIE_NAME =
 	'REFRESH_TOKEN_COOKIE_NAME' as const;
+export const ENV_SECRET_COOKIE_KEY = 'SECRET_COOKIE_KEY' as const;
 
 //tour-api
 export const ENV_TOUR_API_SERVICE_KEY = 'TOUR_API_SERVICE_KEY' as const;
