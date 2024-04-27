@@ -1,7 +1,7 @@
-import * as path from 'path';
+import path from 'path';
 
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import { Request } from 'express';
 import multerS3 from 'multer-s3';
 
