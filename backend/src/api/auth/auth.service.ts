@@ -260,12 +260,14 @@ export class AuthService {
 				: accessTokenCookieName!;
 		let cookieOptions: CookieOptions = {
 			maxAge: Number(this.configService.get<number>(ENV_COOKIE_MAX_AGE)),
+			secure: true,
 		};
 
 		if (type === 'refreshToken') {
 			cookieOptions = {
 				...cookieOptions,
 				httpOnly: true,
+				signed: true,
 			};
 		}
 
