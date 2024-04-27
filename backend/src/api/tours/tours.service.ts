@@ -250,9 +250,12 @@ export class ToursService {
 		sigunguCode: number;
 		arrange: string;
 	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
+		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&areaCode=${areaCode}&sigunguCode=${sigunguCode}&arrange=${arrange}`;
+		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&arrange=${arrange}`;
+
+		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
+		if (sigunguCode) httpServiceUrl += `&sigunguCode=${sigunguCode}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
