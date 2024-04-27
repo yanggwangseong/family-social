@@ -13,7 +13,11 @@ import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
-import { ENV_SECRET_COOKIE_KEY } from './constants/env-keys.const';
+import {
+	ENV_APPLICATION_PORT,
+	ENV_GLOBAL_PREFIX,
+	ENV_SECRET_COOKIE_KEY,
+} from './constants/env-keys.const';
 
 dotenv.config({
 	path: path.resolve(
@@ -44,7 +48,7 @@ async function bootstrap() {
 	};
 
 	// set global prefix
-	app.setGlobalPrefix('api');
+	app.setGlobalPrefix(String(process.env[ENV_GLOBAL_PREFIX]));
 
 	// global pipes
 	app.useGlobalPipes(
@@ -111,6 +115,6 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('api/v1/swagger', app, document, getSwaggerOptions());
 
-	await app.listen(5001);
+	await app.listen(Number(process.env[ENV_APPLICATION_PORT]));
 }
 bootstrap();

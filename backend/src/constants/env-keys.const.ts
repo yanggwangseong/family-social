@@ -35,3 +35,7 @@ export const ENV_TOUR_API_END_POINT = 'TOUR_API_END_POINT' as const;
 //throttler
 export const ENV_THROTTLER_TTL = 'THROTTLER_TTL' as const;
 export const ENV_THROTTLER_LIMIT = 'THROTTLER_LIMIT' as const;
+
+// application
+export const ENV_APPLICATION_PORT = 'APPLICATION_PORT' as const;
+export const ENV_GLOBAL_PREFIX = 'GLOBAL_PREFIX' as const;
