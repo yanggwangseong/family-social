@@ -104,7 +104,9 @@ const TourismDetail: FC = () => {
 										주소:
 									</div>
 								</div>
-								<div className="text-sm text-customDark font-normal">{`(${data.items.item[0].zipcode})${data.items.item[0].addr1}${data.items.item[0].addr2}`}</div>
+								<div className="text-sm text-customDark font-normal">
+									{`(${data.items.item[0].zipcode})${data.items.item[0].addr1}${data.items.item[0].addr2}`}
+								</div>
 							</div>
 							<div className={styles.phone_number_container}>
 								<div className="flex gap-2">
@@ -115,7 +117,9 @@ const TourismDetail: FC = () => {
 										전화번호:
 									</div>
 								</div>
-								<div className="text-sm text-customDark font-normal">{`${data.items.introduction.item[0].infocenter}`}</div>
+								<div className="text-sm text-customDark font-normal">
+									{`${data.items.introduction.item[0].infocenter ?? ''}`}
+								</div>
 							</div>
 							<div className={styles.store_time_container}>
 								<div className="flex gap-2">
@@ -126,7 +130,9 @@ const TourismDetail: FC = () => {
 										영업시간:
 									</div>
 								</div>
-								<div className="text-sm text-customDark font-normal">{`${data.items.introduction.item[0].usetime}`}</div>
+								<div className="text-sm text-customDark font-normal">
+									{`${data.items.introduction.item[0].usetime ?? ''}`}
+								</div>
 							</div>
 						</div>
 					)
