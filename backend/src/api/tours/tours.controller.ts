@@ -157,6 +157,7 @@ export class ToursController {
 		@Query('areaCode') areaCode: number,
 		@Query('sigunguCode') sigunguCode: number,
 		@Query('eventStartDate') eventStartDate: string,
+		@Query('arrange') arrange: string,
 	) {
 		return await this.toursService.getHttpTourApiFestivalSchedule({
 			numOfRows,
@@ -164,6 +165,7 @@ export class ToursController {
 			eventStartDate,
 			areaCode,
 			sigunguCode,
+			arrange,
 		});
 	}
 }

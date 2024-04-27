@@ -241,17 +241,18 @@ export class ToursService {
 		eventStartDate,
 		areaCode,
 		sigunguCode,
+		arrange,
 	}: {
 		numOfRows: number;
 		pageNo: number;
 		eventStartDate: string;
 		areaCode: number;
 		sigunguCode: number;
+		arrange: string;
 	}) {
-		const arrange = 'A';
 		const httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&areaCode=${areaCode}&sigunguCode=${sigunguCode}&arrange=${arrange}`;
 
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
