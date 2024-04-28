@@ -1,12 +1,11 @@
-import { Column, Entity, Unique } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 import { MentionType, Union } from '@/types';
 
 import { DefaultEntity } from './common/default.entity';
 
-@Unique(['mentionType'])
-@Entity({ name: 'fam_mention_type' })
-export class MentionTypeEntity extends DefaultEntity {
+@Entity({ name: 'fam_mention' })
+export class MentionEntity extends DefaultEntity {
 	@Column({
 		type: 'enum',
 		enum: MentionType,
