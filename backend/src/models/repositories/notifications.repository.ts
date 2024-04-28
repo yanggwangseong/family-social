@@ -4,8 +4,6 @@ import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Union, isReadOptions } from '@/types';
-
 import { NotificationResDto } from '../dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '../entities/notification.entity';
 
