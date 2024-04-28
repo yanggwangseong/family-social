@@ -35,9 +35,9 @@ export class MentionEntity extends DefaultEntity {
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly mentionSenderId!: string;
 
-	@Column({ type: 'uuid', nullable: false })
+	@Column({ type: 'uuid', nullable: true })
 	@ApiProperty({
-		nullable: false,
+		nullable: true,
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -45,9 +45,9 @@ export class MentionEntity extends DefaultEntity {
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly mentionCommentId!: string;
 
-	@Column({ type: 'uuid', nullable: false })
+	@Column({ type: 'uuid', nullable: true })
 	@ApiProperty({
-		nullable: false,
+		nullable: true,
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
