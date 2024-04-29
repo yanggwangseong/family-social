@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 
 import { MentionTypeRepository } from '@/models/repositories/mention-type.repository';
 import { MentionsRepository } from '@/models/repositories/mentions.repository';
@@ -22,8 +23,8 @@ export class MentionsService {
 		return mentionTypId;
 	}
 
-	async createMentions(mentionArgs: ICreateMentionArgs) {
-		const { mentionType, mentions, qr, ...rest } = mentionArgs;
+	async createMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
+		const { mentionType, mentions, ...rest } = mentionArgs;
 
 		const mentionTypeId = await this.findMentionIdByNotificationType(
 			mentionType,

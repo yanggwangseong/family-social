@@ -129,13 +129,15 @@ export class FeedsService {
 			qr,
 		);
 
-		await this.mentionsService.createMentions({
-			mentionType: 'mention_on_feed',
-			mentions: rest.mentions,
-			mentionSenderId: rest.memberId,
-			mentionFeedId: feed.id,
+		await this.mentionsService.createMentions(
+			{
+				mentionType: 'mention_on_feed',
+				mentions: rest.mentions,
+				mentionSenderId: rest.memberId,
+				mentionFeedId: feed.id,
+			},
 			qr,
-		});
+		);
 
 		await this.mediasService.createFeedMedias(medias, feed.id, qr);
 
