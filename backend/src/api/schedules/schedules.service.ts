@@ -108,7 +108,9 @@ export class SchedulesService {
 			await this.tourismPeriodRepository.findTourismPeriodsByScheduleId(
 				rest.scheduleId,
 			);
-		periodIds.map(async (item) => await this.deleteTourism(item.id, qr));
+		await Promise.all(
+			periodIds.map(async (item) => await this.deleteTourism(item.id, qr)),
+		);
 
 		// TourismPeriod 다 삭제
 		await this.deleteTourismPeriod(rest.scheduleId, qr);
