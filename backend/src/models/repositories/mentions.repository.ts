@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,21 +23,33 @@ export class MentionsRepository extends Repository<MentionEntity> {
 	}
 
 	async createMentions(
-		mentions: MentionCreateReqDto[],
-		overrideInsertFeilds: Omit<
-			QueryDeepPartialEntity<MentionEntity>,
-			'id' | 'mentionRecipientId'
-		>,
+		insertMentions: QueryDeepPartialEntity<MentionEntity>[],
 		qr?: QueryRunner,
 	) {
 		const mentionsRepository = this.getMentionRepository(qr);
 
-		mentions.map(async (mention: MentionCreateReqDto) => {
-			await mentionsRepository.insert({
-				id: uuidv4(),
-				mentionRecipientId: mention.mentionMemberId,
-				...overrideInsertFeilds,
-			});
+		await mentionsRepository.insert(insertMentions);
+	}
+
+	async getMentions(overrideWhere: FindOptionsWhere<MentionEntity>) {
+		const mentions = await this.repository.find({
+			select: {
+				id: true,
+				mentionRecipient: {
+					id: true,
+					profileImage: true,
+					username: true,
+					email: true,
+				},
+			},
+			where: {
+				...overrideWhere,
+			},
+			relations: {
+				mentionRecipient: true,
+			},
 		});
+
+		return mentions;
 	}
 }

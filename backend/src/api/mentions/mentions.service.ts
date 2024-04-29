@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { v4 as uuidv4 } from 'uuid';
 
+import { MentionCreateReqDto } from '@/models/dto/mention/req/mention-create-req.dto';
+import { MentionEntity } from '@/models/entities/mention.entity';
 import { MentionTypeRepository } from '@/models/repositories/mention-type.repository';
 import { MentionsRepository } from '@/models/repositories/mentions.repository';
 import { MentionType, Union } from '@/types';
@@ -12,6 +16,12 @@ export class MentionsService {
 		private readonly mentionsRepository: MentionsRepository,
 		private readonly mentionTypeRepository: MentionTypeRepository,
 	) {}
+
+	async findMentionsByFeedId(feedId: string) {
+		return await this.mentionsRepository.getMentions({
+			mentionFeedId: feedId,
+		});
+	}
 
 	async findMentionIdByNotificationType(
 		mentionType: Union<typeof MentionType>,
@@ -31,12 +41,27 @@ export class MentionsService {
 		);
 
 		await this.mentionsRepository.createMentions(
-			mentions,
-			{
-				mentionTypeId,
-				...rest,
-			},
+			this.createNewMentions(mentions, mentionTypeId, { ...rest }),
 			qr,
 		);
+	}
+
+	private createNewMentions(
+		mentions: MentionCreateReqDto[],
+		mentionTypeId: string,
+		{
+			mentionSenderId,
+			mentionFeedId,
+		}: { mentionSenderId: string; mentionFeedId: string },
+	) {
+		return mentions.map((data): QueryDeepPartialEntity<MentionEntity> => {
+			return {
+				id: uuidv4(),
+				mentionTypeId,
+				mentionSenderId,
+				mentionFeedId,
+				mentionRecipientId: data.mentionMemberId,
+			};
+		});
 	}
 }
