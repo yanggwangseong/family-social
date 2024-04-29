@@ -103,16 +103,24 @@ export class FeedsService {
 		};
 	}
 
-	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
+	async updateLikesFeedId(
+		memberId: string,
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<boolean> {
+		const likeFeedRepository =
+			this.likesFeedRepository.getLikesFeedRepository(qr);
+
 		const like = await this.likesFeedRepository.findMemberLikesFeed(
 			memberId,
 			feedId,
+			qr,
 		);
 
 		if (like) {
-			await this.likesFeedRepository.remove(like);
+			await likeFeedRepository.remove(like);
 		} else {
-			await this.likesFeedRepository.save({ memberId, feedId });
+			await likeFeedRepository.save({ memberId, feedId });
 		}
 
 		return !like;

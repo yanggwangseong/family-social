@@ -199,6 +199,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesFeedSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -208,17 +209,27 @@ export class FeedsController {
 		)
 		feedId: string,
 		@Body() dto: FeedLikeUpdateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const isUpdateLike = await this.feedsService.updateLikesFeedId(sub, feedId);
+		const isUpdateLike = await this.feedsService.updateLikesFeedId(
+			sub,
+			feedId,
+			qr,
+		);
 
-		await this.notificationsService.createNotification({
-			notificationType: 'like_on_my_post',
-			recipientId: dto.feedWriterId,
-			senderId: sub,
-			notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
-			notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
-			notificationFeedId: feedId,
-		});
+		if (isUpdateLike) {
+			await this.notificationsService.createNotification(
+				{
+					notificationType: 'like_on_my_post',
+					recipientId: dto.feedWriterId,
+					senderId: sub,
+					notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+					notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+					notificationFeedId: feedId,
+				},
+				qr,
+			);
+		}
 
 		return isUpdateLike;
 	}
