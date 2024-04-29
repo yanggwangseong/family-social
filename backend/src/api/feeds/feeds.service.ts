@@ -40,9 +40,9 @@ export class FeedsService {
 		memberIdArgs: string,
 	): Promise<FeedResDto> {
 		const [feed, [medias, comments], mentions] = await Promise.all([
-			this.feedsRepository.findFeedInfoById(feedIdArgs),
-			this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
-			this.mentionsService.findMentionsByFeedId(feedIdArgs),
+			await this.feedsRepository.findFeedInfoById(feedIdArgs),
+			await this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
+			await this.mentionsService.findMentionsByFeedId(feedIdArgs),
 		]);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
@@ -58,6 +58,7 @@ export class FeedsService {
 			...memberRest,
 			medias,
 			comments,
+			mentions,
 		};
 	}
 

@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { v4 as uuidv4 } from 'uuid';
 
-import { MentionCreateReqDto } from '../dto/mention/req/mention-create-req.dto';
+import { MentionResDto } from '../dto/mention/res/mention-res.dto';
 import { MentionEntity } from '../entities/mention.entity';
 
 @Injectable()
@@ -31,7 +30,9 @@ export class MentionsRepository extends Repository<MentionEntity> {
 		await mentionsRepository.insert(insertMentions);
 	}
 
-	async getMentions(overrideWhere: FindOptionsWhere<MentionEntity>) {
+	async getMentions(
+		overrideWhere: FindOptionsWhere<MentionEntity>,
+	): Promise<MentionResDto[]> {
 		const mentions = await this.repository.find({
 			select: {
 				id: true,

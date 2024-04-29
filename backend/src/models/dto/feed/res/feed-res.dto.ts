@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { CommentGetListsResDto } from '../../comments/res/comment-get-lists-res.dto';
 import { MediaResDto } from '../../media/res/media-res.dto';
+import { MentionResDto } from '../../mention/res/mention-res.dto';
 
 export class FeedResDto {
 	@ApiProperty({
@@ -60,4 +61,10 @@ export class FeedResDto {
 		type: [CommentGetListsResDto],
 	})
 	comments?: CommentGetListsResDto[];
+
+	@ApiPropertyOptional({
+		nullable: true,
+		type: [MentionResDto],
+	})
+	mentions?: MentionResDto[];
 }
