@@ -283,6 +283,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@CreateCommentSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Post(':feedId/comments')
 	async createComment(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -292,23 +293,30 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		feedId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.commentsService.createComment({
-			commentContents: dto.commentContents,
-			replyId: dto.replyId,
-			parentId: dto.parentId,
-			feedId: feedId,
-			memberId: sub,
-		});
+		await this.commentsService.createComment(
+			{
+				commentContents: dto.commentContents,
+				replyId: dto.replyId,
+				parentId: dto.parentId,
+				feedId: feedId,
+				memberId: sub,
+			},
+			qr,
+		);
 
-		await this.notificationsService.createNotification({
-			notificationType: 'comment_on_my_post',
-			recipientId: dto.feedWriterId,
-			senderId: sub,
-			notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
-			notificationDescription: dto.commentContents,
-			notificationFeedId: feedId,
-		});
+		await this.notificationsService.createNotification(
+			{
+				notificationType: 'comment_on_my_post',
+				recipientId: dto.feedWriterId,
+				senderId: sub,
+				notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
+				notificationDescription: dto.commentContents,
+				notificationFeedId: feedId,
+			},
+			qr,
+		);
 	}
 
 	/**

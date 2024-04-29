@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 
 import {
 	EntityConflictException,
@@ -106,10 +106,16 @@ export class CommentsService {
 		return total ? total : 0;
 	}
 
-	async createComment(createCommentsArgs: ICreateCommentsArgs) {
-		return await this.commentsRepository.createComment({
-			...createCommentsArgs,
-		});
+	async createComment(
+		createCommentsArgs: ICreateCommentsArgs,
+		qr?: QueryRunner,
+	) {
+		return await this.commentsRepository.createComment(
+			{
+				...createCommentsArgs,
+			},
+			qr,
+		);
 	}
 
 	async updateComment(commentId: string, commentContents: string) {
