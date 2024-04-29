@@ -39,9 +39,10 @@ export class FeedsService {
 		feedIdArgs: string,
 		memberIdArgs: string,
 	): Promise<FeedResDto> {
-		const [feed, [medias, comments]] = await Promise.all([
+		const [feed, [medias, comments], mentions] = await Promise.all([
 			this.feedsRepository.findFeedInfoById(feedIdArgs),
 			this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
+			this.mentionsService.findMentionsByFeedId(feedIdArgs),
 		]);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
@@ -175,11 +176,13 @@ export class FeedsService {
 			throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
 		const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-		medias.map(async (media) => {
-			const fileName = extractFilePathFromUrl(media.url, 'feed');
-			if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
-			await DeleteS3Media(fileName);
-		});
+		await Promise.all(
+			medias.map(async (media) => {
+				const fileName = extractFilePathFromUrl(media.url, 'feed');
+				if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
+				await DeleteS3Media(fileName);
+			}),
+		);
 	}
 
 	async findFeedByIdOrThrow(feedId: string): Promise<FeedByIdResDto> {
