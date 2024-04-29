@@ -31,5 +31,7 @@ export class FeedCreateReqDto extends PickType(FeedEntity, [
 		type: [MentionCreateReqDto],
 	})
 	@IsArray({ message: arrayValidationMessage })
+	@ValidateNested({ each: true })
+	@Type(() => MentionCreateReqDto)
 	mentions!: MentionCreateReqDto[];
 }

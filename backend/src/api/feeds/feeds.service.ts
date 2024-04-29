@@ -22,6 +22,7 @@ import { DeleteS3Media } from '@/utils/upload-media';
 
 import { CommentsService } from '../comments/comments.service';
 import { MediasService } from '../medias/medias.service';
+import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
 export class FeedsService {
@@ -29,6 +30,7 @@ export class FeedsService {
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
 		private readonly commentsService: CommentsService,
+		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
@@ -126,6 +128,14 @@ export class FeedsService {
 			},
 			qr,
 		);
+
+		await this.mentionsService.createMentions({
+			mentionType: 'mention_on_feed',
+			mentions: rest.mentions,
+			mentionSenderId: rest.memberId,
+			mentionFeedId: feed.id,
+			qr,
+		});
 
 		await this.mediasService.createFeedMedias(medias, feed.id, qr);
 
