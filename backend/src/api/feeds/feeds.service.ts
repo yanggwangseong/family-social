@@ -168,16 +168,15 @@ export class FeedsService {
 		);
 
 		// mentions
+		await this.mentionsService.updateMentions({
+			mentionType: 'mention_on_feed',
+			mentions: rest.mentions,
+			mentionSenderId: rest.memberId,
+			mentionFeedId: feed.id,
+		});
+
 		// medias
-		await Promise.all([
-			await this.mentionsService.updateMentions({
-				mentionType: 'mention_on_feed',
-				mentions: rest.mentions,
-				mentionSenderId: rest.memberId,
-				mentionFeedId: feed.id,
-			}),
-			await this.mediasService.updateFeedMedias(medias, rest.feedId, qr),
-		]);
+		await this.mediasService.updateFeedMedias(medias, rest.feedId, qr);
 
 		return feed;
 	}

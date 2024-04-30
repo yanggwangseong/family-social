@@ -93,12 +93,23 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		return id;
 	}
 
-	async updateComment(commentId: string, commentContents: string) {
-		await this.update({ id: commentId }, { commentContents: commentContents });
+	async updateComment(
+		commentId: string,
+		commentContents: string,
+		qr?: QueryRunner,
+	) {
+		const commentsRepository = this.getCommentsRepository(qr);
+
+		await commentsRepository.update(
+			{ id: commentId },
+			{ commentContents: commentContents },
+		);
 	}
 
-	async deleteComment(commentId: string) {
-		const { affected } = await this.delete({
+	async deleteComment(commentId: string, qr?: QueryRunner) {
+		const commentsRepository = this.getCommentsRepository(qr);
+
+		const { affected } = await commentsRepository.delete({
 			id: commentId,
 		});
 

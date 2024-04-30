@@ -118,15 +118,23 @@ export class CommentsService {
 		);
 	}
 
-	async updateComment(commentId: string, commentContents: string) {
+	async updateComment(
+		commentId: string,
+		commentContents: string,
+		qr?: QueryRunner,
+	) {
 		return await this.commentsRepository.updateComment(
 			commentId,
 			commentContents,
+			qr,
 		);
 	}
 
-	async deleteComment(commentId: string) {
-		const deleteStatus = await this.commentsRepository.deleteComment(commentId);
+	async deleteComment(commentId: string, qr?: QueryRunner) {
+		const deleteStatus = await this.commentsRepository.deleteComment(
+			commentId,
+			qr,
+		);
 
 		if (!deleteStatus) throw EntityConflictException(ERROR_DELETE_COMMENT);
 	}
