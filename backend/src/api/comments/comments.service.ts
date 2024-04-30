@@ -15,11 +15,14 @@ import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
 import { ICreateCommentsArgs } from '@/types/args/comment';
 
+import { MentionsService } from '../mentions/mentions.service';
+
 @Injectable()
 export class CommentsService {
 	constructor(
 		private readonly commentsRepository: CommentsRepository,
 		private readonly likesCommentRepository: LikesCommentRepository,
+		private readonly mentionsService: MentionsService,
 		private dataSource: DataSource,
 	) {}
 
@@ -28,6 +31,10 @@ export class CommentsService {
 		memberId: string,
 	): Promise<CommentGetListsResDto[]> {
 		const comment = await this.commentsRepository.getCommentsByFeedId(feedId);
+
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_comment',
+		);
 
 		const newComments = await Promise.all(
 			comment.map(async (comment): Promise<CommentGetListsResDto> => {
@@ -60,11 +67,16 @@ export class CommentsService {
 											id: id,
 											username: username,
 										},
+										mentions: await this.mentionsService.findMentionsByFeedId(
+											feedId,
+											mentionTypeId,
+											child.id,
+										),
 									};
 								},
 							),
 					  )
-					: undefined;
+					: [];
 
 				return {
 					id: comment.id,
@@ -83,6 +95,11 @@ export class CommentsService {
 						username: comment.member.username,
 					},
 					childrenComments: newChildComments,
+					mentions: await this.mentionsService.findMentionsByFeedId(
+						feedId,
+						mentionTypeId,
+						comment.id,
+					),
 				};
 			}),
 		);

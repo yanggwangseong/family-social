@@ -89,7 +89,15 @@ export class FeedsController {
 		feedId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		const result = await this.feedsService.findFeedInfoById(feedId, sub);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
+
+		const result = await this.feedsService.findFeedInfoById(
+			feedId,
+			mentionTypeId,
+			sub,
+		);
 
 		return result;
 	}
@@ -259,10 +267,9 @@ export class FeedsController {
 		feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const mentionTypeId =
-			await this.mentionsService.findMentionIdByNotificationType(
-				'mention_on_feed',
-			);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
 
 		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
 	}
@@ -416,10 +423,9 @@ export class FeedsController {
 		commentId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const mentionTypeId =
-			await this.mentionsService.findMentionIdByNotificationType(
-				'mention_on_comment',
-			);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_comment',
+		);
 
 		await this.mentionsService.deleteMentionsByFeedId(
 			{ mentionFeedId: feedId, mentionTypeId },

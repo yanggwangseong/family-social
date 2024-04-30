@@ -37,12 +37,16 @@ export class FeedsService {
 
 	async findFeedInfoById(
 		feedIdArgs: string,
+		mentionTypeId: string,
 		memberIdArgs: string,
 	): Promise<FeedResDto> {
 		const [feed, [medias, comments], mentions] = await Promise.all([
 			await this.feedsRepository.findFeedInfoById(feedIdArgs),
 			await this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
-			await this.mentionsService.findMentionsByFeedId(feedIdArgs),
+			await this.mentionsService.findMentionsByFeedId(
+				feedIdArgs,
+				mentionTypeId,
+			),
 		]);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
@@ -75,6 +79,9 @@ export class FeedsService {
 		groupId?: string,
 	): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset({ page });
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
 		const { list, count } = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
@@ -92,6 +99,7 @@ export class FeedsService {
 
 				const mentions = await this.mentionsService.findMentionsByFeedId(
 					feed.feedId,
+					mentionTypeId,
 				);
 
 				return {

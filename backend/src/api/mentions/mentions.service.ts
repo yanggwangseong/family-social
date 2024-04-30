@@ -17,15 +17,19 @@ export class MentionsService {
 		private readonly mentionTypeRepository: MentionTypeRepository,
 	) {}
 
-	async findMentionsByFeedId(feedId: string) {
+	async findMentionsByFeedId(
+		feedId: string,
+		mentionTypeId: string,
+		mentionCommentId?: string,
+	) {
 		return await this.mentionsRepository.getMentions({
 			mentionFeedId: feedId,
+			mentionTypeId,
+			mentionCommentId,
 		});
 	}
 
-	async findMentionIdByNotificationType(
-		mentionType: Union<typeof MentionType>,
-	) {
+	async findMentionIdByMentionType(mentionType: Union<typeof MentionType>) {
 		const { mentionTypId } = await this.mentionTypeRepository.findMentionTypeId(
 			mentionType,
 		);
@@ -36,9 +40,7 @@ export class MentionsService {
 	async createMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
 		const { mentionType, mentions, ...rest } = mentionArgs;
 
-		const mentionTypeId = await this.findMentionIdByNotificationType(
-			mentionType,
-		);
+		const mentionTypeId = await this.findMentionIdByMentionType(mentionType);
 
 		await this.mentionsRepository.createMentions(
 			this.createNewMentions(mentions, mentionTypeId, { ...rest }),
@@ -57,7 +59,7 @@ export class MentionsService {
 	}
 
 	async updateMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
-		const mentionTypeId = await this.findMentionIdByNotificationType(
+		const mentionTypeId = await this.findMentionIdByMentionType(
 			mentionArgs.mentionType,
 		);
 		await this.deleteMentionsByFeedId(
