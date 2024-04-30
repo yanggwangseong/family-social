@@ -20,6 +20,7 @@ import { FeedMediaEntity } from './feed-media.entity';
 import { GroupEntity } from './group.entity';
 import { LikeFeedEntity } from './like-feed.entity';
 import { MemberEntity } from './member.entity';
+import { MentionEntity } from './mention.entity';
 
 @Entity({ name: 'fam_feed' })
 @Index(['createdAt'])
@@ -81,4 +82,8 @@ export class FeedEntity extends DefaultEntity {
 	// comment
 	@OneToMany(() => CommentEntity, (cm) => cm.feed)
 	comments?: CommentEntity[];
+
+	// mention
+	@OneToMany(() => MentionEntity, (mt) => mt.mentionFeed)
+	feedMentions?: MentionEntity[];
 }

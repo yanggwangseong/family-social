@@ -56,6 +56,7 @@ import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
+import { MentionsService } from '../mentions/mentions.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -67,6 +68,7 @@ export class FeedsController {
 		private readonly feedsService: FeedsService,
 		private readonly commentsService: CommentsService,
 		private readonly notificationsService: NotificationsService,
+		private readonly mentionsService: MentionsService,
 	) {}
 
 	/**
@@ -87,7 +89,15 @@ export class FeedsController {
 		feedId: string,
 		@CurrentUser('sub') sub: string,
 	) {
-		const result = await this.feedsService.findFeedInfoById(feedId, sub);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
+
+		const result = await this.feedsService.findFeedInfoById(
+			feedId,
+			mentionTypeId,
+			sub,
+		);
 
 		return result;
 	}
@@ -176,14 +186,17 @@ export class FeedsController {
 		feedId: string,
 		@Body() dto: FeedUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
+		@CurrentUser('sub') sub: string,
 	) {
 		await this.feedsService.updateFeed(
 			{
 				contents: dto.contents,
 				isPublic: dto.isPublic,
 				groupId: dto.groupId,
-				feedId: feedId,
 				medias: dto.medias,
+				mentions: dto.mentions,
+				feedId: feedId,
+				memberId: sub,
 			},
 			qr,
 		);
@@ -199,6 +212,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesFeedSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -208,17 +222,27 @@ export class FeedsController {
 		)
 		feedId: string,
 		@Body() dto: FeedLikeUpdateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const isUpdateLike = await this.feedsService.updateLikesFeedId(sub, feedId);
+		const isUpdateLike = await this.feedsService.updateLikesFeedId(
+			sub,
+			feedId,
+			qr,
+		);
 
-		await this.notificationsService.createNotification({
-			notificationType: 'like_on_my_post',
-			recipientId: dto.feedWriterId,
-			senderId: sub,
-			notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
-			notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
-			notificationFeedId: feedId,
-		});
+		if (isUpdateLike) {
+			await this.notificationsService.createNotification(
+				{
+					notificationType: 'like_on_my_post',
+					recipientId: dto.feedWriterId,
+					senderId: sub,
+					notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+					notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
+					notificationFeedId: feedId,
+				},
+				qr,
+			);
+		}
 
 		return isUpdateLike;
 	}
@@ -243,7 +267,11 @@ export class FeedsController {
 		feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.deleteFeed(feedId, qr);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
+
+		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
 	}
 
 	@Post('/test')
@@ -272,6 +300,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@CreateCommentSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@Post(':feedId/comments')
 	async createComment(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -281,23 +310,42 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		feedId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.commentsService.createComment({
-			commentContents: dto.commentContents,
-			replyId: dto.replyId,
-			parentId: dto.parentId,
-			feedId: feedId,
-			memberId: sub,
-		});
+		const commentId = await this.commentsService.createComment(
+			{
+				commentContents: dto.commentContents,
+				replyId: dto.replyId,
+				parentId: dto.parentId,
+				feedId: feedId,
+				memberId: sub,
+				mentions: dto.mentions,
+			},
+			qr,
+		);
 
-		await this.notificationsService.createNotification({
-			notificationType: 'comment_on_my_post',
-			recipientId: dto.feedWriterId,
-			senderId: sub,
-			notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
-			notificationDescription: dto.commentContents,
-			notificationFeedId: feedId,
-		});
+		await this.mentionsService.createMentions(
+			{
+				mentionType: 'mention_on_comment',
+				mentions: dto.mentions,
+				mentionSenderId: sub,
+				mentionFeedId: feedId,
+				mentionCommentId: commentId,
+			},
+			qr,
+		);
+
+		await this.notificationsService.createNotification(
+			{
+				notificationType: 'comment_on_my_post',
+				recipientId: dto.feedWriterId,
+				senderId: sub,
+				notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
+				notificationDescription: dto.commentContents,
+				notificationFeedId: feedId,
+			},
+			qr,
+		);
 	}
 
 	/**
@@ -311,6 +359,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@UpdateCommentSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@UseGuards(IsMineCommentGuard)
 	@Put(':feedId/comments/:commentId')
 	async updateComment(
@@ -325,11 +374,27 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.commentsService.updateComment(
+		const comment = await this.commentsService.updateComment(
 			commentId,
 			dto.commentContents,
+			qr,
 		);
+
+		await this.mentionsService.updateMentions(
+			{
+				mentionType: 'mention_on_comment',
+				mentions: dto.mentions,
+				mentionSenderId: sub,
+				mentionFeedId: feedId,
+				mentionCommentId: commentId,
+			},
+			qr,
+		);
+
+		return comment;
 	}
 
 	/**
@@ -342,6 +407,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@DeleteCommentSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@UseGuards(IsMineCommentGuard)
 	@Delete(':feedId/comments/:commentId')
 	async deleteComment(
@@ -355,8 +421,18 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.commentsService.deleteComment(commentId);
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_comment',
+		);
+
+		await this.mentionsService.deleteMentionsByFeedId(
+			{ mentionFeedId: feedId, mentionTypeId },
+			qr,
+		);
+
+		return await this.commentsService.deleteComment(commentId, qr);
 	}
 
 	/**

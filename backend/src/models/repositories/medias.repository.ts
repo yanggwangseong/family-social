@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-import { MediaCreateReqDto } from '../dto/media/req/media-create-req.dto';
-import { MediaUpdateReqDto } from '../dto/media/req/media-update-req-dto';
 import { FeedMediaEntity } from '../entities/feed-media.entity';
 
 @Injectable()
@@ -23,33 +21,12 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 	}
 
 	async createFeedMedias(
-		media: MediaCreateReqDto[],
-		feedId: string,
+		insertMedias: QueryDeepPartialEntity<FeedMediaEntity>[],
 		qr?: QueryRunner,
 	): Promise<void> {
 		const mediasRepository = this.getMediasRepository(qr);
 
-		media.map(async (media: MediaCreateReqDto) => {
-			await mediasRepository.insert({
-				id: uuidv4(),
-				url: media.url,
-				position: media.position,
-				feedId: feedId,
-			});
-		});
-	}
-
-	async updateFeedMedias(
-		media: MediaUpdateReqDto[],
-		feedId: string,
-		qr?: QueryRunner,
-	): Promise<[boolean, void]> {
-		const result = Promise.all([
-			await this.deleteFeedMediasByFeedId(feedId, qr),
-			await this.createFeedMedias(media, feedId, qr),
-		]);
-
-		return result;
+		await mediasRepository.insert(insertMedias);
 	}
 
 	async deleteFeedMediasByFeedId(

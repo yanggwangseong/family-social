@@ -33,4 +33,5 @@ export type Union<
 type ValueType = string | number | boolean;
 
 export const AlarmType = ['comment_on_my_post', 'like_on_my_post'] as const;
+export const MentionType = ['mention_on_feed', 'mention_on_comment'] as const;
 export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;

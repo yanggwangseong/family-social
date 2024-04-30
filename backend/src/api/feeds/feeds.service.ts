@@ -22,6 +22,7 @@ import { DeleteS3Media } from '@/utils/upload-media';
 
 import { CommentsService } from '../comments/comments.service';
 import { MediasService } from '../medias/medias.service';
+import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
 export class FeedsService {
@@ -29,17 +30,23 @@ export class FeedsService {
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
 		private readonly commentsService: CommentsService,
+		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
 		private dataSource: DataSource,
 	) {}
 
 	async findFeedInfoById(
 		feedIdArgs: string,
+		mentionTypeId: string,
 		memberIdArgs: string,
 	): Promise<FeedResDto> {
-		const [feed, [medias, comments]] = await Promise.all([
-			this.feedsRepository.findFeedInfoById(feedIdArgs),
-			this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
+		const [feed, [medias, comments], mentions] = await Promise.all([
+			await this.feedsRepository.findFeedInfoById(feedIdArgs),
+			await this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
+			await this.mentionsService.findMentionsByFeedId(
+				feedIdArgs,
+				mentionTypeId,
+			),
 		]);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
@@ -55,6 +62,7 @@ export class FeedsService {
 			...memberRest,
 			medias,
 			comments,
+			mentions,
 		};
 	}
 
@@ -71,6 +79,9 @@ export class FeedsService {
 		groupId?: string,
 	): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset({ page });
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			'mention_on_feed',
+		);
 		const { list, count } = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
@@ -86,10 +97,16 @@ export class FeedsService {
 					memberId,
 				);
 
+				const mentions = await this.mentionsService.findMentionsByFeedId(
+					feed.feedId,
+					mentionTypeId,
+				);
+
 				return {
 					...feed,
 					medias,
 					comments,
+					mentions,
 				};
 			}),
 		);
@@ -101,16 +118,24 @@ export class FeedsService {
 		};
 	}
 
-	async updateLikesFeedId(memberId: string, feedId: string): Promise<boolean> {
+	async updateLikesFeedId(
+		memberId: string,
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<boolean> {
+		const likeFeedRepository =
+			this.likesFeedRepository.getLikesFeedRepository(qr);
+
 		const like = await this.likesFeedRepository.findMemberLikesFeed(
 			memberId,
 			feedId,
+			qr,
 		);
 
 		if (like) {
-			await this.likesFeedRepository.remove(like);
+			await likeFeedRepository.remove(like);
 		} else {
-			await this.likesFeedRepository.save({ memberId, feedId });
+			await likeFeedRepository.save({ memberId, feedId });
 		}
 
 		return !like;
@@ -123,6 +148,16 @@ export class FeedsService {
 		const feed = await this.feedsRepository.createFeed(
 			{
 				...rest,
+			},
+			qr,
+		);
+
+		await this.mentionsService.createMentions(
+			{
+				mentionType: 'mention_on_feed',
+				mentions: rest.mentions,
+				mentionSenderId: rest.memberId,
+				mentionFeedId: feed.id,
 			},
 			qr,
 		);
@@ -140,26 +175,42 @@ export class FeedsService {
 			qr,
 		);
 
+		// mentions
+		await this.mentionsService.updateMentions({
+			mentionType: 'mention_on_feed',
+			mentions: rest.mentions,
+			mentionSenderId: rest.memberId,
+			mentionFeedId: feed.id,
+		});
+
+		// medias
 		await this.mediasService.updateFeedMedias(medias, rest.feedId, qr);
 
 		return feed;
 	}
 
-	async deleteFeed(feedId: string, qr?: QueryRunner) {
-		const [mediaStatus, feedStatus] = await Promise.all([
+	async deleteFeed(feedId: string, mentionTypeId: string, qr?: QueryRunner) {
+		const [mediaStatus, mentionStatus, feedStatus] = await Promise.all([
 			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
+			await this.mentionsService.deleteMentionsByFeedId(
+				{ mentionFeedId: feedId, mentionTypeId },
+				qr,
+			),
 			await this.feedsRepository.deleteFeed(feedId, qr),
 		]);
 
-		if (!mediaStatus || !feedStatus)
+		if (!mediaStatus || !mentionStatus || !feedStatus)
 			throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
 		const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
-		medias.map(async (media) => {
-			const fileName = extractFilePathFromUrl(media.url, 'feed');
-			if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
-			await DeleteS3Media(fileName);
-		});
+
+		await Promise.all(
+			medias.map(async (media) => {
+				const fileName = extractFilePathFromUrl(media.url, 'feed');
+				if (!fileName) throw EntityNotFoundException(ERROR_FILE_DIR_NOT_FOUND);
+				await DeleteS3Media(fileName);
+			}),
+		);
 	}
 
 	async findFeedByIdOrThrow(feedId: string): Promise<FeedByIdResDto> {

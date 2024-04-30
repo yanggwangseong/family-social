@@ -6,6 +6,10 @@ import {
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CommentsModule } from '@/api/comments/comments.module';
+import { MediasModule } from '@/api/medias/medias.module';
+import { MentionsModule } from '@/api/mentions/mentions.module';
+import { NotificationsModule } from '@/api/notifications/notifications.module';
 import { CommentExistsMiddleware } from '@/common/middlewares/comment-exists.middleware';
 import { FeedExistsMiddleware } from '@/common/middlewares/feed-exists.middleware';
 import { FeedEntity } from '@/models/entities/feed.entity';
@@ -15,9 +19,6 @@ import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository
 
 import { FeedsController } from './feeds.controller';
 import { FeedsService } from './feeds.service';
-import { CommentsModule } from '../comments/comments.module';
-import { MediasModule } from '../medias/medias.module';
-import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 		MediasModule,
 		CommentsModule,
 		NotificationsModule,
+		MentionsModule,
 	],
 	controllers: [FeedsController],
 	providers: [FeedsService, FeedsRepository, LikesFeedRepository],

@@ -130,8 +130,6 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			query.andWhere('a.groupId = :groupId', { groupId });
 		}
 
-		console.log(query);
-
 		const [list, count] = await Promise.all([
 			query.getRawMany(),
 			query.getCount(),

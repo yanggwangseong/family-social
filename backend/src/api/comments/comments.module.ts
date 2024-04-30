@@ -8,9 +8,13 @@ import { LikesCommentRepository } from '@/models/repositories/likes-comment.repo
 
 import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
+import { MentionsModule } from '../mentions/mentions.module';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([CommentEntity, LikeCommentEntity])],
+	imports: [
+		TypeOrmModule.forFeature([CommentEntity, LikeCommentEntity]),
+		MentionsModule,
+	],
 	controllers: [CommentsController],
 	providers: [CommentsService, CommentsRepository, LikesCommentRepository],
 	exports: [CommentsService],

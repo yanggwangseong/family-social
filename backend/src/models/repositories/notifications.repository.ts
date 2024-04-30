@@ -4,8 +4,6 @@ import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Union, isReadOptions } from '@/types';
-
 import { NotificationResDto } from '../dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '../entities/notification.entity';
 
@@ -18,7 +16,7 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	getScheduleRepository(qr?: QueryRunner) {
+	getNotificationRepository(qr?: QueryRunner) {
 		return qr
 			? qr.manager.getRepository<NotificationEntity>(NotificationEntity)
 			: this.repository;
@@ -31,9 +29,9 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 		>,
 		qr?: QueryRunner,
 	) {
-		const scheduleRepository = this.getScheduleRepository(qr);
+		const NotificationRepository = this.getNotificationRepository(qr);
 
-		await scheduleRepository.insert({
+		await NotificationRepository.insert({
 			id: uuidv4(),
 			...overrideInsertFeilds,
 		});

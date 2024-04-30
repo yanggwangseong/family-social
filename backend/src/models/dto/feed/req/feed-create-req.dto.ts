@@ -7,6 +7,7 @@ import { notEmptyValidationMessage } from '@/common/validation-message/not-empty
 import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { MediaCreateReqDto } from '../../media/req/media-create-req.dto';
+import { MentionCreateReqDto } from '../../mention/req/mention-create-req.dto';
 
 export class FeedCreateReqDto extends PickType(FeedEntity, [
 	'isPublic',
@@ -24,4 +25,13 @@ export class FeedCreateReqDto extends PickType(FeedEntity, [
 	@ValidateNested({ each: true })
 	@Type(() => MediaCreateReqDto)
 	medias!: MediaCreateReqDto[];
+
+	@ApiProperty({
+		nullable: true,
+		type: [MentionCreateReqDto],
+	})
+	@IsArray({ message: arrayValidationMessage })
+	@ValidateNested({ each: true })
+	@Type(() => MentionCreateReqDto)
+	mentions!: MentionCreateReqDto[];
 }
