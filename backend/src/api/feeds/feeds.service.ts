@@ -173,15 +173,17 @@ export class FeedsService {
 	}
 
 	async deleteFeed(feedId: string, qr?: QueryRunner) {
-		const [mediaStatus, feedStatus] = await Promise.all([
+		const [mediaStatus, mentionStatus, feedStatus] = await Promise.all([
 			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
+			await this.mentionsService.deleteMentionsByFeedId(feedId, qr),
 			await this.feedsRepository.deleteFeed(feedId, qr),
 		]);
 
-		if (!mediaStatus || !feedStatus)
+		if (!mediaStatus || !mentionStatus || !feedStatus)
 			throw EntityConflictException(ERROR_DELETE_FEED_OR_MEDIA);
 
 		const medias = await this.mediasService.findMediaUrlByFeedId(feedId);
+
 		await Promise.all(
 			medias.map(async (media) => {
 				const fileName = extractFilePathFromUrl(media.url, 'feed');

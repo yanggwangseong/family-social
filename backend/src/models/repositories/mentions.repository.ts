@@ -30,6 +30,16 @@ export class MentionsRepository extends Repository<MentionEntity> {
 		await mentionsRepository.insert(insertMentions);
 	}
 
+	async deleteMentions(feedId: string, qr?: QueryRunner): Promise<boolean> {
+		const mentionRepository = this.getMentionRepository(qr);
+
+		const { affected } = await mentionRepository.delete({
+			mentionFeedId: feedId,
+		});
+
+		return !!affected;
+	}
+
 	async getMentions(
 		overrideWhere: FindOptionsWhere<MentionEntity>,
 	): Promise<MentionResDto[]> {

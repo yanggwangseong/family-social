@@ -46,6 +46,13 @@ export class MentionsService {
 		);
 	}
 
+	async deleteMentionsByFeedId(
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<boolean> {
+		return this.mentionsRepository.deleteMentions(feedId, qr);
+	}
+
 	private createNewMentions(
 		mentions: MentionCreateReqDto[],
 		mentionTypeId: string,
