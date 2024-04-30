@@ -259,7 +259,12 @@ export class FeedsController {
 		feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.feedsService.deleteFeed(feedId, qr);
+		const mentionTypeId =
+			await this.mentionsService.findMentionIdByNotificationType(
+				'mention_on_feed',
+			);
+
+		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
 	}
 
 	@Post('/test')
@@ -347,6 +352,7 @@ export class FeedsController {
 	 * @returns void
 	 */
 	@UpdateCommentSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@UseGuards(IsMineCommentGuard)
 	@Put(':feedId/comments/:commentId')
 	async updateComment(
@@ -361,11 +367,26 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		return await this.commentsService.updateComment(
+		const comment = await this.commentsService.updateComment(
 			commentId,
 			dto.commentContents,
 		);
+
+		await this.mentionsService.updateMentions(
+			{
+				mentionType: 'mention_on_comment',
+				mentions: dto.mentions,
+				mentionSenderId: sub,
+				mentionFeedId: feedId,
+				mentionCommentId: commentId,
+			},
+			qr,
+		);
+
+		return comment;
 	}
 
 	/**

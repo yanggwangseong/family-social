@@ -3,7 +3,7 @@ import { MentionEntity } from '@/models/entities/mention.entity';
 
 import { MentionType, Union } from '../index';
 
-export interface ICreateFeedMentionArgs
+export interface ICreateMentionArgs
 	extends Pick<
 		MentionEntity,
 		'mentionSenderId' | 'mentionFeedId' | 'mentionCommentId'

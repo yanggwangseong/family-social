@@ -14,6 +14,7 @@ import { MentionTypeEntity } from './mention-type.entity';
 @Entity({ name: 'fam_mention' })
 @Index(['mentionFeedId'])
 @Index(['mentionCommentId'])
+@Index(['mentionTypeId'])
 export class MentionEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty({

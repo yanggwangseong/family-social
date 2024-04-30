@@ -28,13 +28,12 @@ export class MediasService {
 		feedId: string,
 		qr?: QueryRunner,
 	) {
-		await Promise.all([
-			await this.mediasRepository.deleteFeedMediasByFeedId(feedId, qr),
-			await this.mediasRepository.createFeedMedias(
-				this.createNewMedias(media, feedId),
-				qr,
-			),
-		]);
+		await this.mediasRepository.deleteFeedMediasByFeedId(feedId, qr);
+
+		await this.mediasRepository.createFeedMedias(
+			this.createNewMedias(media, feedId),
+			qr,
+		);
 	}
 
 	async deleteFeedMediasByFeedId(

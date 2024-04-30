@@ -182,10 +182,13 @@ export class FeedsService {
 		return feed;
 	}
 
-	async deleteFeed(feedId: string, qr?: QueryRunner) {
+	async deleteFeed(feedId: string, mentionTypeId: string, qr?: QueryRunner) {
 		const [mediaStatus, mentionStatus, feedStatus] = await Promise.all([
 			await this.mediasService.deleteFeedMediasByFeedId(feedId, qr),
-			await this.mentionsService.deleteMentionsByFeedId(feedId, qr),
+			await this.mentionsService.deleteMentionsByFeedId(
+				{ mentionFeedId: feedId, mentionTypeId },
+				qr,
+			),
 			await this.feedsRepository.deleteFeed(feedId, qr),
 		]);
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { QueryRunner } from 'typeorm';
+import { FindOptionsWhere, QueryRunner } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -8,7 +8,7 @@ import { MentionEntity } from '@/models/entities/mention.entity';
 import { MentionTypeRepository } from '@/models/repositories/mention-type.repository';
 import { MentionsRepository } from '@/models/repositories/mentions.repository';
 import { MentionType, Union } from '@/types';
-import { ICreateFeedMentionArgs } from '@/types/args/mention';
+import { ICreateMentionArgs } from '@/types/args/mention';
 
 @Injectable()
 export class MentionsService {
@@ -33,7 +33,7 @@ export class MentionsService {
 		return mentionTypId;
 	}
 
-	async createMentions(mentionArgs: ICreateFeedMentionArgs, qr?: QueryRunner) {
+	async createMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
 		const { mentionType, mentions, ...rest } = mentionArgs;
 
 		const mentionTypeId = await this.findMentionIdByNotificationType(
@@ -47,17 +47,25 @@ export class MentionsService {
 	}
 
 	async deleteMentionsByFeedId(
-		feedId: string,
+		overrideWhere: Pick<
+			FindOptionsWhere<MentionEntity>,
+			'mentionFeedId' | 'mentionTypeId' | 'mentionCommentId'
+		>,
 		qr?: QueryRunner,
 	): Promise<boolean> {
-		return this.mentionsRepository.deleteMentions(feedId, qr);
+		return this.mentionsRepository.deleteMentions(overrideWhere, qr);
 	}
 
-	async updateMentions(mentionArgs: ICreateFeedMentionArgs, qr?: QueryRunner) {
-		await Promise.all([
-			await this.deleteMentionsByFeedId(mentionArgs.mentionFeedId, qr),
-			await this.createMentions(mentionArgs, qr),
-		]);
+	async updateMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
+		const mentionTypeId = await this.findMentionIdByNotificationType(
+			mentionArgs.mentionType,
+		);
+		await this.deleteMentionsByFeedId(
+			{ mentionFeedId: mentionArgs.mentionFeedId, mentionTypeId },
+			qr,
+		);
+
+		await this.createMentions(mentionArgs, qr);
 	}
 
 	private createNewMentions(

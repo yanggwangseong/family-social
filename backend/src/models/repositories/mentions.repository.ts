@@ -30,12 +30,13 @@ export class MentionsRepository extends Repository<MentionEntity> {
 		await mentionsRepository.insert(insertMentions);
 	}
 
-	async deleteMentions(feedId: string, qr?: QueryRunner): Promise<boolean> {
+	async deleteMentions(
+		overrideWhere: FindOptionsWhere<MentionEntity>,
+		qr?: QueryRunner,
+	): Promise<boolean> {
 		const mentionRepository = this.getMentionRepository(qr);
 
-		const { affected } = await mentionRepository.delete({
-			mentionFeedId: feedId,
-		});
+		const { affected } = await mentionRepository.delete({ ...overrideWhere });
 
 		return !!affected;
 	}
