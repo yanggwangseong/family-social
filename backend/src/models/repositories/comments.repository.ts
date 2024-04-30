@@ -83,10 +83,14 @@ export class CommentsRepository extends Repository<CommentEntity> {
 	) {
 		const commentsRepository = this.getCommentsRepository(qr);
 
-		await commentsRepository.insert({
+		const insertResult = await commentsRepository.insert({
 			id: uuidv4(),
 			...createCommentsArgs,
 		});
+
+		const id: string = insertResult.identifiers[0].id;
+
+		return id;
 	}
 
 	async updateComment(commentId: string, commentContents: string) {

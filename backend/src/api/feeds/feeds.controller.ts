@@ -56,6 +56,7 @@ import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
+import { MentionsService } from '../mentions/mentions.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -67,6 +68,7 @@ export class FeedsController {
 		private readonly feedsService: FeedsService,
 		private readonly commentsService: CommentsService,
 		private readonly notificationsService: NotificationsService,
+		private readonly mentionsService: MentionsService,
 	) {}
 
 	/**
@@ -298,13 +300,25 @@ export class FeedsController {
 		feedId: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.commentsService.createComment(
+		const commentId = await this.commentsService.createComment(
 			{
 				commentContents: dto.commentContents,
 				replyId: dto.replyId,
 				parentId: dto.parentId,
 				feedId: feedId,
 				memberId: sub,
+				mentions: dto.mentions,
+			},
+			qr,
+		);
+
+		await this.mentionsService.createMentions(
+			{
+				mentionType: 'mention_on_comment',
+				mentions: dto.mentions,
+				mentionSenderId: sub,
+				mentionFeedId: feedId,
+				mentionCommentId: commentId,
 			},
 			qr,
 		);

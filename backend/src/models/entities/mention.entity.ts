@@ -43,7 +43,7 @@ export class MentionEntity extends DefaultEntity {
 		message: notEmptyValidationMessage,
 	})
 	@IsUUID(4, { message: uuidValidationMessage })
-	public readonly mentionCommentId!: string;
+	public readonly mentionCommentId?: string;
 
 	@Column({ type: 'uuid', nullable: true })
 	@ApiProperty({

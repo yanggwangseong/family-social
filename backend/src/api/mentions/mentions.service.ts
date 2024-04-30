@@ -8,7 +8,7 @@ import { MentionEntity } from '@/models/entities/mention.entity';
 import { MentionTypeRepository } from '@/models/repositories/mention-type.repository';
 import { MentionsRepository } from '@/models/repositories/mentions.repository';
 import { MentionType, Union } from '@/types';
-import { ICreateMentionArgs } from '@/types/args/mention';
+import { ICreateFeedMentionArgs } from '@/types/args/mention';
 
 @Injectable()
 export class MentionsService {
@@ -33,7 +33,7 @@ export class MentionsService {
 		return mentionTypId;
 	}
 
-	async createMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
+	async createMentions(mentionArgs: ICreateFeedMentionArgs, qr?: QueryRunner) {
 		const { mentionType, mentions, ...rest } = mentionArgs;
 
 		const mentionTypeId = await this.findMentionIdByNotificationType(
@@ -53,7 +53,7 @@ export class MentionsService {
 		return this.mentionsRepository.deleteMentions(feedId, qr);
 	}
 
-	async updateMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
+	async updateMentions(mentionArgs: ICreateFeedMentionArgs, qr?: QueryRunner) {
 		await Promise.all([
 			await this.deleteMentionsByFeedId(mentionArgs.mentionFeedId, qr),
 			await this.createMentions(mentionArgs, qr),
@@ -66,7 +66,12 @@ export class MentionsService {
 		{
 			mentionSenderId,
 			mentionFeedId,
-		}: { mentionSenderId: string; mentionFeedId: string },
+			mentionCommentId,
+		}: {
+			mentionSenderId: string;
+			mentionFeedId: string;
+			mentionCommentId?: string;
+		},
 	) {
 		return mentions.map((data): QueryDeepPartialEntity<MentionEntity> => {
 			return {
@@ -74,6 +79,7 @@ export class MentionsService {
 				mentionTypeId,
 				mentionSenderId,
 				mentionFeedId,
+				mentionCommentId,
 				mentionRecipientId: data.mentionMemberId,
 			};
 		});
