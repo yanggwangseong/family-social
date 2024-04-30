@@ -90,10 +90,15 @@ export class FeedsService {
 					memberId,
 				);
 
+				const mentions = await this.mentionsService.findMentionsByFeedId(
+					feed.feedId,
+				);
+
 				return {
 					...feed,
 					medias,
 					comments,
+					mentions,
 				};
 			}),
 		);
