@@ -176,14 +176,17 @@ export class FeedsController {
 		feedId: string,
 		@Body() dto: FeedUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
+		@CurrentUser('sub') sub: string,
 	) {
 		await this.feedsService.updateFeed(
 			{
 				contents: dto.contents,
 				isPublic: dto.isPublic,
 				groupId: dto.groupId,
-				feedId: feedId,
 				medias: dto.medias,
+				mentions: dto.mentions,
+				feedId: feedId,
+				memberId: sub,
 			},
 			qr,
 		);

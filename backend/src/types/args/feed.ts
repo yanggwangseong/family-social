@@ -13,8 +13,7 @@ export interface ICreateFeedArgs {
 	mentions: MentionCreateReqDto[];
 }
 
-export interface IUpdateFeedArgs
-	extends Omit<ICreateFeedArgs, 'memberId' | 'mentions'> {
+export interface IUpdateFeedArgs extends ICreateFeedArgs {
 	feedId: string;
 }
 

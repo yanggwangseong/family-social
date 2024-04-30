@@ -53,6 +53,13 @@ export class MentionsService {
 		return this.mentionsRepository.deleteMentions(feedId, qr);
 	}
 
+	async updateMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
+		await Promise.all([
+			await this.deleteMentionsByFeedId(mentionArgs.mentionFeedId, qr),
+			await this.createMentions(mentionArgs, qr),
+		]);
+	}
+
 	private createNewMentions(
 		mentions: MentionCreateReqDto[],
 		mentionTypeId: string,
