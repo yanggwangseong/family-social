@@ -29,19 +29,6 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 		await mediasRepository.insert(insertMedias);
 	}
 
-	async updateFeedMedias(
-		newMedias: QueryDeepPartialEntity<FeedMediaEntity>[],
-		feedId: string,
-		qr?: QueryRunner,
-	): Promise<[boolean, void]> {
-		const result = await Promise.all([
-			await this.deleteFeedMediasByFeedId(feedId, qr),
-			await this.createFeedMedias(newMedias, qr),
-		]);
-
-		return result;
-	}
-
 	async deleteFeedMediasByFeedId(
 		feedId: string,
 		qr?: QueryRunner,

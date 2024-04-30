@@ -27,12 +27,14 @@ export class MediasService {
 		media: MediaUpdateReqDto[],
 		feedId: string,
 		qr?: QueryRunner,
-	): Promise<[boolean, void]> {
-		return this.mediasRepository.updateFeedMedias(
-			this.createNewMedias(media, feedId),
-			feedId,
-			qr,
-		);
+	) {
+		await Promise.all([
+			await this.mediasRepository.deleteFeedMediasByFeedId(feedId, qr),
+			await this.mediasRepository.createFeedMedias(
+				this.createNewMedias(media, feedId),
+				qr,
+			),
+		]);
 	}
 
 	async deleteFeedMediasByFeedId(
@@ -49,13 +51,15 @@ export class MediasService {
 	}
 
 	private createNewMedias(media: MediaUpdateReqDto[], feedId: string) {
-		return media.map((data): QueryDeepPartialEntity<FeedMediaEntity> => {
-			return {
-				id: uuidv4(),
-				url: data.url,
-				position: data.position,
-				feedId,
-			};
-		});
+		return media.map(
+			({ url, position }): QueryDeepPartialEntity<FeedMediaEntity> => {
+				return {
+					id: uuidv4(),
+					url: url,
+					position: position,
+					feedId,
+				};
+			},
+		);
 	}
 }
