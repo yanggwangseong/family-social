@@ -30,17 +30,30 @@ const CommentForm: FC<CommentFormProps> = ({
 	handleCloseReply,
 	handleEditComment,
 }) => {
+	// const {
+	// 	register,
+	// 	formState: { errors, isValid, isDirty },
+	// 	setValue,
+	// 	handleSubmit,
+	// 	reset,
+	// 	getValues,
+	// 	watch,
+	// 	getFieldState,
+	// } = useForm<{ commentContents: string }>({
+	// 	mode: 'onChange',
+	// });
+
 	const {
-		register,
-		formState: { errors, isValid, isDirty },
-		setValue,
 		handleSubmit,
-		reset,
+		control,
 		getValues,
-		watch,
-		getFieldState,
+		setValue,
+		reset,
+		formState: { errors },
 	} = useForm<{ commentContents: string }>({
-		mode: 'onChange',
+		defaultValues: {
+			commentContents: '',
+		},
 	});
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } = useEmoji<{
@@ -112,19 +125,20 @@ const CommentForm: FC<CommentFormProps> = ({
 	};
 
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		createCommentSync({
-			commentContents: data.commentContents,
-			feedId,
-			parentId,
-			replyId,
-			feedWriterId,
-		});
+		console.log(data);
+		// createCommentSync({
+		// 	commentContents: data.commentContents,
+		// 	feedId,
+		// 	parentId,
+		// 	replyId,
+		// 	feedWriterId,
+		// });
 	};
 
 	const onUpdateSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		updateCommentSync(data);
+		console.log(data);
+		// updateCommentSync(data);
 	};
-	// mentions 생성
 
 	return (
 		<form onSubmit={handleSubmit(isEdit ? onUpdateSubmit : onSubmit)}>
@@ -147,7 +161,7 @@ const CommentForm: FC<CommentFormProps> = ({
 						</div>
 					)}
 				</div>
-				<FieldWithTextarea
+				{/* <FieldWithTextarea
 					{...register('commentContents', {
 						maxLength: {
 							value: 2000,
@@ -157,8 +171,8 @@ const CommentForm: FC<CommentFormProps> = ({
 					fieldClass="hidden_border_textarea"
 					placeholder="댓글을 입력 하세요."
 					defaultValue={commentContents}
-				></FieldWithTextarea>
-				<MentionField></MentionField>
+				></FieldWithTextarea> */}
+				<MentionField errors={errors} control={control}></MentionField>
 				<div className={styles.comment_btn_container}>
 					<CustomButton
 						type="submit"

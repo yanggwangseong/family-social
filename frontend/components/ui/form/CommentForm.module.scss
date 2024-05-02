@@ -1,5 +1,5 @@
 .comment_form_container {
-	@apply border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex;
+	@apply border border-solid border-customDark rounded-full px-6 py-3 h-12 flex-1 ml-4 flex items-center;
 
 	.comment_emoji_container {
 		@apply mr-2 relative;

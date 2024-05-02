@@ -1,34 +1,33 @@
 /* mentions */
 .mentions {
-	margin: 2em 0;
+	//margin: 2em 0;
 	width: 100%;
-	height: 60px;
+	//height: 60px;
 }
 .mentions--singleLine .mentions__control {
 	display: inline-block;
-	padding-left: 10px;
+	//padding-left: 10px;
 }
 .mentions--singleLine .mentions__highlighter {
-	padding: 1px;
-	border: 2px inset transparent;
+	//padding: 1px;
+	//border: 2px inset transparent;
 }
 .mentions--singleLine .mentions__input {
-	border: 2px inset grey;
+	//border: 2px inset grey;
 
-	padding-left: 10px;
+	//padding-left: 10px;
 }
 
-.mentions--multiLine .mentions__control {
-	font-family: monospace;
-}
+// .mentions--multiLine .mentions__control {
+// }
 .mentions--multiLine .mentions__highlighter {
-	border: 1px solid transparent;
-	padding: 9px;
-	min-height: 63px;
+	border: 1px solid transparent; // 중요
+	//padding: 9px;
+	//min-height: 63px;
 }
 .mentions--multiLine .mentions__input {
-	border: 1px solid silver;
-	padding: 9px;
+	border: 1px solid #fff9f4; // 중요
+	//padding: 9px;
 	outline: 0;
 }
 .mentions__suggestions__list {
@@ -44,10 +43,10 @@
 	color: #fff;
 }
 .mentions__mention {
+	@apply text-customOrange;
 	position: relative;
 	z-index: 1;
 	color: green;
-	font-style: italic;
 	text-shadow: 1px 1px 1px white, 1px -1px 1px white, -1px 1px 1px white,
 		-1px -1px 1px white;
 	text-decoration: none;
