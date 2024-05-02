@@ -54,7 +54,7 @@ const CommentForm: FC<CommentFormProps> = ({
 		formState: { errors },
 	} = useForm<{ commentContents: string }>({
 		defaultValues: {
-			commentContents: '',
+			commentContents: isEdit ? commentContents : '',
 		},
 	});
 
