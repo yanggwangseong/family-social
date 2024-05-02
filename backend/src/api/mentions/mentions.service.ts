@@ -91,6 +91,7 @@ export class MentionsService {
 				mentionFeedId,
 				mentionCommentId,
 				mentionRecipientId: data.mentionMemberId,
+				mentionPosition: data.mentionPosition,
 			};
 		});
 	}
