@@ -16,6 +16,7 @@ import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
 import styles from './CommentForm.module.scss';
 import MentionFieldArea from '../field/field-area/mention-field-area/MentionFieldArea';
+import MentionField from '../mention/MentionField';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -123,6 +124,7 @@ const CommentForm: FC<CommentFormProps> = ({
 	const onUpdateSubmit: SubmitHandler<{ commentContents: string }> = data => {
 		updateCommentSync(data);
 	};
+	// mentions 생성
 
 	return (
 		<form onSubmit={handleSubmit(isEdit ? onUpdateSubmit : onSubmit)}>
@@ -156,6 +158,7 @@ const CommentForm: FC<CommentFormProps> = ({
 					placeholder="댓글을 입력 하세요."
 					defaultValue={commentContents}
 				></FieldWithTextarea>
+				<MentionField></MentionField>
 				<div className={styles.comment_btn_container}>
 					<CustomButton
 						type="submit"
