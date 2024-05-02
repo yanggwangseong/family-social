@@ -17,6 +17,8 @@ import { useEmoji } from '@/hooks/useEmoji';
 import styles from './CommentForm.module.scss';
 import MentionFieldArea from '../field/field-area/mention-field-area/MentionFieldArea';
 import MentionField from '../mention/MentionField';
+import { CommentFormProps } from './comment-form.interface';
+import { extractMention } from '@/utils/extract-mention';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -125,19 +127,25 @@ const CommentForm: FC<CommentFormProps> = ({
 	};
 
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		console.log(data);
-		// createCommentSync({
-		// 	commentContents: data.commentContents,
-		// 	feedId,
-		// 	parentId,
-		// 	replyId,
-		// 	feedWriterId,
-		// });
+		const mentions = extractMention(data.commentContents);
+
+		createCommentSync({
+			commentContents: data.commentContents,
+			feedId,
+			parentId,
+			replyId,
+			feedWriterId,
+			mentions,
+		});
 	};
 
 	const onUpdateSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		console.log(data);
-		// updateCommentSync(data);
+		const mentions = extractMention(data.commentContents);
+
+		updateCommentSync({
+			commentContents: data.commentContents,
+			mentions,
+		});
 	};
 
 	return (
