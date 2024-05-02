@@ -96,6 +96,7 @@ const CommentForm: FC<CommentFormProps> = ({
 				commentId,
 				feedId,
 				commentContents: data.commentContents,
+				mentions: data.mentions,
 			}),
 		{
 			onMutate: variable => {

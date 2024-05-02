@@ -26,15 +26,18 @@ export const CommentService = {
 		feedId,
 		commentId,
 		commentContents,
+		mentions,
 	}: {
 		feedId: string;
 		commentId?: string;
 		commentContents: string;
+		mentions: CreateMentionRequest[];
 	}) {
 		const { data } = await axiosAPI.put<void>(
 			`/feeds/${feedId}/comments/${commentId}`,
 			{
 				commentContents: commentContents,
+				mentions,
 			},
 		);
 
