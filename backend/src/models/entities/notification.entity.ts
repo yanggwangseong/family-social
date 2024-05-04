@@ -7,6 +7,7 @@ import {
 	MaxLength,
 } from 'class-validator';
 import {
+	BeforeInsert,
 	Column,
 	Entity,
 	Index,
@@ -86,7 +87,7 @@ export class NotificationEntity extends DefaultEntity {
 
 	@Column({ type: 'varchar', length: 100, nullable: false })
 	@ApiProperty({
-		maxLength: 60,
+		maxLength: 100,
 		nullable: false,
 	})
 	@IsNotEmpty({
@@ -95,7 +96,7 @@ export class NotificationEntity extends DefaultEntity {
 	@IsString({
 		message: stringValidationMessage,
 	})
-	@MaxLength(60, { message: maxLengthValidationMessage })
+	@MaxLength(100, { message: maxLengthValidationMessage })
 	notificationDescription!: string;
 
 	@Column({ type: 'uuid', nullable: true })
@@ -129,4 +130,10 @@ export class NotificationEntity extends DefaultEntity {
 		message: booleanValidationMessage,
 	})
 	isRead: boolean = false;
+
+	@BeforeInsert()
+	splitNotificationProperties() {
+		this.notificationTitle = this.notificationTitle.slice(0, 60);
+		this.notificationDescription = this.notificationDescription.slice(0, 100);
+	}
 }
