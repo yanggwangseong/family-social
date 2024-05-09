@@ -5,10 +5,11 @@ import FeedPublicSelect from '../select/FeedPublicSelect';
 import { Union, feedPublicSelectOptions } from 'types';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
 import MentionView from '../mention/mention-view/MentionView';
+import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 
 const Profile: FC<{
 	chat?: ChatListResponse;
-	commentContents?: string;
+	comment?: CommentsResponse;
 	profileImage?: string;
 	username?: string;
 	email?: string;
@@ -17,7 +18,7 @@ const Profile: FC<{
 	onChageIsPublic?: (status: Union<typeof feedPublicSelectOptions>) => void;
 }> = ({
 	chat,
-	commentContents,
+	comment,
 	profileImage,
 	username,
 	email,
@@ -38,11 +39,14 @@ const Profile: FC<{
 				</div>
 			</div>
 			<div>
-				{commentContents && (
+				{comment && (
 					<>
 						<div className={styles.profile_comment_username}>양광성</div>
 						<div className={styles.profile_comment_contents}>
-							<MentionView contents={commentContents}></MentionView>
+							<MentionView
+								contents={comment.commentContents}
+								mentions={comment.mentions}
+							></MentionView>
 						</div>
 					</>
 				)}
