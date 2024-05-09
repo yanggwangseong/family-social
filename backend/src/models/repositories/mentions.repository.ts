@@ -47,6 +47,7 @@ export class MentionsRepository extends Repository<MentionEntity> {
 		const mentions = await this.repository.find({
 			select: {
 				id: true,
+				mentionPosition: true,
 				mentionRecipient: {
 					id: true,
 					profileImage: true,

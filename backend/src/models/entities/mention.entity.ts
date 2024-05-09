@@ -67,7 +67,7 @@ export class MentionEntity extends DefaultEntity {
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly mentionTypeId!: string;
 
-	@Column('numeric', { name: 'position', default: 0 })
+	@Column('numeric', { name: 'mentionPosition', default: 0 })
 	@ApiProperty({
 		nullable: false,
 	})
