@@ -26,14 +26,15 @@ const Profile: FC<{
 }) => {
 	return (
 		<div className={styles.profile_container}>
-			<div className={styles.profile_img_container}>
-				<Image
-					className="rounded-full"
-					width={40}
-					height={40}
-					src={'/images/profile/profile.png'}
-					alt="img"
-				></Image>
+			<div>
+				<div className={styles.profile_img_container}>
+					<Image
+						className="rounded-full"
+						fill
+						src={'/images/profile/profile.png'}
+						alt="img"
+					></Image>
+				</div>
 			</div>
 			<div>
 				{commentContents && (

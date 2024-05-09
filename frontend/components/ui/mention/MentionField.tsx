@@ -68,6 +68,7 @@ const MentionField: FC<{
 					<MentionsInput
 						value={field.value}
 						classNames={style}
+						allowSuggestionsAboveCursor={true}
 						onChange={e => field.onChange(e.target.value)}
 					>
 						<Mention
