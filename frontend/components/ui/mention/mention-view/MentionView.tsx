@@ -1,13 +1,25 @@
 import Link from 'next/link';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import style from '../MentionField.module.scss';
 import { MENTION_MATCH_PATTERN } from '@/constants/mention-match-pattern.const';
 import { MentionsResponse } from '@/shared/interfaces/mention.interface';
+import { AnimatePresence, motion } from 'framer-motion';
+import MemberHoverModal from '../../modal/member-hover-modal/MemberHoverModal';
 
 const MentionView: FC<{ contents: string; mentions: MentionsResponse[] }> = ({
 	contents,
 	mentions,
 }) => {
+	const [isHovering, setIsHovering] = useState<number>();
+
+	const handleMouseOver = (index: number) => {
+		setIsHovering(index);
+	};
+
+	const handleMouseOut = (index: number) => {
+		setIsHovering(undefined);
+	};
+
 	const renderMentions = (text: string) => {
 		const parts = text.split(MENTION_MATCH_PATTERN);
 
@@ -25,10 +37,27 @@ const MentionView: FC<{ contents: string; mentions: MentionsResponse[] }> = ({
 				return (
 					<Link
 						className={style.mentions__mention}
+						onMouseOver={() => handleMouseOver(index)}
+						onMouseOut={() => handleMouseOut(index)}
 						key={index}
 						href={`/accounts/${existsMention.mentionRecipient.email}`}
 					>
 						{`@${name}`}
+						{isHovering === index && (
+							<AnimatePresence key={index}>
+								<motion.div
+									key={index}
+									className={style.mention_view_modal}
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
+									exit={{ opacity: 0, transition: { duration: 1 } }}
+								>
+									<MemberHoverModal
+										mentionRecipient={existsMention.mentionRecipient}
+									></MemberHoverModal>
+								</motion.div>
+							</AnimatePresence>
+						)}
 					</Link>
 				);
 			} else if (index % 3 === 2) {

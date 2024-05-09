@@ -51,4 +51,16 @@
 		-1px -1px 1px white;
 	text-decoration: none;
 	//pointer-events: none;
+
+	&:hover {
+		@apply z-[30];
+
+		.mention_view_modal {
+			@apply block z-[20];
+		}
+	}
+
+	.mention_view_modal {
+		@apply hidden absolute w-[400px] bg-white bottom-4 z-[20];
+	}
 }

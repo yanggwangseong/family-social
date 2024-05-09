@@ -41,7 +41,9 @@ const Profile: FC<{
 			<div>
 				{comment && (
 					<>
-						<div className={styles.profile_comment_username}>양광성</div>
+						<div className={styles.profile_comment_username}>
+							{comment.member.username}
+						</div>
 						<div className={styles.profile_comment_contents}>
 							<MentionView
 								contents={comment.commentContents}
