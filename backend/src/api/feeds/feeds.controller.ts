@@ -428,7 +428,7 @@ export class FeedsController {
 		);
 
 		await this.mentionsService.deleteMentionsByFeedId(
-			{ mentionFeedId: feedId, mentionTypeId },
+			{ mentionFeedId: feedId, mentionCommentId: commentId, mentionTypeId },
 			qr,
 		);
 
