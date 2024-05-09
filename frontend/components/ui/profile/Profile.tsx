@@ -4,6 +4,7 @@ import Image from 'next/image';
 import FeedPublicSelect from '../select/FeedPublicSelect';
 import { Union, feedPublicSelectOptions } from 'types';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
+import MentionView from '../mention/mention-view/MentionView';
 
 const Profile: FC<{
 	chat?: ChatListResponse;
@@ -41,7 +42,7 @@ const Profile: FC<{
 					<>
 						<div className={styles.profile_comment_username}>양광성</div>
 						<div className={styles.profile_comment_contents}>
-							{commentContents}
+							<MentionView contents={commentContents}></MentionView>
 						</div>
 					</>
 				)}
