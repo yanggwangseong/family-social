@@ -106,7 +106,20 @@ export const GetMembersByUserNameSwagger = () => {
 			summary: '유저이름에 해당하는 유저 리스트 검색',
 		}),
 		ApiOkResponse({
-			description: '검색된 유저 리스트 가져오기',
+			description: '유저이름에 해당하는 유저 리스트 검색',
+			type: MemberSearchResDto,
+			isArray: true,
+		}),
+	);
+};
+
+export const GetMembersSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '내가 속한 그룹의 멤버들 전체 가져오기',
+		}),
+		ApiOkResponse({
+			description: '내가 속한 그룹의 멤버들 전체 가져오기',
 			type: MemberSearchResDto,
 			isArray: true,
 		}),

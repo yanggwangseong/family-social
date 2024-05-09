@@ -82,6 +82,30 @@ export class MembersRepository extends Repository<MemberEntity> {
 		});
 	}
 
+	async findAllMembers(
+		authorMemberId: string,
+		groupIds: string[],
+	): Promise<MemberSearchResDto[]> {
+		return await this.repository.find({
+			select: {
+				id: true,
+				username: true,
+				profileImage: true,
+				email: true,
+			},
+			relations: {
+				memberGroups: true,
+			},
+			where: {
+				id: Not(authorMemberId),
+				memberGroups: {
+					groupId: In(groupIds),
+					invitationAccepted: true,
+				},
+			},
+		});
+	}
+
 	async findMembersByUserName(
 		username: string,
 		authorMemberId: string,
