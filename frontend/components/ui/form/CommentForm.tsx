@@ -53,6 +53,7 @@ const CommentForm: FC<CommentFormProps> = ({
 		reset,
 		formState: { errors },
 	} = useForm<{ commentContents: string }>({
+		mode: 'onChange',
 		defaultValues: {
 			commentContents: isEdit ? commentContents : '',
 		},
@@ -181,7 +182,18 @@ const CommentForm: FC<CommentFormProps> = ({
 					placeholder="댓글을 입력 하세요."
 					defaultValue={commentContents}
 				></FieldWithTextarea> */}
-				<MentionField errors={errors} control={control}></MentionField>
+
+				<div className={styles.comment_field_container}>
+					<MentionField
+						control={control}
+						fieldName="commentContents"
+						validationOptions={{
+							required: '댓글을 작성해주세요!',
+						}}
+						placeholderText={'댓글을 입력 하세요.'}
+					></MentionField>
+				</div>
+
 				<div className={styles.comment_btn_container}>
 					<CustomButton
 						type="submit"
@@ -192,6 +204,11 @@ const CommentForm: FC<CommentFormProps> = ({
 					</CustomButton>
 				</div>
 			</div>
+			{errors.commentContents && (
+				<div className={styles.field_error}>
+					{errors.commentContents.message}
+				</div>
+			)}
 		</form>
 	);
 };

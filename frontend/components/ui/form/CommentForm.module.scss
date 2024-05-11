@@ -9,7 +9,14 @@
 		}
 	}
 
+	.comment_field_container {
+		@apply w-full;
+	}
+
 	.comment_btn_container {
 		@apply flex items-center justify-center;
 	}
+}
+.field_error {
+	@apply ml-10 mt-2 text-customOrange;
 }
