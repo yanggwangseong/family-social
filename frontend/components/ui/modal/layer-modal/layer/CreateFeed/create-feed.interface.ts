@@ -1,6 +1,5 @@
 export interface CreateFeedFields {
 	contents: string;
-	isPublic: string;
 }
 
 export interface CreateMediaType {

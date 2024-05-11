@@ -37,6 +37,7 @@ import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 import { motion } from 'framer-motion';
 import { toggleVariant } from '@/utils/animation/toggle-variant';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import MentionField from '@/components/ui/mention/MentionField';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -71,17 +72,26 @@ const CreateFeed: FC = () => {
 		feed?.isPublic ? (feed.isPublic === true ? 'public' : 'private') : 'public',
 	);
 
+	// const {
+	// 	register,
+	// 	formState: { errors, isValid },
+	// 	control,
+	// 	handleSubmit,
+	// 	reset,
+	// 	getValues,
+	// 	setValue,
+	// 	watch,
+	// } = useForm<CreateFeedFields>({
+	// 	mode: 'onChange',
+	// });
+
 	const {
-		register,
 		formState: { errors, isValid },
+		control,
 		handleSubmit,
-		reset,
 		getValues,
 		setValue,
-		watch,
-	} = useForm<CreateFeedFields>({
-		mode: 'onChange',
-	});
+	} = useForm<CreateFeedFields>();
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
 		useEmoji<CreateFeedFields>(getValues, setValue);
@@ -391,7 +401,7 @@ const CreateFeed: FC = () => {
 							</select>
 						</div> */}
 						<div className={styles.form_field_container}>
-							<FieldWithTextarea
+							{/* <FieldWithTextarea
 								fieldClass="inline_textarea"
 								{...register('contents', {
 									required: '피드 글을 작성해주세요!',
@@ -403,7 +413,12 @@ const CreateFeed: FC = () => {
 								placeholder="피드 글을 작성 해보세요"
 								defaultValue={feed?.contents}
 								error={errors.contents}
-							/>
+							/> */}
+							<MentionField
+								errors={errors}
+								control={control}
+								fieldName="contents"
+							></MentionField>
 						</div>
 						<div className={styles.form_swiper_container}>
 							<SwiperContainer list={isImageUrl} type="create-feed-form" />
