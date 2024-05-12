@@ -10,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import {
 	PostUploadCoverImageSwagger,
+	PostUploadFeedMediasSwagger,
 	PostUploadProfileSwagger,
 } from '@/common/decorators/swagger/swagger-media.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
@@ -80,6 +81,7 @@ export class MediasController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 업로드 된 파일 배열
 	 */
+	@PostUploadFeedMediasSwagger()
 	@Post('/feeds')
 	@UseInterceptors(
 		FilesInterceptor('files', 10, CreateBodyImageMulterOptions()),

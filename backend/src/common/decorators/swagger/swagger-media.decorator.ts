@@ -64,3 +64,31 @@ export const PostUploadCoverImageSwagger = () => {
 		}),
 	);
 };
+
+export const PostUploadFeedMediasSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '피드 미디어 업로드',
+		}),
+		ApiBody({
+			schema: {
+				type: 'object',
+				properties: {
+					files: {
+						type: 'string',
+						format: 'binary',
+					},
+				},
+			},
+		}),
+		ApiConsumes('multipart/form-data'),
+		ApiResponse({
+			description: '피드 미디어 업로드',
+			isArray: true,
+			type: String,
+		}),
+		ApiBadRequestResponse({
+			description: ERROR_FILE_NOT_FOUND,
+		}),
+	);
+};
