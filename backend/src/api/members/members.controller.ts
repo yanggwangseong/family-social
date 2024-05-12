@@ -31,10 +31,7 @@ import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-mess
 import { ParseEmailPipe } from '@/common/pipes/parse-email.pipe';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
-import {
-	CreateMemberCoverImageMulterOptions,
-	CreateMemberProfileImageMulterOptions,
-} from '@/utils/upload-media';
+import { CreateMemberCoverImageMulterOptions } from '@/utils/upload-media';
 
 import { MembersService } from './members.service';
 
@@ -130,19 +127,6 @@ export class MembersController {
 			memberId,
 			...dto,
 		});
-	}
-
-	@Post('/uploads/profile')
-	@UseInterceptors(
-		FilesInterceptor('files', 1, CreateMemberProfileImageMulterOptions()),
-	)
-	@ApiConsumes('multipart/form-data')
-	async uploadProfile(@UploadedFiles() files: Express.MulterS3.File[]) {
-		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
-		}
-		const locations = files.map(({ location }) => location);
-		return locations;
 	}
 
 	@Post('/uploads/cover-image')
