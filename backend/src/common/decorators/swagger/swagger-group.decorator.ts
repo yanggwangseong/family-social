@@ -23,7 +23,6 @@ import {
 	ERROR_USER_NOT_FOUND,
 } from '@/constants/business-error';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
-import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
@@ -40,18 +39,6 @@ export const GetMemberListBelongToGroupSwagger = () => {
 		}),
 		ApiForbiddenResponse({
 			description: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
-		}),
-	);
-};
-
-export const GetFeedsOfGroupSwagger = () => {
-	return applyDecorators(
-		ApiOperation({
-			summary: '특정 그룹에 해당하는 피드를 가져옵니다',
-		}),
-		ApiCreatedResponse({
-			description: '특정 그룹에 해당하는 피드를 가져오기 성공',
-			type: FeedGetAllResDto,
 		}),
 	);
 };

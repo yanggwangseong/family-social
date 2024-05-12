@@ -59,11 +59,7 @@ const GroupDetail: FC = () => {
 	} = useFeedIntersectionObserver(
 		['group-feeds', groupId],
 		async ({ pageParam = 1 }) =>
-			await GroupService.getFeedsOfGroup(
-				pageParam,
-				query.options ?? 'GROUPFEED',
-				groupId,
-			),
+			await FeedService.getFeeds(pageParam, 'GROUPFEED', groupId),
 	);
 
 	const handleRefetch = (pageValue: number) => {

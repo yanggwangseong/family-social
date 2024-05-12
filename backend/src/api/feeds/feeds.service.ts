@@ -69,13 +69,7 @@ export class FeedsService {
 	async findAllFeed(
 		page: number,
 		memberId: string,
-		options:
-			| 'TOP'
-			| 'MYFEED'
-			| 'ALL'
-			| 'GROUPFEED'
-			| 'GROUPMEMBER'
-			| 'GROUPEVENT',
+		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
 		groupId?: string,
 	): Promise<FeedGetAllResDto> {
 		const { take, skip } = getOffset({ page });

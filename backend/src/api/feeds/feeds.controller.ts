@@ -10,12 +10,10 @@ import {
 	Post,
 	Put,
 	Query,
-	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
@@ -34,7 +32,6 @@ import {
 	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
@@ -52,7 +49,6 @@ import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-re
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
-import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
@@ -108,6 +104,7 @@ export class FeedsController {
 	 * @tag feeds
 	 * @param {number} page - 페이징을 위한 page 번호
 	 * @param {string} sub  - 인증된 사용자의 아이디
+	 * @param groupId 특정 그룹에 해당하는 피드를 가져오기 위한 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -115,7 +112,8 @@ export class FeedsController {
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(
-		@Query('options') options: 'TOP' | 'MYFEED' | 'ALL',
+		@Query('options')
+		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
 		@Query(
 			'page',
 			new DefaultValuePipe(1),
@@ -123,8 +121,13 @@ export class FeedsController {
 		)
 		page: number,
 		@CurrentUser('sub') sub: string,
+		@Query(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId?: string,
 	) {
-		return await this.feedsService.findAllFeed(page, sub, options);
+		return await this.feedsService.findAllFeed(page, sub, options, groupId);
 	}
 
 	/**
@@ -272,19 +275,6 @@ export class FeedsController {
 		);
 
 		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
-	}
-
-	@Post('/test')
-	@UseInterceptors(
-		FilesInterceptor('files', 10, CreateBodyImageMulterOptions()),
-	)
-	@ApiConsumes('multipart/form-data')
-	async upload(@UploadedFiles() files: Express.MulterS3.File[]) {
-		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
-		}
-		const locations = files.map(({ location }) => location);
-		return locations;
 	}
 
 	/**

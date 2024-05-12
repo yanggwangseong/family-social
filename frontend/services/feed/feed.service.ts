@@ -17,9 +17,13 @@ export function sleep(ms: number) {
 }
 
 export const FeedService = {
-	async getFeeds(page: number, options: 'TOP' | 'MYFEED' | 'ALL' = 'TOP') {
+	async getFeeds(
+		page: number,
+		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
+		groupId?: string,
+	) {
 		const { data } = await axiosAPI.get<FeedsResponse>(
-			`/feeds?page=${page}&options=${options}`,
+			`/feeds?page=${page}&options=${options}&groupId=${groupId}`,
 		);
 
 		return data;

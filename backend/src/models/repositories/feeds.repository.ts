@@ -80,13 +80,8 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		take: number;
 		skip: number;
 		memberId: string;
-		options:
-			| 'TOP'
-			| 'MYFEED'
-			| 'ALL'
-			| 'GROUPFEED'
-			| 'GROUPMEMBER'
-			| 'GROUPEVENT';
+		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED';
+
 		groupId?: string;
 	}): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
 		const query = this.repository
