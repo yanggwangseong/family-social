@@ -1,5 +1,6 @@
 import { OmitStrict } from 'types';
 import { AuthResponse } from './auth.interface';
+import { MentionsResponse } from './mention.interface';
 
 export interface CommentsResponse {
 	id: string;
@@ -11,5 +12,6 @@ export interface CommentsResponse {
 	myLikeByComment: boolean;
 	sumLikeByComment: number;
 	member: AuthResponse;
+	mentions: MentionsResponse[];
 	childrenComments?: OmitStrict<CommentsResponse, 'childrenComments'>[];
 }

@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
+import { numberValidationMessage } from '@/common/validation-message/number-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { CommentEntity } from './comment.entity';
@@ -65,6 +66,21 @@ export class MentionEntity extends DefaultEntity {
 	})
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly mentionTypeId!: string;
+
+	@Column('int4', { name: 'mentionPosition', default: 0 })
+	@ApiProperty({
+		nullable: false,
+	})
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	@IsNumber(
+		{},
+		{
+			message: numberValidationMessage,
+		},
+	)
+	mentionPosition!: number;
 
 	@ManyToOne(() => MentionTypeEntity, (mt) => mt.mentions)
 	@JoinColumn({ name: 'mentionTypeId', referencedColumnName: 'id' })

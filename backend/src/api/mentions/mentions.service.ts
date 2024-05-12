@@ -59,11 +59,16 @@ export class MentionsService {
 	}
 
 	async updateMentions(mentionArgs: ICreateMentionArgs, qr?: QueryRunner) {
-		const mentionTypeId = await this.findMentionIdByMentionType(
-			mentionArgs.mentionType,
-		);
+		const { mentionFeedId, mentionCommentId, mentionType } = mentionArgs;
+
+		const mentionTypeId = await this.findMentionIdByMentionType(mentionType);
+
 		await this.deleteMentionsByFeedId(
-			{ mentionFeedId: mentionArgs.mentionFeedId, mentionTypeId },
+			{
+				mentionFeedId,
+				mentionCommentId,
+				mentionTypeId,
+			},
 			qr,
 		);
 
@@ -91,6 +96,7 @@ export class MentionsService {
 				mentionFeedId,
 				mentionCommentId,
 				mentionRecipientId: data.mentionMemberId,
+				mentionPosition: data.mentionPosition,
 			};
 		});
 	}

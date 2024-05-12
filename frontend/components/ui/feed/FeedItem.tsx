@@ -23,6 +23,7 @@ import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndM
 import SwiperContainer from '../swiper/SwiperContainer';
 import { Variants, motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
+import MentionView from '../mention/mention-view/MentionView';
 
 const FeedItem: FC<FeedItemProps> = ({
 	feed,
@@ -106,7 +107,12 @@ const FeedItem: FC<FeedItemProps> = ({
 						</motion.div>
 					</div>
 					<div className={styles.feed_description_container}>
-						{feed.contents}
+						{
+							<MentionView
+								contents={feed.contents}
+								mentions={feed.mentions}
+							></MentionView>
+						}
 					</div>
 					<div
 						className={styles.feed_media_container}

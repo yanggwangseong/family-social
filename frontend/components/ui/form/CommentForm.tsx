@@ -16,6 +16,9 @@ import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
 import styles from './CommentForm.module.scss';
 import MentionFieldArea from '../field/field-area/mention-field-area/MentionFieldArea';
+import MentionField from '../mention/MentionField';
+import { CommentFormProps } from './comment-form.interface';
+import { extractMention } from '@/utils/extract-mention';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -29,17 +32,31 @@ const CommentForm: FC<CommentFormProps> = ({
 	handleCloseReply,
 	handleEditComment,
 }) => {
+	// const {
+	// 	register,
+	// 	formState: { errors, isValid, isDirty },
+	// 	setValue,
+	// 	handleSubmit,
+	// 	reset,
+	// 	getValues,
+	// 	watch,
+	// 	getFieldState,
+	// } = useForm<{ commentContents: string }>({
+	// 	mode: 'onChange',
+	// });
+
 	const {
-		register,
-		formState: { errors, isValid, isDirty },
-		setValue,
 		handleSubmit,
-		reset,
+		control,
 		getValues,
-		watch,
-		getFieldState,
+		setValue,
+		reset,
+		formState: { errors },
 	} = useForm<{ commentContents: string }>({
 		mode: 'onChange',
+		defaultValues: {
+			commentContents: isEdit ? commentContents : '',
+		},
 	});
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } = useEmoji<{
@@ -80,6 +97,7 @@ const CommentForm: FC<CommentFormProps> = ({
 				commentId,
 				feedId,
 				commentContents: data.commentContents,
+				mentions: data.mentions,
 			}),
 		{
 			onMutate: variable => {
@@ -111,17 +129,25 @@ const CommentForm: FC<CommentFormProps> = ({
 	};
 
 	const onSubmit: SubmitHandler<{ commentContents: string }> = data => {
+		const mentions = extractMention(data.commentContents);
+
 		createCommentSync({
 			commentContents: data.commentContents,
 			feedId,
 			parentId,
 			replyId,
 			feedWriterId,
+			mentions,
 		});
 	};
 
 	const onUpdateSubmit: SubmitHandler<{ commentContents: string }> = data => {
-		updateCommentSync(data);
+		const mentions = extractMention(data.commentContents);
+
+		updateCommentSync({
+			commentContents: data.commentContents,
+			mentions,
+		});
 	};
 
 	return (
@@ -145,7 +171,7 @@ const CommentForm: FC<CommentFormProps> = ({
 						</div>
 					)}
 				</div>
-				<FieldWithTextarea
+				{/* <FieldWithTextarea
 					{...register('commentContents', {
 						maxLength: {
 							value: 2000,
@@ -155,7 +181,23 @@ const CommentForm: FC<CommentFormProps> = ({
 					fieldClass="hidden_border_textarea"
 					placeholder="댓글을 입력 하세요."
 					defaultValue={commentContents}
-				></FieldWithTextarea>
+				></FieldWithTextarea> */}
+
+				<div className={styles.comment_field_container}>
+					<MentionField
+						control={control}
+						fieldName="commentContents"
+						validationOptions={{
+							required: '댓글을 작성해주세요!',
+							maxLength: {
+								value: 2000,
+								message: '최대 2000자까지 가능합니다',
+							},
+						}}
+						placeholderText={'댓글을 입력 하세요.'}
+					></MentionField>
+				</div>
+
 				<div className={styles.comment_btn_container}>
 					<CustomButton
 						type="submit"
@@ -166,6 +208,11 @@ const CommentForm: FC<CommentFormProps> = ({
 					</CustomButton>
 				</div>
 			</div>
+			{errors.commentContents && (
+				<div className={styles.field_error}>
+					{errors.commentContents.message}
+				</div>
+			)}
 		</form>
 	);
 };

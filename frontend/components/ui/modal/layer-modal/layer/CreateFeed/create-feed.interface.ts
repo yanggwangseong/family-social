@@ -1,6 +1,7 @@
+import { CreateMentionRequest } from '@/components/ui/form/comment-form.interface';
+
 export interface CreateFeedFields {
 	contents: string;
-	isPublic: string;
 }
 
 export interface CreateMediaType {
@@ -13,6 +14,7 @@ export interface CreateFeedRequest {
 	isPublic: boolean;
 	groupId: string;
 	medias: CreateMediaType[];
+	mentions: CreateMentionRequest[];
 }
 
 export interface UpdateFeedRequest extends CreateFeedRequest {

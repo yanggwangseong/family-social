@@ -4,10 +4,12 @@ import Image from 'next/image';
 import FeedPublicSelect from '../select/FeedPublicSelect';
 import { Union, feedPublicSelectOptions } from 'types';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
+import MentionView from '../mention/mention-view/MentionView';
+import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 
 const Profile: FC<{
 	chat?: ChatListResponse;
-	commentContents?: string;
+	comment?: CommentsResponse;
 	profileImage?: string;
 	username?: string;
 	email?: string;
@@ -16,7 +18,7 @@ const Profile: FC<{
 	onChageIsPublic?: (status: Union<typeof feedPublicSelectOptions>) => void;
 }> = ({
 	chat,
-	commentContents,
+	comment,
 	profileImage,
 	username,
 	email,
@@ -26,26 +28,32 @@ const Profile: FC<{
 }) => {
 	return (
 		<div className={styles.profile_container}>
-			<div className={styles.profile_img_container}>
-				<Image
-					className="rounded-full"
-					width={40}
-					height={40}
-					src={'/images/profile/profile.png'}
-					alt="img"
-				></Image>
+			<div>
+				<div className={styles.profile_img_container}>
+					<Image
+						className="rounded-full"
+						fill
+						src={profileImage ?? '/images/profile/profile.png'}
+						alt="img"
+					></Image>
+				</div>
 			</div>
 			<div>
-				{commentContents && (
+				{comment && (
 					<>
-						<div className={styles.profile_comment_username}>양광성</div>
+						<div className={styles.profile_comment_username}>
+							{comment.member.username}
+						</div>
 						<div className={styles.profile_comment_contents}>
-							{commentContents}
+							<MentionView
+								contents={comment.commentContents}
+								mentions={comment.mentions}
+							></MentionView>
 						</div>
 					</>
 				)}
 
-				{username && <div className={styles.profile_username}>양광성</div>}
+				{username && <div className={styles.profile_username}>{username}</div>}
 				{email && <div className={styles.profile_email}>{email}</div>}
 				{isPublic && (
 					<FeedPublicSelect

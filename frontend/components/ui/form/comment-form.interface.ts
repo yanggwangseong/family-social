@@ -1,4 +1,4 @@
-interface CommentFormProps {
+export interface CommentFormProps {
 	onCommentRefetch: () => void;
 	feedId: string;
 	feedWriterId: string;
@@ -9,4 +9,9 @@ interface CommentFormProps {
 	commentContents?: string;
 	handleCloseReply?: () => void;
 	handleEditComment?: () => void;
+}
+
+export interface CreateMentionRequest {
+	mentionMemberId: string;
+	mentionPosition: number;
 }

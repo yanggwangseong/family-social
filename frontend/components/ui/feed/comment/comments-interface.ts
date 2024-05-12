@@ -1,4 +1,5 @@
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
+import { CreateMentionRequest } from '../../form/comment-form.interface';
 
 export interface CommentsProps {
 	comments: CommentsResponse[];
@@ -15,7 +16,8 @@ export interface CreateCommentRequest {
 	replyId?: string;
 	parentId?: string;
 	feedId: string;
+	mentions: CreateMentionRequest[];
 }
 
 export interface UpdateCommentRequest
-	extends Pick<CreateCommentRequest, 'commentContents'> {}
+	extends Pick<CreateCommentRequest, 'commentContents' | 'mentions'> {}
