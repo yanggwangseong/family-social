@@ -14,7 +14,10 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ERROR_FILE_NOT_FOUND } from '@/constants/business-error';
-import { CreateMemberProfileImageMulterOptions } from '@/utils/upload-media';
+import {
+	CreateMemberCoverImageMulterOptions,
+	CreateMemberProfileImageMulterOptions,
+} from '@/utils/upload-media';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
@@ -39,6 +42,26 @@ export class MediasController {
 	async postUploadProfile(@UploadedFiles() files: Express.MulterS3.File[]) {
 		if (!files?.length) {
 			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
+		}
+		const locations = files.map(({ location }) => location);
+		return locations;
+	}
+
+	/**
+	 * @summary 멤버 커버 이미지 업로드
+	 *
+	 * @tag medias
+	 * @param files 업로드 파일 배열
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 업로드 된 파일 배열
+	 */
+	@Post('/members/cover-image')
+	@UseInterceptors(
+		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
+	)
+	async postUploadCoverImage(@UploadedFiles() files: Express.MulterS3.File[]) {
+		if (!files?.length) {
+			throw BadRequestServiceException(`파일이 없습니다.`);
 		}
 		const locations = files.map(({ location }) => location);
 		return locations;

@@ -4,14 +4,11 @@ import {
 	Get,
 	Param,
 	ParseUUIDPipe,
-	Post,
 	Put,
-	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 import {
 	GetMemberByEmailSwagger,
@@ -20,10 +17,7 @@ import {
 	UpdateMemberProfileSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import {
-	BadRequestServiceException,
-	UnAuthOrizedException,
-} from '@/common/exception/service.exception';
+import { UnAuthOrizedException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -31,7 +25,6 @@ import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-mess
 import { ParseEmailPipe } from '@/common/pipes/parse-email.pipe';
 import { ERROR_AUTHORIZATION_MEMBER } from '@/constants/business-error';
 import { MemberUpdateReqDto } from '@/models/dto/member/req/member-update-req.dto';
-import { CreateMemberCoverImageMulterOptions } from '@/utils/upload-media';
 
 import { MembersService } from './members.service';
 
@@ -127,18 +120,5 @@ export class MembersController {
 			memberId,
 			...dto,
 		});
-	}
-
-	@Post('/uploads/cover-image')
-	@UseInterceptors(
-		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
-	)
-	@ApiConsumes('multipart/form-data')
-	async uploadCoverImage(@UploadedFiles() files: Express.MulterS3.File[]) {
-		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
-		}
-		const locations = files.map(({ location }) => location);
-		return locations;
 	}
 }
