@@ -10,12 +10,10 @@ import {
 	Post,
 	Put,
 	Query,
-	UploadedFiles,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
@@ -34,7 +32,6 @@ import {
 	GetFeedDetailSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
-import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
@@ -52,7 +49,6 @@ import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-re
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
-import { CreateBodyImageMulterOptions } from '@/utils/upload-media';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
@@ -272,19 +268,6 @@ export class FeedsController {
 		);
 
 		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
-	}
-
-	@Post('/test')
-	@UseInterceptors(
-		FilesInterceptor('files', 10, CreateBodyImageMulterOptions()),
-	)
-	@ApiConsumes('multipart/form-data')
-	async upload(@UploadedFiles() files: Express.MulterS3.File[]) {
-		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
-		}
-		const locations = files.map(({ location }) => location);
-		return locations;
 	}
 
 	/**
