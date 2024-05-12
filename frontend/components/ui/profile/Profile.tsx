@@ -33,7 +33,7 @@ const Profile: FC<{
 					<Image
 						className="rounded-full"
 						fill
-						src={'/images/profile/profile.png'}
+						src={profileImage ?? '/images/profile/profile.png'}
 						alt="img"
 					></Image>
 				</div>
@@ -53,7 +53,7 @@ const Profile: FC<{
 					</>
 				)}
 
-				{username && <div className={styles.profile_username}>양광성</div>}
+				{username && <div className={styles.profile_username}>{username}</div>}
 				{email && <div className={styles.profile_email}>{email}</div>}
 				{isPublic && (
 					<FeedPublicSelect

@@ -18,6 +18,11 @@
 
 // .mentions--multiLine .mentions__control {
 // }
+.mentions--multiLine {
+	:nth-child(2) {
+		z-index: 2 !important;
+	}
+}
 .mentions--multiLine .mentions__highlighter {
 	//border: 1px solid transparent; // 중요
 	//padding: 9px;

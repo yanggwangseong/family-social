@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
-import { Mention, MentionsInput } from 'react-mentions';
+import { Mention, MentionsInput, SuggestionDataItem } from 'react-mentions';
 import style from './MentionField.module.scss';
 import { Control, Controller, Path, RegisterOptions } from 'react-hook-form';
 import { MemberService } from '@/services/member/member.service';
 import { useQuery } from 'react-query';
 import { MentionFieldProps } from './mention-field.interface';
+import Profile from '../profile/Profile';
 
 const MentionField = <T extends Record<string, any>>(
 	props: MentionFieldProps<T>,
@@ -20,11 +21,31 @@ const MentionField = <T extends Record<string, any>>(
 					return {
 						id: item.id,
 						display: item.username,
+						profileImg: item.profileImage,
 					};
 				});
 			},
 		},
 	);
+
+	const renderUserSuggestion = (
+		suggestion: SuggestionDataItem,
+		search: string,
+		highlightedDisplay: React.ReactNode,
+		index: number,
+		focused: boolean,
+	) => {
+		if (!data) {
+			return null;
+		}
+
+		return (
+			<Profile
+				username={suggestion.display}
+				profileImage={data[index].profileImg}
+			></Profile>
+		);
+	};
 
 	return (
 		<div>
@@ -52,6 +73,7 @@ const MentionField = <T extends Record<string, any>>(
 									data={data}
 									displayTransform={(id, display) => `@${display} `}
 									markup="@[__display__](__id__) "
+									renderSuggestion={renderUserSuggestion}
 								/>
 							</MentionsInput>
 						</>
