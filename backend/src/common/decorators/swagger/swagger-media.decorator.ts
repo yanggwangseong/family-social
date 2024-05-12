@@ -10,7 +10,10 @@ import {
 
 import {
 	ERROR_FILE_NOT_FOUND,
+	ERROR_GROUP_NOT_FOUND,
+	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_SCHEDULE_NOT_FOUND,
+	ERROR_UUID_PIPE_MESSAGE,
 } from '@/constants/business-error';
 
 export const PostUploadProfileSwagger = () => {
@@ -121,6 +124,34 @@ export const PatchScheduleUploadThumbnailImageSwagger = () => {
 		}),
 		ApiNotFoundResponse({
 			description: `1. ${ERROR_SCHEDULE_NOT_FOUND} \n2. ${ERROR_FILE_NOT_FOUND}`,
+		}),
+	);
+};
+
+export const PatchGroupUploadCoverImageSwagger = () => {
+	return applyDecorators(
+		ApiConsumes('multipart/form-data'),
+		ApiBody({
+			schema: {
+				type: 'object',
+				properties: {
+					files: {
+						type: 'string',
+						format: 'binary',
+					},
+				},
+			},
+		}),
+		ApiOperation({
+			summary: '특정 그룹 커버 이미지 변경',
+		}),
+		ApiResponse({
+			description: '특정 그룹 커버 이미지 변경 성공',
+			isArray: true,
+			type: String,
+		}),
+		ApiNotFoundResponse({
+			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_UUID_PIPE_MESSAGE} \n3. ${ERROR_NO_PERMISSTION_TO_GROUP} \n4. ${ERROR_FILE_NOT_FOUND}`,
 		}),
 	);
 };

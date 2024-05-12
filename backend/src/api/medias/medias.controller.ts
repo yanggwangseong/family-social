@@ -12,6 +12,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
+	PatchGroupUploadCoverImageSwagger,
 	PatchScheduleUploadThumbnailImageSwagger,
 	PostUploadCoverImageSwagger,
 	PostUploadFeedMediasSwagger,
@@ -152,6 +153,7 @@ export class MediasController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns string[]
 	 */
+	@PatchGroupUploadCoverImageSwagger()
 	@Patch('/groups/:groupId/cover-image')
 	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(
