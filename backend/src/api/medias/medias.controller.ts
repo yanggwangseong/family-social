@@ -6,8 +6,9 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
+import { PostUploadProfileSwagger } from '@/common/decorators/swagger/swagger-media.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -22,12 +23,20 @@ import { CreateMemberProfileImageMulterOptions } from '@/utils/upload-media';
 export class MediasController {
 	constructor() {}
 
+	/**
+	 * @summary 멤버 프로필 업로드
+	 *
+	 * @tag medias
+	 * @param files 업로드 파일 배열
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 업로드 된 파일 배열
+	 */
+	@PostUploadProfileSwagger()
 	@Post('/members/profile')
 	@UseInterceptors(
 		FilesInterceptor('files', 1, CreateMemberProfileImageMulterOptions()),
 	)
-	@ApiConsumes('multipart/form-data')
-	async uploadProfile(@UploadedFiles() files: Express.MulterS3.File[]) {
+	async postUploadProfile(@UploadedFiles() files: Express.MulterS3.File[]) {
 		if (!files?.length) {
 			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
 		}
