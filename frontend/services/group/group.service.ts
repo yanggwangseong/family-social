@@ -14,18 +14,6 @@ export const GroupService = {
 		return data;
 	},
 
-	async getFeedsOfGroup(
-		page: number,
-		options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT' = 'GROUPFEED',
-		groupId: string,
-	) {
-		const { data } = await axiosAPI.get<FeedsResponse>(
-			`/groups/${groupId}/feeds?page=${page}&options=${options}`,
-		);
-
-		return data;
-	},
-
 	async createGroup(
 		groupName: string,
 		groupDescription: string,
