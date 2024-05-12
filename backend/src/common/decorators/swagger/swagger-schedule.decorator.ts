@@ -1,7 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
 import {
-	ApiBody,
-	ApiConsumes,
 	ApiCreatedResponse,
 	ApiForbiddenResponse,
 	ApiNotFoundResponse,
@@ -113,32 +111,6 @@ export const PatchScheduleTitleSwagger = () => {
 		}),
 		ApiCreatedResponse({
 			description: '여행 제목 수정 성공',
-		}),
-		ApiNotFoundResponse({
-			description: `${ERROR_SCHEDULE_NOT_FOUND}`,
-		}),
-	);
-};
-
-export const PatchScheduleUploadThumbnailImageSwagger = () => {
-	return applyDecorators(
-		ApiConsumes('multipart/form-data'),
-		ApiBody({
-			schema: {
-				type: 'object',
-				properties: {
-					files: {
-						type: 'string',
-						format: 'binary',
-					},
-				},
-			},
-		}),
-		ApiOperation({
-			summary: '특정 스케줄 썸네일 수정하기',
-		}),
-		ApiCreatedResponse({
-			description: '스케줄 썸네일 수정하기 성공',
 		}),
 		ApiNotFoundResponse({
 			description: `${ERROR_SCHEDULE_NOT_FOUND}`,

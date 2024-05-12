@@ -1,5 +1,8 @@
 import {
 	Controller,
+	Param,
+	ParseUUIDPipe,
+	Patch,
 	Post,
 	UploadedFiles,
 	UseGuards,
@@ -9,6 +12,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
+	PatchScheduleUploadThumbnailImageSwagger,
 	PostUploadCoverImageSwagger,
 	PostUploadFeedMediasSwagger,
 	PostUploadProfileSwagger,
@@ -17,19 +21,23 @@ import { BadRequestServiceException } from '@/common/exception/service.exception
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ERROR_FILE_NOT_FOUND } from '@/constants/business-error';
 import {
 	CreateBodyImageMulterOptions,
 	CreateMemberCoverImageMulterOptions,
 	CreateMemberProfileImageMulterOptions,
+	createScheduleThumbnailImageMulterOptions,
 } from '@/utils/upload-media';
+
+import { SchedulesService } from '../schedules/schedules.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('medias')
 @Controller('medias')
 export class MediasController {
-	constructor() {}
+	constructor(private readonly schedulesService: SchedulesService) {}
 
 	/**
 	 * @summary 멤버 프로필 업로드
@@ -91,6 +99,41 @@ export class MediasController {
 			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
 		}
 		const locations = files.map(({ location }) => location);
+		return locations;
+	}
+
+	/**
+	 * @summary 특정 스케줄 여행스케줄 썸네일 변경
+	 *
+	 * @tag schedules
+	 * @param scheduleId - 스케줄 아이디
+	 * @param files - 업로드 파일
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns string[]
+	 */
+	@PatchScheduleUploadThumbnailImageSwagger()
+	@Patch('/schedules/:scheduleId/thumbnail-image')
+	@UseInterceptors(
+		FilesInterceptor('files', 1, createScheduleThumbnailImageMulterOptions()),
+	)
+	async PatchScheduleUploadThumbnailImage(
+		@UploadedFiles() files: Express.MulterS3.File[],
+		@Param(
+			'scheduleId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		scheduleId: string,
+	) {
+		if (!files?.length) {
+			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
+		}
+		const locations = files.map(({ location }) => location);
+
+		await this.schedulesService.updateScheduleThumbnail(
+			scheduleId,
+			locations[0],
+		);
+
 		return locations;
 	}
 }
