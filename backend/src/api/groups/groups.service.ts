@@ -105,6 +105,10 @@ export class GroupsService {
 		});
 	}
 
+	async updateGroupCoverImage(groupId: string, imageUrl: string) {
+		return await this.groupsRepository.updateGroupCoverImage(groupId, imageUrl);
+	}
+
 	async deleteGroup(
 		deleteGroupArgs: IDeleteGroupArgs,
 		qr?: QueryRunner,

@@ -12,10 +12,15 @@ import { MediasRepository } from '@/models/repositories/medias.repository';
 
 import { MediasController } from './medias.controller';
 import { MediasService } from './medias.service';
+import { GroupsModule } from '../groups/groups.module';
 import { SchedulesModule } from '../schedules/schedules.module';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([FeedMediaEntity]), SchedulesModule],
+	imports: [
+		TypeOrmModule.forFeature([FeedMediaEntity]),
+		SchedulesModule,
+		GroupsModule,
+	],
 	controllers: [MediasController],
 	providers: [MediasService, MediasRepository],
 	exports: [MediasService],

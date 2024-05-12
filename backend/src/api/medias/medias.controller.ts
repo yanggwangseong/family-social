@@ -27,9 +27,11 @@ import {
 	CreateBodyImageMulterOptions,
 	CreateMemberCoverImageMulterOptions,
 	CreateMemberProfileImageMulterOptions,
+	createGroupCoverImageMulterOptions,
 	createScheduleThumbnailImageMulterOptions,
 } from '@/utils/upload-media';
 
+import { GroupsService } from '../groups/groups.service';
 import { SchedulesService } from '../schedules/schedules.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -37,7 +39,10 @@ import { SchedulesService } from '../schedules/schedules.service';
 @ApiTags('medias')
 @Controller('medias')
 export class MediasController {
-	constructor(private readonly schedulesService: SchedulesService) {}
+	constructor(
+		private readonly schedulesService: SchedulesService,
+		private readonly groupsService: GroupsService,
+	) {}
 
 	/**
 	 * @summary 멤버 프로필 업로드
@@ -105,7 +110,7 @@ export class MediasController {
 	/**
 	 * @summary 특정 스케줄 여행스케줄 썸네일 변경
 	 *
-	 * @tag schedules
+	 * @tag medias
 	 * @param scheduleId - 스케줄 아이디
 	 * @param files - 업로드 파일
 	 * @author YangGwangSeong <soaw83@gmail.com>
@@ -133,6 +138,37 @@ export class MediasController {
 			scheduleId,
 			locations[0],
 		);
+
+		return locations;
+	}
+
+	/**
+	 * @summary 특정 그룹 커버 이미지 변경
+	 *
+	 * @tag medias
+	 * @param groupId 그룹 아이디
+	 * @param files 업로드 파일
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns string[]
+	 */
+	@Patch('/groups/:groupId/cover-image')
+	@UseInterceptors(
+		FilesInterceptor('files', 1, createGroupCoverImageMulterOptions()),
+	)
+	async PatchGroupUploadCoverImage(
+		@UploadedFiles() files: Express.MulterS3.File[],
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+	) {
+		if (!files?.length) {
+			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
+		}
+		const locations = files.map(({ location }) => location);
+
+		await this.groupsService.updateGroupCoverImage(groupId, locations[0]);
 
 		return locations;
 	}
