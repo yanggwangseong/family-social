@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { GroupExistsMiddleware } from '@/common/middlewares/group-exists.middleware';
 import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
 import { FeedMediaEntity } from '@/models/entities/feed-media.entity';
 import { MediasRepository } from '@/models/repositories/medias.repository';
@@ -29,6 +30,11 @@ export class MediasModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer.apply(ScheduleExistsMiddleware).forRoutes({
 			path: 'medias/schedules/:scheduleId/thumbnail-image',
+			method: RequestMethod.PATCH,
+		});
+
+		consumer.apply(GroupExistsMiddleware).forRoutes({
+			path: 'medias/groups/:groupId/cover-image',
 			method: RequestMethod.PATCH,
 		});
 	}
