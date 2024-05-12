@@ -27,17 +27,17 @@ import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
-import { AiOutlineClose } from 'react-icons/ai';
+
 import { Union, feedPublicSelectOptions } from 'types';
-import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
 import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import MentionField from '@/components/ui/mention/MentionField';
+import { extractMention } from '@/utils/extract-mention';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -93,6 +93,9 @@ const CreateFeed: FC = () => {
 		setValue,
 	} = useForm<CreateFeedFields>({
 		mode: 'onChange',
+		defaultValues: {
+			contents: '',
+		},
 	});
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
@@ -232,6 +235,7 @@ const CreateFeed: FC = () => {
 
 	const onSubmit: SubmitHandler<CreateFeedFields> = async ({ contents }) => {
 		const uploadResult = await uploadFilesASync();
+		const mentions = extractMention(contents);
 		const medias: CreateMediaType[] = uploadResult.map((data, index) =>
 			createMedia(data, index),
 		);
@@ -241,7 +245,8 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
-				medias: medias,
+				medias,
+				mentions,
 			});
 		}
 
@@ -252,6 +257,7 @@ const CreateFeed: FC = () => {
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
 				medias: medias,
+				mentions,
 			});
 		}
 	};
