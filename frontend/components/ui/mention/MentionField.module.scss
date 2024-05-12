@@ -19,14 +19,13 @@
 // .mentions--multiLine .mentions__control {
 // }
 .mentions--multiLine .mentions__highlighter {
-	border: 1px solid transparent; // 중요
+	//border: 1px solid transparent; // 중요
 	//padding: 9px;
 	//min-height: 63px;
 }
 .mentions--multiLine .mentions__input {
-	border: 1px solid #fff9f4; // 중요
-	//padding: 9px;
-	outline: 0;
+	//border: 1px solid #fff9f4; // 중요
+	padding: 1px;
 }
 .mentions__suggestions__list {
 	@apply z-[30];

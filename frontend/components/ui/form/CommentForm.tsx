@@ -189,6 +189,10 @@ const CommentForm: FC<CommentFormProps> = ({
 						fieldName="commentContents"
 						validationOptions={{
 							required: '댓글을 작성해주세요!',
+							maxLength: {
+								value: 2000,
+								message: '최대 2000자까지 가능합니다',
+							},
 						}}
 						placeholderText={'댓글을 입력 하세요.'}
 					></MentionField>

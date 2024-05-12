@@ -91,7 +91,9 @@ const CreateFeed: FC = () => {
 		handleSubmit,
 		getValues,
 		setValue,
-	} = useForm<CreateFeedFields>();
+	} = useForm<CreateFeedFields>({
+		mode: 'onChange',
+	});
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
 		useEmoji<CreateFeedFields>(getValues, setValue);
@@ -415,9 +417,16 @@ const CreateFeed: FC = () => {
 								error={errors.contents}
 							/> */}
 							<MentionField
-								errors={errors}
 								control={control}
 								fieldName="contents"
+								validationOptions={{
+									required: '피드 글을 작성해주세요!',
+									maxLength: {
+										value: 2000,
+										message: '최대 2000자까지 가능합니다',
+									},
+								}}
+								placeholderText={'피드 글을 작성 해보세요'}
 							></MentionField>
 						</div>
 						<div className={styles.form_swiper_container}>
