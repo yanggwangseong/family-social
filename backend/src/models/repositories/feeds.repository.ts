@@ -75,11 +75,19 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		skip,
 		memberId,
 		options,
+		groupId,
 	}: {
 		take: number;
 		skip: number;
 		memberId: string;
-		options: 'TOP' | 'MYFEED' | 'ALL';
+		options:
+			| 'TOP'
+			| 'MYFEED'
+			| 'ALL'
+			| 'GROUPFEED'
+			| 'GROUPMEMBER'
+			| 'GROUPEVENT';
+		groupId?: string;
 	}): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
 		const query = this.repository
 			.createQueryBuilder('a')
@@ -116,6 +124,10 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			query.where('a.memberId = :memberId', { memberId });
 		} else {
 			query.where('a.isPublic = :isPublic', { isPublic: true });
+		}
+
+		if (options === 'GROUPFEED') {
+			query.andWhere('a.groupId = :groupId', { groupId });
 		}
 
 		const [list, count] = await Promise.all([

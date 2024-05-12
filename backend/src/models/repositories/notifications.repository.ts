@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import {
+	DeepPartial,
+	FindOptionsWhere,
+	QueryRunner,
+	Repository,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Union, isReadOptions } from '@/types';
 
 import { NotificationResDto } from '../dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '../entities/notification.entity';
@@ -18,25 +20,26 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	getScheduleRepository(qr?: QueryRunner) {
+	getNotificationRepository(qr?: QueryRunner) {
 		return qr
 			? qr.manager.getRepository<NotificationEntity>(NotificationEntity)
 			: this.repository;
 	}
 
 	async createNotification(
-		overrideInsertFeilds: Omit<
-			QueryDeepPartialEntity<NotificationEntity>,
-			'id'
-		>,
+		overrideInsertFeilds: DeepPartial<NotificationEntity>,
 		qr?: QueryRunner,
 	) {
-		const scheduleRepository = this.getScheduleRepository(qr);
+		const NotificationRepository = this.getNotificationRepository(qr);
 
-		await scheduleRepository.insert({
+		const notification: DeepPartial<NotificationEntity> = {
 			id: uuidv4(),
 			...overrideInsertFeilds,
-		});
+		};
+
+		await NotificationRepository.insert(
+			NotificationRepository.create(notification),
+		);
 	}
 
 	async getNotifications({

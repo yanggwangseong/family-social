@@ -1,5 +1,6 @@
 import { CommentsResponse } from './comment.interface';
 import { MediaInfo } from './media.interface';
+import { MentionsResponse } from './mention.interface';
 
 export interface FeedsResponse {
 	list: FeedInfo[];
@@ -19,6 +20,7 @@ export interface FeedInfo {
 	sumLike?: number;
 	medias: MediaInfo[];
 	comments: CommentsResponse[];
+	mentions: MentionsResponse[];
 }
 
 export interface FeedByIdResponse {

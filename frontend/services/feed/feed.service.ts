@@ -10,6 +10,7 @@ import {
 } from '@/shared/interfaces/feed.interface';
 
 import { axiosAPI } from 'api/axios';
+import { OmitStrict } from 'types';
 
 export function sleep(ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
@@ -24,30 +25,18 @@ export const FeedService = {
 		return data;
 	},
 
-	async createFeed({ contents, isPublic, groupId, medias }: CreateFeedRequest) {
+	async createFeed(createFeedRequest: CreateFeedRequest) {
 		const { data } = await axiosAPI.post<FeedByIdResponse>(`/feeds`, {
-			contents: contents,
-			isPublic: isPublic,
-			groupId: groupId,
-			medias: medias,
-		});
+			...createFeedRequest,
+		} satisfies CreateFeedRequest);
 
 		return data;
 	},
 
-	async updateFeed({
-		contents,
-		isPublic,
-		groupId,
-		medias,
-		feedId,
-	}: UpdateFeedRequest) {
+	async updateFeed({ feedId, ...rest }: UpdateFeedRequest) {
 		const { data } = await axiosAPI.put<FeedByIdResponse>(`/feeds/${feedId}`, {
-			contents: contents,
-			isPublic: isPublic,
-			groupId: groupId,
-			medias: medias,
-		});
+			...rest,
+		} satisfies OmitStrict<UpdateFeedRequest, 'feedId'>);
 
 		return data;
 	},

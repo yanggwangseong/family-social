@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
 
@@ -13,8 +13,19 @@ export class LikesFeedRepository extends Repository<LikeFeedEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async findMemberLikesFeed(memberId: string, feedId: string) {
-		return await this.repository.findOneBy({
+	getLikesFeedRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<LikeFeedEntity>(LikeFeedEntity)
+			: this.repository;
+	}
+
+	async findMemberLikesFeed(
+		memberId: string,
+		feedId: string,
+		qr?: QueryRunner,
+	) {
+		const repository = this.getLikesFeedRepository(qr);
+		return await repository.findOneBy({
 			memberId: memberId,
 			feedId: feedId,
 		});

@@ -1,5 +1,14 @@
 import { atom } from 'recoil';
 
+export const serviceCategoriesDefaultValue = {
+	firstCategory: '',
+	firstCategoryName: '',
+	secondCategory: '',
+	secondCategoryName: '',
+	thirdCategory: '',
+	thirdCategoryName: '',
+};
+
 export interface serviceCategoriesAtomType {
 	firstCategory: string;
 	firstCategoryName: string;
@@ -10,13 +19,6 @@ export interface serviceCategoriesAtomType {
 }
 
 export const serviceCategoriesAtom = atom<serviceCategoriesAtomType>({
-	default: {
-		firstCategory: '',
-		firstCategoryName: '',
-		secondCategory: '',
-		secondCategoryName: '',
-		thirdCategory: '',
-		thirdCategoryName: '',
-	},
+	default: serviceCategoriesDefaultValue,
 	key: 'serviceCategories',
 });

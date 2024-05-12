@@ -17,6 +17,7 @@ import { DefaultEntity } from './common/default.entity';
 import { FeedEntity } from './feed.entity';
 import { LikeCommentEntity } from './like-comment.entity';
 import { MemberEntity } from './member.entity';
+import { MentionEntity } from './mention.entity';
 
 @Entity({ name: 'fam_comment' })
 @Index(['createdAt'])
@@ -86,4 +87,8 @@ export class CommentEntity extends DefaultEntity {
 	// comment-like
 	@OneToMany(() => LikeCommentEntity, (lcm) => lcm.comment)
 	LikedByComments?: LikeCommentEntity[];
+
+	// mentions
+	@OneToMany(() => MentionEntity, (mt) => mt.mentionComment)
+	commentMentions?: MentionEntity[];
 }

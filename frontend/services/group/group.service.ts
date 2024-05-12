@@ -1,3 +1,4 @@
+import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 import {
 	GroupResponse,
 	MemberBelongToGroupsResponse,
@@ -8,6 +9,18 @@ export const GroupService = {
 	async getMemberBelongToGroups(): Promise<MemberBelongToGroupsResponse[]> {
 		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(
 			'/groups',
+		);
+
+		return data;
+	},
+
+	async getFeedsOfGroup(
+		page: number,
+		options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT' = 'GROUPFEED',
+		groupId: string,
+	) {
+		const { data } = await axiosAPI.get<FeedsResponse>(
+			`/groups/${groupId}/feeds?page=${page}&options=${options}`,
 		);
 
 		return data;

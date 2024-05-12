@@ -16,6 +16,7 @@ import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import {
 	GetMemberByEmailSwagger,
 	GetMemberByMemberIdSwagger,
+	GetMembersSwagger,
 	UpdateMemberProfileSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -43,6 +44,24 @@ import { MembersService } from './members.service';
 @Controller('members')
 export class MembersController {
 	constructor(private readonly membersService: MembersService) {}
+
+	/**
+	 * @summary 내가 속한 그룹의 멤버들 전체 가져오기
+	 *
+	 * @tag members
+	 * @param sub 인증된 유저
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 유저 이름 , 유저 아이디
+	 */
+	@GetMembersSwagger()
+	@Get()
+	async getMembers(@CurrentUser('sub') sub: string) {
+		const { groupIds } = await this.membersService.findGroupIdsBelongToMyGroup(
+			sub,
+		);
+
+		return await this.membersService.findAllMembers(sub, groupIds);
+	}
 
 	/**
 	 * @summary 특정 멤버 유저 아이디로 조회

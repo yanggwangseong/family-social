@@ -39,7 +39,9 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods }) => {
 			)}
 
 			{/* 행사/축제 검색 */}
-			{query.menu === 'FESTIVAL' && <Festival></Festival>}
+			{query.menu === 'FESTIVAL' && (
+				<Festival onChangePeriods={handleChangePeriods}></Festival>
+			)}
 
 			{/* 키워드 검색 */}
 			{query.menu === 'TOURSEARCH' && (

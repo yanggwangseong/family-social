@@ -18,6 +18,7 @@ import { GroupsModule } from './api/groups/groups.module';
 import { MailsModule } from './api/mails/mails.module';
 import { MediasModule } from './api/medias/medias.module';
 import { MembersModule } from './api/members/members.module';
+import { MentionsModule } from './api/mentions/mentions.module';
 import { NotificationsModule } from './api/notifications/notifications.module';
 import { SearchModule } from './api/search/search.module';
 import { ServerSentEventsModule } from './api/server-sent-events/server-sent-events.module';
@@ -51,6 +52,7 @@ import {
 		SearchModule,
 		NotificationsModule,
 		ServerSentEventsModule,
+		MentionsModule,
 		ThrottlerModule.forRootAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],

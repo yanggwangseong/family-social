@@ -1,8 +1,11 @@
+import path from 'path';
+
 import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
@@ -10,6 +13,21 @@ import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
+import {
+	ENV_APPLICATION_PORT,
+	ENV_GLOBAL_PREFIX,
+	ENV_SECRET_COOKIE_KEY,
+} from './constants/env-keys.const';
+
+dotenv.config({
+	path: path.resolve(
+		process.env.NODE_ENV === 'production'
+			? '.production.env'
+			: process.env.NODE_ENV === 'stage'
+			? '.stage.env'
+			: '.development.env',
+	),
+});
 
 const getSwaggerOptions = () => ({
 	swaggerOptions: {
@@ -30,7 +48,7 @@ async function bootstrap() {
 	};
 
 	// set global prefix
-	app.setGlobalPrefix('api');
+	app.setGlobalPrefix(String(process.env[ENV_GLOBAL_PREFIX]));
 
 	// global pipes
 	app.useGlobalPipes(
@@ -72,7 +90,7 @@ async function bootstrap() {
 	app.enableCors(options);
 
 	// cookie parser
-	app.use(cookieParser());
+	app.use(cookieParser(process.env[ENV_SECRET_COOKIE_KEY]));
 
 	// production 나중에 적용
 	//process.env.NODE_ENV === 'production' && app.use(helmet());
@@ -97,6 +115,6 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('api/v1/swagger', app, document, getSwaggerOptions());
 
-	await app.listen(5001);
+	await app.listen(Number(process.env[ENV_APPLICATION_PORT]));
 }
 bootstrap();

@@ -49,6 +49,16 @@ export class MembersService {
 		return member;
 	}
 
+	async findAllMembers(
+		authorMemberId: string,
+		groupIds: string[],
+	): Promise<MemberSearchResDto[]> {
+		return await this.membersRepository.findAllMembers(
+			authorMemberId,
+			groupIds,
+		);
+	}
+
 	async findMembersByUserName(
 		username: string,
 		authorMemberId: string,

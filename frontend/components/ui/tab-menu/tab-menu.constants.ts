@@ -84,3 +84,21 @@ export const notificationsTabMenus: TabeMenuListType[] = [
 		title: '안읽음',
 	},
 ];
+
+export const groupTabMenus: TabeMenuListType[] = [
+	{
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+		options: 'GROUPFEED',
+		title: '피드',
+	},
+	{
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+		options: 'GROUPMEMBER',
+		title: '멤버',
+	},
+	{
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+		options: 'GROUPEVENT',
+		title: '이벤트',
+	},
+];

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, QueryRunner } from 'typeorm';
 
 import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
@@ -57,17 +57,22 @@ export class NotificationsService {
 		};
 	}
 
-	async createNotification(notificationArgs: ICreateNotificationArgs) {
+	async createNotification(
+		notificationArgs: ICreateNotificationArgs,
+		qr?: QueryRunner,
+	) {
 		const { notificationType, ...rest } = notificationArgs;
 
-		const notificationTypeId = await this.findNotificationIdByNotificationType(
-			notificationType,
-		);
+		const notificationTypeId: string =
+			await this.findNotificationIdByNotificationType(notificationType);
 
-		await this.notificationsRepository.createNotification({
-			notificationTypeId,
-			...rest,
-		});
+		await this.notificationsRepository.createNotification(
+			{
+				notificationTypeId,
+				...rest,
+			},
+			qr,
+		);
 
 		this.serverSentEventsService.emitNotificationChangeEvent(rest.recipientId);
 	}

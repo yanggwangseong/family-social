@@ -2,8 +2,9 @@
 	@apply flex;
 
 	.profile_img_container {
-		@apply border border-solid border-customDark rounded-full mr-3;
-		height: 42px;
+		@apply border border-solid border-customDark rounded-full mr-3 relative;
+		height: 40px;
+		width: 40px;
 	}
 
 	.profile_username {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateCommentsArgs } from '@/types/args/comment';
@@ -14,6 +14,12 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		private readonly repository: Repository<CommentEntity>,
 	) {
 		super(repository.target, repository.manager, repository.queryRunner);
+	}
+
+	getCommentsRepository(qr?: QueryRunner) {
+		return qr
+			? qr.manager.getRepository<CommentEntity>(CommentEntity)
+			: this.repository;
 	}
 
 	async getUserIdAndNameByCommentId(commentId: string) {
@@ -71,19 +77,39 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		});
 	}
 
-	async createComment(createCommentsArgs: ICreateCommentsArgs) {
-		await this.repository.insert({
+	async createComment(
+		createCommentsArgs: ICreateCommentsArgs,
+		qr?: QueryRunner,
+	) {
+		const commentsRepository = this.getCommentsRepository(qr);
+
+		const insertResult = await commentsRepository.insert({
 			id: uuidv4(),
 			...createCommentsArgs,
 		});
+
+		const id: string = insertResult.identifiers[0].id;
+
+		return id;
 	}
 
-	async updateComment(commentId: string, commentContents: string) {
-		await this.update({ id: commentId }, { commentContents: commentContents });
+	async updateComment(
+		commentId: string,
+		commentContents: string,
+		qr?: QueryRunner,
+	) {
+		const commentsRepository = this.getCommentsRepository(qr);
+
+		await commentsRepository.update(
+			{ id: commentId },
+			{ commentContents: commentContents },
+		);
 	}
 
-	async deleteComment(commentId: string) {
-		const { affected } = await this.delete({
+	async deleteComment(commentId: string, qr?: QueryRunner) {
+		const commentsRepository = this.getCommentsRepository(qr);
+
+		const { affected } = await commentsRepository.delete({
 			id: commentId,
 		});
 

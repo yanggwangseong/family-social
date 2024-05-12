@@ -8,6 +8,7 @@ import {
 import { CommentEntity } from '@/models/entities/comment.entity';
 
 import { MemberResDto } from '../../member/res/member-res.dto';
+import { MentionResDto } from '../../mention/res/mention-res.dto';
 
 export class CommentGetListsResDto extends PickType(CommentEntity, [
 	'id',
@@ -31,6 +32,12 @@ export class CommentGetListsResDto extends PickType(CommentEntity, [
 		nullable: false,
 	})
 	member!: MemberResDto;
+
+	@ApiPropertyOptional({
+		nullable: true,
+		type: [MentionResDto],
+	})
+	mentions!: MentionResDto[];
 
 	@ApiPropertyOptional({
 		isArray: true,

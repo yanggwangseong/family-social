@@ -1,11 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './TourContentType.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { contentIdsAtom } from '@/atoms/contentIdAtom';
-import { serviceCategoriesAtom } from '@/atoms/serviceCategoriesAtom';
-import { areaCodeAtom } from '@/atoms/areaCodeAtom';
+import {
+	serviceCategoriesAtom,
+	serviceCategoriesDefaultValue,
+} from '@/atoms/serviceCategoriesAtom';
+import { areaCodeAtom, areaCodeDefaultValue } from '@/atoms/areaCodeAtom';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { LayerMode } from 'types';
 import { useInfiniteQuery } from 'react-query';
@@ -113,6 +116,14 @@ const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 	const handleChangePeriods = (dates: PeriodsType[]) => {
 		onChangePeriods(dates);
 	};
+
+	useEffect(() => {
+		return () => {
+			setIsAtomContentId([]);
+			setIsAreaCode(areaCodeDefaultValue);
+			setIsServiceCategories(serviceCategoriesDefaultValue);
+		};
+	}, [setIsAreaCode, setIsAtomContentId, setIsServiceCategories]);
 
 	return (
 		<div className={styles.container}>

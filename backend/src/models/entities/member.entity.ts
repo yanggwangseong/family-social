@@ -25,6 +25,7 @@ import { FeedEntity } from './feed.entity';
 import { LikeCommentEntity } from './like-comment.entity';
 import { LikeFeedEntity } from './like-feed.entity';
 import { MemberChatEntity } from './member-chat.entity';
+import { MentionEntity } from './mention.entity';
 import { MessageEntity } from './message.entity';
 import { NotificationEntity } from './notification.entity';
 import { ScheduleEntity } from './schedule.entity';
@@ -178,4 +179,12 @@ export class MemberEntity extends DefaultEntity {
 	// sender-notification
 	@OneToMany(() => NotificationEntity, (nt) => nt.sender)
 	senderIdNotifications?: NotificationEntity[];
+
+	// recipient-mention
+	@OneToMany(() => MentionEntity, (nt) => nt.mentionRecipient)
+	recipientMentions?: MentionEntity[];
+
+	// sender-mention
+	@OneToMany(() => MentionEntity, (nt) => nt.mentionSender)
+	senderMentions?: MentionEntity[];
 }

@@ -27,16 +27,17 @@ import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
-import { AiOutlineClose } from 'react-icons/ai';
+
 import { Union, feedPublicSelectOptions } from 'types';
-import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
+
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
 import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import MentionField from '@/components/ui/mention/MentionField';
+import { extractMention } from '@/utils/extract-mention';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -71,16 +72,30 @@ const CreateFeed: FC = () => {
 		feed?.isPublic ? (feed.isPublic === true ? 'public' : 'private') : 'public',
 	);
 
+	// const {
+	// 	register,
+	// 	formState: { errors, isValid },
+	// 	control,
+	// 	handleSubmit,
+	// 	reset,
+	// 	getValues,
+	// 	setValue,
+	// 	watch,
+	// } = useForm<CreateFeedFields>({
+	// 	mode: 'onChange',
+	// });
+
 	const {
-		register,
 		formState: { errors, isValid },
+		control,
 		handleSubmit,
-		reset,
 		getValues,
 		setValue,
-		watch,
 	} = useForm<CreateFeedFields>({
 		mode: 'onChange',
+		defaultValues: {
+			contents: '',
+		},
 	});
 
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
@@ -220,6 +235,7 @@ const CreateFeed: FC = () => {
 
 	const onSubmit: SubmitHandler<CreateFeedFields> = async ({ contents }) => {
 		const uploadResult = await uploadFilesASync();
+		const mentions = extractMention(contents);
 		const medias: CreateMediaType[] = uploadResult.map((data, index) =>
 			createMedia(data, index),
 		);
@@ -229,7 +245,8 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
-				medias: medias,
+				medias,
+				mentions,
 			});
 		}
 
@@ -240,6 +257,7 @@ const CreateFeed: FC = () => {
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
 				medias: medias,
+				mentions,
 			});
 		}
 	};
@@ -391,7 +409,7 @@ const CreateFeed: FC = () => {
 							</select>
 						</div> */}
 						<div className={styles.form_field_container}>
-							<FieldWithTextarea
+							{/* <FieldWithTextarea
 								fieldClass="inline_textarea"
 								{...register('contents', {
 									required: '피드 글을 작성해주세요!',
@@ -403,7 +421,19 @@ const CreateFeed: FC = () => {
 								placeholder="피드 글을 작성 해보세요"
 								defaultValue={feed?.contents}
 								error={errors.contents}
-							/>
+							/> */}
+							<MentionField
+								control={control}
+								fieldName="contents"
+								validationOptions={{
+									required: '피드 글을 작성해주세요!',
+									maxLength: {
+										value: 2000,
+										message: '최대 2000자까지 가능합니다',
+									},
+								}}
+								placeholderText={'피드 글을 작성 해보세요'}
+							></MentionField>
 						</div>
 						<div className={styles.form_swiper_container}>
 							<SwiperContainer list={isImageUrl} type="create-feed-form" />
