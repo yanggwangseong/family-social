@@ -8,7 +8,10 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
-import { PostUploadProfileSwagger } from '@/common/decorators/swagger/swagger-media.decorator';
+import {
+	PostUploadCoverImageSwagger,
+	PostUploadProfileSwagger,
+} from '@/common/decorators/swagger/swagger-media.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -55,13 +58,14 @@ export class MediasController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 업로드 된 파일 배열
 	 */
+	@PostUploadCoverImageSwagger()
 	@Post('/members/cover-image')
 	@UseInterceptors(
 		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
 	)
 	async postUploadCoverImage(@UploadedFiles() files: Express.MulterS3.File[]) {
 		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
+			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
 		}
 		const locations = files.map(({ location }) => location);
 		return locations;

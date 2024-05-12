@@ -36,3 +36,31 @@ export const PostUploadProfileSwagger = () => {
 		}),
 	);
 };
+
+export const PostUploadCoverImageSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '멤버 커버 이미지 업로드',
+		}),
+		ApiBody({
+			schema: {
+				type: 'object',
+				properties: {
+					files: {
+						type: 'string',
+						format: 'binary',
+					},
+				},
+			},
+		}),
+		ApiConsumes('multipart/form-data'),
+		ApiResponse({
+			description: '멤버 커버 이미지 업로드',
+			isArray: true,
+			type: String,
+		}),
+		ApiBadRequestResponse({
+			description: ERROR_FILE_NOT_FOUND,
+		}),
+	);
+};
