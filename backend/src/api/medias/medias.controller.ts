@@ -19,6 +19,7 @@ import {
 } from '@/common/decorators/swagger/swagger-media.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
@@ -152,6 +153,7 @@ export class MediasController {
 	 * @returns string[]
 	 */
 	@Patch('/groups/:groupId/cover-image')
+	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(
 		FilesInterceptor('files', 1, createGroupCoverImageMulterOptions()),
 	)

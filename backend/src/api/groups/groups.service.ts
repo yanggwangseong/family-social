@@ -187,6 +187,7 @@ export class GroupsService {
 			where: {
 				groupId,
 				memberId,
+				invitationAccepted: true,
 			},
 		});
 	}
