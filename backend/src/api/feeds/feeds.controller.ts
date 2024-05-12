@@ -99,11 +99,43 @@ export class FeedsController {
 	}
 
 	/**
+	 * @summary 특정 그룹에 해당하는 피드를 가져옵니다.
+	 *
+	 * @tag groups
+	 * @param page 페이징을 위한 page 번호
+	 * @param options 조회 옵션
+	 * @param sub 인증된 사용자의 아이디
+	 * @param groupId 특정 그룹 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns feed
+	 */
+	// @GetFeedsOfGroupSwagger()
+	// @Get('/:groupId/feeds')
+	// async getFeedsOfGroup(
+	// 	@Param(
+	// 		'groupId',
+	// 		new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+	// 	)
+	// 	groupId: string,
+	// 	@Query('options') options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT',
+	// 	@Query(
+	// 		'page',
+	// 		new DefaultValuePipe(1),
+	// 		new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+	// 	)
+	// 	page: number,
+	// 	@CurrentUser('sub') sub: string,
+	// ) {
+	// 	return await this.feedsService.findAllFeed(page, sub, options, groupId);
+	// }
+
+	/**
 	 * @summary 피드를 가져옵니다.
 	 *
 	 * @tag feeds
 	 * @param {number} page - 페이징을 위한 page 번호
 	 * @param {string} sub  - 인증된 사용자의 아이디
+	 * @param groupId 특정 그룹에 해당하는 피드를 가져오기 위한 그룹 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns feed
 	 */
@@ -111,7 +143,8 @@ export class FeedsController {
 	@GetFeedsSwagger()
 	@Get()
 	async findAllFeed(
-		@Query('options') options: 'TOP' | 'MYFEED' | 'ALL',
+		@Query('options')
+		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
 		@Query(
 			'page',
 			new DefaultValuePipe(1),
@@ -119,8 +152,13 @@ export class FeedsController {
 		)
 		page: number,
 		@CurrentUser('sub') sub: string,
+		@Query(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId?: string,
 	) {
-		return await this.feedsService.findAllFeed(page, sub, options);
+		return await this.feedsService.findAllFeed(page, sub, options, groupId);
 	}
 
 	/**

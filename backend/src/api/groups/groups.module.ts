@@ -16,7 +16,6 @@ import { GroupsRepository } from '@/models/repositories/groups.repository';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
 import { FamsModule } from '../fams/fams.module';
-import { FeedsModule } from '../feeds/feeds.module';
 import { MailsModule } from '../mails/mails.module';
 import { MembersModule } from '../members/members.module';
 import { SchedulesModule } from '../schedules/schedules.module';
@@ -28,11 +27,10 @@ import { SchedulesModule } from '../schedules/schedules.module';
 		MembersModule,
 		SchedulesModule,
 		MailsModule,
-		FeedsModule,
 	],
 	controllers: [GroupsController],
 	providers: [GroupsService, GroupsRepository, FamsRepository],
-	exports: [],
+	exports: [GroupsService],
 })
 export class GroupsModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
