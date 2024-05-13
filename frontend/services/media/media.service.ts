@@ -25,4 +25,19 @@ export const MediaService = {
 
 		return data;
 	},
+
+	async uploadGroupCoverImage(img: File, groupId: string): Promise<string[]> {
+		const formData = new FormData();
+		formData.append('files', img);
+
+		const { data } = await axiosAPI.patch(
+			`/medias/groups/${groupId}/cover-image`,
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
+
+		return data;
+	},
 };
