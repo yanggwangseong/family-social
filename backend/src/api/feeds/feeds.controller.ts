@@ -123,7 +123,10 @@ export class FeedsController {
 		@CurrentUser('sub') sub: string,
 		@Query(
 			'groupId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+			new ParseUUIDPipe({
+				exceptionFactory: parseUUIDPipeMessage,
+				optional: true,
+			}),
 		)
 		groupId?: string,
 	) {
