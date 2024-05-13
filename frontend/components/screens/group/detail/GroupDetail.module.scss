@@ -28,7 +28,7 @@
 						@apply absolute flex gap-1 border border-solid border-customDark rounded px-2 py-1 bottom-4 right-4 bg-customOrange font-semibold;
 
 						.btn_text {
-							@apply text-sm;
+							@apply text-sm cursor-pointer;
 						}
 					}
 				}

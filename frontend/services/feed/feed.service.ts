@@ -22,9 +22,10 @@ export const FeedService = {
 		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
 		groupId?: string,
 	) {
-		const { data } = await axiosAPI.get<FeedsResponse>(
-			`/feeds?page=${page}&options=${options}&groupId=${groupId}`,
-		);
+		let endPoint = `/feeds?page=${page}&options=${options}`;
+		if (groupId) endPoint += `&groupId=${groupId}`;
+
+		const { data } = await axiosAPI.get<FeedsResponse>(endPoint);
 
 		return data;
 	},

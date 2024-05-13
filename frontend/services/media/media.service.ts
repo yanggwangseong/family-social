@@ -8,7 +8,7 @@ export const MediaService = {
 			formData.append('files', file);
 		}
 
-		const { data } = await axiosAPI.post('/feeds/test', formData, {
+		const { data } = await axiosAPI.post('/medias/feeds', formData, {
 			headers: { 'Content-Type': 'multipart/form-data' },
 		});
 
@@ -19,9 +19,39 @@ export const MediaService = {
 		const formData = new FormData();
 		formData.append('files', img);
 
-		const { data } = await axiosAPI.post('/members/uploads/profile', formData, {
+		const { data } = await axiosAPI.post('/medias/members/profile', formData, {
 			headers: { 'Content-Type': 'multipart/form-data' },
 		});
+
+		return data;
+	},
+
+	async uploadGroupCoverImage(img: File, groupId: string): Promise<string[]> {
+		const formData = new FormData();
+		formData.append('files', img);
+
+		const { data } = await axiosAPI.patch(
+			`/medias/groups/${groupId}/cover-image`,
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
+
+		return data;
+	},
+
+	async uploadMemberCoverImage(img: File): Promise<string[]> {
+		const formData = new FormData();
+		formData.append('files', img);
+
+		const { data } = await axiosAPI.patch(
+			`/medias/members/cover-image`,
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
 
 		return data;
 	},

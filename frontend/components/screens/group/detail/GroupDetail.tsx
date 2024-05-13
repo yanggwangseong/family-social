@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './GroupDetail.module.scss';
 import Format from '@/components/ui/layout/Format';
 import { useRouter } from 'next/router';
@@ -20,12 +20,16 @@ import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, useMutation } from 'react-query';
 import { FeedService } from '@/services/feed/feed.service';
 import { GroupService } from '@/services/group/group.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import FeedItem from '@/components/ui/feed/FeedItem';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver';
+import axios from 'axios';
+import { MediaService } from '@/services/media/media.service';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
@@ -42,7 +46,10 @@ const GroupDetail: FC = () => {
 
 	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
+	const hiddenFileInput = useRef<HTMLInputElement | null>(null);
+
 	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
+
 	const {
 		isShowing: isOpenInvitation,
 		handleToggleModal: handleCloseInvitationModal,
@@ -114,6 +121,38 @@ const GroupDetail: FC = () => {
 	// 	return () => {};
 	// }, [data, fetchNextPage, observedPost]);
 
+	const { mutateAsync } = useMutation(
+		['group-cover-image-upload'],
+		async (file: File) =>
+			await MediaService.uploadGroupCoverImage(file, groupId),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
+		},
+	);
+
+	const handleGroupCoverImageUpload = async (
+		event: ChangeEvent<HTMLInputElement>,
+	) => {
+		const uploadedFiles: File[] = Array.from(event.target.files || []);
+
+		await mutateAsync(uploadedFiles[0]);
+	};
+
+	const handleClick = () => {
+		hiddenFileInput.current!.click();
+	};
+
 	return (
 		<Format title={'group-detail'}>
 			<div className={styles.container}>
@@ -137,7 +176,17 @@ const GroupDetail: FC = () => {
 								></Image>
 								<div className={styles.banner_edit_btn}>
 									<PiPencilDuotone size={22} />
-									<div className={styles.btn_text}>수정</div>
+									<button className={styles.btn_text} onClick={handleClick}>
+										수정
+									</button>
+
+									<input
+										type="file"
+										id="fileUpload"
+										style={{ display: 'none' }}
+										onChange={handleGroupCoverImageUpload}
+										ref={hiddenFileInput}
+									/>
 								</div>
 							</div>
 							<div className={styles.main_contents_container}>

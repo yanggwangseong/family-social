@@ -14,10 +14,11 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	PatchGroupUploadCoverImageSwagger,
 	PatchScheduleUploadThumbnailImageSwagger,
-	PostUploadCoverImageSwagger,
+	PatchUploadMemberCoverImageSwagger,
 	PostUploadFeedMediasSwagger,
 	PostUploadProfileSwagger,
 } from '@/common/decorators/swagger/swagger-media.decorator';
+import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
@@ -34,6 +35,7 @@ import {
 } from '@/utils/upload-media';
 
 import { GroupsService } from '../groups/groups.service';
+import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
 
 @UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
@@ -44,6 +46,7 @@ export class MediasController {
 	constructor(
 		private readonly schedulesService: SchedulesService,
 		private readonly groupsService: GroupsService,
+		private readonly membersService: MembersService,
 	) {}
 
 	/**
@@ -75,16 +78,21 @@ export class MediasController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 업로드 된 파일 배열
 	 */
-	@PostUploadCoverImageSwagger()
-	@Post('/members/cover-image')
+	@PatchUploadMemberCoverImageSwagger()
+	@Patch('/members/cover-image')
 	@UseInterceptors(
 		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
 	)
-	async postUploadCoverImage(@UploadedFiles() files: Express.MulterS3.File[]) {
+	async pathUploadMemberCoverImage(
+		@UploadedFiles() files: Express.MulterS3.File[],
+		@CurrentUser('sub') sub: string,
+	) {
 		if (!files?.length) {
 			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
 		}
 		const locations = files.map(({ location }) => location);
+
+		await this.membersService.updateMemberCoverImage(sub, locations[0]);
 		return locations;
 	}
 

@@ -48,6 +48,10 @@ export class MembersRepository extends Repository<MemberEntity> {
 		return this.findMemberById({ memberId: memberId });
 	}
 
+	async updateMemberCoverImage(memberId: string, imageUrl: string) {
+		await this.update({ id: memberId }, { coverImage: imageUrl });
+	}
+
 	async signInUser({
 		email,
 	}: ILoginMemberArgs): Promise<(MemberResDto & { password?: string }) | null> {
