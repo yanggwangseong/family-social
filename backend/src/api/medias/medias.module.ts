@@ -14,6 +14,7 @@ import { MediasRepository } from '@/models/repositories/medias.repository';
 import { MediasController } from './medias.controller';
 import { MediasService } from './medias.service';
 import { GroupsModule } from '../groups/groups.module';
+import { MembersModule } from '../members/members.module';
 import { SchedulesModule } from '../schedules/schedules.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { SchedulesModule } from '../schedules/schedules.module';
 		TypeOrmModule.forFeature([FeedMediaEntity]),
 		SchedulesModule,
 		GroupsModule,
+		MembersModule,
 	],
 	controllers: [MediasController],
 	providers: [MediasService, MediasRepository],
