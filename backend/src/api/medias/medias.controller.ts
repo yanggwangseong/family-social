@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
 	PatchGroupUploadCoverImageSwagger,
 	PatchScheduleUploadThumbnailImageSwagger,
-	PostUploadCoverImageSwagger,
+	PatchUploadMemberCoverImageSwagger,
 	PostUploadFeedMediasSwagger,
 	PostUploadProfileSwagger,
 } from '@/common/decorators/swagger/swagger-media.decorator';
@@ -78,12 +78,12 @@ export class MediasController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 업로드 된 파일 배열
 	 */
-	@PostUploadCoverImageSwagger()
-	@Post('/members/cover-image')
+	@PatchUploadMemberCoverImageSwagger()
+	@Patch('/members/cover-image')
 	@UseInterceptors(
 		FilesInterceptor('files', 1, CreateMemberCoverImageMulterOptions()),
 	)
-	async postUploadProfileCoverImage(
+	async pathUploadMemberCoverImage(
 		@UploadedFiles() files: Express.MulterS3.File[],
 		@CurrentUser('sub') sub: string,
 	) {

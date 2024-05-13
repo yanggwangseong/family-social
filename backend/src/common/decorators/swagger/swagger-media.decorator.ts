@@ -44,7 +44,7 @@ export const PostUploadProfileSwagger = () => {
 	);
 };
 
-export const PostUploadCoverImageSwagger = () => {
+export const PatchUploadMemberCoverImageSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '멤버 커버 이미지 업로드',
