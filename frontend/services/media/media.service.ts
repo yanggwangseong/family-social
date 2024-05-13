@@ -40,4 +40,19 @@ export const MediaService = {
 
 		return data;
 	},
+
+	async uploadMemberCoverImage(img: File): Promise<string[]> {
+		const formData = new FormData();
+		formData.append('files', img);
+
+		const { data } = await axiosAPI.patch(
+			`/medias/members/cover-image`,
+			formData,
+			{
+				headers: { 'Content-Type': 'multipart/form-data' },
+			},
+		);
+
+		return data;
+	},
 };

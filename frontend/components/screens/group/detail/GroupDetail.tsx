@@ -122,7 +122,7 @@ const GroupDetail: FC = () => {
 	// }, [data, fetchNextPage, observedPost]);
 
 	const { mutateAsync } = useMutation(
-		['profile-image-upload'],
+		['group-cover-image-upload'],
 		async (file: File) =>
 			await MediaService.uploadGroupCoverImage(file, groupId),
 		{
@@ -141,7 +141,9 @@ const GroupDetail: FC = () => {
 		},
 	);
 
-	const handleAddDocuments = async (event: ChangeEvent<HTMLInputElement>) => {
+	const handleGroupCoverImageUpload = async (
+		event: ChangeEvent<HTMLInputElement>,
+	) => {
 		const uploadedFiles: File[] = Array.from(event.target.files || []);
 
 		await mutateAsync(uploadedFiles[0]);
@@ -182,7 +184,7 @@ const GroupDetail: FC = () => {
 										type="file"
 										id="fileUpload"
 										style={{ display: 'none' }}
-										onChange={handleAddDocuments}
+										onChange={handleGroupCoverImageUpload}
 										ref={hiddenFileInput}
 									/>
 								</div>
