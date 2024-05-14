@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+	MiddlewareConsumer,
+	Module,
+	NestModule,
+	RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
@@ -31,6 +36,8 @@ import { SchedulesService } from './schedules.service';
 })
 export class SchedulesModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(ScheduleExistsMiddleware).forRoutes(SchedulesController);
+		consumer
+			.apply(ScheduleExistsMiddleware)
+			.exclude({ path: 'schdules', method: RequestMethod.GET });
 	}
 }

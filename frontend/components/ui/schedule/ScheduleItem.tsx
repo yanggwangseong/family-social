@@ -80,8 +80,17 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						[styles.isMobileUpdate]: !!isUpdateTitle,
 					})}
 				>
-					<div>
+					<div className="flex">
 						<div className={styles.d_day}>D-248</div>
+						<div className="border border-solid border-customDark rounded-full w-[25px] h-[25px] relative">
+							<Image
+								className="rounded-full"
+								fill
+								src={'/images/banner/group-base.png'}
+								alt=""
+							></Image>
+						</div>
+						<div className="text-xs text-customGray">5명에게 공유됨</div>
 					</div>
 					<motion.div
 						className={styles.setting_container}

@@ -41,7 +41,39 @@ export class SchedulesService {
 
 		const [list, count] =
 			await this.scheduleRepository.getScheduleListOwnMemberId({
-				memberId,
+				overrideWhere: {
+					memberId,
+				},
+				take,
+				skip,
+			});
+
+		return {
+			list: list,
+			page: page,
+			totalPage: Math.ceil(count / take),
+		};
+	}
+
+	async getScheduleListByGroupId({
+		memberId,
+		groupId,
+		page,
+		limit,
+	}: {
+		memberId: string;
+		groupId: string;
+		page: number;
+		limit: number;
+	}): Promise<ScheduleResDto> {
+		const { take, skip } = getOffset({ page, limit });
+
+		const [list, count] =
+			await this.scheduleRepository.getScheduleListOwnMemberId({
+				overrideWhere: {
+					groupId,
+					memberId,
+				},
 				take,
 				skip,
 			});

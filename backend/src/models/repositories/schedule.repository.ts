@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateScheduleArgs } from '@/types/args/schedule';
@@ -26,11 +26,11 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	}
 
 	async getScheduleListOwnMemberId({
-		memberId,
+		overrideWhere,
 		take,
 		skip,
 	}: {
-		memberId: string;
+		overrideWhere: FindOptionsWhere<ScheduleEntity>;
 		take: number;
 		skip: number;
 	}): Promise<[ScheduleGetListResDto[], number]> {
@@ -45,7 +45,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 				updatedAt: true,
 			},
 			where: {
-				memberId,
+				...overrideWhere,
 			},
 			relations: {
 				schedulePeriods: {

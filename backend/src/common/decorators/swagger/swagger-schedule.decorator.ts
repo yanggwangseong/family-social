@@ -33,7 +33,7 @@ export const GetOneScheduleSwagger = () => {
 	);
 };
 
-export const GetScheduleListSwagger = () => {
+export const GetScheduleListOwnMemberIdSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '여행일정 리스트 전체 가져오기',
@@ -47,6 +47,18 @@ export const GetScheduleListSwagger = () => {
 		}),
 		ApiForbiddenResponse({
 			description: ERROR_NO_PERMISSTION_TO_GROUP,
+		}),
+	);
+};
+
+export const GetSchedulesSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '여행일정 리스트 전체 가져오기',
+		}),
+		ApiCreatedResponse({
+			description: '여행일정 리스트 전체 가져오기',
+			type: ScheduleResDto,
 		}),
 	);
 };

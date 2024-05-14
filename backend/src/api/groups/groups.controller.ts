@@ -32,7 +32,7 @@ import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
 	GetOneScheduleSwagger,
-	GetScheduleListSwagger,
+	GetScheduleListOwnMemberIdSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -372,7 +372,7 @@ export class GroupsController {
 	}
 
 	/**
-	 * @summary 여행일정 리스트 전체 가져오기
+	 * @summary 특정 그룹 여행일정 리스트 전체 가져오기
 	 *
 	 * @tag groups
 	 * @param {number} page 							- 페이지 번호
@@ -382,7 +382,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 여행 일정 리스트
 	 */
-	@GetScheduleListSwagger()
+	@GetScheduleListOwnMemberIdSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
 		@Query(
@@ -409,8 +409,9 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		return await this.schedulesService.getScheduleListOwnMemberId({
+		return await this.schedulesService.getScheduleListByGroupId({
 			memberId: sub,
+			groupId,
 			page,
 			limit,
 		});
