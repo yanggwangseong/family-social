@@ -394,7 +394,9 @@ export class GroupsController {
 		@Query(
 			'limit',
 			new DefaultValuePipe(3),
-			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('limit'),
+			}),
 		)
 		limit: number,
 		@Param(
