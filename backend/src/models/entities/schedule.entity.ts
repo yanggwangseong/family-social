@@ -24,7 +24,7 @@ import { uuidValidationMessage } from '@/common/validation-message/uuid-validati
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
-import { SharedScheduleMember } from './shared-schedule-member.entity';
+import { SharedScheduleMemberEntity } from './shared-schedule-member.entity';
 import { TourismPeriodEntity } from './tourism-period.entity';
 
 @Entity({ name: 'fam_schedule' })
@@ -103,6 +103,6 @@ export class ScheduleEntity extends DefaultEntity {
 	@OneToMany(() => TourismPeriodEntity, (tp) => tp.schedule)
 	schedulePeriods!: TourismPeriodEntity[];
 
-	@OneToMany(() => SharedScheduleMember, (scm) => scm.sharedSchedule)
-	sharedMembers!: SharedScheduleMember[];
+	@OneToMany(() => SharedScheduleMemberEntity, (scm) => scm.sharedSchedule)
+	sharedMembers!: SharedScheduleMemberEntity[];
 }

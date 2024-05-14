@@ -16,7 +16,7 @@ import { uuidValidationMessage } from '@/common/validation-message/uuid-validati
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
-import { SharedScheduleMember } from './shared-schedule-member.entity';
+import { SharedScheduleMemberEntity } from './shared-schedule-member.entity';
 
 export type roleType = 'main' | 'user';
 
@@ -73,6 +73,6 @@ export class FamEntity extends DefaultEntity {
 	@JoinColumn({ name: 'groupId', referencedColumnName: 'id' })
 	group!: GroupEntity;
 
-	@OneToMany(() => SharedScheduleMember, (scm) => scm.sharedMember)
-	sharedMembers!: SharedScheduleMember[];
+	@OneToMany(() => SharedScheduleMemberEntity, (scm) => scm.sharedMember)
+	sharedMembers!: SharedScheduleMemberEntity[];
 }
