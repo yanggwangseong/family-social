@@ -15,6 +15,7 @@ import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-per
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
+import { SharedScheduleMemberRepository } from '@/models/repositories/shared-schedule-member.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
@@ -26,6 +27,7 @@ export class SchedulesService {
 		private readonly scheduleRepository: ScheduleRepository,
 		private readonly tourismPeriodRepository: TourismPeriodRepository,
 		private readonly tourismRepository: TourismRepository,
+		private readonly sharedScheduleMemberRepository: SharedScheduleMemberRepository,
 	) {}
 
 	async getScheduleListOwnMemberId({
@@ -99,7 +101,8 @@ export class SchedulesService {
 		{ scheduleItem, ...rest }: ICreateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
-		const { scheduleName, periods, startPeriod, endPeriod } = scheduleItem;
+		const { scheduleName, periods, startPeriod, endPeriod, sharedFamIds } =
+			scheduleItem;
 
 		const schedule = await this.scheduleRepository.createSchedule(
 			{
@@ -110,6 +113,8 @@ export class SchedulesService {
 			},
 			qr,
 		);
+
+		await this.createSharedScheduleMember(sharedFamIds, schedule.id, qr);
 
 		const createTourismPeriod = await this.createTourismPeriod(
 			periods,
@@ -239,6 +244,23 @@ export class SchedulesService {
 
 	private async deleteTourism(periodId: string, qr?: QueryRunner) {
 		await this.tourismRepository.deleteTourism(periodId, qr);
+	}
+
+	private async createSharedScheduleMember(
+		sharedFamIds: string[],
+		sharedScheduleId: string,
+		qr?: QueryRunner,
+	) {
+		const createSharedScheduleMember = sharedFamIds.map((item) => ({
+			id: uuidv4(),
+			sharedFamId: item,
+			sharedScheduleId,
+		}));
+
+		await this.sharedScheduleMemberRepository.createSharedScheduleMember(
+			createSharedScheduleMember,
+			qr,
+		);
 	}
 
 	private async createTourismPeriod(
