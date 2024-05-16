@@ -197,6 +197,9 @@ export class SchedulesService {
 		// TourismPeriod 다 삭제
 		await this.deleteTourismPeriod(scheduleId, qr);
 
+		// 공유된 멤버 삭제
+		await this.deleteSharedScheduleMember(scheduleId, qr);
+
 		// Schedule 삭제
 		await this.scheduleRepository.deleteSchedule(scheduleId, qr);
 	}
@@ -236,6 +239,24 @@ export class SchedulesService {
 
 	async scheduleExistsByScheduleId(scheduleId: string) {
 		return this.scheduleRepository.exist({ where: { id: scheduleId } });
+	}
+
+	private addMemberIdIfNotExists(sharedFamIds: string[], memberId: string) {
+		if (sharedFamIds.find((item) => item !== memberId)) {
+			[...sharedFamIds] = [...sharedFamIds, memberId];
+		}
+
+		return sharedFamIds;
+	}
+
+	private async deleteSharedScheduleMember(
+		scheduleId: string,
+		qr?: QueryRunner,
+	) {
+		await this.sharedScheduleMemberRepository.deleteSharedScheduleMember(
+			scheduleId,
+			qr,
+		);
 	}
 
 	private async deleteTourismPeriod(scheduleId: string, qr?: QueryRunner) {

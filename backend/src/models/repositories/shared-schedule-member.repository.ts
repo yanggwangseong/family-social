@@ -31,4 +31,14 @@ export class SharedScheduleMemberRepository extends Repository<SharedScheduleMem
 
 		await repository.insert(sharedScheduleMembers);
 	}
+
+	async deleteSharedScheduleMember(sharedScheduleId: string, qr?: QueryRunner) {
+		const repository = this.getRepository(qr);
+
+		const { affected } = await repository.delete({
+			sharedScheduleId,
+		});
+
+		return !!affected;
+	}
 }

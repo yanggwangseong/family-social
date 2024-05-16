@@ -450,6 +450,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 여행일정 생성자는 무조건 공유된 아이디에 있어야 되기 때문에 있는지 체크하는 커스텀 guard 생성
 	@CreateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
@@ -485,6 +486,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 그룹 권한이 있는 멤버거나 본인이 생성한 여행 일정이라면 수정 기능 권한 허용
 	@UpdateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)
