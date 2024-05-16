@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ICreateScheduleArgs } from '@/types/args/schedule';
@@ -26,38 +26,74 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	}
 
 	async getScheduleListOwnMemberId({
-		memberId,
+		overrideWhere,
 		take,
 		skip,
 	}: {
-		memberId: string;
+		overrideWhere: FindOptionsWhere<ScheduleEntity>;
 		take: number;
 		skip: number;
-	}): Promise<[ScheduleGetListResDto[], number]> {
-		return await this.repository.findAndCount({
-			select: {
-				id: true,
-				groupId: true,
-				scheduleImage: true,
-				scheduleName: true,
-				startPeriod: true,
-				endPeriod: true,
-				updatedAt: true,
-			},
-			where: {
-				memberId,
-			},
-			relations: {
-				schedulePeriods: {
-					tourisms: true,
+	}) {
+		return await this.repository
+			.findAndCount({
+				select: {
+					id: true,
+					groupId: true,
+					scheduleImage: true,
+					scheduleName: true,
+					startPeriod: true,
+					endPeriod: true,
+					updatedAt: true,
+					sharedMembers: {
+						sharedFamId: true,
+						sharedMember: {
+							id: true,
+							role: true,
+							invitationAccepted: true,
+							memberId: true,
+							member: {
+								id: true,
+								username: true,
+								profileImage: true,
+								email: true,
+							},
+						},
+					},
 				},
-			},
-			order: {
-				updatedAt: 'desc',
-			},
-			take,
-			skip,
-		});
+				where: {
+					...overrideWhere,
+				},
+				relations: {
+					sharedMembers: {
+						sharedMember: {
+							member: true,
+						},
+					},
+				},
+				order: {
+					updatedAt: 'desc',
+				},
+				take,
+				skip,
+			})
+			.then((data) => {
+				const [schedule, number] = data;
+				const newSchedule = schedule.map((value) => {
+					const { sharedMembers, ...rest } = value;
+
+					const newSharedMembers = sharedMembers.map((item) => {
+						return {
+							...item.sharedMember,
+						};
+					});
+					return {
+						...rest,
+						sharedMembers: newSharedMembers,
+					};
+				});
+				const result: [ScheduleGetListResDto[], number] = [newSchedule, number];
+				return result;
+			});
 	}
 
 	async getOneScheduleById(

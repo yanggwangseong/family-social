@@ -32,7 +32,7 @@ import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
 	GetOneScheduleSwagger,
-	GetScheduleListSwagger,
+	GetScheduleListOwnMemberIdSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -372,7 +372,7 @@ export class GroupsController {
 	}
 
 	/**
-	 * @summary 여행일정 리스트 전체 가져오기
+	 * @summary 특정 그룹 여행일정 리스트 전체 가져오기
 	 *
 	 * @tag groups
 	 * @param {number} page 							- 페이지 번호
@@ -382,7 +382,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 여행 일정 리스트
 	 */
-	@GetScheduleListSwagger()
+	@GetScheduleListOwnMemberIdSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
 		@Query(
@@ -394,7 +394,9 @@ export class GroupsController {
 		@Query(
 			'limit',
 			new DefaultValuePipe(3),
-			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('limit'),
+			}),
 		)
 		limit: number,
 		@Param(
@@ -407,8 +409,9 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		return await this.schedulesService.getScheduleListOwnMemberId({
+		return await this.schedulesService.getScheduleListByGroupId({
 			memberId: sub,
+			groupId,
 			page,
 			limit,
 		});
@@ -447,6 +450,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 여행일정 생성자는 무조건 공유된 아이디에 있어야 되기 때문에 있는지 체크하는 커스텀 guard 생성
 	@CreateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
@@ -482,6 +486,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 그룹 권한이 있는 멤버거나 본인이 생성한 여행 일정이라면 수정 기능 권한 허용
 	@UpdateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)

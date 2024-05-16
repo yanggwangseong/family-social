@@ -5,3 +5,8 @@
 # 3. 추후에 그룹끼리의 팔로우 기능을 추가 할시 내가 속한 groupId와 팔로우된 groupId를 포함해서 1번의 유저가 속한 groupId랑 비교해야됨.
 
 ## 즉 조회 할 수 있는 그룹은 총 내가 속한 그룹 + 내가 속한 그룹이 팔로우한 그룹
+
+## (이런 고민을 했어요)
+
+- Nestjs class-validator `ValidateNested` 데코레이터 n개의 중첩객체 validation 방법 [링크](https://threeyears.tistory.com/513)
+- Nestjs class-validator global Validation-pipe 사용시 에러 메세지 커스텀하기

@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsUUID } from 'class-validator';
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+} from 'typeorm';
 
 import { booleanValidationMessage } from '@/common/validation-message/boolean-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -9,6 +16,7 @@ import { uuidValidationMessage } from '@/common/validation-message/uuid-validati
 import { DefaultEntity } from './common/default.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
+import { SharedScheduleMemberEntity } from './shared-schedule-member.entity';
 
 export type roleType = 'main' | 'user';
 
@@ -64,4 +72,7 @@ export class FamEntity extends DefaultEntity {
 	@ManyToOne(() => GroupEntity, (group) => group.groupByMemberGroups)
 	@JoinColumn({ name: 'groupId', referencedColumnName: 'id' })
 	group!: GroupEntity;
+
+	@OneToMany(() => SharedScheduleMemberEntity, (scm) => scm.sharedMember)
+	sharedMembers!: SharedScheduleMemberEntity[];
 }

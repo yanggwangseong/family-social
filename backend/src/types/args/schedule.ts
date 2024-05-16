@@ -5,3 +5,9 @@ export interface ICreateScheduleArgs {
 	startPeriod: Date;
 	endPeriod: Date;
 }
+
+export interface ICreateSharedScheduleMemberArgs {
+	id: string;
+	sharedFamId: string;
+	sharedScheduleId: string;
+}

@@ -15,6 +15,7 @@ import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-per
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
+import { SharedScheduleMemberRepository } from '@/models/repositories/shared-schedule-member.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
@@ -26,6 +27,7 @@ export class SchedulesService {
 		private readonly scheduleRepository: ScheduleRepository,
 		private readonly tourismPeriodRepository: TourismPeriodRepository,
 		private readonly tourismRepository: TourismRepository,
+		private readonly sharedScheduleMemberRepository: SharedScheduleMemberRepository,
 	) {}
 
 	async getScheduleListOwnMemberId({
@@ -41,7 +43,39 @@ export class SchedulesService {
 
 		const [list, count] =
 			await this.scheduleRepository.getScheduleListOwnMemberId({
-				memberId,
+				overrideWhere: {
+					memberId,
+				},
+				take,
+				skip,
+			});
+
+		return {
+			list: list,
+			page: page,
+			totalPage: Math.ceil(count / take),
+		};
+	}
+
+	async getScheduleListByGroupId({
+		memberId,
+		groupId,
+		page,
+		limit,
+	}: {
+		memberId: string;
+		groupId: string;
+		page: number;
+		limit: number;
+	}): Promise<ScheduleResDto> {
+		const { take, skip } = getOffset({ page, limit });
+
+		const [list, count] =
+			await this.scheduleRepository.getScheduleListOwnMemberId({
+				overrideWhere: {
+					groupId,
+					memberId,
+				},
 				take,
 				skip,
 			});
@@ -67,7 +101,8 @@ export class SchedulesService {
 		{ scheduleItem, ...rest }: ICreateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
-		const { scheduleName, periods, startPeriod, endPeriod } = scheduleItem;
+		const { scheduleName, periods, startPeriod, endPeriod, sharedFamIds } =
+			scheduleItem;
 
 		const schedule = await this.scheduleRepository.createSchedule(
 			{
@@ -78,6 +113,8 @@ export class SchedulesService {
 			},
 			qr,
 		);
+
+		await this.createSharedScheduleMember(sharedFamIds, schedule.id, qr);
 
 		const createTourismPeriod = await this.createTourismPeriod(
 			periods,
@@ -160,6 +197,9 @@ export class SchedulesService {
 		// TourismPeriod 다 삭제
 		await this.deleteTourismPeriod(scheduleId, qr);
 
+		// 공유된 멤버 삭제
+		await this.deleteSharedScheduleMember(scheduleId, qr);
+
 		// Schedule 삭제
 		await this.scheduleRepository.deleteSchedule(scheduleId, qr);
 	}
@@ -201,12 +241,47 @@ export class SchedulesService {
 		return this.scheduleRepository.exist({ where: { id: scheduleId } });
 	}
 
+	private addMemberIdIfNotExists(sharedFamIds: string[], memberId: string) {
+		if (sharedFamIds.find((item) => item !== memberId)) {
+			[...sharedFamIds] = [...sharedFamIds, memberId];
+		}
+
+		return sharedFamIds;
+	}
+
+	private async deleteSharedScheduleMember(
+		scheduleId: string,
+		qr?: QueryRunner,
+	) {
+		await this.sharedScheduleMemberRepository.deleteSharedScheduleMember(
+			scheduleId,
+			qr,
+		);
+	}
+
 	private async deleteTourismPeriod(scheduleId: string, qr?: QueryRunner) {
 		await this.tourismPeriodRepository.deleteTourismPeriod(scheduleId, qr);
 	}
 
 	private async deleteTourism(periodId: string, qr?: QueryRunner) {
 		await this.tourismRepository.deleteTourism(periodId, qr);
+	}
+
+	private async createSharedScheduleMember(
+		sharedFamIds: string[],
+		sharedScheduleId: string,
+		qr?: QueryRunner,
+	) {
+		const createSharedScheduleMember = sharedFamIds.map((item) => ({
+			id: uuidv4(),
+			sharedFamId: item,
+			sharedScheduleId,
+		}));
+
+		await this.sharedScheduleMemberRepository.createSharedScheduleMember(
+			createSharedScheduleMember,
+			qr,
+		);
 	}
 
 	private async createTourismPeriod(
