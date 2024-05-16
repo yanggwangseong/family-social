@@ -79,17 +79,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 			.then((data) => {
 				const [schedule, number] = data;
 				const newSchedule = schedule.map((value) => {
-					const { sharedMembers, ...rest } = value;
-
-					const newSharedMembers = sharedMembers.map((item) => {
-						return {
-							...item.sharedMember,
-						};
-					});
-					return {
-						...rest,
-						sharedMembers: newSharedMembers,
-					};
+					return this.transformSharedMembers(value);
 				});
 				const result: [ScheduleGetListResDto[], number] = [newSchedule, number];
 				return result;
@@ -99,48 +89,74 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	async getOneScheduleById(
 		scheduleId: string,
 	): Promise<ScheduleItemResDto | null> {
-		return await this.repository.findOne({
-			select: {
-				id: true,
-				groupId: true,
-				scheduleImage: true,
-				scheduleName: true,
-				startPeriod: true,
-				endPeriod: true,
-				updatedAt: true,
-				schedulePeriods: {
+		return await this.repository
+			.findOne({
+				select: {
 					id: true,
-					period: true,
-					startTime: true,
-					endTime: true,
-					tourisms: {
+					groupId: true,
+					scheduleImage: true,
+					scheduleName: true,
+					startPeriod: true,
+					endPeriod: true,
+					updatedAt: true,
+					schedulePeriods: {
 						id: true,
-						contentId: true,
-						stayTime: true,
-						tourismImage: true,
-						title: true,
-						position: true,
+						period: true,
+						startTime: true,
+						endTime: true,
+						tourisms: {
+							id: true,
+							contentId: true,
+							stayTime: true,
+							tourismImage: true,
+							title: true,
+							position: true,
+						},
+					},
+					sharedMembers: {
+						sharedFamId: true,
+						sharedMember: {
+							id: true,
+							role: true,
+							invitationAccepted: true,
+							memberId: true,
+							member: {
+								id: true,
+								username: true,
+								profileImage: true,
+								email: true,
+							},
+						},
 					},
 				},
-			},
-			where: {
-				id: scheduleId,
-			},
-			relations: {
-				schedulePeriods: {
-					tourisms: true,
+				where: {
+					id: scheduleId,
 				},
-			},
-			order: {
-				updatedAt: 'desc',
-				schedulePeriods: {
-					period: 'ASC',
-					tourisms: {
-						position: 'ASC',
+				relations: {
+					schedulePeriods: {
+						tourisms: true,
+					},
+					sharedMembers: {
+						sharedMember: {
+							member: true,
+						},
 					},
 				},
-			},
-		});
+				order: {
+					updatedAt: 'desc',
+					schedulePeriods: {
+						period: 'ASC',
+						tourisms: {
+							position: 'ASC',
+						},
+					},
+				},
+			})
+			.then((data) => {
+				if (!data) return null;
+
+				return this.transformSharedMembers(data);
+			});
 	}
 
 	async findOrFailScheduleById(
@@ -246,5 +262,19 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 				memberId,
 			},
 		});
+	}
+
+	private transformSharedMembers(data: ScheduleEntity) {
+		const { sharedMembers, ...rest } = data;
+
+		const newSharedMembers = sharedMembers.map((item) => {
+			return {
+				...item.sharedMember,
+			};
+		});
+		return {
+			...rest,
+			sharedMembers: newSharedMembers,
+		};
 	}
 }
