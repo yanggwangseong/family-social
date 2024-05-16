@@ -1,4 +1,5 @@
 import { PeriodsType } from '@/atoms/periodAtom';
+import { FamSharedMemberResponse } from './fam.interface';
 
 export interface CreateScheduleResponse {
 	id: string;
@@ -26,6 +27,7 @@ export interface ScheduleResponse {
 	startPeriod: Date;
 	endPeriod: Date;
 	updatedAt: string;
+	sharedMembers: FamSharedMemberResponse[];
 }
 
 export interface ScheduleItemResponse extends ScheduleResponse {
