@@ -17,6 +17,7 @@ import { LayerMode } from 'types';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
+import SharedMembers from '../shared-members/SharedMembers';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 	schedule,
@@ -80,18 +81,8 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						[styles.isMobileUpdate]: !!isUpdateTitle,
 					})}
 				>
-					<div className="flex">
-						<div className={styles.d_day}>D-248</div>
-						<div className="border border-solid border-customDark rounded-full w-[25px] h-[25px] relative">
-							<Image
-								className="rounded-full"
-								fill
-								src={'/images/banner/group-base.png'}
-								alt=""
-							></Image>
-						</div>
-						<div className="text-xs text-customGray">5명에게 공유됨</div>
-					</div>
+					<div className={styles.d_day}>D-248</div>
+
 					<motion.div
 						className={styles.setting_container}
 						initial={false}
@@ -141,6 +132,9 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 					new Date(schedule.updatedAt),
 					'yyyy-MM-dd',
 				)}`}</div>
+
+				{/* 공유된 멤버 */}
+				<SharedMembers />
 			</div>
 		</motion.div>
 	);

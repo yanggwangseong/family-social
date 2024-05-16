@@ -1,0 +1,15 @@
+.container {
+	@apply flex gap-2;
+
+	.img_conatiner {
+		@apply border border-solid border-customDark rounded-full w-[25px] h-[25px] relative;
+
+		.profile_img {
+			@apply rounded-full;
+		}
+	}
+
+	.shared_text {
+		@apply text-xs text-customGray flex items-center;
+	}
+}

@@ -103,6 +103,7 @@ const Schedule: FC = () => {
 									options={'SCHEDULEALL'}
 								></TabMenu>
 							</div>
+
 							<div className={styles.schedule_container}>
 								{isLoading && <Skeleton />}
 
