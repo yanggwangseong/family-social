@@ -33,31 +33,67 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		overrideWhere: FindOptionsWhere<ScheduleEntity>;
 		take: number;
 		skip: number;
-	}): Promise<[ScheduleGetListResDto[], number]> {
-		return await this.repository.findAndCount({
-			select: {
-				id: true,
-				groupId: true,
-				scheduleImage: true,
-				scheduleName: true,
-				startPeriod: true,
-				endPeriod: true,
-				updatedAt: true,
-			},
-			where: {
-				...overrideWhere,
-			},
-			relations: {
-				schedulePeriods: {
-					tourisms: true,
+	}) {
+		return await this.repository
+			.findAndCount({
+				select: {
+					id: true,
+					groupId: true,
+					scheduleImage: true,
+					scheduleName: true,
+					startPeriod: true,
+					endPeriod: true,
+					updatedAt: true,
+					sharedMembers: {
+						sharedFamId: true,
+						sharedMember: {
+							id: true,
+							role: true,
+							invitationAccepted: true,
+							memberId: true,
+							member: {
+								id: true,
+								username: true,
+								profileImage: true,
+								email: true,
+							},
+						},
+					},
 				},
-			},
-			order: {
-				updatedAt: 'desc',
-			},
-			take,
-			skip,
-		});
+				where: {
+					...overrideWhere,
+				},
+				relations: {
+					sharedMembers: {
+						sharedMember: {
+							member: true,
+						},
+					},
+				},
+				order: {
+					updatedAt: 'desc',
+				},
+				take,
+				skip,
+			})
+			.then((data) => {
+				const [schedule, number] = data;
+				const newSchedule = schedule.map((value) => {
+					const { sharedMembers, ...rest } = value;
+
+					const newSharedMembers = sharedMembers.map((item) => {
+						return {
+							...item.sharedMember,
+						};
+					});
+					return {
+						...rest,
+						sharedMembers: newSharedMembers,
+					};
+				});
+				const result: [ScheduleGetListResDto[], number] = [newSchedule, number];
+				return result;
+			});
 	}
 
 	async getOneScheduleById(
