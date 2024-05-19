@@ -44,6 +44,12 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 					startPeriod: true,
 					endPeriod: true,
 					updatedAt: true,
+					group: {
+						id: true,
+						groupName: true,
+						groupDescription: true,
+						groupCoverImage: true,
+					},
 					sharedMembers: {
 						sharedFamId: true,
 						sharedMember: {
@@ -64,6 +70,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 					...overrideWhere,
 				},
 				relations: {
+					group: true,
 					sharedMembers: {
 						sharedMember: {
 							member: true,
