@@ -4,6 +4,8 @@ import styles from './ScheduleSidebar.module.scss';
 import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 import cn from 'classnames';
 import SidebarScheduleTourism from './sidebar-schedule-tourism/SidebarScheduleTourism';
+import SidebarSharedMembers from './sidebar-shared-members/SidebarSharedMembers';
+import ScheduleSidebarController from './ScheduleSidebarController';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
@@ -11,21 +13,22 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isStartEndPeriod,
 	isPage,
 }) => {
+	if (isPage === 'selectGroupPage') return null;
+
 	return (
-		isPage === 'tourismPage' && (
-			<div
-				className={cn(styles.right_sidebar_container, {
-					[styles.mobile_toruism_sidebar]: isPage === 'tourismPage',
-				})}
-			>
-				<SidebarScheduleTourism
-					isSelecteGroup={isSelecteGroup}
-					isScheduleName={isScheduleName}
-					isStartEndPeriod={isStartEndPeriod}
-					isPage={isPage}
-				/>
-			</div>
-		)
+		<div
+			className={cn(styles.right_sidebar_container, {
+				[styles.mobile_toruism_sidebar]: isPage === 'tourismPage',
+			})}
+		>
+			<ScheduleSidebarController
+				isSelecteGroup={isSelecteGroup}
+				isScheduleName={isScheduleName}
+				isStartEndPeriod={isStartEndPeriod}
+				isPage={isPage}
+				status={isPage}
+			/>
+		</div>
 	);
 };
 
