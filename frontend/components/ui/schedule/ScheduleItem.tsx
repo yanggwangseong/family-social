@@ -81,7 +81,30 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						[styles.isMobileUpdate]: !!isUpdateTitle,
 					})}
 				>
-					<div className={styles.d_day}>D-248</div>
+					<div className="flex gap-4">
+						<div className={styles.contents_top_container}>
+							{isUpdateTitle ? (
+								<ScheduleUpdateTitle
+									handleUpdateTitle={handleUpdateTitle}
+									scheduleId={schedule.id}
+								></ScheduleUpdateTitle>
+							) : (
+								<>
+									<div className={styles.d_day}>D-248</div>
+									<div className={styles.title}>{schedule.scheduleName}</div>
+									<div
+										className={styles.title_update_icon_container}
+										onClick={e => {
+											e.stopPropagation();
+											handleUpdateTitle();
+										}}
+									>
+										<PiPencilDuotone size={18} color="#0a0a0a" />
+									</div>
+								</>
+							)}
+						</div>
+					</div>
 
 					<motion.div
 						className={styles.setting_container}
@@ -104,27 +127,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						/>
 					</motion.div>
 				</div>
-				<div className={styles.contents_top_container}>
-					{isUpdateTitle ? (
-						<ScheduleUpdateTitle
-							handleUpdateTitle={handleUpdateTitle}
-							scheduleId={schedule.id}
-						></ScheduleUpdateTitle>
-					) : (
-						<>
-							<div className={styles.title}>{schedule.scheduleName}</div>
-							<div
-								className={styles.title_update_icon_container}
-								onClick={e => {
-									e.stopPropagation();
-									handleUpdateTitle();
-								}}
-							>
-								<PiPencilDuotone size={18} color="#0a0a0a" />
-							</div>
-						</>
-					)}
-				</div>
+
 				<div
 					className={styles.schedule_periods}
 				>{`${schedule.startPeriod} ~ ${schedule.endPeriod}`}</div>
@@ -134,7 +137,10 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 				)}`}</div>
 
 				{/* 공유된 멤버 */}
-				<SharedMembers />
+				<SharedMembers
+					sharedMembers={schedule.sharedMembers}
+					sharedGroup={schedule.group}
+				/>
 			</div>
 		</motion.div>
 	);
