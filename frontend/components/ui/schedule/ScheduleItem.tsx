@@ -81,29 +81,28 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						[styles.isMobileUpdate]: !!isUpdateTitle,
 					})}
 				>
-					<div className="flex gap-4">
-						<div className={styles.contents_top_container}>
-							{isUpdateTitle ? (
-								<ScheduleUpdateTitle
-									handleUpdateTitle={handleUpdateTitle}
-									scheduleId={schedule.id}
-								></ScheduleUpdateTitle>
-							) : (
-								<>
-									<div className={styles.d_day}>D-248</div>
-									<div className={styles.title}>{schedule.scheduleName}</div>
-									<div
-										className={styles.title_update_icon_container}
-										onClick={e => {
-											e.stopPropagation();
-											handleUpdateTitle();
-										}}
-									>
-										<PiPencilDuotone size={18} color="#0a0a0a" />
-									</div>
-								</>
-							)}
-						</div>
+					<div className={styles.contents_top_container}>
+						{isUpdateTitle ? (
+							<ScheduleUpdateTitle
+								handleUpdateTitle={handleUpdateTitle}
+								scheduleId={schedule.id}
+							></ScheduleUpdateTitle>
+						) : (
+							<>
+								<div className={styles.d_day}>D-248</div>
+								<div className={styles.title}>{schedule.scheduleName}</div>
+
+								<div
+									className={styles.title_update_icon_container}
+									onClick={e => {
+										e.stopPropagation();
+										handleUpdateTitle();
+									}}
+								>
+									<PiPencilDuotone size={18} color="#0a0a0a" />
+								</div>
+							</>
+						)}
 					</div>
 
 					<motion.div
@@ -131,16 +130,20 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 				<div
 					className={styles.schedule_periods}
 				>{`${schedule.startPeriod} ~ ${schedule.endPeriod}`}</div>
-				<div className={styles.update_date}>{`최근 수정일 ${TranslateDateFormat(
-					new Date(schedule.updatedAt),
-					'yyyy-MM-dd',
-				)}`}</div>
 
-				{/* 공유된 멤버 */}
-				<SharedMembers
-					sharedMembers={schedule.sharedMembers}
-					sharedGroup={schedule.group}
-				/>
+				<div className={styles.bottom_container}>
+					{/* 공유된 멤버 */}
+					<SharedMembers
+						sharedMembers={schedule.sharedMembers}
+						sharedGroup={schedule.group}
+					/>
+					<div
+						className={styles.update_date}
+					>{`최근 수정일 ${TranslateDateFormat(
+						new Date(schedule.updatedAt),
+						'yyyy-MM-dd',
+					)}`}</div>
+				</div>
 			</div>
 		</motion.div>
 	);
