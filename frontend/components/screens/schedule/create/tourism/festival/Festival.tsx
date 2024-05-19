@@ -87,8 +87,6 @@ const Festival: FC<TourFestivalProps> = ({ onChangePeriods }) => {
 		};
 	}, [setIsAreaCode]);
 
-	console.log(data);
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.selected_type_container}>

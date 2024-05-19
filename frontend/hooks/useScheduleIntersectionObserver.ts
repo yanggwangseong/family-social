@@ -6,11 +6,7 @@ export const useScheduleIntersectionObserver = () => {
 	const { data, isLoading, isRefetching, fetchNextPage } = useInfiniteSelect(
 		['schedules'],
 		async ({ pageParam = 1 }) =>
-			await ScheduleService.getScheduleList(
-				pageParam,
-				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
-				4,
-			),
+			await ScheduleService.getScheduleList(pageParam, 4),
 	);
 
 	const [observedPost, setObservedPost] = useState('');

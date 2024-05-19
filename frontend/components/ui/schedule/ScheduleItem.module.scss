@@ -55,8 +55,12 @@
 			@apply text-sm font-medium;
 		}
 
-		.update_date {
-			@apply text-customGray text-xs;
+		.bottom_container {
+			@apply flex;
+
+			.update_date {
+				@apply text-customGray text-xs ml-auto flex items-center;
+			}
 		}
 	}
 }

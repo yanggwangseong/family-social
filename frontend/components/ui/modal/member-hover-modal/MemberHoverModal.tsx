@@ -16,6 +16,7 @@ const MemberHoverModal: FC<{ mentionRecipient: SearchMemberResponse }> = ({
 	const handleProfilePage = () => {
 		router.push(`/accounts/${mentionRecipient.email}`);
 	};
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.profile_container}>
