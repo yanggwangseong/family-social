@@ -23,7 +23,6 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	isStartEndPeriod,
 	isPage,
 }) => {
-	console.log(isSelecteGroup);
 	const router = useRouter();
 	const [isValidate, setIsValidate] = useState<boolean>(false);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);

@@ -3,8 +3,7 @@ import styles from './ScheduleSidebar.module.scss';
 
 import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 import cn from 'classnames';
-import SidebarScheduleTourism from './sidebar-schedule-tourism/SidebarScheduleTourism';
-import SidebarSharedMembers from './sidebar-shared-members/SidebarSharedMembers';
+
 import ScheduleSidebarController from './ScheduleSidebarController';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
