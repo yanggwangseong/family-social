@@ -3,6 +3,7 @@ import {
 	GroupResponse,
 	MemberBelongToGroupsResponse,
 } from '@/shared/interfaces/group.interface';
+import { MembersBelongToGroupResponse } from '@/shared/interfaces/member.interface';
 import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -12,6 +13,13 @@ export const GroupService = {
 			'/groups',
 		);
 
+		return data;
+	},
+
+	async getMembersBelongToGroup(groupId: string) {
+		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(
+			`groups/${groupId}/members`,
+		);
 		return data;
 	},
 

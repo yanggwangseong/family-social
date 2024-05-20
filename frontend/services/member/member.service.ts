@@ -23,13 +23,6 @@ export const MemberService = {
 		return data;
 	},
 
-	async getMembersBelongToGroup(groupId: string) {
-		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(
-			`groups/${groupId}/members/`,
-		);
-		return data;
-	},
-
 	async getAllMembers() {
 		const { data } = await axiosAPI.get<SearchMemberResponse[]>(`/members`);
 		return data;
