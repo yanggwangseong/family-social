@@ -18,15 +18,12 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 		async () => await GroupService.getMembersBelongToGroup(isSelecteGroup),
 	);
 
-	const { isSharedFamIds, handleSharedFamIds } = useSharedFamIds();
+	const { isSharedFamIds, handleSharedFamIds } = useSharedFamIds(data);
 
 	const handleAllSelectedMember = (members: MembersBelongToGroupResponse[]) => {
 		isAllSelected === false
 			? handleSharedFamIds(members.map(item => item.id))
 			: handleSharedFamIds([]);
-
-		// 상태값은 handle 함수 실행 시킨 후에 selected 변경
-		setIsAllSelected(!isAllSelected);
 	};
 
 	const handleSelectedMember = (famId: string, isSelected: boolean) => {
@@ -36,10 +33,10 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 	};
 
 	useEffect(() => {
-		if (isAllSelected === true && data?.length !== isSharedFamIds.length) {
-			setIsAllSelected(false);
-		}
-	}, [data?.length, isAllSelected, isSharedFamIds.length]);
+		data && data.length === isSharedFamIds.length
+			? setIsAllSelected(true)
+			: setIsAllSelected(false);
+	}, [data, isSharedFamIds.length]);
 
 	return (
 		<>

@@ -16,6 +16,7 @@ import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { ScheduleSidebarProps } from '../schedule-sidebar.interface';
+import { sharedFamIdsAtom } from '@/atoms/sharedFamIdsAtom';
 
 const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
@@ -26,6 +27,7 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	const router = useRouter();
 	const [isValidate, setIsValidate] = useState<boolean>(false);
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+	const [isSharedFamIds, setIsSharedFamIds] = useRecoilState(sharedFamIdsAtom);
 
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
@@ -33,13 +35,7 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	const { mutate: createScheduleSync } = useMutation(
 		['create-schedule'],
 		(data: CreateScheduleRequest) =>
-			ScheduleService.createSchedules({
-				periods: data.periods,
-				groupId: data.groupId,
-				scheduleName: data.scheduleName,
-				startPeriod: data.startPeriod,
-				endPeriod: data.endPeriod,
-			}),
+			ScheduleService.createSchedules({ ...data }),
 		{
 			onMutate: variable => {
 				Loading.hourglass();
@@ -76,6 +72,7 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 					startPeriod: isStartEndPeriod.startPeriod,
 					endPeriod: isStartEndPeriod.endPeriod,
 					periods: isPeriods,
+					sharedFamIds: isSharedFamIds,
 				});
 			},
 			() => {},

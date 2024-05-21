@@ -12,6 +12,7 @@ export interface CreateScheduleRequest {
 	startPeriod: string;
 	endPeriod: string;
 	periods: PeriodsType[];
+	sharedFamIds: string[];
 }
 
 export interface GetScheduleListResponse {
