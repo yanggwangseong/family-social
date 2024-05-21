@@ -49,6 +49,7 @@ export class FamsRepository extends Repository<FamEntity> {
 					id: true,
 					profileImage: true,
 					username: true,
+					email: true,
 				},
 			},
 			where: {

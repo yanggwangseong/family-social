@@ -1,0 +1,23 @@
+.container {
+	@apply flex flex-col gap-10;
+
+	.title_container {
+		@apply flex gap-4;
+
+		.title {
+			@apply text-xl font-semibold;
+		}
+	}
+
+	.select_all_container {
+		@apply flex gap-4 cursor-pointer;
+
+		.select_all_text {
+			@apply text-sm font-medium;
+
+			&.active {
+				@apply text-customOrange;
+			}
+		}
+	}
+}
