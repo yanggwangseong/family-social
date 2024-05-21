@@ -20,8 +20,8 @@ const RightSidebar: FC = () => {
 	};
 
 	const { data, isLoading } = useQuery(
-		['get-members'],
-		async () => await MemberService.getMembersBelongToGroup(groupId),
+		['get-members', groupId],
+		async () => await GroupService.getMembersBelongToGroup(groupId),
 	);
 
 	const { data: groupList, isLoading: groupLoading } = useQuery(

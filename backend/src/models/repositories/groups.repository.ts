@@ -114,6 +114,10 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return await this.findOrFailGroupById({ groupId });
 	}
 
+	async updateGroupCoverImage(groupId: string, imageUrl: string) {
+		await this.update({ id: groupId }, { groupCoverImage: imageUrl });
+	}
+
 	async deleteGroup(
 		{ groupId }: { groupId: string },
 		qr?: QueryRunner,

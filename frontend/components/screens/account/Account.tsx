@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC, useRef } from 'react';
 import styles from './Account.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
@@ -15,9 +15,14 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import MyFeed from '../feed/my-feed/MyFeed';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
+import { PiPencilDuotone } from 'react-icons/pi';
 import { MemberService } from '@/services/member/member.service';
+import axios from 'axios';
+import { MediaService } from '@/services/media/media.service';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -27,11 +32,32 @@ const Account: FC<{ email: string }> = ({ email }) => {
 
 	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
+	const hiddenFileInput = useRef<HTMLInputElement | null>(null);
+
 	const { isSuccess, data } = useQuery(
 		['get-member-by-email', email],
 		async () => await MemberService.getMemberByMemberEmail(email),
 		{
 			enabled: !!email,
+		},
+	);
+
+	const { mutateAsync } = useMutation(
+		['member-cover-image-upload'],
+		async (file: File) => await MediaService.uploadMemberCoverImage(file),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
 		},
 	);
 
@@ -49,6 +75,18 @@ const Account: FC<{ email: string }> = ({ email }) => {
 			modal_title: '프로필 수정',
 			layer: LayerMode.editProfile,
 		});
+	};
+
+	const handleMemberCoverImageUpload = async (
+		event: ChangeEvent<HTMLInputElement>,
+	) => {
+		const uploadedFiles: File[] = Array.from(event.target.files || []);
+
+		await mutateAsync(uploadedFiles[0]);
+	};
+
+	const handleClick = () => {
+		hiddenFileInput.current!.click();
 	};
 
 	return (
@@ -73,6 +111,20 @@ const Account: FC<{ email: string }> = ({ email }) => {
 										alt="banner"
 										objectFit="cover"
 									></Image>
+									<div className={styles.banner_edit_btn}>
+										<PiPencilDuotone size={22} />
+										<button className={styles.btn_text} onClick={handleClick}>
+											수정
+										</button>
+
+										<input
+											type="file"
+											id="fileUpload"
+											style={{ display: 'none' }}
+											onChange={handleMemberCoverImageUpload}
+											ref={hiddenFileInput}
+										/>
+									</div>
 								</div>
 								<div className={styles.main_contents_container}>
 									<div className={styles.account_top_container}>

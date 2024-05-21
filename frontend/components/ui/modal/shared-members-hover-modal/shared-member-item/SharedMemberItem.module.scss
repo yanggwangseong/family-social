@@ -1,0 +1,21 @@
+.profile_container {
+	@apply flex w-1/2 px-2 py-3;
+
+	.profile_img_container {
+		@apply border border-solid border-customDark rounded-full mr-3 relative;
+		height: 40px;
+		width: 40px;
+	}
+
+	.right_container {
+		@apply flex flex-col justify-between;
+
+		.profile_username {
+			@apply text-customDark text-sm font-semibold;
+		}
+
+		.profile_role {
+			@apply text-customGray text-xs;
+		}
+	}
+}

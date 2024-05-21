@@ -17,6 +17,7 @@ import { LayerMode } from 'types';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
+import SharedMembers from '../shared-members/SharedMembers';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 	schedule,
@@ -80,9 +81,30 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						[styles.isMobileUpdate]: !!isUpdateTitle,
 					})}
 				>
-					<div>
-						<div className={styles.d_day}>D-248</div>
+					<div className={styles.contents_top_container}>
+						{isUpdateTitle ? (
+							<ScheduleUpdateTitle
+								handleUpdateTitle={handleUpdateTitle}
+								scheduleId={schedule.id}
+							></ScheduleUpdateTitle>
+						) : (
+							<>
+								<div className={styles.d_day}>D-248</div>
+								<div className={styles.title}>{schedule.scheduleName}</div>
+
+								<div
+									className={styles.title_update_icon_container}
+									onClick={e => {
+										e.stopPropagation();
+										handleUpdateTitle();
+									}}
+								>
+									<PiPencilDuotone size={18} color="#0a0a0a" />
+								</div>
+							</>
+						)}
 					</div>
+
 					<motion.div
 						className={styles.setting_container}
 						initial={false}
@@ -104,34 +126,24 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						/>
 					</motion.div>
 				</div>
-				<div className={styles.contents_top_container}>
-					{isUpdateTitle ? (
-						<ScheduleUpdateTitle
-							handleUpdateTitle={handleUpdateTitle}
-							scheduleId={schedule.id}
-						></ScheduleUpdateTitle>
-					) : (
-						<>
-							<div className={styles.title}>{schedule.scheduleName}</div>
-							<div
-								className={styles.title_update_icon_container}
-								onClick={e => {
-									e.stopPropagation();
-									handleUpdateTitle();
-								}}
-							>
-								<PiPencilDuotone size={18} color="#0a0a0a" />
-							</div>
-						</>
-					)}
-				</div>
+
 				<div
 					className={styles.schedule_periods}
 				>{`${schedule.startPeriod} ~ ${schedule.endPeriod}`}</div>
-				<div className={styles.update_date}>{`최근 수정일 ${TranslateDateFormat(
-					new Date(schedule.updatedAt),
-					'yyyy-MM-dd',
-				)}`}</div>
+
+				<div className={styles.bottom_container}>
+					{/* 공유된 멤버 */}
+					<SharedMembers
+						sharedMembers={schedule.sharedMembers}
+						sharedGroup={schedule.group}
+					/>
+					<div
+						className={styles.update_date}
+					>{`최근 수정일 ${TranslateDateFormat(
+						new Date(schedule.updatedAt),
+						'yyyy-MM-dd',
+					)}`}</div>
+				</div>
 			</div>
 		</motion.div>
 	);

@@ -28,7 +28,9 @@ export class TourismEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	@IsUUID(4, { message: uuidValidationMessage })
+	@IsString({
+		message: stringValidationMessage,
+	})
 	public readonly contentId!: string;
 
 	@Column({ type: 'time', nullable: false })

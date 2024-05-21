@@ -2,7 +2,7 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 
 import { FamEntity } from '@/models/entities/fam.entity';
 
-import { MemberProfileImageResDto } from '../../member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '../../member/res/member-search-res.dto';
 
 export class GroupMembersResDto extends PickType(FamEntity, [
 	'id',
@@ -12,5 +12,5 @@ export class GroupMembersResDto extends PickType(FamEntity, [
 	@ApiProperty({
 		nullable: false,
 	})
-	member!: MemberProfileImageResDto;
+	member!: MemberSearchResDto;
 }

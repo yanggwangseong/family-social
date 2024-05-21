@@ -3,6 +3,8 @@ import {
 	GroupResponse,
 	MemberBelongToGroupsResponse,
 } from '@/shared/interfaces/group.interface';
+import { MembersBelongToGroupResponse } from '@/shared/interfaces/member.interface';
+import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
 
 export const GroupService = {
@@ -14,13 +16,16 @@ export const GroupService = {
 		return data;
 	},
 
-	async getFeedsOfGroup(
-		page: number,
-		options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT' = 'GROUPFEED',
-		groupId: string,
-	) {
-		const { data } = await axiosAPI.get<FeedsResponse>(
-			`/groups/${groupId}/feeds?page=${page}&options=${options}`,
+	async getMembersBelongToGroup(groupId: string) {
+		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(
+			`groups/${groupId}/members`,
+		);
+		return data;
+	},
+
+	async getScheduleListByGroupId(groupId: string, page: number, limit: number) {
+		const { data } = await axiosAPI.get<GetScheduleListResponse>(
+			`/groups/${groupId}/schedules?page=${page}&limit=${limit}`,
 		);
 
 		return data;

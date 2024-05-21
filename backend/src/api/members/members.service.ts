@@ -81,6 +81,13 @@ export class MembersService {
 		});
 	}
 
+	async updateMemberCoverImage(memberId: string, imageUrl: string) {
+		return await this.membersRepository.updateMemberCoverImage(
+			memberId,
+			imageUrl,
+		);
+	}
+
 	async memberExistsByEmail(
 		email: string,
 	): Promise<(MemberResDto & { isFirstLogin: boolean }) | null> {

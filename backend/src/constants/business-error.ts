@@ -83,3 +83,6 @@ export const ERROR_EMAIL_PIPE_MESSAGE =
 	'이메일 형식이 올바르지 않습니다' as const;
 export const ERROR_IS_READ_OPTIONS_PIPE_MESSAGE =
 	'options의 값이 올바르지 않습니다' as const;
+
+// medias
+export const ERROR_FILE_NOT_FOUND = '파일이 없습니다' as const;

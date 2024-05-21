@@ -1,27 +1,29 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
+	Get,
 	Param,
+	ParseIntPipe,
 	ParseUUIDPipe,
 	Patch,
-	UploadedFiles,
+	Query,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
+	GetSchedulesSwagger,
 	PatchScheduleTitleSwagger,
-	PatchScheduleUploadThumbnailImageSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorator';
-import { BadRequestServiceException } from '@/common/exception/service.exception';
+import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ScheduleUpdateTitleDto } from '@/models/dto/schedule/req/schedule-update-title.dto';
-import { createScheduleThumbnailImageMulterOptions } from '@/utils/upload-media';
 
 import { SchedulesService } from './schedules.service';
 
@@ -31,6 +33,42 @@ import { SchedulesService } from './schedules.service';
 @Controller('schedules')
 export class SchedulesController {
 	constructor(private readonly schedulesService: SchedulesService) {}
+
+	/**
+	 * @summary 여행일정 리스트 전체 가져오기
+	 *
+	 * @tag schedules
+	 * @param {number} page 							- 페이지 번호
+	 * @param {number} limit 							- 가져 올 갯수
+	 * @param {string} sub  							- 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 여행 일정 리스트
+	 */
+	@GetSchedulesSwagger()
+	@Get()
+	async getSchedules(
+		@Query(
+			'page',
+			new DefaultValuePipe(1),
+			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		)
+		page: number,
+		@Query(
+			'limit',
+			new DefaultValuePipe(3),
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('limit'),
+			}),
+		)
+		limit: number,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.schedulesService.getScheduleListOwnMemberId({
+			memberId: sub,
+			page,
+			limit,
+		});
+	}
 
 	/**
 	 * @summary 특정 스케줄 여행제목 수정
@@ -55,40 +93,5 @@ export class SchedulesController {
 			scheduleId,
 			dto.scheduleName,
 		);
-	}
-
-	/**
-	 * @summary 특정 스케줄 여행스케줄 썸네일 변경
-	 *
-	 * @tag schedules
-	 * @param {string} scheduleId - 스케줄 아이디
-	 * @param {Express.MulterS3.File} files - 업로드 파일
-	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns string[]
-	 */
-	@PatchScheduleUploadThumbnailImageSwagger()
-	@Patch(':scheduleId/uploads/thumbnail-image')
-	@UseInterceptors(
-		FilesInterceptor('files', 1, createScheduleThumbnailImageMulterOptions()),
-	)
-	async PatchScheduleUploadThumbnailImage(
-		@UploadedFiles() files: Express.MulterS3.File[],
-		@Param(
-			'scheduleId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		scheduleId: string,
-	) {
-		if (!files?.length) {
-			throw BadRequestServiceException(`파일이 없습니다.`);
-		}
-		const locations = files.map(({ location }) => location);
-
-		await this.schedulesService.updateScheduleThumbnail(
-			scheduleId,
-			locations[0],
-		);
-
-		return locations;
 	}
 }

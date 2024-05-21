@@ -22,7 +22,6 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
-	GetFeedsOfGroupSwagger,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
 	PostInvitedEmailsOfGroupSwagger,
@@ -33,7 +32,7 @@ import {
 	CreateToursScheduleSwagger,
 	DeleteToursScheduleSwagger,
 	GetOneScheduleSwagger,
-	GetScheduleListSwagger,
+	GetScheduleListOwnMemberIdSwagger,
 	UpdateToursScheduleSwagger,
 } from '@/common/decorators/swagger/swagger-schedule.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
@@ -59,7 +58,6 @@ import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-per
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
-import { FeedsService } from '../feeds/feeds.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
@@ -75,7 +73,6 @@ export class GroupsController {
 		private readonly membersService: MembersService,
 		private readonly schedulesService: SchedulesService,
 		private readonly mailsService: MailsService,
-		private readonly feedsService: FeedsService,
 	) {}
 
 	/**
@@ -219,37 +216,6 @@ export class GroupsController {
 			page,
 			limit,
 		});
-	}
-
-	/**
-	 * @summary 특정 그룹에 해당하는 피드를 가져옵니다.
-	 *
-	 * @tag groups
-	 * @param page 페이징을 위한 page 번호
-	 * @param options 조회 옵션
-	 * @param sub 인증된 사용자의 아이디
-	 * @param groupId 특정 그룹 아이디
-	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns feed
-	 */
-	@GetFeedsOfGroupSwagger()
-	@Get('/:groupId/feeds')
-	async getFeedsOfGroup(
-		@Param(
-			'groupId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		groupId: string,
-		@Query('options') options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT',
-		@Query(
-			'page',
-			new DefaultValuePipe(1),
-			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
-		)
-		page: number,
-		@CurrentUser('sub') sub: string,
-	) {
-		return await this.feedsService.findAllFeed(page, sub, options, groupId);
 	}
 
 	/**
@@ -406,7 +372,7 @@ export class GroupsController {
 	}
 
 	/**
-	 * @summary 여행일정 리스트 전체 가져오기
+	 * @summary 특정 그룹 여행일정 리스트 전체 가져오기
 	 *
 	 * @tag groups
 	 * @param {number} page 							- 페이지 번호
@@ -416,7 +382,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 여행 일정 리스트
 	 */
-	@GetScheduleListSwagger()
+	@GetScheduleListOwnMemberIdSwagger()
 	@Get('/:groupId/schedules')
 	async getScheduleListOwnMemberId(
 		@Query(
@@ -428,7 +394,9 @@ export class GroupsController {
 		@Query(
 			'limit',
 			new DefaultValuePipe(3),
-			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('limit'),
+			}),
 		)
 		limit: number,
 		@Param(
@@ -441,8 +409,9 @@ export class GroupsController {
 		// 그룹에 속한 사람인지 체크
 		await this.groupsService.checkRoleOfGroupExists(groupId, sub);
 
-		return await this.schedulesService.getScheduleListOwnMemberId({
+		return await this.schedulesService.getScheduleListByGroupId({
 			memberId: sub,
+			groupId,
 			page,
 			limit,
 		});
@@ -481,6 +450,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 여행일정 생성자는 무조건 공유된 아이디에 있어야 되기 때문에 있는지 체크하는 커스텀 guard 생성
 	@CreateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard)
 	@UseInterceptors(TransactionInterceptor)
@@ -516,6 +486,7 @@ export class GroupsController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 일정 아이디
 	 */
+	// [TODO] 그룹 권한이 있는 멤버거나 본인이 생성한 여행 일정이라면 수정 기능 권한 허용
 	@UpdateToursScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard, IsMineScheduleGuard)
 	@UseInterceptors(TransactionInterceptor)

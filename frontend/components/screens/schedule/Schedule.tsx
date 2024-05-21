@@ -1,21 +1,19 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './Schedule.module.scss';
 import Format from '@/components/ui/layout/Format';
 import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
 import { scheduleTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
-import ScheduleSidebar from '@/components/ui/layout/sidebar/schedule/ScheduleSidebar';
+
 import ScheduleItem from '@/components/ui/schedule/ScheduleItem';
-import { useInfiniteQuery } from 'react-query';
-import { ScheduleService } from '@/services/schedule/schedule.service';
+
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { PiPencilDuotone } from 'react-icons/pi';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { useScheduleIntersectionObserver } from '@/hooks/useScheduleIntersectionObserver';
-import { useInfiniteSelect } from '@/hooks/useInfiniteSelect';
 
 const Schedule: FC = () => {
 	// const {
@@ -103,6 +101,7 @@ const Schedule: FC = () => {
 									options={'SCHEDULEALL'}
 								></TabMenu>
 							</div>
+
 							<div className={styles.schedule_container}>
 								{isLoading && <Skeleton />}
 
