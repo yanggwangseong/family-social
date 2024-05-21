@@ -29,6 +29,18 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 		setIsAllSelected(!isAllSelected);
 	};
 
+	const handleSelectedMember = (famId: string, isSelected: boolean) => {
+		isSelected
+			? handleSharedFamIds(isSharedFamIds.filter(item => item !== famId))
+			: handleSharedFamIds([...isSharedFamIds, famId]);
+	};
+
+	useEffect(() => {
+		if (isAllSelected === true && data?.length !== isSharedFamIds.length) {
+			setIsAllSelected(false);
+		}
+	}, [data?.length, isAllSelected, isSharedFamIds.length]);
+
 	return (
 		<>
 			{data && (
@@ -59,6 +71,7 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 							key={index}
 							belongToMember={item}
 							selected={isSharedFamIds.includes(item.id)}
+							handleSelectedMember={handleSelectedMember}
 						/>
 					))}
 				</div>

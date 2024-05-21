@@ -10,9 +10,14 @@ import cn from 'classnames';
 const SelectProfile: FC<{
 	belongToMember: MembersBelongToGroupResponse;
 	selected: boolean;
-}> = ({ belongToMember, selected }) => {
+	handleSelectedMember: (famId: string, isSelected: boolean) => void;
+}> = ({ belongToMember, selected, handleSelectedMember }) => {
 	return (
-		<motion.div className={styles.container} {...INLINEBUTTONGESTURE}>
+		<motion.div
+			className={styles.container}
+			{...INLINEBUTTONGESTURE}
+			onClick={() => handleSelectedMember(belongToMember.id, selected)}
+		>
 			<div
 				className={cn(styles.check_icon_container, {
 					[styles.active]: !!selected,
