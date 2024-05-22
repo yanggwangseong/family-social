@@ -20,3 +20,7 @@ export interface CreateFeedRequest {
 export interface UpdateFeedRequest extends CreateFeedRequest {
 	feedId: string;
 }
+
+export interface FeedLikeUpdateRequest {
+	feedWriterId: string;
+}

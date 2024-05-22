@@ -1,5 +1,6 @@
 import {
 	CreateFeedRequest,
+	FeedLikeUpdateRequest,
 	UpdateFeedRequest,
 } from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
 
@@ -49,7 +50,7 @@ export const FeedService = {
 	async updateLike(feedId: string, feedWriterId: string) {
 		const { data } = await axiosAPI.put(`/feeds/${feedId}/likes`, {
 			feedWriterId,
-		});
+		} satisfies FeedLikeUpdateRequest);
 
 		return data;
 	},
