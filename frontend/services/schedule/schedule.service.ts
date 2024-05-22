@@ -1,8 +1,10 @@
 import {
 	CreateScheduleRequest,
+	CreateScheduleRequestBody,
 	CreateScheduleResponse,
 	GetScheduleListResponse,
 	ScheduleItemResponse,
+	UpdateScheduleNameRequestBody,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -12,7 +14,7 @@ export const ScheduleService = {
 			`/groups/${groupId}/schedules`,
 			{
 				...rest,
-			},
+			} satisfies CreateScheduleRequestBody,
 		);
 
 		return data;
@@ -47,7 +49,7 @@ export const ScheduleService = {
 			`/schedules/${scheduleId}/title`,
 			{
 				scheduleName,
-			},
+			} satisfies UpdateScheduleNameRequestBody,
 		);
 
 		return data;

@@ -1,4 +1,7 @@
-import { GetChatsResponse } from '@/shared/interfaces/chat.interface';
+import {
+	CreateChatRequest,
+	GetChatsResponse,
+} from '@/shared/interfaces/chat.interface';
 import { axiosAPI } from 'api/axios';
 
 export const ChatService = {
@@ -9,7 +12,9 @@ export const ChatService = {
 	},
 
 	async postChat(memberIds: string[]) {
-		const { data } = await axiosAPI.post(`/chats`, { memberIds });
+		const { data } = await axiosAPI.post(`/chats`, {
+			memberIds,
+		} satisfies CreateChatRequest);
 
 		return data;
 	},

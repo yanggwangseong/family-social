@@ -1,6 +1,7 @@
 import { PeriodsType } from '@/atoms/periodAtom';
 import { FamSharedMemberResponse } from './fam.interface';
 import { GroupProfileResponse } from './group.interface';
+import { OmitStrict } from 'types';
 
 export interface CreateScheduleResponse {
 	id: string;
@@ -14,6 +15,9 @@ export interface CreateScheduleRequest {
 	periods: PeriodsType[];
 	sharedFamIds: string[];
 }
+
+export interface CreateScheduleRequestBody
+	extends OmitStrict<CreateScheduleRequest, 'groupId'> {}
 
 export interface GetScheduleListResponse {
 	list: ScheduleResponse[];
@@ -52,4 +56,8 @@ export interface TourismResponse {
 	tourismImage: string;
 	title: string;
 	position: number;
+}
+
+export interface UpdateScheduleNameRequestBody {
+	scheduleName: string;
 }

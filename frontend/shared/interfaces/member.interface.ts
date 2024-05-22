@@ -20,3 +20,9 @@ export interface MemberAccountResponse extends MembersResponse {
 export interface SearchMemberResponse extends MembersResponse {
 	email: string;
 }
+
+export interface UpdateProfileRequestBodyData {
+	username: string;
+	phoneNumber: string;
+	profileImage: string;
+}

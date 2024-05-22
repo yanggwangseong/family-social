@@ -1,5 +1,11 @@
 import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/EditProfile/edit-profile.interface';
-import { AuthResponse } from '@/shared/interfaces/auth.interface';
+import {
+	AuthResponse,
+	EmailVerifyRequest,
+	RegisterRequest,
+	SignInRequest,
+	SocialRegisterRequest,
+} from '@/shared/interfaces/auth.interface';
 import { axiosAPI, axiosClassic } from 'api/axios';
 
 export const AuthService = {
@@ -7,7 +13,7 @@ export const AuthService = {
 		const { data } = await axiosClassic.post<AuthResponse>('/auth/sign-in', {
 			email,
 			password,
-		});
+		} satisfies SignInRequest);
 	},
 
 	async register(
@@ -21,7 +27,7 @@ export const AuthService = {
 			password,
 			username,
 			phoneNumber,
-		});
+		} satisfies RegisterRequest);
 
 		return data;
 	},
@@ -32,7 +38,7 @@ export const AuthService = {
 		const { data } = await axiosClassic.patch<void>('/auth/social/sign-up', {
 			id,
 			...rest,
-		});
+		} satisfies SocialRegisterRequest);
 
 		return data;
 	},
@@ -47,8 +53,8 @@ export const AuthService = {
 			'/auth/email-verify',
 			{
 				signupVerifyToken: emailVerifyCode,
-				email: email,
-			},
+				email,
+			} satisfies EmailVerifyRequest,
 		);
 
 		return data;

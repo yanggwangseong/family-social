@@ -13,3 +13,10 @@ export interface MemberBelongToGroupsResponse extends FamResponse {
 export interface GroupProfileResponse extends GroupResponse {
 	groupCoverImage: string;
 }
+
+export interface CreateGroupRequest {
+	groupName: string;
+	groupDescription: string;
+}
+
+export interface UpdateGroupRequest extends CreateGroupRequest {}
