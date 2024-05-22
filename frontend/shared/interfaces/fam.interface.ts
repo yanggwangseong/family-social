@@ -22,3 +22,15 @@ export interface FamSharedMemberResponse extends FamResponse {
 	memberId: string;
 	member: SearchMemberResponse;
 }
+
+export interface FamAcceptInvitationRequest {
+	invitationAccepted: boolean;
+}
+
+export interface FamAcceptInvitationArgs {
+	groupId: string;
+	memberId: string;
+	famId: string;
+}
+
+export interface FamRejectInvitationArgs extends FamAcceptInvitationArgs {}
