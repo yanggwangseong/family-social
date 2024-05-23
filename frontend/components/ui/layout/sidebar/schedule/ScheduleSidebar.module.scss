@@ -1,10 +1,17 @@
 .right_sidebar_container {
 	@screen lg {
-		@apply block sticky w-[400px] h-full top-0 border-l border-solid border-customDark;
+		@apply block sticky w-[400px] h-full top-0 rounded-none border-l border-solid border-customDark shadow-none border-t-0 border-r-0 border-b-0;
 	}
-	@apply w-full border-0 fixed bottom-0 z-10 hidden p-4 bg-basic;
+
+	@apply w-full fixed bottom-0 z-10 hidden p-4 bg-basic shadow-2xl rounded-tr-[44px] rounded-tl-[44px] border border-solid border-customDark;
+
 	height: calc(100vh - 30vh - 80px);
+
 	&.mobile_toruism_sidebar {
-		@apply block;
+		@apply flex flex-col;
+	}
+
+	.resize_panel_btn {
+		@apply flex justify-center p-2 cursor-ns-resize;
 	}
 }
