@@ -6,6 +6,7 @@ import cn from 'classnames';
 import { PiEqualsBold } from 'react-icons/pi';
 import ScheduleSidebarController from './ScheduleSidebarController';
 import { useResizeVertical } from '@/hooks/useResizeVertical';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
@@ -13,12 +14,9 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isStartEndPeriod,
 	isPage,
 }) => {
-	const maxSidebarHeight = window.innerHeight - 80;
-	const minSidebarHeight = 330;
-
 	const { handleTouchStart, handleMouseDown, sidebarRef } = useResizeVertical(
-		maxSidebarHeight,
-		minSidebarHeight,
+		80,
+		330,
 	);
 
 	if (isPage === 'selectGroupPage') return null;

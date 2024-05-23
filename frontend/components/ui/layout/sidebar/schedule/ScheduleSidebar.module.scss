@@ -12,6 +12,9 @@
 	}
 
 	.resize_panel_btn {
+		@screen md {
+			@apply hidden;
+		}
 		@apply flex justify-center p-2 cursor-ns-resize;
 	}
 }
