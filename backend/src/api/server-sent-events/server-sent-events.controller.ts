@@ -4,11 +4,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 
 import { ServerSentEventsService } from './server-sent-events.service';
 
-@UseInterceptors(LoggingInterceptor, TimeoutInterceptor)
+@UseInterceptors(LoggingInterceptor)
 @UseGuards(AccessTokenGuard)
 @ApiTags('sse')
 @Controller('sse')
