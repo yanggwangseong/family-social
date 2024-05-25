@@ -24,7 +24,8 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	return (
 		<div
 			className={cn(styles.right_sidebar_container, {
-				[styles.mobile_toruism_sidebar]: isPage === 'tourismPage',
+				[styles.mobile_toruism_sidebar]:
+					isPage === 'tourismPage' || isPage === 'periodPage',
 			})}
 			ref={sidebarRef}
 		>

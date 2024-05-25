@@ -1,5 +1,5 @@
 .container {
-	@apply flex flex-col gap-10;
+	@apply flex flex-col gap-10 h-full;
 
 	.title_container {
 		@apply flex gap-4;
@@ -19,5 +19,9 @@
 				@apply text-customOrange;
 			}
 		}
+	}
+
+	.select_profile_container {
+		@apply flex flex-col gap-10 overflow-x-hidden overflow-y-auto mb-10 flex-grow;
 	}
 }
