@@ -7,6 +7,8 @@ import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { ICreateGroupArgs } from '@/types/args/group';
 
+import { GroupProfileResDto } from '../dto/group/res/group-profile.rest.dto';
+
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
 	constructor(
@@ -47,7 +49,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		groupId,
 	}: {
 		groupId: string;
-	}): Promise<GroupResDto | null> {
+	}): Promise<GroupProfileResDto | null> {
 		const group = await this.repository.findOne({
 			where: {
 				id: groupId,
@@ -56,6 +58,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 				id: true,
 				groupName: true,
 				groupDescription: true,
+				groupCoverImage: true,
 			},
 		});
 
