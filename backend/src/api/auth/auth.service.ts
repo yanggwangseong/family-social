@@ -22,6 +22,7 @@ import {
 import {
 	ENV_ACCESS_TOKEN_COOKIE_NAME,
 	ENV_COOKIE_MAX_AGE,
+	ENV_COOKIE_SECURE,
 	ENV_JWT_ACCESS_TOKEN_EXPIRATION,
 	ENV_JWT_ACCESS_TOKEN_SECRET,
 	ENV_JWT_REFRESH_TOKEN_EXPIRATION,
@@ -260,7 +261,7 @@ export class AuthService {
 				: accessTokenCookieName!;
 		let cookieOptions: CookieOptions = {
 			maxAge: Number(this.configService.get<number>(ENV_COOKIE_MAX_AGE)),
-			secure: true,
+			secure: JSON.parse(this.configService.get(ENV_COOKIE_SECURE)!),
 		};
 
 		if (type === 'refreshToken') {
