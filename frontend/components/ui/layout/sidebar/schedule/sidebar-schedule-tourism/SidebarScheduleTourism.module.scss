@@ -34,6 +34,9 @@
 
 	// 버튼
 	.right_sidebar_footer_container {
-		@apply mb-2;
+		@screen md {
+			@apply mb-2;
+		}
+		@apply mb-10;
 	}
 }
