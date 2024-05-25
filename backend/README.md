@@ -10,3 +10,5 @@
 
 - Nestjs class-validator `ValidateNested` 데코레이터 n개의 중첩객체 validation 방법 [링크](https://threeyears.tistory.com/513)
 - Nestjs class-validator global Validation-pipe 사용시 에러 메세지 커스텀하기
+- cookie-option에서 `secure:true` 사용시 safari 브라우저에서 localhost에 cookie 저장이 안되는 문제 [링크](https://threeyears.tistory.com/517)
+- cookie-option에서 signed 옵션으로 cookie-parser 사용시 secret-key로 검증하여 보안 강화하기 [링크](https://threeyears.tistory.com/502)
