@@ -38,6 +38,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { AttachGroupGuard } from '@/common/guards/attach-group.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -266,6 +267,7 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@PostInvitedEmailsOfGroupSwagger()
+	@UseGuards(AttachGroupGuard)
 	@Post('/:groupId/invited-emails')
 	async postInvitedEmailsOfGroup(@Body() dto: GroupInvitedEmailsReqDto) {
 		// [TODO] 그룹 존재하는지 middleware에서 확인하고 통과하면 req 객체에 담아주고 CurrentUser데코레이터처럼 데코레이터를 통해서 그룹 정보 가져오기
