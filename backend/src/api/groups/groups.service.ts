@@ -17,6 +17,7 @@ import {
 } from '@/constants/business-error';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
+import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupsRepository } from '@/models/repositories/groups.repository';
@@ -192,7 +193,7 @@ export class GroupsService {
 		});
 	}
 
-	async findGroupByIdOrThrow(groupId: string): Promise<GroupResDto> {
+	async findGroupByIdOrThrow(groupId: string): Promise<GroupProfileResDto> {
 		const group = await this.groupsRepository.findGroupById({
 			groupId,
 		});
