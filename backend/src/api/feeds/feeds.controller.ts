@@ -16,6 +16,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
+import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
@@ -35,6 +36,7 @@ import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
+import { PaginationGuard } from '@/common/guards/pagination.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
@@ -44,6 +46,7 @@ import {
 	COMMENT_ON_MY_POST_TITLE,
 	LIKE_ON_MY_POST_TITLE,
 } from '@/constants/notification.const';
+import { PaginationEnum } from '@/constants/pagination.const';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -110,6 +113,8 @@ export class FeedsController {
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
+	@UseGuards(PaginationGuard)
+	@IsPagination(PaginationEnum.CURSOR)
 	@Get()
 	async findAllFeed(
 		@Query('options')

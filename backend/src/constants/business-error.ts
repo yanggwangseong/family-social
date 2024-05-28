@@ -86,3 +86,7 @@ export const ERROR_IS_READ_OPTIONS_PIPE_MESSAGE =
 
 // medias
 export const ERROR_FILE_NOT_FOUND = '파일이 없습니다' as const;
+
+// 500 InternalServerErrorException
+export const ERROR_INTERNAL_SERVER_ERROR =
+	'서버에 오류가 발생하여 요청을 수행할 수 없습니다' as const;
