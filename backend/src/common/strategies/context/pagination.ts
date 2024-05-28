@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
@@ -11,6 +12,7 @@ export interface PaginationStrategy<T extends ObjectLiteral> {
 	): Promise<any>;
 }
 
+@Injectable()
 export class Pagination<T extends ObjectLiteral> {
 	private strategy!: PaginationStrategy<T>;
 
@@ -18,7 +20,7 @@ export class Pagination<T extends ObjectLiteral> {
 		this.strategy = strategy;
 	}
 
-	paginate(
+	async paginate(
 		dto: DefaultPaginationReqDto,
 		repository: Repository<T>,
 		overrideFindOptions: FindManyOptions<T> = {},

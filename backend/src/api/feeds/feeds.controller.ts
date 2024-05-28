@@ -52,6 +52,7 @@ import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-re
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
@@ -113,8 +114,8 @@ export class FeedsController {
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
-	@UseInterceptors(PaginationInterceptor)
-	@IsPagination(PaginationEnum.CURSOR)
+	@UseInterceptors(PaginationInterceptor<FeedEntity>)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get()
 	async findAllFeed(
 		@Query('options')

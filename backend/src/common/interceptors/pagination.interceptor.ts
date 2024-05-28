@@ -6,16 +6,26 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
+import { ObjectLiteral } from 'typeorm';
 import { z } from 'zod';
 
 import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
 import { PAGINATION_KEY, PaginationEnum } from '@/constants/pagination.const';
 
 import { InternalServerErrorException } from '../exception/service.exception';
+import { BasicPaginationStrategy } from '../strategies/basic-pagination.strategy';
+import { Pagination } from '../strategies/context/pagination';
+import { CursorPaginationStrategy } from '../strategies/cusor-pagination.strategy';
 
 @Injectable()
-export class PaginationInterceptor implements NestInterceptor {
-	constructor(private readonly reflector: Reflector) {}
+export class PaginationInterceptor<T extends ObjectLiteral>
+	implements NestInterceptor
+{
+	constructor(
+		private readonly reflector: Reflector,
+		private readonly pagination: Pagination<T>,
+	) {}
+
 	intercept(context: ExecutionContext, next: CallHandler<any>) {
 		const paginationType: PaginationEnum = this.reflector.getAllAndOverride(
 			PAGINATION_KEY,
@@ -33,6 +43,20 @@ export class PaginationInterceptor implements NestInterceptor {
 			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
 		}
 
+		//const pagination = new Pagination();
+		this.setPaginationStrategy(this.pagination, paginationType);
+
 		return next.handle().pipe();
+	}
+
+	private setPaginationStrategy(
+		pagination: Pagination<T>,
+		paginationType: PaginationEnum,
+	) {
+		if (paginationType === PaginationEnum.BASIC) {
+			pagination.setStrategy(new BasicPaginationStrategy());
+		} else {
+			pagination.setStrategy(new CursorPaginationStrategy());
+		}
 	}
 }

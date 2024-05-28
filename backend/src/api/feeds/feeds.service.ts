@@ -5,6 +5,7 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
+import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FEED_NOT_FOUND,
@@ -13,6 +14,8 @@ import {
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
+import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
@@ -32,6 +35,7 @@ export class FeedsService {
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
+		private readonly pagination: Pagination<FeedEntity>,
 		private dataSource: DataSource,
 	) {}
 
@@ -83,6 +87,21 @@ export class FeedsService {
 			options,
 			groupId,
 		});
+
+		/** */
+		const newDto: DefaultPaginationReqDto = {
+			page: 1,
+			limit: 3,
+		};
+
+		const result = this.pagination.paginate(newDto, this.feedsRepository, {
+			select: {
+				id: true,
+			},
+		});
+
+		return result;
+		/** */
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {
