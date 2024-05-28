@@ -1,5 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+	CallHandler,
+	ExecutionContext,
+	Injectable,
+	NestInterceptor,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
 import { z } from 'zod';
 
 import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
@@ -8,9 +14,9 @@ import { PAGINATION_KEY, PaginationEnum } from '@/constants/pagination.const';
 import { InternalServerErrorException } from '../exception/service.exception';
 
 @Injectable()
-export class PaginationGuard implements CanActivate {
+export class PaginationInterceptor implements NestInterceptor {
 	constructor(private readonly reflector: Reflector) {}
-	canActivate(context: ExecutionContext) {
+	intercept(context: ExecutionContext, next: CallHandler<any>) {
 		const paginationType: PaginationEnum = this.reflector.getAllAndOverride(
 			PAGINATION_KEY,
 			[context.getHandler(), context.getClass],
@@ -27,6 +33,6 @@ export class PaginationGuard implements CanActivate {
 			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
 		}
 
-		return true;
+		return next.handle().pipe();
 	}
 }
