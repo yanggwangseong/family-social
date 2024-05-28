@@ -6,6 +6,7 @@ import {
 	FORBIDDEN,
 	UNAUTHORIZED,
 	UNPROCESSABLE_ENTITY,
+	INTERNAL_SERVER_ERROR,
 } from '@/models/dto/error/error-code.dto';
 
 // UNAUTHORIZED SERVICE EXCEPTION
@@ -38,6 +39,13 @@ export const EntityConflictException = (message?: string): ServiceException => {
 // UNPROCESSABLE SERVICE EXCEPTION
 export const UnProcessAbleException = (message?: string): ServiceException => {
 	return new ServiceException(UNPROCESSABLE_ENTITY, message);
+};
+
+// INTERNAL SERVER ERROR
+export const InternalServerErrorException = (
+	message?: string,
+): ServiceException => {
+	return new ServiceException(INTERNAL_SERVER_ERROR, message);
 };
 
 interface HttpExceptionResponse {
