@@ -1,4 +1,9 @@
-import { Repository, FindManyOptions, ObjectLiteral } from 'typeorm';
+import {
+	Repository,
+	FindManyOptions,
+	ObjectLiteral,
+	SelectQueryBuilder,
+} from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
 
@@ -18,6 +23,18 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 
 		return {
 			data,
+			count,
+		};
+	}
+
+	async paginateQueryBuilder(query: SelectQueryBuilder<T>) {
+		const [list, count] = await Promise.all([
+			query.getRawMany(),
+			query.getCount(),
+		]);
+
+		return {
+			list,
 			count,
 		};
 	}

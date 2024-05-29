@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
+import {
+	FindManyOptions,
+	ObjectLiteral,
+	Repository,
+	SelectQueryBuilder,
+} from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
 
@@ -8,6 +13,11 @@ export interface PaginationStrategy<T extends ObjectLiteral> {
 		dto: DefaultPaginationReqDto,
 		repository: Repository<T>,
 		overrideFindOptions: FindManyOptions<T>,
+		path?: string,
+	): Promise<any>;
+
+	paginateQueryBuilder(
+		query: SelectQueryBuilder<T>,
 		path?: string,
 	): Promise<any>;
 }
@@ -27,5 +37,9 @@ export class Pagination<T extends ObjectLiteral> {
 		path?: string,
 	) {
 		return this.strategy.paginate(dto, repository, overrideFindOptions, path);
+	}
+
+	async paginateQueryBuilder(query: SelectQueryBuilder<T>, path?: string) {
+		return await this.strategy.paginateQueryBuilder(query, path);
 	}
 }

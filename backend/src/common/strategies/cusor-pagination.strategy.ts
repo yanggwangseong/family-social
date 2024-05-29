@@ -1,4 +1,9 @@
-import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
+import {
+	FindManyOptions,
+	ObjectLiteral,
+	Repository,
+	SelectQueryBuilder,
+} from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
 
@@ -11,6 +16,7 @@ export class CursorPaginationStrategy<T extends ObjectLiteral>
 		dto: DefaultPaginationReqDto,
 		repository: Repository<T>,
 		overrideFindOptions: FindManyOptions<T> = {},
+		path?: string,
 	) {
 		const [data, count] = await repository.findAndCount({
 			...overrideFindOptions,
@@ -18,6 +24,18 @@ export class CursorPaginationStrategy<T extends ObjectLiteral>
 
 		return {
 			data,
+			count,
+		};
+	}
+
+	async paginateQueryBuilder(query: SelectQueryBuilder<T>, path?: string) {
+		const [list, count] = await Promise.all([
+			query.getRawMany(),
+			query.getCount(),
+		]);
+
+		return {
+			list,
 			count,
 		};
 	}
