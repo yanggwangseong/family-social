@@ -17,6 +17,7 @@ export interface PaginationStrategy<T extends ObjectLiteral> {
 	): Promise<any>;
 
 	paginateQueryBuilder(
+		dto: DefaultPaginationReqDto,
 		query: SelectQueryBuilder<T>,
 		path?: string,
 	): Promise<any>;
@@ -39,7 +40,11 @@ export class Pagination<T extends ObjectLiteral> {
 		return this.strategy.paginate(dto, repository, overrideFindOptions, path);
 	}
 
-	async paginateQueryBuilder(query: SelectQueryBuilder<T>, path?: string) {
-		return await this.strategy.paginateQueryBuilder(query, path);
+	async paginateQueryBuilder(
+		dto: DefaultPaginationReqDto,
+		query: SelectQueryBuilder<T>,
+		path?: string,
+	) {
+		return await this.strategy.paginateQueryBuilder(dto, query, path);
 	}
 }

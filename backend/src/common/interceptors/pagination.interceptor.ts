@@ -46,7 +46,25 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 		//const pagination = new Pagination();
 		this.setPaginationStrategy(this.pagination, paginationType);
 
-		return next.handle().pipe(map((item) => console.log(item)));
+		return next.handle().pipe(
+			map((item) => {
+				if (paginationType === PaginationEnum.BASIC) {
+					// basic
+					return {
+						list: item.list,
+						page: item.page,
+						totalPage: Math.ceil(item.count / item.take),
+					};
+				} else {
+					// cursor
+					return {
+						list: item.list,
+						page: item.page,
+						totalPage: Math.ceil(item.count / item.take),
+					};
+				}
+			}),
+		);
 	}
 
 	private setPaginationStrategy(
