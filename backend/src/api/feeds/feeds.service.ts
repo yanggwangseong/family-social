@@ -80,7 +80,8 @@ export class FeedsService {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			'mention_on_feed',
 		);
-		const { list, count } = await this.feedsRepository.findAllFeed({
+
+		const query = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
 			memberId,
@@ -88,20 +89,13 @@ export class FeedsService {
 			groupId,
 		});
 
-		/** */
-		const newDto: DefaultPaginationReqDto = {
-			page: 1,
-			limit: 3,
-		};
-
-		const result = this.pagination.paginate(newDto, this.feedsRepository, {
-			select: {
-				id: true,
-			},
-		});
-
-		return result;
-		/** */
+		const {
+			list,
+			count,
+		}: {
+			list: Omit<FeedResDto, 'medias'>[];
+			count: number;
+		} = await this.pagination.paginateQueryBuilder(query);
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {

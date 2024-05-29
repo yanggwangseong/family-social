@@ -5,7 +5,7 @@ import {
 	NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ObjectLiteral } from 'typeorm';
 import { z } from 'zod';
 
@@ -46,7 +46,7 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 		//const pagination = new Pagination();
 		this.setPaginationStrategy(this.pagination, paginationType);
 
-		return next.handle().pipe();
+		return next.handle().pipe(map((item) => console.log(item)));
 	}
 
 	private setPaginationStrategy(
