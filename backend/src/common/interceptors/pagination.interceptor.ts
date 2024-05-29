@@ -5,7 +5,7 @@ import {
 	NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { ObjectLiteral } from 'typeorm';
 import { z } from 'zod';
 
@@ -48,21 +48,15 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 
 		return next.handle().pipe(
 			map((item) => {
-				if (paginationType === PaginationEnum.BASIC) {
-					// basic
-					return {
-						list: item.list,
-						page: item.page,
-						totalPage: Math.ceil(item.count / item.take),
-					};
-				} else {
-					// cursor
-					return {
-						list: item.list,
-						page: item.page,
-						totalPage: Math.ceil(item.count / item.take),
-					};
-				}
+				return paginationType === PaginationEnum.BASIC
+					? {
+							list: item.list,
+							page: item.page,
+							totalPage: Math.ceil(item.count / item.take),
+					  }
+					: {
+							data: true,
+					  };
 			}),
 		);
 	}
@@ -71,10 +65,8 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 		pagination: Pagination<T>,
 		paginationType: PaginationEnum,
 	) {
-		if (paginationType === PaginationEnum.BASIC) {
-			pagination.setStrategy(new BasicPaginationStrategy());
-		} else {
-			pagination.setStrategy(new CursorPaginationStrategy());
-		}
+		paginationType === PaginationEnum.BASIC
+			? pagination.setStrategy(new BasicPaginationStrategy())
+			: pagination.setStrategy(new CursorPaginationStrategy());
 	}
 }

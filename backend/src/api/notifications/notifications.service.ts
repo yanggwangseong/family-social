@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere, QueryRunner } from 'typeorm';
 
+import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
 import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
+import { NotificationResDto } from '@/models/dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
 import { NotificationsRepository } from '@/models/repositories/notifications.repository';
-import { AlarmType, Union, isReadOptions } from '@/types';
+import { AlarmType, Union } from '@/types';
 import { ICreateNotificationArgs } from '@/types/args/notification';
+import { BasicPaginationResponse } from '@/types/pagination';
 import { getOffset } from '@/utils/getOffset';
 
 import { ServerSentEventsService } from '../server-sent-events/server-sent-events.service';
@@ -19,28 +22,22 @@ export class NotificationsService {
 		private readonly serverSentEventsService: ServerSentEventsService,
 	) {}
 
-	async getNotificationByMemberId({
-		memberId,
-		readOptions,
-		page,
-		limit,
-	}: {
-		memberId: string;
-		readOptions: Union<typeof isReadOptions>;
-		page: number;
-		limit: number;
-	}): Promise<NotificationPaginateResDto> {
+	async getNotificationByMemberId(
+		memberId: string,
+		paginationDto: NotificationPaginationReqDto,
+	): Promise<BasicPaginationResponse<NotificationResDto>> {
+		const { page, limit, is_read_options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 
 		const whereOverride: FindOptionsWhere<NotificationEntity> = {
 			recipientId: memberId,
 		};
 
-		if (readOptions === 'READ') {
+		if (is_read_options === 'READ') {
 			whereOverride.isRead = true;
 		}
 
-		if (readOptions === 'NOTREAD') {
+		if (is_read_options === 'NOTREAD') {
 			whereOverride.isRead = false;
 		}
 
@@ -53,7 +50,8 @@ export class NotificationsService {
 		return {
 			list,
 			page,
-			totalPage: Math.ceil(count / take),
+			count,
+			take,
 		};
 	}
 
