@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere, QueryRunner } from 'typeorm';
 
+import { Pagination } from '@/common/strategies/context/pagination';
 import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
-import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 import { NotificationResDto } from '@/models/dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
@@ -20,6 +20,7 @@ export class NotificationsService {
 		private readonly notificationsRepository: NotificationsRepository,
 		private readonly notificationTypeRepository: NotificationTypeRepository,
 		private readonly serverSentEventsService: ServerSentEventsService,
+		private readonly pagination: Pagination<NotificationEntity>,
 	) {}
 
 	async getNotificationByMemberId(
@@ -41,11 +42,43 @@ export class NotificationsService {
 			whereOverride.isRead = false;
 		}
 
-		const [list, count] = await this.notificationsRepository.getNotifications({
-			whereOverride,
-			take,
-			skip,
-		});
+		const { list, count }: { list: NotificationResDto[]; count: number } =
+			await this.pagination.paginate(
+				paginationDto,
+				this.notificationsRepository,
+				{
+					select: {
+						id: true,
+						notificationTypeId: true,
+						recipientId: true,
+						senderId: true,
+						notificationTitle: true,
+						notificationDescription: true,
+						notificationFeedId: true,
+						isRead: true,
+						createdAt: true,
+						sender: {
+							id: true,
+							username: true,
+							profileImage: true,
+						},
+					},
+					where: {
+						...whereOverride,
+					},
+					relations: {
+						sender: true,
+					},
+					skip,
+					take,
+				},
+			);
+
+		// const [list, count] = await this.notificationsRepository.getNotifications({
+		// 	whereOverride,
+		// 	take,
+		// 	skip,
+		// });
 
 		return {
 			list,

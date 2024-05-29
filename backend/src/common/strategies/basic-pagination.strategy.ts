@@ -3,6 +3,7 @@ import {
 	FindManyOptions,
 	ObjectLiteral,
 	SelectQueryBuilder,
+	FindOptionsWhere,
 } from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
@@ -17,12 +18,15 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 		repository: Repository<T>,
 		overrideFindOptions: FindManyOptions<T> = {},
 	) {
-		const [data, count] = await repository.findAndCount({
+		const findOptions = this.composeFindOptions<T>(dto);
+
+		const [list, count] = await repository.findAndCount({
+			...findOptions,
 			...overrideFindOptions,
 		});
 
 		return {
-			data,
+			list,
 			count,
 		};
 	}
@@ -39,6 +43,16 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 		return {
 			list,
 			count,
+		};
+	}
+
+	private composeFindOptions<T>(
+		dto: DefaultPaginationReqDto,
+	): FindManyOptions<T> {
+		const where: FindOptionsWhere<T> = {};
+
+		return {
+			where,
 		};
 	}
 }

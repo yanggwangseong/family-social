@@ -31,6 +31,7 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 			PAGINATION_KEY,
 			[context.getHandler(), context.getClass],
 		);
+
 		const schema = z.nativeEnum(PaginationEnum);
 
 		const validationResult = schema.safeParse(paginationType);

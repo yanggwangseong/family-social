@@ -16,7 +16,6 @@ import { PaginationInterceptor } from '@/common/interceptors/pagination.intercep
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { PaginationEnum } from '@/constants/pagination.const';
 import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
-import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 
 import { NotificationsService } from './notifications.service';
