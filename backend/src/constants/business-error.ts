@@ -94,3 +94,6 @@ export const ERROR_INTERNAL_SERVER_ERROR =
 // pagination error
 export const ERROR_PARSER_FILTER_WHERE =
 	`where 필터는 '__'로 split 했을때 길이가 2 또는 3이어야합니다` as const;
+
+export const ERROR_PARSER_FILTER_ORDER =
+	`order 필터는 '__'로 split 했을때 길이가 2여야 합니다` as const;
