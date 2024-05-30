@@ -12,8 +12,8 @@ export const GetNotificationListSwagger = () => {
 		ApiQuery({
 			name: 'is_read_options',
 			enum: isReadOptions,
-			required: false,
-			description: 'Read status options',
+			required: true,
+			description: '알람 읽음 상태',
 		}),
 		ApiOperation({
 			summary: '자신에게 온 알람을 가져오기',

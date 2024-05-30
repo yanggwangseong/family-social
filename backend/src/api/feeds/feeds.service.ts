@@ -11,9 +11,9 @@ import {
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
+import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
-import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
@@ -71,12 +71,11 @@ export class FeedsService {
 	}
 
 	async findAllFeed(
-		page: number,
 		memberId: string,
-		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
-		groupId?: string,
+		paginationDto: FeedPaginationReqDto,
 	): Promise<BasicPaginationResponse<FeedResDto>> {
-		const { take, skip } = getOffset({ page });
+		const { page, limit, groupId, options } = paginationDto;
+		const { take, skip } = getOffset({ page, limit });
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			'mention_on_feed',
 		);
@@ -89,18 +88,13 @@ export class FeedsService {
 			groupId,
 		});
 
-		const newDto: DefaultPaginationReqDto = {
-			page: 1,
-			limit: 3,
-		};
-
 		const {
 			list,
 			count,
 		}: {
 			list: Omit<FeedResDto, 'medias'>[];
 			count: number;
-		} = await this.pagination.paginateQueryBuilder(newDto, query);
+		} = await this.pagination.paginateQueryBuilder(query);
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {
