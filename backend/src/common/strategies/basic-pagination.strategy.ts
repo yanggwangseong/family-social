@@ -20,16 +20,25 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 	) {
 		/**
 		 *  composeFindOptions에서 보통 where절과 order by절을 생성 하여 findOptions에 담긴다.
-		 * 	그러나 만약에 overrideFindOptions에서도 where절을 추가 했다면
-		 *  아래의 로직처럼 2개의 where절을 하나로 합쳐주는 작업
+		 * 	order절도 만약 overrideFindOptions에서 추가 했다면 하나로 합쳐주는 작업
 		 */
 		const findOptions = this.composeFindOptions<T>(dto);
 
-		const { where, ...rest } = overrideFindOptions;
+		const { where, order, ...rest } = overrideFindOptions;
 
+		/**
+		 *  만약에 overrideFindOptions에서도 where절을 추가 했다면
+		 *  아래의 로직처럼 2개의 where절을 하나로 합쳐주는 작업
+		 */
 		findOptions.where = {
 			...findOptions.where,
 			...where,
+		};
+
+		// order절도 만약 overrideFindOptions에서 추가 했다면 하나로 합쳐주는 작업
+		findOptions.order = {
+			...findOptions.order!,
+			...order,
 		};
 
 		const [list, count] = await repository.findAndCount({
