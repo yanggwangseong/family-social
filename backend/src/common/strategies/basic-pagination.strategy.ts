@@ -3,10 +3,10 @@ import {
 	FindManyOptions,
 	ObjectLiteral,
 	SelectQueryBuilder,
-	FindOptionsWhere,
 } from 'typeorm';
 
 import { DefaultPaginationReqDto } from '@/models/dto/pagination/req/default-pagination-req.dto';
+import { getComposeFindOptions } from '@/utils/get-compose-find-options';
 
 import { PaginationStrategy } from './context/pagination';
 
@@ -18,11 +18,23 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 		repository: Repository<T>,
 		overrideFindOptions: FindManyOptions<T> = {},
 	) {
+		/**
+		 *  composeFindOptions에서 보통 where절과 order by절을 생성 하여 findOptions에 담긴다.
+		 * 	그러나 만약에 overrideFindOptions에서도 where절을 추가 했다면
+		 *  아래의 로직처럼 2개의 where절을 하나로 합쳐주는 작업
+		 */
 		const findOptions = this.composeFindOptions<T>(dto);
+
+		const { where, ...rest } = overrideFindOptions;
+
+		findOptions.where = {
+			...findOptions.where,
+			...where,
+		};
 
 		const [list, count] = await repository.findAndCount({
 			...findOptions,
-			...overrideFindOptions,
+			...rest,
 		});
 
 		return {
@@ -46,10 +58,6 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 	private composeFindOptions<T>(
 		dto: DefaultPaginationReqDto,
 	): FindManyOptions<T> {
-		const where: FindOptionsWhere<T> = {};
-
-		return {
-			where,
-		};
+		return getComposeFindOptions(dto);
 	}
 }
