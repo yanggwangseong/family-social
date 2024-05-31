@@ -18,3 +18,12 @@ export interface BasicPaginationResponse<T> {
 	count: number;
 	take: number;
 }
+
+export interface CursorPaginationResponse<T> {
+	list: T[];
+	cursor: {
+		after: string;
+	};
+	count: number;
+	next: string;
+}
