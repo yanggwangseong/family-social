@@ -1,4 +1,4 @@
-import { IPaginationArgs } from '@/types';
+import { IPaginationArgs } from '@/types/pagination';
 
 export const NUM_OF_ENTITIES: number = 3 as const;
 

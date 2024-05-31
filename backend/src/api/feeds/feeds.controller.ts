@@ -1,11 +1,9 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Delete,
 	Get,
 	Param,
-	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
 	Put,
@@ -16,6 +14,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
+import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
@@ -36,19 +35,22 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
-import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import {
 	COMMENT_ON_MY_POST_TITLE,
 	LIKE_ON_MY_POST_TITLE,
 } from '@/constants/notification.const';
+import { PaginationEnum } from '@/constants/pagination.const';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
+import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
@@ -110,27 +112,30 @@ export class FeedsController {
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
+	@UseInterceptors(PaginationInterceptor<FeedEntity>)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get()
 	async findAllFeed(
-		@Query('options')
-		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
-		@Query(
-			'page',
-			new DefaultValuePipe(1),
-			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
-		)
-		page: number,
 		@CurrentUser('sub') sub: string,
-		@Query(
-			'groupId',
-			new ParseUUIDPipe({
-				exceptionFactory: parseUUIDPipeMessage,
-				optional: true,
-			}),
-		)
-		groupId?: string,
+		// @Query('options')
+		// options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
+		// @Query(
+		// 	'page',
+		// 	new DefaultValuePipe(1),
+		// 	new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
+		// )
+		// page: number,
+		// @Query(
+		// 	'groupId',
+		// 	new ParseUUIDPipe({
+		// 		exceptionFactory: parseUUIDPipeMessage,
+		// 		optional: true,
+		// 	}),
+		// )
+		// groupId?: string,
+		@Query() paginationDto: FeedPaginationReqDto,
 	) {
-		return await this.feedsService.findAllFeed(page, sub, options, groupId);
+		return await this.feedsService.findAllFeed(sub, paginationDto);
 	}
 
 	/**
