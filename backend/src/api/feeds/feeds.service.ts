@@ -94,7 +94,7 @@ export class FeedsService {
 		}: {
 			list: Omit<FeedResDto, 'medias'>[];
 			count: number;
-		} = await this.pagination.paginateQueryBuilder(query);
+		} = await this.pagination.paginateQueryBuilder(paginationDto, query);
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {

@@ -52,7 +52,10 @@ export class BasicPaginationStrategy<T extends ObjectLiteral>
 		};
 	}
 
-	async paginateQueryBuilder(query: SelectQueryBuilder<T>) {
+	async paginateQueryBuilder(
+		dto: DefaultPaginationReqDto,
+		query: SelectQueryBuilder<T>,
+	) {
 		const [list, count] = await Promise.all([
 			query.getRawMany(),
 			query.getCount(),
