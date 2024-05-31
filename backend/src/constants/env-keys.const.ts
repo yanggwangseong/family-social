@@ -40,3 +40,7 @@ export const ENV_THROTTLER_LIMIT = 'THROTTLER_LIMIT' as const;
 // application
 export const ENV_APPLICATION_PORT = 'APPLICATION_PORT' as const;
 export const ENV_GLOBAL_PREFIX = 'GLOBAL_PREFIX' as const;
+
+// http protocol host
+export const ENV_PROTOCOL_KEY = 'SERVER_PROTOCOL' as const;
+export const ENV_HOST_KEY = 'SERVER_HOST' as const;

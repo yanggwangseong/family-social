@@ -4,6 +4,7 @@ import {
 	Injectable,
 	NestInterceptor,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import { map } from 'rxjs';
 import { ObjectLiteral } from 'typeorm';
@@ -24,6 +25,7 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 	constructor(
 		private readonly reflector: Reflector,
 		private readonly pagination: Pagination<T>,
+		private readonly configService: ConfigService,
 	) {}
 
 	intercept(context: ExecutionContext, next: CallHandler<any>) {
@@ -56,7 +58,12 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 							totalPage: Math.ceil(item.count / item.take),
 					  }
 					: {
-							data: true,
+							list: item.list,
+							cursor: {
+								after: item.lastItem?.id,
+							},
+							count: item.list.length,
+							next: item.nextUrl?.toString(),
 					  };
 			}),
 		);
@@ -68,6 +75,8 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 	) {
 		paginationType === PaginationEnum.BASIC
 			? pagination.setStrategy(new BasicPaginationStrategy())
-			: pagination.setStrategy(new CursorPaginationStrategy());
+			: pagination.setStrategy(
+					new CursorPaginationStrategy(this.configService),
+			  );
 	}
 }
