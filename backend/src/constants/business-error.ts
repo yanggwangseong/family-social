@@ -86,3 +86,14 @@ export const ERROR_IS_READ_OPTIONS_PIPE_MESSAGE =
 
 // medias
 export const ERROR_FILE_NOT_FOUND = '파일이 없습니다' as const;
+
+// 500 InternalServerErrorException
+export const ERROR_INTERNAL_SERVER_ERROR =
+	'서버에 오류가 발생하여 요청을 수행할 수 없습니다' as const;
+
+// pagination error
+export const ERROR_PARSER_FILTER_WHERE =
+	`where 필터는 '__'로 split 했을때 길이가 2 또는 3이어야합니다` as const;
+
+export const ERROR_PARSER_FILTER_ORDER =
+	`order 필터는 '__'로 split 했을때 길이가 2여야 합니다` as const;

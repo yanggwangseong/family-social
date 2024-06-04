@@ -63,14 +63,16 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 							전체 선택
 						</div>
 					</motion.div>
-					{data.map((item, index) => (
-						<SelectProfile
-							key={index}
-							belongToMember={item}
-							selected={isSharedFamIds.includes(item.id)}
-							handleSelectedMember={handleSelectedMember}
-						/>
-					))}
+					<div className={styles.select_profile_container}>
+						{data.map((item, index) => (
+							<SelectProfile
+								key={index}
+								belongToMember={item}
+								selected={isSharedFamIds.includes(item.id)}
+								handleSelectedMember={handleSelectedMember}
+							/>
+						))}
+					</div>
 				</div>
 			)}
 		</>

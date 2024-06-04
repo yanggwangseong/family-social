@@ -40,3 +40,9 @@ export const UNPROCESSABLE_ENTITY = new ErrorCodeDTO(
 	HttpStatus.UNPROCESSABLE_ENTITY,
 	'Unprocessable Entity',
 );
+
+// 500
+export const INTERNAL_SERVER_ERROR = new ErrorCodeDTO(
+	HttpStatus.INTERNAL_SERVER_ERROR,
+	'Internal Server Error',
+);

@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere, QueryRunner } from 'typeorm';
 
-import { NotificationPaginateResDto } from '@/models/dto/notification/res/notification-paginate-res.dto';
+import { Pagination } from '@/common/strategies/context/pagination';
+import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
+import { NotificationResDto } from '@/models/dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
 import { NotificationsRepository } from '@/models/repositories/notifications.repository';
-import { AlarmType, Union, isReadOptions } from '@/types';
+import { AlarmType, Union } from '@/types';
 import { ICreateNotificationArgs } from '@/types/args/notification';
+import { BasicPaginationResponse } from '@/types/pagination';
 import { getOffset } from '@/utils/getOffset';
 
 import { ServerSentEventsService } from '../server-sent-events/server-sent-events.service';
@@ -17,43 +20,71 @@ export class NotificationsService {
 		private readonly notificationsRepository: NotificationsRepository,
 		private readonly notificationTypeRepository: NotificationTypeRepository,
 		private readonly serverSentEventsService: ServerSentEventsService,
+		private readonly pagination: Pagination<NotificationEntity>,
 	) {}
 
-	async getNotificationByMemberId({
-		memberId,
-		readOptions,
-		page,
-		limit,
-	}: {
-		memberId: string;
-		readOptions: Union<typeof isReadOptions>;
-		page: number;
-		limit: number;
-	}): Promise<NotificationPaginateResDto> {
+	async getNotificationByMemberId(
+		memberId: string,
+		paginationDto: NotificationPaginationReqDto,
+	): Promise<BasicPaginationResponse<NotificationResDto>> {
+		const { page, limit, is_read_options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 
 		const whereOverride: FindOptionsWhere<NotificationEntity> = {
 			recipientId: memberId,
 		};
 
-		if (readOptions === 'READ') {
+		if (is_read_options === 'READ') {
 			whereOverride.isRead = true;
 		}
 
-		if (readOptions === 'NOTREAD') {
+		if (is_read_options === 'NOTREAD') {
 			whereOverride.isRead = false;
 		}
 
-		const [list, count] = await this.notificationsRepository.getNotifications({
-			whereOverride,
-			take,
-			skip,
-		});
+		const { list, count }: { list: NotificationResDto[]; count: number } =
+			await this.pagination.paginate(
+				paginationDto,
+				this.notificationsRepository,
+				{
+					select: {
+						id: true,
+						notificationTypeId: true,
+						recipientId: true,
+						senderId: true,
+						notificationTitle: true,
+						notificationDescription: true,
+						notificationFeedId: true,
+						isRead: true,
+						createdAt: true,
+						sender: {
+							id: true,
+							username: true,
+							profileImage: true,
+						},
+					},
+					where: {
+						...whereOverride,
+					},
+					relations: {
+						sender: true,
+					},
+					skip,
+					take,
+				},
+			);
+
+		// const [list, count] = await this.notificationsRepository.getNotifications({
+		// 	whereOverride,
+		// 	take,
+		// 	skip,
+		// });
 
 		return {
 			list,
 			page,
-			totalPage: Math.ceil(count / take),
+			count,
+			take,
 		};
 	}
 

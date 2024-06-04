@@ -3,25 +3,29 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { QueryRunner } from 'typeorm';
 
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
+import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 
 @Injectable()
 export class MailsService {
 	constructor(private readonly mailerService: MailerService) {}
 
-	async sendInvitedEmailOfGroup({ invitedEmails }: GroupInvitedEmailsReqDto) {
+	async sendInvitedEmailOfGroup(
+		{ invitedEmails }: GroupInvitedEmailsReqDto,
+		group: GroupProfileResDto,
+	) {
 		const inviteLink = 'http://localhost:3000/g/:groupId/:famId';
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
 				return await this.mailerService.sendMail({
 					to: email,
-					subject: '그룹 가입 초대를 받았습니다',
-					text: '그룹 가입 초대를 받았습니다',
+					subject: `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`,
+					text: `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`,
 					html: `<!DOCTYPE html>
 				<html lang="ko">
 				<head>
 					<meta charset="UTF-8">
 					<meta name="viewport" content="width=device-width, initial-scale=1.0">
-					<title>그룹 가입 초대를 받았습니다</title>
+					<title>${group.groupName} 그룹에 그룹 가입 초대를 받았습니다</title>
 				</head>
 				<body
 					style='font-family: Arial, sans-serif;

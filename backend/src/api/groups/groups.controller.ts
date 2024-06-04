@@ -16,6 +16,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
+import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -38,6 +39,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { AttachGroupGuard } from '@/common/guards/attach-group.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -53,6 +55,7 @@ import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invita
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
+import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
 
@@ -266,11 +269,14 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@PostInvitedEmailsOfGroupSwagger()
+	@UseGuards(AttachGroupGuard)
 	@Post('/:groupId/invited-emails')
-	async postInvitedEmailsOfGroup(@Body() dto: GroupInvitedEmailsReqDto) {
+	async postInvitedEmailsOfGroup(
+		@Body() dto: GroupInvitedEmailsReqDto,
+		@ExTractGroupDecorator() group: GroupProfileResDto,
+	) {
 		// [TODO] 그룹 존재하는지 middleware에서 확인하고 통과하면 req 객체에 담아주고 CurrentUser데코레이터처럼 데코레이터를 통해서 그룹 정보 가져오기
-
-		await this.mailsService.sendInvitedEmailOfGroup(dto);
+		await this.mailsService.sendInvitedEmailOfGroup(dto, group);
 	}
 
 	/**

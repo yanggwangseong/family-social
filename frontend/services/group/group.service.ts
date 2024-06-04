@@ -1,7 +1,9 @@
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 import {
+	CreateGroupRequest,
 	GroupResponse,
 	MemberBelongToGroupsResponse,
+	UpdateGroupRequest,
 } from '@/shared/interfaces/group.interface';
 import { MembersBelongToGroupResponse } from '@/shared/interfaces/member.interface';
 import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
@@ -38,7 +40,7 @@ export const GroupService = {
 		const { data } = await axiosAPI.post<GroupResponse>('/groups', {
 			groupName,
 			groupDescription,
-		});
+		} satisfies CreateGroupRequest);
 
 		return data;
 	},
@@ -51,7 +53,7 @@ export const GroupService = {
 		const { data } = await axiosAPI.put<GroupResponse>(`/groups/${groupId}`, {
 			groupName,
 			groupDescription,
-		});
+		} satisfies UpdateGroupRequest);
 
 		return data;
 	},

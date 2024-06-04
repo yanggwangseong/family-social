@@ -83,7 +83,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED';
 
 		groupId?: string;
-	}): Promise<{ list: Omit<FeedResDto, 'medias'>[]; count: number }> {
+	}) {
 		const query = this.repository
 			.createQueryBuilder('a')
 			.select([
@@ -125,15 +125,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			query.andWhere('a.groupId = :groupId', { groupId });
 		}
 
-		const [list, count] = await Promise.all([
-			query.getRawMany(),
-			query.getCount(),
-		]);
-
-		return {
-			list,
-			count,
-		};
+		return query;
 	}
 
 	async findOrFailFeedById(

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Pagination } from '@/common/strategies/context/pagination';
 import { NotificationTypeEntity } from '@/models/entities/notification-type.entity';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 import { NotificationTypeRepository } from '@/models/repositories/notification-type.repository';
@@ -20,6 +21,7 @@ import { ServerSentEventsModule } from '../server-sent-events/server-sent-events
 		NotificationsService,
 		NotificationsRepository,
 		NotificationTypeRepository,
+		Pagination,
 	],
 	exports: [NotificationsService],
 })

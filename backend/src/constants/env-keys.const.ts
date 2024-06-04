@@ -27,6 +27,7 @@ export const ENV_ACCESS_TOKEN_COOKIE_NAME = 'ACCESS_TOKEN_COOKIE_NAME' as const;
 export const ENV_REFRESH_TOKEN_COOKIE_NAME =
 	'REFRESH_TOKEN_COOKIE_NAME' as const;
 export const ENV_SECRET_COOKIE_KEY = 'SECRET_COOKIE_KEY' as const;
+export const ENV_COOKIE_SECURE = 'COOKIE_SECURE' as const;
 
 //tour-api
 export const ENV_TOUR_API_SERVICE_KEY = 'TOUR_API_SERVICE_KEY' as const;
@@ -39,3 +40,7 @@ export const ENV_THROTTLER_LIMIT = 'THROTTLER_LIMIT' as const;
 // application
 export const ENV_APPLICATION_PORT = 'APPLICATION_PORT' as const;
 export const ENV_GLOBAL_PREFIX = 'GLOBAL_PREFIX' as const;
+
+// http protocol host
+export const ENV_PROTOCOL_KEY = 'SERVER_PROTOCOL' as const;
+export const ENV_HOST_KEY = 'SERVER_HOST' as const;

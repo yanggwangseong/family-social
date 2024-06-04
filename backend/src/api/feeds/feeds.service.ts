@@ -5,17 +5,20 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 } from '@/common/exception/service.exception';
+import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
+import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
-import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
 import { ICreateFeedArgs, IUpdateFeedArgs } from '@/types/args/feed';
+import { BasicPaginationResponse } from '@/types/pagination';
 import { extractFilePathFromUrl } from '@/utils/extract-file-path';
 import { getOffset } from '@/utils/getOffset';
 import { DeleteS3Media } from '@/utils/upload-media';
@@ -32,6 +35,7 @@ export class FeedsService {
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
+		private readonly pagination: Pagination<FeedEntity>,
 		private dataSource: DataSource,
 	) {}
 
@@ -67,22 +71,30 @@ export class FeedsService {
 	}
 
 	async findAllFeed(
-		page: number,
 		memberId: string,
-		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED',
-		groupId?: string,
-	): Promise<FeedGetAllResDto> {
-		const { take, skip } = getOffset({ page });
+		paginationDto: FeedPaginationReqDto,
+	): Promise<BasicPaginationResponse<FeedResDto>> {
+		const { page, limit, groupId, options } = paginationDto;
+		const { take, skip } = getOffset({ page, limit });
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			'mention_on_feed',
 		);
-		const { list, count } = await this.feedsRepository.findAllFeed({
+
+		const query = await this.feedsRepository.findAllFeed({
 			take,
 			skip,
 			memberId,
 			options,
 			groupId,
 		});
+
+		const {
+			list,
+			count,
+		}: {
+			list: Omit<FeedResDto, 'medias'>[];
+			count: number;
+		} = await this.pagination.paginateQueryBuilder(paginationDto, query);
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {
@@ -107,8 +119,9 @@ export class FeedsService {
 
 		return {
 			list: mappedList,
-			page: page,
-			totalPage: Math.ceil(count / take),
+			page,
+			count,
+			take,
 		};
 	}
 

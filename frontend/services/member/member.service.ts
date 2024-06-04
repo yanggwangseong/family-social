@@ -4,6 +4,7 @@ import {
 	MembersBelongToGroupResponse,
 	MembersResponse,
 	SearchMemberResponse,
+	UpdateProfileRequestBodyData,
 } from '@/shared/interfaces/member.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -18,7 +19,7 @@ export const MemberService = {
 			username,
 			phoneNumber,
 			profileImage,
-		});
+		} satisfies UpdateProfileRequestBodyData);
 
 		return data;
 	},
