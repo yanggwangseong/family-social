@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-	DeepPartial,
-	FindOptionsWhere,
-	QueryRunner,
-	Repository,
-} from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { NotificationResDto } from '../dto/notification/res/notification.res.dto';
 import { NotificationEntity } from '../entities/notification.entity';
@@ -27,12 +24,12 @@ export class NotificationsRepository extends Repository<NotificationEntity> {
 	}
 
 	async createNotification(
-		overrideInsertFeilds: DeepPartial<NotificationEntity>,
+		overrideInsertFeilds: OverrideInsertFeild<NotificationEntity>,
 		qr?: QueryRunner,
 	) {
 		const NotificationRepository = this.getNotificationRepository(qr);
 
-		const notification: DeepPartial<NotificationEntity> = {
+		const notification: OverrideInsertFeild<NotificationEntity> = {
 			id: uuidv4(),
 			...overrideInsertFeilds,
 		};
