@@ -37,7 +37,12 @@ export class Pagination<T extends ObjectLiteral> {
 		overrideFindOptions: FindManyOptions<T> = {},
 		path?: string,
 	) {
-		return this.strategy.paginate(dto, repository, overrideFindOptions, path);
+		return await this.strategy.paginate(
+			dto,
+			repository,
+			overrideFindOptions,
+			path,
+		);
 	}
 
 	async paginateQueryBuilder(

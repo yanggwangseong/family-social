@@ -3,6 +3,7 @@ import {
 	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
 
@@ -12,8 +13,8 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
-import { FeedGetAllResDto } from '@/models/dto/feed/res/feed-get-all-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 
 export const GetFeedDetailSwagger = () => {
 	return applyDecorators(
@@ -35,9 +36,9 @@ export const GetFeedsSwagger = () => {
 		ApiOperation({
 			summary: '피드 가져오기',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '피드 조회 성공',
-			type: FeedGetAllResDto,
+			type: () => withBasicPaginationResponse(FeedResDto),
 		}),
 	);
 };

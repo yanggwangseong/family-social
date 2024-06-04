@@ -21,9 +21,6 @@ export interface BasicPaginationResponse<T> {
 
 export interface CursorPaginationResponse<T> {
 	list: T[];
-	cursor: {
-		after: string;
-	};
-	count: number;
-	next: string;
+	lastItem: T | null;
+	nextUrl: URL | null;
 }

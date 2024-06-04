@@ -36,7 +36,7 @@ export class NotificationsController {
 	 * @param sub   인증된 사용자의 아이디
 	 * @param is_read_status 'ALL', 'READ', 'NOTREAD'
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns {Promise<NotificationPaginateResDto>} 자신에게 온 알람 리스트
+	 * @returns 자신에게 온 알람 리스트
 	 */
 	@GetNotificationListSwagger()
 	@UseInterceptors(PaginationInterceptor<NotificationEntity>)
