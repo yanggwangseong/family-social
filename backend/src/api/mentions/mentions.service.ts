@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { FindOptionsWhere, QueryRunner } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MentionCreateReqDto } from '@/models/dto/mention/req/mention-create-req.dto';
@@ -9,6 +8,7 @@ import { MentionTypeRepository } from '@/models/repositories/mention-type.reposi
 import { MentionsRepository } from '@/models/repositories/mentions.repository';
 import { MentionType, Union } from '@/types';
 import { ICreateMentionArgs } from '@/types/args/mention';
+import { OverrideInsertFeild } from '@/types/repository';
 
 @Injectable()
 export class MentionsService {
@@ -88,7 +88,7 @@ export class MentionsService {
 			mentionCommentId?: string;
 		},
 	) {
-		return mentions.map((data): QueryDeepPartialEntity<MentionEntity> => {
+		return mentions.map((data): OverrideInsertFeild<MentionEntity> => {
 			return {
 				id: uuidv4(),
 				mentionTypeId,

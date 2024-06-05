@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+
+import { OverrideInsertArrayFeild } from '@/types/repository';
 
 import { MentionResDto } from '../dto/mention/res/mention-res.dto';
 import { MentionEntity } from '../entities/mention.entity';
@@ -22,12 +23,12 @@ export class MentionsRepository extends Repository<MentionEntity> {
 	}
 
 	async createMentions(
-		insertMentions: QueryDeepPartialEntity<MentionEntity>[],
+		overrideInsertArrayFeild: OverrideInsertArrayFeild<MentionEntity>,
 		qr?: QueryRunner,
 	) {
 		const mentionsRepository = this.getMentionRepository(qr);
 
-		await mentionsRepository.insert(insertMentions);
+		await mentionsRepository.insert(overrideInsertArrayFeild);
 	}
 
 	async deleteMentions(
