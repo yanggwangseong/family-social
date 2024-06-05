@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
-import { ICreateMessageArgs } from '@/types/args/message';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { MessagesByChatResDto } from '../dto/message/res/messages-by-chat-res.dto';
 import { RecentMessageResDto } from '../dto/message/res/recent-message-res.dto';
@@ -18,11 +17,10 @@ export class MessagesRepository extends Repository<MessageEntity> {
 		super(repository.target, repository.manager, repository.queryRunner);
 	}
 
-	async createMessage(createMessageArgs: ICreateMessageArgs) {
-		const message = await this.repository.insert({
-			id: uuidv4(),
-			...createMessageArgs,
-		});
+	async createMessage(
+		overrideInsertFeilds: OverrideInsertFeild<MessageEntity>,
+	) {
+		const message = await this.repository.insert(overrideInsertFeilds);
 
 		return await this.repository
 			.findOneOrFail({
