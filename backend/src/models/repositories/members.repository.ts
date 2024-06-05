@@ -8,16 +8,12 @@ import {
 	QueryRunner,
 	Repository,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
 import { MemberEntity } from '@/models/entities/member.entity';
-import {
-	ICreateMemberArgs,
-	ILoginMemberArgs,
-	IUpdateMemberArgs,
-} from '@/types/args/member';
+import { ILoginMemberArgs, IUpdateMemberArgs } from '@/types/args/member';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
 import { MemberSearchResDto } from '../dto/member/res/member-search-res.dto';
@@ -226,17 +222,12 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}
 
 	async createMember(
-		createMemberArgs: ICreateMemberArgs,
-		signupVerifyToken: string,
+		overrideInsertFeilds: OverrideInsertFeild<MemberEntity>,
 		qr?: QueryRunner,
 	): Promise<MemberProfileImageResDto | null> {
 		const membersRepository = this.getMembersRepository(qr);
 
-		const insertResult = await membersRepository.insert({
-			id: uuidv4(),
-			...createMemberArgs,
-			signupVerifyToken: signupVerifyToken,
-		});
+		const insertResult = await membersRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id; // 타입 명시
 
