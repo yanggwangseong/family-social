@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -76,15 +77,15 @@ export class GroupsService {
 			qr,
 		);
 
-		await this.famsRepository.createFam(
-			{
-				memberId,
-				groupId: group.id,
-				role: 'main',
-				invitationAccepted: true,
-			},
-			qr,
-		);
+		const newFam = this.famsRepository.create({
+			id: uuidv4(),
+			memberId,
+			groupId: group.id,
+			role: 'main',
+			invitationAccepted: true,
+		});
+
+		await this.famsRepository.createFam(newFam, qr);
 
 		return group;
 	}
