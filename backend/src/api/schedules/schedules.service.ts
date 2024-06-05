@@ -104,13 +104,15 @@ export class SchedulesService {
 		const { scheduleName, periods, startPeriod, endPeriod, sharedFamIds } =
 			scheduleItem;
 
+		const newSchedule = this.scheduleRepository.create({
+			id: uuidv4(),
+			scheduleName,
+			startPeriod,
+			endPeriod,
+			...rest,
+		});
 		const schedule = await this.scheduleRepository.createSchedule(
-			{
-				scheduleName,
-				startPeriod,
-				endPeriod,
-				...rest,
-			},
+			newSchedule,
 			qr,
 		);
 
