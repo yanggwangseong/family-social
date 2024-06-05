@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { ICreateGroupArgs } from '@/types/args/group';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { GroupProfileResDto } from '../dto/group/res/group-profile.rest.dto';
 
@@ -90,15 +91,12 @@ export class GroupsRepository extends Repository<GroupEntity> {
 	}
 
 	async createGroup(
-		createGroupArgs: Omit<ICreateGroupArgs, 'memberId'>,
+		overrideInsertFeilds: OverrideInsertFeild<GroupEntity>,
 		qr?: QueryRunner,
 	): Promise<GroupResDto> {
 		const groupsRepository = this.getGroupsRepository(qr);
 
-		const insertResult = await groupsRepository.insert({
-			id: uuidv4(),
-			...createGroupArgs,
-		});
+		const insertResult = await groupsRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id;
 
