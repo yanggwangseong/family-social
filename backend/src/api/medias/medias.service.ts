@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MediaCreateReqDto } from '@/models/dto/media/req/media-create-req.dto';
 import { MediaUpdateReqDto } from '@/models/dto/media/req/media-update-req-dto';
 import { FeedMediaEntity } from '@/models/entities/feed-media.entity';
 import { MediasRepository } from '@/models/repositories/medias.repository';
+import { OverrideInsertFeild } from '@/types/repository';
 
 @Injectable()
 export class MediasService {
@@ -51,7 +51,7 @@ export class MediasService {
 
 	private createNewMedias(media: MediaUpdateReqDto[], feedId: string) {
 		return media.map(
-			({ url, position }): QueryDeepPartialEntity<FeedMediaEntity> => {
+			({ url, position }): OverrideInsertFeild<FeedMediaEntity> => {
 				return {
 					id: uuidv4(),
 					url: url,
