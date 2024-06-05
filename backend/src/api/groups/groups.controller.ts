@@ -40,6 +40,7 @@ import { CurrentUser } from '@/common/decorators/user.decorator';
 import { BadRequestServiceException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { AttachGroupGuard } from '@/common/guards/attach-group.guard';
+import { CheckDuplicateGroupNameGuard } from '@/common/guards/check-duplicate-group-name.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -105,6 +106,7 @@ export class GroupsController {
 	 * @returns 그룹명
 	 */
 	@CreateGroupSwagger()
+	@UseGuards(CheckDuplicateGroupNameGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async createGroup(
@@ -136,6 +138,7 @@ export class GroupsController {
 	 * @returns 그룹명
 	 */
 	@UpdateGroupSwagger()
+	@UseGuards(CheckDuplicateGroupNameGuard)
 	@Put(':groupId')
 	async updateGroup(
 		@Param(
