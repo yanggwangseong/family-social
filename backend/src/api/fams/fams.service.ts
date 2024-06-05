@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -24,11 +25,13 @@ export class FamsService {
 		memberId: string;
 		groupId: string;
 	}): Promise<void> {
-		await this.famsRepository.createFam({
+		const newFam = this.famsRepository.create({
+			id: uuidv4(),
 			...createFamArgs,
 			role: 'user',
 			invitationAccepted: false,
 		});
+		await this.famsRepository.createFam(newFam);
 		//[TODO] 그룹 초대 notification
 	}
 

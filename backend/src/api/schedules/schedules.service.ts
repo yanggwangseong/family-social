@@ -14,11 +14,15 @@ import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-re
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
+import { SharedScheduleMemberEntity } from '@/models/entities/shared-schedule-member.entity';
+import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
+import { TourismEntity } from '@/models/entities/tourism.entity';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { SharedScheduleMemberRepository } from '@/models/repositories/shared-schedule-member.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
+import { OverrideInsertFeild } from '@/types/repository';
 import { getOffset } from '@/utils/getOffset';
 
 @Injectable()
@@ -104,13 +108,15 @@ export class SchedulesService {
 		const { scheduleName, periods, startPeriod, endPeriod, sharedFamIds } =
 			scheduleItem;
 
+		const newSchedule = this.scheduleRepository.create({
+			id: uuidv4(),
+			scheduleName,
+			startPeriod,
+			endPeriod,
+			...rest,
+		});
 		const schedule = await this.scheduleRepository.createSchedule(
-			{
-				scheduleName,
-				startPeriod,
-				endPeriod,
-				...rest,
-			},
+			newSchedule,
 			qr,
 		);
 
@@ -272,11 +278,15 @@ export class SchedulesService {
 		sharedScheduleId: string,
 		qr?: QueryRunner,
 	) {
-		const createSharedScheduleMember = sharedFamIds.map((item) => ({
-			id: uuidv4(),
-			sharedFamId: item,
-			sharedScheduleId,
-		}));
+		const createSharedScheduleMember =
+			this.sharedScheduleMemberRepository.create(
+				sharedFamIds.map(
+					(item): OverrideInsertFeild<SharedScheduleMemberEntity> => ({
+						sharedFamId: item,
+						sharedScheduleId,
+					}),
+				),
+			);
 
 		await this.sharedScheduleMemberRepository.createSharedScheduleMember(
 			createSharedScheduleMember,
@@ -289,11 +299,15 @@ export class SchedulesService {
 		scheduleId: string,
 		qr?: QueryRunner,
 	) {
-		const createTourismPeriod = periods.map((item) => ({
-			id: uuidv4(),
-			scheduleId: scheduleId,
-			...item,
-		}));
+		const createTourismPeriod = this.tourismPeriodRepository.create(
+			periods.map(
+				(item): OverrideInsertFeild<TourismPeriodEntity> => ({
+					id: uuidv4(),
+					scheduleId,
+					...item,
+				}),
+			),
+		);
 
 		await this.tourismPeriodRepository.createTourismPeriod(
 			createTourismPeriod,
@@ -308,11 +322,15 @@ export class SchedulesService {
 		periodId: string,
 		qr?: QueryRunner,
 	) {
-		const createTourisms = tourism.map((item) => ({
-			id: uuidv4(),
-			periodId,
-			...item,
-		}));
+		const createTourisms = this.tourismRepository.create(
+			tourism.map(
+				(item): OverrideInsertFeild<TourismEntity> => ({
+					id: uuidv4(),
+					periodId,
+					...item,
+				}),
+			),
+		);
 
 		await this.tourismRepository.createTourism(createTourisms, qr);
 	}

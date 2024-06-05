@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+
+import { OverrideInsertArrayFeild } from '@/types/repository';
 
 import { FeedMediaEntity } from '../entities/feed-media.entity';
 
@@ -21,12 +22,12 @@ export class MediasRepository extends Repository<FeedMediaEntity> {
 	}
 
 	async createFeedMedias(
-		insertMedias: QueryDeepPartialEntity<FeedMediaEntity>[],
+		overrideInsertArrayFeild: OverrideInsertArrayFeild<FeedMediaEntity>,
 		qr?: QueryRunner,
 	): Promise<void> {
 		const mediasRepository = this.getMediasRepository(qr);
 
-		await mediasRepository.insert(insertMedias);
+		await mediasRepository.insert(overrideInsertArrayFeild);
 	}
 
 	async deleteFeedMediasByFeedId(

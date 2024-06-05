@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamEntity, roleType } from '@/models/entities/fam.entity';
 import {
-	ICreateFamArgs,
 	IFindInvitationByFamArgs,
 	IUpdateFamInvitationAcceptArgs,
 } from '@/types/args/fam';
 import { IDeleteGroupArgs } from '@/types/args/group';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { BelongToGroupResDto } from '../dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '../dto/group/res/group-members.res.dto';
@@ -191,15 +190,12 @@ export class FamsRepository extends Repository<FamEntity> {
 	}
 
 	async createFam(
-		createFamArgs: ICreateFamArgs,
+		overrideInsertFeilds: OverrideInsertFeild<FamEntity>,
 		qr?: QueryRunner,
 	): Promise<FamResDto> {
 		const famsRepository = this.getFamsRepository(qr);
 
-		const insertResult = await famsRepository.insert({
-			id: uuidv4(),
-			...createFamArgs,
-		});
+		const insertResult = await famsRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id;
 

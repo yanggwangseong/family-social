@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { CookieOptions, Response } from 'express';
 import { QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -147,14 +148,18 @@ export class AuthService {
 		const { password } = dto;
 
 		const signupVerifyToken = generateRandomCode(10);
+
+		const createMember = this.membersRepository.create({
+			id: uuidv4(),
+			...dto,
+			password: await this.EncryptHashData<string>(
+				password ?? signupVerifyToken,
+			),
+			signupVerifyToken: await this.EncryptHashData<string>(signupVerifyToken),
+		});
+
 		const newMember = await this.membersRepository.createMember(
-			{
-				...dto,
-				password: await this.EncryptHashData<string>(
-					password ?? signupVerifyToken,
-				),
-			},
-			await this.EncryptHashData<string>(signupVerifyToken),
+			createMember,
 			qr,
 		);
 

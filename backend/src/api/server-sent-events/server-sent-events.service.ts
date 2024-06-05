@@ -22,7 +22,7 @@ export class ServerSentEventsService {
 					data: {
 						message: `새로운 알람이 도착했습니다`,
 					},
-				} as MessageEvent;
+				} satisfies MessageEvent;
 			}),
 		);
 	}

@@ -94,8 +94,9 @@ export class NotificationsService {
 	) {
 		const { notificationType, ...rest } = notificationArgs;
 
-		const notificationTypeId: string =
-			await this.findNotificationIdByNotificationType(notificationType);
+		const notificationTypeId = await this.findNotificationIdByNotificationType(
+			notificationType,
+		);
 
 		await this.notificationsRepository.createNotification(
 			{

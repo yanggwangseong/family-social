@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -68,23 +69,23 @@ export class GroupsService {
 		// 중복된 그룹 이름 체크
 		await this.checkDuplicateGroupName(memberId, groupName);
 
-		const group = await this.groupsRepository.createGroup(
-			{
-				groupName,
-				groupDescription,
-			},
-			qr,
-		);
+		const newGroup = this.groupsRepository.create({
+			id: uuidv4(),
+			groupName,
+			groupDescription,
+		});
 
-		await this.famsRepository.createFam(
-			{
-				memberId,
-				groupId: group.id,
-				role: 'main',
-				invitationAccepted: true,
-			},
-			qr,
-		);
+		const group = await this.groupsRepository.createGroup(newGroup, qr);
+
+		const newFam = this.famsRepository.create({
+			id: uuidv4(),
+			memberId,
+			groupId: group.id,
+			role: 'main',
+			invitationAccepted: true,
+		});
+
+		await this.famsRepository.createFam(newFam, qr);
 
 		return group;
 	}
