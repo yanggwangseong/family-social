@@ -15,6 +15,7 @@ import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-per
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
 import { SharedScheduleMemberEntity } from '@/models/entities/shared-schedule-member.entity';
+import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { SharedScheduleMemberRepository } from '@/models/repositories/shared-schedule-member.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
@@ -297,11 +298,15 @@ export class SchedulesService {
 		scheduleId: string,
 		qr?: QueryRunner,
 	) {
-		const createTourismPeriod = periods.map((item) => ({
-			id: uuidv4(),
-			scheduleId: scheduleId,
-			...item,
-		}));
+		const createTourismPeriod = this.tourismPeriodRepository.create(
+			periods.map(
+				(item): OverrideInsertFeild<TourismPeriodEntity> => ({
+					id: uuidv4(),
+					scheduleId,
+					...item,
+				}),
+			),
+		);
 
 		await this.tourismPeriodRepository.createTourismPeriod(
 			createTourismPeriod,
