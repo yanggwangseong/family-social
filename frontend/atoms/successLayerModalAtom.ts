@@ -1,14 +1,14 @@
+import { successLottie } from '@/hooks/useSuccessLayerModal';
 import { atom } from 'recoil';
-import { LayerMode, Union } from 'types';
 
 export interface SuccessModalLayerType {
-	layer: typeof LayerMode.successLayerModal;
+	lottieFile: keyof typeof successLottie;
 	message: string;
 }
 
 export const successLayerModalAtom = atom<SuccessModalLayerType>({
 	default: {
-		layer: 'successLayerModal',
+		lottieFile: 'createFeedAnimation',
 		message: '',
 	},
 	key: 'successLayerModalAtom',

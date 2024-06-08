@@ -17,7 +17,6 @@ import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
-import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
@@ -34,17 +33,13 @@ import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import MentionField from '@/components/ui/mention/MentionField';
 import { extractMention } from '@/utils/extract-mention';
-import { successLayerModalAtom } from '@/atoms/successLayerModalAtom';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
-	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
-	const [, setIsLayer] = useRecoilState(modalLayerAtom);
-
-	const [isSuccessModal, setIsSuccessModal] = useRecoilState(
-		successLayerModalAtom,
-	);
+	const { handleChangeLayer, handleChangeSuccessModal } =
+		useSuccessLayerModal();
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
 
@@ -127,15 +122,12 @@ const CreateFeed: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				setIsLayer({
-					modal_title: '피드 생성 성공',
-					layer: LayerMode.successLayerModal,
-				});
+				handleChangeLayer('피드 생성 성공', LayerMode.successLayerModal);
 
-				setIsSuccessModal({
-					layer: LayerMode.successLayerModal,
-					message: '피드가 생성 되었습니다',
-				});
+				handleChangeSuccessModal(
+					'createFeedAnimation',
+					'피드가 생성 되었습니다',
+				);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
@@ -155,15 +147,12 @@ const CreateFeed: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				setIsLayer({
-					modal_title: '피드 수정 성공',
-					layer: LayerMode.successLayerModal,
-				});
+				handleChangeLayer('피드 수정 성공', LayerMode.successLayerModal);
 
-				setIsSuccessModal({
-					layer: LayerMode.successLayerModal,
-					message: '피드가 수정 되었습니다',
-				});
+				handleChangeSuccessModal(
+					'createFeedAnimation',
+					'피드가 수정 되었습니다',
+				);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {

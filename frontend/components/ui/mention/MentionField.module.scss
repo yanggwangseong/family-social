@@ -21,7 +21,6 @@
 .mentions--multiLine {
 	:nth-child(2) {
 		z-index: 2 !important;
-		@apply text-customOrange;
 	}
 }
 .mentions--multiLine .mentions__highlighter {
