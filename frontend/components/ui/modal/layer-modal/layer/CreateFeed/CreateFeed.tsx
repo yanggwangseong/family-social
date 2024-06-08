@@ -17,14 +17,14 @@ import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
-import { modalAtom } from '@/atoms/modalAtom';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
 
-import { Union, feedPublicSelectOptions } from 'types';
+import { LayerMode, Union, feedPublicSelectOptions } from 'types';
 
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
@@ -34,11 +34,17 @@ import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import MentionField from '@/components/ui/mention/MentionField';
 import { extractMention } from '@/utils/extract-mention';
+import { successLayerModalAtom } from '@/atoms/successLayerModalAtom';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+
+	const [isSuccessModal, setIsSuccessModal] = useRecoilState(
+		successLayerModalAtom,
+	);
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
 
@@ -120,8 +126,15 @@ const CreateFeed: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `피드가 생성 되었습니다`, '확인', () => {
-					setIsShowing(false);
+
+				setIsLayer({
+					modal_title: '피드 생성 성공',
+					layer: LayerMode.successLayerModal,
+				});
+
+				setIsSuccessModal({
+					layer: LayerMode.successLayerModal,
+					message: '피드가 생성 되었습니다',
 				});
 			},
 			onError(error) {
@@ -141,8 +154,15 @@ const CreateFeed: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `피드가 수정 되었습니다`, '확인', () => {
-					setIsShowing(false);
+
+				setIsLayer({
+					modal_title: '피드 수정 성공',
+					layer: LayerMode.successLayerModal,
+				});
+
+				setIsSuccessModal({
+					layer: LayerMode.successLayerModal,
+					message: '피드가 수정 되었습니다',
 				});
 			},
 			onError(error) {
