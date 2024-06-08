@@ -38,8 +38,7 @@ import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
-	const { handleChangeLayer, handleChangeSuccessModal } =
-		useSuccessLayerModal();
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
 
@@ -122,12 +121,12 @@ const CreateFeed: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				handleChangeLayer('피드 생성 성공', LayerMode.successLayerModal);
-
-				handleChangeSuccessModal(
-					'createFeedAnimation',
-					'피드가 생성 되었습니다',
-				);
+				handleSuccessLayerModal({
+					modalTitle: '피드 생성 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createFeedAnimation',
+					message: '피드가 생성 되었습니다',
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
@@ -147,12 +146,12 @@ const CreateFeed: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				handleChangeLayer('피드 수정 성공', LayerMode.successLayerModal);
-
-				handleChangeSuccessModal(
-					'createFeedAnimation',
-					'피드가 수정 되었습니다',
-				);
+				handleSuccessLayerModal({
+					modalTitle: '피드 수정 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createFeedAnimation',
+					message: '피드가 수정 되었습니다',
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
