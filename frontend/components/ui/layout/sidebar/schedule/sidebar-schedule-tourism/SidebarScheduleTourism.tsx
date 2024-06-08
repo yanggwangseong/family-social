@@ -17,6 +17,8 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { ScheduleSidebarProps } from '../schedule-sidebar.interface';
 import { sharedFamIdsAtom } from '@/atoms/sharedFamIdsAtom';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
@@ -32,6 +34,8 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
 
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
+
 	const { mutate: createScheduleSync } = useMutation(
 		['create-schedule'],
 		(data: CreateScheduleRequest) =>
@@ -42,8 +46,12 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `일정을 생성 하였습니다.`, '확인', () => {
-					router.push(`/schedules/${data.id}`);
+
+				handleSuccessLayerModal({
+					modalTitle: '일정 생성',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createScheduleAnimation',
+					message: '일정을 생성 하였습니다',
 				});
 			},
 			onError(error) {
