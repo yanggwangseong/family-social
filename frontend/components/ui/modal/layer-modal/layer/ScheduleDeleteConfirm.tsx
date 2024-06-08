@@ -8,8 +8,7 @@ import axios from 'axios';
 import { useMutation } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const ScheduleDeleteConfirm: FC = () => {

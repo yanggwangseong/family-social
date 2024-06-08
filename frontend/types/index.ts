@@ -100,4 +100,38 @@ type NumericRange<
 			ARR[START] extends undefined ? ACC : ACC | ARR['length']
 	  >;
 
-type PaginateLimit = NumericRange<3, 10, []>;
+type PaginateLimit = NumericRange<1, 10>;
+
+// type NumericRange2<
+// 	N extends number,
+// 	Result extends Array<unknown> = [],
+// > = Result['length'] extends N
+// 	? Result
+// 	: NumericRange2<N, [...Result, Result['length']]>;
+
+// type MAXIMUM_ALLOWED_BOUNDARY = 11;
+
+// type PagiLimit = NumericRange2<MAXIMUM_ALLOWED_BOUNDARY>[number]; // 0 - 10
+
+// type _NumbersToNRec<
+// 	Nr extends number,
+// 	Counter extends any[],
+// 	Accumulator extends number,
+// > = Counter['length'] extends Nr
+// 	? Accumulator
+// 	: _NumbersToNRec<Nr, [any, ...Counter], Accumulator | Counter['length']>;
+
+// export type NumbersToN<Nr extends number> = Nr extends Nr
+// 	? number extends Nr
+// 		? number
+// 		: Nr extends 0
+// 		? never
+// 		: _NumbersToNRec<Nr, [], 0>
+// 	: never;
+
+// export type NrRange<Start extends number, End extends number> = Exclude<
+// 	NumbersToN<End>,
+// 	NumbersToN<Start>
+// >;
+
+// type NumberLimit = NrRange<1, 10>;
