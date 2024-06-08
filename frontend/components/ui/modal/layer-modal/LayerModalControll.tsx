@@ -14,6 +14,7 @@ import AreaCode from './layer/create-schedule/area-code/AreaCode';
 import TourismDetail from './layer/tourism-detail/TourismDetail';
 import ScheduleDeleteConfirm from './layer/ScheduleDeleteConfirm';
 import ScheduleThumbnailImage from './layer/schedule-thumbnail-image/ScheduleThumbnailImage';
+import SuccessLayerModal from './layer/success-layer-modal/SuccessLayerModal';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -30,6 +31,7 @@ const StatusLookUpTable = {
 	[LayerMode.tourismDetail]: TourismDetail,
 	[LayerMode.scheduleDeleteConfirm]: ScheduleDeleteConfirm,
 	[LayerMode.scheduleThumbnailImage]: ScheduleThumbnailImage,
+	[LayerMode.successLayerModal]: SuccessLayerModal,
 };
 
 interface StatusProps {

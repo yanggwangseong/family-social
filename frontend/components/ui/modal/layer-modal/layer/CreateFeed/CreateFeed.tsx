@@ -2,12 +2,8 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './CreateFeed.module.scss';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { GroupService } from '@/services/group/group.service';
-import Image from 'next/image';
+import { useMutation, useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
-import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
-import Profile from '@/components/ui/profile/Profile';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -21,14 +17,13 @@ import { MediaService } from '@/services/media/media.service';
 import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
-import { modalAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { useEmoji } from '@/hooks/useEmoji';
 import { FaRegSmile } from 'react-icons/fa';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import Line from '@/components/ui/line/Line';
 
-import { Union, feedPublicSelectOptions } from 'types';
+import { LayerMode, Union, feedPublicSelectOptions } from 'types';
 
 import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
@@ -38,11 +33,12 @@ import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import MentionField from '@/components/ui/mention/MentionField';
 import { extractMention } from '@/utils/extract-mention';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
-	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const [isFeedPage, setIsFeedPage] = useState('selectGroup');
 
@@ -124,8 +120,12 @@ const CreateFeed: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `피드가 생성 되었습니다`, '확인', () => {
-					setIsShowing(false);
+
+				handleSuccessLayerModal({
+					modalTitle: '피드 생성 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createFeedAnimation',
+					message: '피드가 생성 되었습니다',
 				});
 			},
 			onError(error) {
@@ -145,8 +145,12 @@ const CreateFeed: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `피드가 수정 되었습니다`, '확인', () => {
-					setIsShowing(false);
+
+				handleSuccessLayerModal({
+					modalTitle: '피드 수정 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createFeedAnimation',
+					message: '피드가 수정 되었습니다',
 				});
 			},
 			onError(error) {
