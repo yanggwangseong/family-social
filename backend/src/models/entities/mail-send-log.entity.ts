@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Entity } from 'typeorm';
 
 import { DefaultEntity } from './common/default.entity';
 
-@Injectable()
+@Entity({ name: 'fam_mail_send_log' })
 export class MailSendLogEntity extends DefaultEntity {}
