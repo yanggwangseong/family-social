@@ -57,6 +57,18 @@ export class MailsService {
 				});
 			}),
 		);
+
+		sendResult.forEach((element) => {
+			if (element.status === 'rejected') {
+				if (element.reason instanceof Error) {
+					console.log('************', element.reason.message);
+				}
+			}
+
+			if (element.status === 'fulfilled') {
+				console.log(element.value.response);
+			}
+		});
 	}
 
 	async sendSignUpEmailVerify(
