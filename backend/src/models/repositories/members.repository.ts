@@ -171,10 +171,14 @@ export class MembersRepository extends Repository<MemberEntity> {
 
 	async findMemberById({
 		memberId,
+		qr,
 	}: {
 		memberId: string;
+		qr?: QueryRunner;
 	}): Promise<MemberProfileImageResDto | null> {
-		const member = await this.repository.findOne({
+		const membersRepository = this.getMembersRepository(qr);
+
+		const member = await membersRepository.findOne({
 			where: {
 				id: memberId,
 			},
@@ -231,7 +235,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 
 		const id: string = insertResult.identifiers[0].id; // 타입 명시
 
-		return this.findMemberById({ memberId: id });
+		return this.findMemberById({ memberId: id, qr });
 	}
 
 	async updateMemberProfile({ memberId, ...rest }: IUpdateMemberArgs) {
