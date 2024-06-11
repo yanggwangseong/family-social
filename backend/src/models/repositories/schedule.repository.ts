@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
-import { ICreateScheduleArgs } from '@/types/args/schedule';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { ScheduleByIdResDto } from '../dto/schedule/res/schedule-by-id-res.dto';
 import { ScheduleGetListResDto } from '../dto/schedule/res/schedule-get-list-res.dto';
@@ -204,15 +203,12 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 	}
 
 	async createSchedule(
-		createScheduleArgs: ICreateScheduleArgs,
+		overrideInsertFeilds: OverrideInsertFeild<ScheduleEntity>,
 		qr?: QueryRunner,
 	) {
 		const scheduleRepository = this.getScheduleRepository(qr);
 
-		const insertResult = await scheduleRepository.insert({
-			id: uuidv4(),
-			...createScheduleArgs,
-		});
+		const insertResult = await scheduleRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id;
 

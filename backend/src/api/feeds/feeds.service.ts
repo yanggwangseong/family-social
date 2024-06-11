@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -149,20 +150,20 @@ export class FeedsService {
 	}
 
 	async createFeed(
-		{ medias, ...rest }: ICreateFeedArgs,
+		{ medias, mentions, ...rest }: ICreateFeedArgs,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
-		const feed = await this.feedsRepository.createFeed(
-			{
-				...rest,
-			},
-			qr,
-		);
+		const newFeed = this.feedsRepository.create({
+			id: uuidv4(),
+			...rest,
+		});
+
+		const feed = await this.feedsRepository.createFeed(newFeed, qr);
 
 		await this.mentionsService.createMentions(
 			{
 				mentionType: 'mention_on_feed',
-				mentions: rest.mentions,
+				mentions: mentions,
 				mentionSenderId: rest.memberId,
 				mentionFeedId: feed.id,
 			},

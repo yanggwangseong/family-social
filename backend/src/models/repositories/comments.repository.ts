@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
-import { ICreateCommentsArgs } from '@/types/args/comment';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { CommentEntity } from '../entities/comment.entity';
 
@@ -78,15 +77,12 @@ export class CommentsRepository extends Repository<CommentEntity> {
 	}
 
 	async createComment(
-		createCommentsArgs: ICreateCommentsArgs,
+		overrideInsertFeilds: OverrideInsertFeild<CommentEntity>,
 		qr?: QueryRunner,
 	) {
 		const commentsRepository = this.getCommentsRepository(qr);
 
-		const insertResult = await commentsRepository.insert({
-			id: uuidv4(),
-			...createCommentsArgs,
-		});
+		const insertResult = await commentsRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id;
 

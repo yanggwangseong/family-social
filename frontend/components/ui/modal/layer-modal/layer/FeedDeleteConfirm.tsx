@@ -8,8 +8,7 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useMutation } from 'react-query';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { FeedService } from '@/services/feed/feed.service';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 
 const FeedDeleteConfirm: FC = () => {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { ICreateTourismArgs } from '@/types/args/tour';
+import { OverrideInsertArrayFeild } from '@/types/repository';
 
 import { TourismEntity } from '../entities/tourism.entity';
 
@@ -21,10 +21,13 @@ export class TourismRepository extends Repository<TourismEntity> {
 			: this.repository;
 	}
 
-	async createTourism(tourism: ICreateTourismArgs[], qr?: QueryRunner) {
+	async createTourism(
+		overrideInsertArrayFeild: OverrideInsertArrayFeild<TourismEntity>,
+		qr?: QueryRunner,
+	) {
 		const tourismRepository = this.getTourismRepository(qr);
 
-		await tourismRepository.insert(tourism);
+		await tourismRepository.insert(overrideInsertArrayFeild);
 	}
 
 	async deleteTourism(periodId: string, qr?: QueryRunner) {

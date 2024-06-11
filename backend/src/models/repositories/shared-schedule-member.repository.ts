@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { ICreateSharedScheduleMemberArgs } from '@/types/args/schedule';
+import { OverrideInsertArrayFeild } from '@/types/repository';
 
 import { SharedScheduleMemberEntity } from '../entities/shared-schedule-member.entity';
 
@@ -24,12 +24,12 @@ export class SharedScheduleMemberRepository extends Repository<SharedScheduleMem
 	}
 
 	async createSharedScheduleMember(
-		sharedScheduleMembers: ICreateSharedScheduleMemberArgs[],
+		overrideInsertArrayFeild: OverrideInsertArrayFeild<SharedScheduleMemberEntity>,
 		qr?: QueryRunner,
 	) {
 		const repository = this.getRepository(qr);
 
-		await repository.insert(sharedScheduleMembers);
+		await repository.insert(overrideInsertArrayFeild);
 	}
 
 	async deleteSharedScheduleMember(sharedScheduleId: string, qr?: QueryRunner) {

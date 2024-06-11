@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
@@ -65,26 +66,23 @@ export class GroupsService {
 	): Promise<GroupResDto> {
 		const { memberId, groupName, groupDescription } = createGroupArgs;
 
-		// 중복된 그룹 이름 체크
-		await this.checkDuplicateGroupName(memberId, groupName);
+		const newGroup = this.groupsRepository.create({
+			id: uuidv4(),
+			groupName,
+			groupDescription,
+		});
 
-		const group = await this.groupsRepository.createGroup(
-			{
-				groupName,
-				groupDescription,
-			},
-			qr,
-		);
+		const group = await this.groupsRepository.createGroup(newGroup, qr);
 
-		await this.famsRepository.createFam(
-			{
-				memberId,
-				groupId: group.id,
-				role: 'main',
-				invitationAccepted: true,
-			},
-			qr,
-		);
+		const newFam = this.famsRepository.create({
+			id: uuidv4(),
+			memberId,
+			groupId: group.id,
+			role: 'main',
+			invitationAccepted: true,
+		});
+
+		await this.famsRepository.createFam(newFam, qr);
 
 		return group;
 	}
@@ -98,9 +96,6 @@ export class GroupsService {
 		groupName: string;
 		groupDescription?: string;
 	}): Promise<GroupResDto> {
-		// 중복된 그룹 이름 체크
-		await this.checkDuplicateGroupName(memberId, rest.groupName);
-
 		return await this.groupsRepository.updateGroup({
 			...rest,
 		});
@@ -152,18 +147,13 @@ export class GroupsService {
 		if (!GroupStatus) throw EntityConflictException(ERROR_DELETE_GROUP);
 	}
 
-	private async checkDuplicateGroupName(
-		memberId: string,
-		groupName: string,
-	): Promise<void> {
+	async checkDuplicateGroupName(memberId: string, groupName: string) {
 		const count = await this.groupsRepository.findGroupByGroupName({
 			memberId,
 			groupName,
 		});
 
-		if (count > 0) {
-			throw EntityConflictException(ERROR_DUPLICATE_GROUP_NAME);
-		}
+		return count;
 	}
 
 	async checkRoleOfGroupExists(groupId: string, memberId: string) {

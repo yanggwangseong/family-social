@@ -19,6 +19,8 @@ import MentionFieldArea from '../field/field-area/mention-field-area/MentionFiel
 import MentionField from '../mention/MentionField';
 import { CommentFormProps } from './comment-form.interface';
 import { extractMention } from '@/utils/extract-mention';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -44,6 +46,8 @@ const CommentForm: FC<CommentFormProps> = ({
 	// } = useForm<{ commentContents: string }>({
 	// 	mode: 'onChange',
 	// });
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const {
 		handleSubmit,
@@ -72,7 +76,14 @@ const CommentForm: FC<CommentFormProps> = ({
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `댓글 작성 하였습니다.`, '확인');
+
+				handleSuccessLayerModal({
+					modalTitle: '댓글 생성',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createCommentAnimation',
+					message: '댓글 생성 하였습니다',
+				});
+
 				reset({ commentContents: '' });
 				onCommentRefetch();
 				handleCloseReply && handleCloseReply();
@@ -105,7 +116,14 @@ const CommentForm: FC<CommentFormProps> = ({
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `댓글을 수정 하였습니다.`, '확인');
+
+				handleSuccessLayerModal({
+					modalTitle: '댓글 수정',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createCommentAnimation',
+					message: '댓글 수정 하였습니다',
+				});
+
 				reset({ commentContents: '' });
 				onCommentRefetch();
 				handleCloseReply && handleCloseReply();

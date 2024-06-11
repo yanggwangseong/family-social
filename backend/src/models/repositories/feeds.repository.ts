@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 import { FeedEntity } from '@/models/entities/feed.entity';
-import {
-	ICreateFeedArgs,
-	IGetFeedDeatilArgs,
-	IUpdateFeedArgs,
-} from '@/types/args/feed';
+import { IGetFeedDeatilArgs, IUpdateFeedArgs } from '@/types/args/feed';
+import { OverrideInsertFeild } from '@/types/repository';
 
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
-import { FeedResDto } from '../dto/feed/res/feed-res.dto';
 import { LikeFeedEntity } from '../entities/like-feed.entity';
 
 @Injectable()
@@ -148,15 +143,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 	}
 
 	async createFeed(
-		createFeedArgs: Omit<ICreateFeedArgs, 'medias'>,
+		overrideInsertFeilds: OverrideInsertFeild<FeedEntity>,
 		qr?: QueryRunner,
 	): Promise<FeedByIdResDto> {
 		const feedsRepository = this.getFeedsRepository(qr);
 
-		const insertResult = await feedsRepository.insert({
-			id: uuidv4(),
-			...createFeedArgs,
-		});
+		const insertResult = await feedsRepository.insert(overrideInsertFeilds);
 
 		const id: string = insertResult.identifiers[0].id;
 
