@@ -63,7 +63,8 @@ export class MailsService {
 			}),
 		);
 
-		console.log(sendResult);
+		const newMailLog = this.createMailSendLogs(sendResult);
+		console.log(newMailLog);
 	}
 
 	async sendSignUpEmailVerify(
@@ -141,25 +142,27 @@ export class MailsService {
 		};
 	}
 
-	// private createMailSendLogs(mails: PromiseSettledResult<any>[]) {
-	// 	sendResult.forEach((element) => {
-	// 		if (element.status === 'rejected') {
-	// 			if (element.reason instanceof Error) {
-	// 				console.log('************', element.reason.message);
-	// 			}
-	// 		}
-
-	// 		if (element.status === 'fulfilled') {
-	// 			console.log(element.value.response);
-	// 		}
-	// 	});
-	// 	return mails.map(
-	// 		(data): OverrideInsertFeild<MailSendLogEntity> => {
-	// 			return {
-	// 				id: uuidv4(),
-	// 				toEmail:
-	// 			};
-	// 		},
-	// 	);
-	// }
+	private createMailSendLogs(mails: PromiseSettledResult<any>[]) {
+		return this.mailSendLogRepository.create(
+			mails.map((data): OverrideInsertFeild<MailSendLogEntity> => {
+				return data.status === 'fulfilled'
+					? {
+							id: uuidv4(),
+							toEmail: data.value.toEmail,
+							mailSubject: data.value.subject,
+							sendStatus: true,
+					  }
+					: {
+							id: uuidv4(),
+							toEmail: data.reason.toEmail,
+							mailSubject: data.reason.subject,
+							sendStatus: false,
+							reasonMessage:
+								data.reason.reason instanceof Error
+									? data.reason.reason.message
+									: '',
+					  };
+			}),
+		);
+	}
 }

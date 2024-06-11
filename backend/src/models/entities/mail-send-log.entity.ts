@@ -35,7 +35,7 @@ export class MailSendLogEntity {
 	sendStatus!: boolean;
 
 	@Column({ type: 'varchar', length: 120, nullable: true })
-	reasonMessage!: string;
+	reasonMessage?: string;
 
 	@ApiProperty()
 	@CreateDateColumn({
