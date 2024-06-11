@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { QueryRunner } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
+import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
+import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
+import { OverrideInsertFeild } from '@/types/repository';
 
 @Injectable()
 export class MailsService {
-	constructor(private readonly mailerService: MailerService) {}
+	constructor(
+		private readonly mailerService: MailerService,
+		private readonly mailSendLogRepository: MailSendLogRepository,
+	) {}
 
 	async sendInvitedEmailOfGroup(
 		{ invitedEmails }: GroupInvitedEmailsReqDto,
@@ -16,11 +23,8 @@ export class MailsService {
 		const inviteLink = 'http://localhost:3000/g/:groupId/:famId';
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
-				return await this.mailerService.sendMail({
-					to: email,
-					subject: `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`,
-					text: `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`,
-					html: `<!DOCTYPE html>
+				const subject = `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`;
+				const htmlContent = `<!DOCTYPE html>
 				<html lang="ko">
 				<head>
 					<meta charset="UTF-8">
@@ -53,22 +57,13 @@ export class MailsService {
 					</div>
 				</body>
 				</html>
-				`,
-				});
+				`;
+
+				return await this.sendEmail(email, subject, subject, htmlContent);
 			}),
 		);
 
-		sendResult.forEach((element) => {
-			if (element.status === 'rejected') {
-				if (element.reason instanceof Error) {
-					console.log('************', element.reason.message);
-				}
-			}
-
-			if (element.status === 'fulfilled') {
-				console.log(element.value.response);
-			}
-		});
+		console.log(sendResult);
 	}
 
 	async sendSignUpEmailVerify(
@@ -76,7 +71,7 @@ export class MailsService {
 		signupVerifyToken: string,
 		qr?: QueryRunner,
 	): Promise<void> {
-		try {
+		const sendResult = await Promise.allSettled(
 			await this.mailerService.sendMail({
 				to: email,
 				subject: '이메일 인증',
@@ -115,9 +110,56 @@ export class MailsService {
 				</body>
 				</html>
 				`,
-			});
-		} catch (error: any) {
-			throw Error(error);
-		}
+			}),
+		);
 	}
+
+	private async sendEmail(
+		email: string,
+		subject: string,
+		text: string,
+		htmlContent: string,
+	) {
+		const result = await this.mailerService
+			.sendMail({
+				to: email,
+				subject,
+				text: text,
+				html: htmlContent,
+			})
+			.catch((err) => {
+				throw {
+					reason: err,
+					toEmail: email,
+					subject,
+				};
+			});
+		return {
+			value: result,
+			toEmail: email,
+			subject,
+		};
+	}
+
+	// private createMailSendLogs(mails: PromiseSettledResult<any>[]) {
+	// 	sendResult.forEach((element) => {
+	// 		if (element.status === 'rejected') {
+	// 			if (element.reason instanceof Error) {
+	// 				console.log('************', element.reason.message);
+	// 			}
+	// 		}
+
+	// 		if (element.status === 'fulfilled') {
+	// 			console.log(element.value.response);
+	// 		}
+	// 	});
+	// 	return mails.map(
+	// 		(data): OverrideInsertFeild<MailSendLogEntity> => {
+	// 			return {
+	// 				id: uuidv4(),
+	// 				toEmail:
+	// 			};
+	// 		},
+	// 	);
+	// }
 }

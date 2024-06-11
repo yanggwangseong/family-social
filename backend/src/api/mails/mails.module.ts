@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
+import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
 
 import { MailsService } from './mails.service';
 
 @Module({
-	imports: [],
+	imports: [TypeOrmModule.forFeature([MailSendLogEntity])],
 	controllers: [],
-	providers: [MailsService],
+	providers: [MailsService, MailSendLogRepository],
 	exports: [MailsService],
 })
 export class MailsModule {}
