@@ -14,6 +14,7 @@ import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
+import ScheduleDate from './schedule-date/ScheduleDate';
 
 const ScheduleCreate: FC<{
 	edit?: boolean;
@@ -38,6 +39,13 @@ const ScheduleCreate: FC<{
 				? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
 				: '',
 	});
+
+	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+	const [startDate, endDate] = dateRange;
+
+	const handleChangeDate = (dates: [Date, Date]) => {
+		setDateRange(dates);
+	};
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
@@ -90,24 +98,23 @@ const ScheduleCreate: FC<{
 									></SelectGroup>
 								)
 							)}
+							{isPage === 'scheduleDatePage' && (
+								<ScheduleDate
+									onChangeScheduleName={handleChangeScheduleName}
+									isScheduleName={isScheduleName}
+									onChangeStartEndPeriod={handleChangeStartEndPeriod}
+									onChangePeriods={handleChangePeriods}
+									handleChangeDate={handleChangeDate}
+									startDate={startDate}
+									endDate={endDate}
+								></ScheduleDate>
+							)}
 							{isPage === 'periodPage' && (
 								<SchedulePeriod
 									onChangePage={handleChangePage}
-									onChangePeriods={handleChangePeriods}
-									onChangeScheduleName={handleChangeScheduleName}
-									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
-									isScheduleName={isScheduleName}
-									updateStartDate={
-										edit && scheduleItem?.startPeriod
-											? scheduleItem.startPeriod
-											: undefined
-									}
-									updateEndDate={
-										edit && scheduleItem?.endPeriod
-											? scheduleItem.endPeriod
-											: undefined
-									}
+									startDate={startDate}
+									endDate={endDate}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (

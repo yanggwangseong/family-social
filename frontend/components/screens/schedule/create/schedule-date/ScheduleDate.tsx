@@ -17,18 +17,14 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 	isScheduleName,
 	onChangeStartEndPeriod,
 	onChangePeriods,
+	handleChangeDate,
+	startDate,
+	endDate,
 }) => {
 	const [isSelectedPeriod, setIsSelectedPeriod] =
 		useRecoilState(selectedPeriodAtom);
 
 	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>();
-
-	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
-	const [startDate, endDate] = dateRange;
-
-	const handleChangeDate = (dates: [Date, Date]) => {
-		setDateRange(dates);
-	};
 
 	const handleChangeScheduleName = (name: string) => {
 		onChangeScheduleName(name);
@@ -65,29 +61,30 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 		<div className={styles.main_container}>
 			<div className={styles.contents_container}>
 				<div className={styles.step_title}>STEP 2</div>
-			</div>
-			<div>
-				<div className={styles.schedule_name_container}>
-					<div className={styles.title}>여행 이름</div>
-					<div>
-						<Field
-							onChange={e => handleChangeScheduleName(e.target.value)}
-							defaultValue={isScheduleName}
-							placeholder="여행 이름을 작성해주세요."
-						></Field>
+
+				<div>
+					<div className={styles.schedule_name_container}>
+						<div className={styles.title}>여행 이름</div>
+						<div>
+							<Field
+								onChange={e => handleChangeScheduleName(e.target.value)}
+								defaultValue={isScheduleName}
+								placeholder="여행 이름을 작성해주세요."
+							></Field>
+						</div>
 					</div>
+					<div className={styles.title}>여행 일정 선택</div>
+					<div>여행 기간이 어떻게 되시나요?</div>
+					<DatePicker
+						locale={ko}
+						selectsRange={true}
+						startDate={startDate}
+						endDate={endDate}
+						onChange={handleChangeDate}
+						inline
+						isClearable={true}
+					/>
 				</div>
-				<div className={styles.title}>여행 일정 선택</div>
-				<div>여행 기간이 어떻게 되시나요?</div>
-				<DatePicker
-					locale={ko}
-					selectsRange={true}
-					startDate={startDate}
-					endDate={endDate}
-					onChange={handleChangeDate}
-					inline
-					isClearable={true}
-				/>
 			</div>
 			<div className={styles.button_container}>
 				<CustomButton

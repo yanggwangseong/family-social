@@ -40,6 +40,7 @@ export const TabMenus = [
 ] as const;
 export const schdulePages = [
 	'selectGroupPage',
+	'scheduleDatePage',
 	'periodPage',
 	'tourismPage',
 ] as const;

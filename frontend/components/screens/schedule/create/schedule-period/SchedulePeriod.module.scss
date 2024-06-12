@@ -12,15 +12,6 @@
 			@apply font-bold text-lg;
 		}
 
-		// 여행 이름
-		.schedule_name_container {
-			@apply flex flex-col gap-4 mb-4;
-		}
-
-		.title {
-			@apply font-semibold text-lg;
-		}
-
 		.period_btn_container {
 			@apply w-full flex flex-row gap-2 p-4 border border-solid border-customDark justify-center mt-5;
 

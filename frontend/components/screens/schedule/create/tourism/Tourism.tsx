@@ -22,7 +22,7 @@ const Tourism: FC<TourismProps> = ({ onChangePeriods }) => {
 	return (
 		<div className={styles.tourism_container}>
 			<div className={styles.top_title_container}>
-				<div className={styles.step_title}>STEP 3</div>
+				<div className={styles.step_title}>STEP 4</div>
 				<div className={styles.title}>관광 선택</div>
 			</div>
 
