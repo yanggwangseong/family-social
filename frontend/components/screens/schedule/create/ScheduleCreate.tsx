@@ -50,10 +50,34 @@ const ScheduleCreate: FC<{
 	});
 
 	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
-	const [startDate, endDate] = dateRange;
 
 	const handleChangeDate = (dates: [Date, Date]) => {
+		let [startDate, endDate] = dates;
+
+		endDate = !endDate ? startDate : endDate;
+
+		dates[1] = endDate;
+
 		setDateRange(dates);
+
+		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
+
+		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
+
+		const datesRange = getDateRange(startPeriod, endPeriod);
+
+		// 시작기간 종료기간
+		handleChangeStartEndPeriod(startPeriod, endPeriod);
+
+		setIsSelectedPeriod(datesRange[0]);
+
+		setIsPeriodTimes(
+			datesRange.map(date => ({
+				period: date,
+				startTime: '10:00',
+				endTime: '22:00',
+			})),
+		);
 	};
 
 	const [isPage, setIsPage] =
@@ -84,28 +108,7 @@ const ScheduleCreate: FC<{
 		});
 	};
 
-	// schedule-date
-	const selectedDates = () => {
-		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
-
-		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
-
-		const dates = getDateRange(startPeriod, endPeriod);
-
-		// 시작기간 종료기간
-		handleChangeStartEndPeriod(startPeriod, endPeriod);
-
-		setIsSelectedPeriod(dates[0]);
-
-		setIsPeriodTimes(
-			dates.map(date => ({
-				period: date,
-				startTime: '10:00',
-				endTime: '22:00',
-			})),
-		);
-		handleChangePage('periodPage');
-	};
+	const [startDate, endDate] = dateRange;
 
 	return (
 		<Format title={'schedule-create'}>
@@ -140,7 +143,6 @@ const ScheduleCreate: FC<{
 									startDate={startDate}
 									endDate={endDate}
 									isPeriodTimes={isPeriodTimes}
-									selectedDates={selectedDates}
 								></ScheduleDate>
 							)}
 							{isPage === 'periodPage' && (
@@ -163,7 +165,6 @@ const ScheduleCreate: FC<{
 						isStartEndPeriod={isStartEndPeriod}
 						onChangePage={handleChangePage}
 						isPage={isPage}
-						selectedDates={selectedDates}
 					/>
 				</div>
 			</div>

@@ -5,11 +5,7 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { TranslateDateFormat } from '@/utils/translate-date-format';
-import { getDateRange } from '@/utils/get-date-range';
-import { useRecoilState } from 'recoil';
-import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
-import { PeriodsType } from '@/atoms/periodAtom';
+
 import { ScheduleDateProps } from './schedule-date.interface';
 
 const ScheduleDate: FC<ScheduleDateProps> = ({
@@ -21,7 +17,6 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 	startDate,
 	endDate,
 	isPeriodTimes,
-	selectedDates,
 }) => {
 	const handleChangeScheduleName = (name: string) => {
 		onChangeScheduleName(name);
@@ -79,7 +74,7 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 					rounded-full p-[10px]
 					w-full hover:bg-orange-500
 					"
-					onClick={selectedDates}
+					onClick={() => handleChangePage('periodPage')}
 				>
 					{`다음`}
 				</CustomButton>

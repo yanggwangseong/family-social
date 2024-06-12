@@ -23,6 +23,9 @@
 	}
 
 	.button_container {
-		@apply w-full flex gap-4;
+		@screen md {
+			@apply flex;
+		}
+		@apply hidden w-full gap-4;
 	}
 }

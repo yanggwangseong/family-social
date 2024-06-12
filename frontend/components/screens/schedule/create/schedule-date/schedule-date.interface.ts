@@ -10,5 +10,4 @@ export interface ScheduleDateProps {
 	startDate: Date;
 	endDate: Date;
 	isPeriodTimes: PeriodsType[];
-	selectedDates: () => void;
 }

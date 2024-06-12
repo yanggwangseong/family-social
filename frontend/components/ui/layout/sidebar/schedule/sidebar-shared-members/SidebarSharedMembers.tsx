@@ -17,7 +17,6 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
 	onChangePage,
 	isPage,
-	selectedDates,
 }) => {
 	const [isAllSelected, setIsAllSelected] = useState(false);
 	const { data, isLoading } = useQuery(
@@ -104,7 +103,7 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({
 									rounded-full p-[10px]
 									w-full hover:bg-orange-500
 									"
-									onClick={selectedDates}
+									onClick={() => handleChangePage('periodPage')}
 								>
 									다음
 								</CustomButton>
