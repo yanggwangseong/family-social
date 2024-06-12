@@ -6,11 +6,12 @@ import { ScheduleSidebarProps } from './schedule-sidebar.interface';
 
 const StatusScheduleSidebar = {
 	[schdulePages[1]]: SidebarSharedMembers,
-	[schdulePages[2]]: SidebarScheduleTourism,
+	[schdulePages[2]]: SidebarSharedMembers,
+	[schdulePages[3]]: SidebarScheduleTourism,
 };
 
 interface StatusProps extends ScheduleSidebarProps {
-	status: (typeof schdulePages)[1 | 2];
+	status: (typeof schdulePages)[1 | 2 | 3];
 }
 
 const ScheduleSidebarController: FC<StatusProps> = ({ status, ...rest }) => {
