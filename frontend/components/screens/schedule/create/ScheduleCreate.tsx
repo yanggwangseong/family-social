@@ -52,32 +52,30 @@ const ScheduleCreate: FC<{
 	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
 
 	const handleChangeDate = (dates: [Date, Date]) => {
-		let [startDate, endDate] = dates;
-
-		endDate = !endDate ? startDate : endDate;
-
-		dates[1] = endDate;
-
 		setDateRange(dates);
 
-		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
+		const [startDate, endDate] = dates;
 
-		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
+		if (startDate && endDate) {
+			const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
 
-		const datesRange = getDateRange(startPeriod, endPeriod);
+			const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
 
-		// 시작기간 종료기간
-		handleChangeStartEndPeriod(startPeriod, endPeriod);
+			const datesRange = getDateRange(startPeriod, endPeriod);
 
-		setIsSelectedPeriod(datesRange[0]);
+			// 시작기간 종료기간
+			handleChangeStartEndPeriod(startPeriod, endPeriod);
 
-		setIsPeriodTimes(
-			datesRange.map(date => ({
-				period: date,
-				startTime: '10:00',
-				endTime: '22:00',
-			})),
-		);
+			setIsSelectedPeriod(datesRange[0]);
+
+			setIsPeriodTimes(
+				datesRange.map(date => ({
+					period: date,
+					startTime: '10:00',
+					endTime: '22:00',
+				})),
+			);
+		}
 	};
 
 	const [isPage, setIsPage] =

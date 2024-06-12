@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 import { ScheduleDateProps } from './schedule-date.interface';
+import Calendar from '@/components/ui/calendar/Calendar';
 
 const ScheduleDate: FC<ScheduleDateProps> = ({
 	handleChangePage,
@@ -47,14 +48,11 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 					<div className={styles.description_container}>
 						<div className={styles.title}>여행 일정 선택</div>
 						<div className={styles.subtitle}>여행 기간이 어떻게 되시나요?</div>
-						<DatePicker
-							locale={ko}
-							selectsRange={true}
+						{/* 캘린더 */}
+						<Calendar
 							startDate={startDate}
 							endDate={endDate}
-							onChange={handleChangeDate}
-							inline
-							isClearable={true}
+							handleChangeDate={handleChangeDate}
 						/>
 					</div>
 				</div>
