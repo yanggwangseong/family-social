@@ -14,7 +14,14 @@
 
 		// 여행 이름
 		.schedule_name_container {
-			@apply flex flex-col gap-4 mb-4;
+			@apply flex flex-col gap-4 my-4;
+
+			.title {
+				@screen md {
+					@apply text-xl;
+				}
+				@apply font-bold text-lg;
+			}
 		}
 
 		.description_container {

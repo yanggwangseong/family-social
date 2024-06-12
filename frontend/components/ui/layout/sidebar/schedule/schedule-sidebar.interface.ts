@@ -9,4 +9,6 @@ export interface ScheduleSidebarProps {
 	};
 	isPage: Union<typeof schdulePages>;
 	onChangePage: (page: Union<typeof schdulePages>) => void;
+	isClosePanel: boolean;
+	handleClosePanel: () => void;
 }

@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -17,11 +17,16 @@ import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 import ScheduleDate from './schedule-date/ScheduleDate';
 import { getDateRange } from '@/utils/get-date-range';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
 
 const ScheduleCreate: FC<{
 	edit?: boolean;
 	scheduleItem?: ScheduleItemResponse;
 }> = ({ edit = false, scheduleItem }) => {
+	const [isClosePanel, setIsClosePanel] = useState(false);
+
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
 	// schedule-date
@@ -106,6 +111,10 @@ const ScheduleCreate: FC<{
 		});
 	};
 
+	const handleClosePanel = () => {
+		setIsClosePanel(true);
+	};
+
 	const [startDate, endDate] = dateRange;
 
 	return (
@@ -163,7 +172,26 @@ const ScheduleCreate: FC<{
 						isStartEndPeriod={isStartEndPeriod}
 						onChangePage={handleChangePage}
 						isPage={isPage}
+						isClosePanel={isClosePanel}
+						handleClosePanel={handleClosePanel}
 					/>
+
+					{isClosePanel && (
+						<div
+							className={styles.mobile_panel_btn_container}
+							onClick={() => setIsClosePanel(false)}
+						>
+							{isPage === 'tourismPage' ? (
+								<motion.div {...BUTTONGESTURE}>
+									<PiAirplaneDuotone size={28} color="#0a0a0a" />
+								</motion.div>
+							) : (
+								<motion.div {...BUTTONGESTURE}>
+									<PiUsersThreeDuotone size={28} color="#0a0a0a" />
+								</motion.div>
+							)}
+						</div>
+					)}
 				</div>
 			</div>
 		</Format>

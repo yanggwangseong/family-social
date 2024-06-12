@@ -11,10 +11,21 @@
 		@apply flex flex-col;
 	}
 
-	.resize_panel_btn {
-		@screen md {
-			@apply hidden;
+	.panel_btn_container {
+		@apply relative;
+
+		.resize_panel_btn {
+			@screen md {
+				@apply hidden;
+			}
+			@apply flex justify-center p-2 cursor-ns-resize flex-1;
 		}
-		@apply flex justify-center p-2 cursor-ns-resize;
+
+		.panel_close_btn {
+			@screen md {
+				@apply hidden;
+			}
+			@apply block text-2xl font-bold absolute top-0 right-5 border border-solid border-customDark rounded-full bg-customOrange p-1;
+		}
 	}
 }

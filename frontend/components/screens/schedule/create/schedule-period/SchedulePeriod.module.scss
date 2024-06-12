@@ -22,10 +22,9 @@
 	}
 
 	.button_container {
-		// @screen md {
-		// 	@apply fixed bottom-0 flex gap-4 z-50 bg-basic;
-		// 	width: 768px;
-		// }
-		@apply w-full flex gap-4;
+		@screen md {
+			@apply flex;
+		}
+		@apply hidden w-full gap-4;
 	}
 }
