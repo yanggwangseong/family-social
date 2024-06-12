@@ -8,4 +8,5 @@ export interface ScheduleSidebarProps {
 		endPeriod: string;
 	};
 	isPage: Union<typeof schdulePages>;
+	onChangePage: (page: Union<typeof schdulePages>) => void;
 }

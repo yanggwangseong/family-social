@@ -24,6 +24,7 @@ const ScheduleCreate: FC<{
 	const [isScheduleName, setIsScheduleName] = useState<string>(
 		edit && scheduleItem ? scheduleItem.scheduleName : '',
 	);
+
 	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
 		startPeriod: string;
 		endPeriod: string;
@@ -119,6 +120,7 @@ const ScheduleCreate: FC<{
 						isSelecteGroup={isSelecteGroup}
 						isScheduleName={isScheduleName}
 						isStartEndPeriod={isStartEndPeriod}
+						onChangePage={handleChangePage}
 						isPage={isPage}
 					/>
 				</div>

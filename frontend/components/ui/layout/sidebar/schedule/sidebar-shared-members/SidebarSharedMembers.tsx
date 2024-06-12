@@ -10,8 +10,14 @@ import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useSharedFamIds } from '@/hooks/useSharedFamIds';
 import { MembersBelongToGroupResponse } from '@/shared/interfaces/member.interface';
 import cn from 'classnames';
+import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { Union, schdulePages } from 'types';
 
-const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
+const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({
+	isSelecteGroup,
+	onChangePage,
+	isPage,
+}) => {
 	const [isAllSelected, setIsAllSelected] = useState(false);
 	const { data, isLoading } = useQuery(
 		['get-members', isSelecteGroup],
@@ -30,6 +36,10 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 		isSelected
 			? handleSharedFamIds(isSharedFamIds.filter(item => item !== famId))
 			: handleSharedFamIds([...isSharedFamIds, famId]);
+	};
+
+	const handleChangePage = (page: Union<typeof schdulePages>) => {
+		onChangePage(page);
 	};
 
 	useEffect(() => {
@@ -72,6 +82,21 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({ isSelecteGroup }) => {
 								handleSelectedMember={handleSelectedMember}
 							/>
 						))}
+					</div>
+
+					<div className={styles.right_sidebar_footer_container}>
+						{isPage === 'periodPage' && (
+							<CustomButton
+								type="button"
+								className="mt-8 mb-4 bg-customOrange text-customDark 
+						font-bold border border-solid border-customDark 
+						rounded-full p-[10px]
+						w-full hover:bg-orange-500
+						"
+							>
+								다음
+							</CustomButton>
+						)}
 					</div>
 				</div>
 			)}

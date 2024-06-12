@@ -13,6 +13,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isScheduleName,
 	isStartEndPeriod,
 	isPage,
+	onChangePage,
 }) => {
 	const { handleTouchStart, handleMouseDown, sidebarRef } = useResizeVertical(
 		80,
@@ -42,6 +43,7 @@ const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 				isStartEndPeriod={isStartEndPeriod}
 				isPage={isPage}
 				status={isPage}
+				onChangePage={onChangePage}
 			/>
 		</div>
 	);
