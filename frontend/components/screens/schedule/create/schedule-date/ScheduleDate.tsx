@@ -44,17 +44,19 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 							></Field>
 						</div>
 					</div>
-					<div className={styles.title}>여행 일정 선택</div>
-					<div>여행 기간이 어떻게 되시나요?</div>
-					<DatePicker
-						locale={ko}
-						selectsRange={true}
-						startDate={startDate}
-						endDate={endDate}
-						onChange={handleChangeDate}
-						inline
-						isClearable={true}
-					/>
+					<div className={styles.description_container}>
+						<div className={styles.title}>여행 일정 선택</div>
+						<div className={styles.subtitle}>여행 기간이 어떻게 되시나요?</div>
+						<DatePicker
+							locale={ko}
+							selectsRange={true}
+							startDate={startDate}
+							endDate={endDate}
+							onChange={handleChangeDate}
+							inline
+							isClearable={true}
+						/>
+					</div>
 				</div>
 			</div>
 			<div className={styles.button_container}>

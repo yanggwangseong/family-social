@@ -17,8 +17,19 @@
 			@apply flex flex-col gap-4 mb-4;
 		}
 
-		.title {
-			@apply font-semibold text-lg;
+		.description_container {
+			@apply flex flex-col gap-4;
+
+			.title {
+				@screen md {
+					@apply text-xl;
+				}
+				@apply font-bold text-lg;
+			}
+
+			.subtitle {
+				@apply text-sm text-customGray;
+			}
 		}
 	}
 
