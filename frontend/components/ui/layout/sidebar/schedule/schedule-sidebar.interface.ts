@@ -9,4 +9,5 @@ export interface ScheduleSidebarProps {
 	};
 	isPage: Union<typeof schdulePages>;
 	onChangePage: (page: Union<typeof schdulePages>) => void;
+	selectedDates: () => void;
 }

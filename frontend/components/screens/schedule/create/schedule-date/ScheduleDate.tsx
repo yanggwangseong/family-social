@@ -13,46 +13,22 @@ import { PeriodsType } from '@/atoms/periodAtom';
 import { ScheduleDateProps } from './schedule-date.interface';
 
 const ScheduleDate: FC<ScheduleDateProps> = ({
+	handleChangePage,
 	onChangeScheduleName,
 	isScheduleName,
-	onChangeStartEndPeriod,
 	onChangePeriods,
 	handleChangeDate,
 	startDate,
 	endDate,
+	isPeriodTimes,
+	selectedDates,
 }) => {
-	const [isSelectedPeriod, setIsSelectedPeriod] =
-		useRecoilState(selectedPeriodAtom);
-
-	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>();
-
 	const handleChangeScheduleName = (name: string) => {
 		onChangeScheduleName(name);
 	};
 
-	const selectedDates = () => {
-		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
-
-		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
-
-		const dates = getDateRange(startPeriod, endPeriod);
-
-		// 시작기간 종료기간
-		onChangeStartEndPeriod(startPeriod, endPeriod);
-
-		setIsSelectedPeriod(dates[0]);
-
-		setIsPeriodTimes(
-			dates.map(date => ({
-				period: date,
-				startTime: '10:00',
-				endTime: '22:00',
-			})),
-		);
-	};
-
 	useEffect(() => {
-		if (isPeriodTimes) {
+		if (isPeriodTimes.length > 0) {
 			onChangePeriods(isPeriodTimes);
 		}
 	}, [isPeriodTimes, onChangePeriods]);
@@ -89,6 +65,15 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 			<div className={styles.button_container}>
 				<CustomButton
 					type="button"
+					className="mt-8 mb-4 bg-white text-customDark 
+							font-bold border border-solid border-customDark 
+							rounded-full p-[10px] w-full hover:opacity-80"
+					onClick={() => handleChangePage('selectGroupPage')}
+				>
+					이전
+				</CustomButton>
+				<CustomButton
+					type="button"
 					className="mt-8 mb-4 bg-customOrange text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px]
@@ -96,7 +81,7 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 					"
 					onClick={selectedDates}
 				>
-					{`선택`}
+					{`다음`}
 				</CustomButton>
 			</div>
 		</div>

@@ -17,6 +17,7 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
 	onChangePage,
 	isPage,
+	selectedDates,
 }) => {
 	const [isAllSelected, setIsAllSelected] = useState(false);
 	const { data, isLoading } = useQuery(
@@ -85,17 +86,54 @@ const SidebarSharedMembers: FC<ScheduleSidebarProps> = ({
 					</div>
 
 					<div className={styles.right_sidebar_footer_container}>
+						{isPage === 'scheduleDatePage' && (
+							<>
+								<CustomButton
+									type="button"
+									className="mt-8 mb-4 bg-white text-customDark 
+									font-bold border border-solid border-customDark 
+									rounded-full p-[10px] w-full hover:opacity-80"
+									onClick={() => handleChangePage('selectGroupPage')}
+								>
+									이전
+								</CustomButton>
+								<CustomButton
+									type="button"
+									className="mt-8 mb-4 bg-customOrange text-customDark 
+									font-bold border border-solid border-customDark 
+									rounded-full p-[10px]
+									w-full hover:bg-orange-500
+									"
+									onClick={selectedDates}
+								>
+									다음
+								</CustomButton>
+							</>
+						)}
+
 						{isPage === 'periodPage' && (
-							<CustomButton
-								type="button"
-								className="mt-8 mb-4 bg-customOrange text-customDark 
-						font-bold border border-solid border-customDark 
-						rounded-full p-[10px]
-						w-full hover:bg-orange-500
-						"
-							>
-								다음
-							</CustomButton>
+							<>
+								<CustomButton
+									type="button"
+									className="mt-8 mb-4 bg-white text-customDark 
+							font-bold border border-solid border-customDark 
+							rounded-full p-[10px] w-full hover:opacity-80"
+									onClick={() => handleChangePage('scheduleDatePage')}
+								>
+									이전
+								</CustomButton>
+								<CustomButton
+									type="button"
+									className="mt-8 mb-4 bg-customOrange text-customDark 
+								font-bold border border-solid border-customDark 
+								rounded-full p-[10px]
+								w-full hover:bg-orange-500
+								"
+									onClick={() => handleChangePage('tourismPage')}
+								>
+									다음
+								</CustomButton>
+							</>
 						)}
 					</div>
 				</div>

@@ -15,6 +15,8 @@ import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 import ScheduleDate from './schedule-date/ScheduleDate';
+import { getDateRange } from '@/utils/get-date-range';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 
 const ScheduleCreate: FC<{
 	edit?: boolean;
@@ -22,9 +24,16 @@ const ScheduleCreate: FC<{
 }> = ({ edit = false, scheduleItem }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
 
+	// schedule-date
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
+
 	const [isScheduleName, setIsScheduleName] = useState<string>(
 		edit && scheduleItem ? scheduleItem.scheduleName : '',
 	);
+
+	// schedule-date
+	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>([]);
 
 	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
 		startPeriod: string;
@@ -75,6 +84,29 @@ const ScheduleCreate: FC<{
 		});
 	};
 
+	// schedule-date
+	const selectedDates = () => {
+		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
+
+		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
+
+		const dates = getDateRange(startPeriod, endPeriod);
+
+		// 시작기간 종료기간
+		handleChangeStartEndPeriod(startPeriod, endPeriod);
+
+		setIsSelectedPeriod(dates[0]);
+
+		setIsPeriodTimes(
+			dates.map(date => ({
+				period: date,
+				startTime: '10:00',
+				endTime: '22:00',
+			})),
+		);
+		handleChangePage('periodPage');
+	};
+
 	return (
 		<Format title={'schedule-create'}>
 			<div className={styles.container}>
@@ -100,13 +132,15 @@ const ScheduleCreate: FC<{
 							)}
 							{isPage === 'scheduleDatePage' && (
 								<ScheduleDate
+									handleChangePage={handleChangePage}
 									onChangeScheduleName={handleChangeScheduleName}
 									isScheduleName={isScheduleName}
-									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									onChangePeriods={handleChangePeriods}
 									handleChangeDate={handleChangeDate}
 									startDate={startDate}
 									endDate={endDate}
+									isPeriodTimes={isPeriodTimes}
+									selectedDates={selectedDates}
 								></ScheduleDate>
 							)}
 							{isPage === 'periodPage' && (
@@ -129,6 +163,7 @@ const ScheduleCreate: FC<{
 						isStartEndPeriod={isStartEndPeriod}
 						onChangePage={handleChangePage}
 						isPage={isPage}
+						selectedDates={selectedDates}
 					/>
 				</div>
 			</div>
