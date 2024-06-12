@@ -1,0 +1,28 @@
+.main_container {
+	@apply h-full relative mx-4 flex flex-col;
+
+	.contents_container {
+		@apply flex-grow overflow-y-auto;
+
+		// 현재 STEP표시
+		.step_title {
+			@screen md {
+				@apply text-3xl;
+			}
+			@apply font-bold text-lg;
+		}
+
+		// 여행 이름
+		.schedule_name_container {
+			@apply flex flex-col gap-4 mb-4;
+		}
+
+		.title {
+			@apply font-semibold text-lg;
+		}
+	}
+
+	.button_container {
+		@apply w-full flex gap-4;
+	}
+}

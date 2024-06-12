@@ -10,13 +10,9 @@ import { getDateRange } from '@/utils/get-date-range';
 import { useRecoilState } from 'recoil';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { PeriodsType } from '@/atoms/periodAtom';
+import { ScheduleDateProps } from './schedule-date.interface';
 
-const ScheduleDate: FC<{
-	onChangeScheduleName: (name: string) => void;
-	isScheduleName: string;
-	onChangeStartEndPeriod: (startPeriod: string, endPeriod: string) => void;
-	onChangePeriods: (dates: PeriodsType[]) => void;
-}> = ({
+const ScheduleDate: FC<ScheduleDateProps> = ({
 	onChangeScheduleName,
 	isScheduleName,
 	onChangeStartEndPeriod,
@@ -39,9 +35,6 @@ const ScheduleDate: FC<{
 	};
 
 	const selectedDates = () => {
-		//setIsOpen(false);
-		//!pageInit && setPageInit(true);
-
 		const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
 
 		const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
@@ -69,7 +62,7 @@ const ScheduleDate: FC<{
 	}, [isPeriodTimes, onChangePeriods]);
 
 	return (
-		<div className={styles.period_container}>
+		<div className={styles.main_container}>
 			<div className={styles.contents_container}>
 				<div className={styles.step_title}>STEP 2</div>
 			</div>
