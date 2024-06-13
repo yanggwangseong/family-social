@@ -7,6 +7,7 @@ import Link from 'next/link';
 import {
 	PiUserCircleGearDuotone,
 	PiCalendarCheckDuotone,
+	PiUsersThreeDuotone,
 	PiArticleDuotone,
 } from 'react-icons/pi';
 import { useMainSidebar } from '@/hooks/useMainSidebar';
@@ -47,6 +48,12 @@ const MainSidebar: FC = () => {
 							link="/feeds"
 							Icon={PiArticleDuotone}
 							menu="피드"
+							handleCloseMainSidebar={handleCloseMainSidebar}
+						/>
+						<Menu
+							link="/groups"
+							Icon={PiUsersThreeDuotone}
+							menu="그룹"
 							handleCloseMainSidebar={handleCloseMainSidebar}
 						/>
 						<Menu
