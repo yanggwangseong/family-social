@@ -36,7 +36,7 @@ const ScheduleEditPage: NextPage<{ err: boolean; status: number }> = ({
 	if (isLoading) return <Skeleton></Skeleton>;
 	if (!data) return <Skeleton></Skeleton>;
 
-	return <ScheduleCreate edit={true} scheduleItem={data} />;
+	return <ScheduleCreate scheduleItem={data} />;
 };
 
 export default ScheduleEditPage;

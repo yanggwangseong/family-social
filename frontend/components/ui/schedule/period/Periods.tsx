@@ -7,7 +7,6 @@ import { PeriodsType } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
-	console.log('isPeriods=', isPeriods);
 	return (
 		<div className={styles.period_container}>
 			<Table headerColumns={periodTableHeaderCol}>

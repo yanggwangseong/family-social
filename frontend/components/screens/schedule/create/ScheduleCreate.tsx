@@ -22,9 +22,8 @@ import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
 
 const ScheduleCreate: FC<{
-	edit?: boolean;
 	scheduleItem?: ScheduleItemResponse;
-}> = ({ edit = false, scheduleItem }) => {
+}> = ({ scheduleItem }) => {
 	const [isClosePanel, setIsClosePanel] = useState(false);
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -34,7 +33,7 @@ const ScheduleCreate: FC<{
 		useRecoilState(selectedPeriodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>(
-		edit && scheduleItem ? scheduleItem.scheduleName : '',
+		scheduleItem ? scheduleItem.scheduleName : '',
 	);
 
 	// schedule-date
@@ -44,14 +43,12 @@ const ScheduleCreate: FC<{
 		startPeriod: string;
 		endPeriod: string;
 	}>({
-		startPeriod:
-			edit && scheduleItem
-				? TranslateDateFormat(new Date(scheduleItem.startPeriod), 'yyyy-MM-dd')
-				: '',
-		endPeriod:
-			edit && scheduleItem
-				? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
-				: '',
+		startPeriod: scheduleItem
+			? TranslateDateFormat(new Date(scheduleItem.startPeriod), 'yyyy-MM-dd')
+			: '',
+		endPeriod: scheduleItem
+			? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
+			: '',
 	});
 
 	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
@@ -87,7 +84,7 @@ const ScheduleCreate: FC<{
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
-		useMemberBelongToGroups(edit && scheduleItem ? scheduleItem.groupId : '');
+		useMemberBelongToGroups(scheduleItem ? scheduleItem.groupId : '');
 
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);
