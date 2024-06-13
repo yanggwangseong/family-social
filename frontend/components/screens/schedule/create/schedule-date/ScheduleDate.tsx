@@ -1,9 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleDate.module.scss';
 import Field from '@/components/ui/field/Field';
-import DatePicker from 'react-datepicker';
-import { ko } from 'date-fns/locale';
-import 'react-datepicker/dist/react-datepicker.css';
+
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 import { ScheduleDateProps } from './schedule-date.interface';
