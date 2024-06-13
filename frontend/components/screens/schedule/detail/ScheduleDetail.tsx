@@ -9,6 +9,7 @@ import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import ScheduleDetailList from '@/components/ui/schedule/detail/DetailList';
+import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 const ScheduleDetail: FC = () => {
 	const router = useRouter();
@@ -28,6 +29,10 @@ const ScheduleDetail: FC = () => {
 
 	const handleSelectedPeriod = (period: string) => {
 		setIsSelectedPeriod(period);
+	};
+
+	const handleScheduleEditPage = () => {
+		router.push(`/schedules/${query.scheduleId}/edit`);
 	};
 
 	return (
@@ -50,6 +55,17 @@ const ScheduleDetail: FC = () => {
 										<div className={styles.title}>{data.scheduleName}</div>
 										<div className={styles.title_period}>
 											{`${data.startPeriod.toString()} ~ ${data.endPeriod.toString()}`}
+										</div>
+										<div className={styles.schedule_edit_btn_container}>
+											<CustomButton
+												className="text-sm text-customDark font-bold px-3 
+												py-2 border border-solid border-customDark rounded-full
+												cursor-pointer flex gap-2 bg-customOrange md:px-5"
+												type="button"
+												onClick={handleScheduleEditPage}
+											>
+												편집
+											</CustomButton>
 										</div>
 									</div>
 									<ScheduleDetailSelect
