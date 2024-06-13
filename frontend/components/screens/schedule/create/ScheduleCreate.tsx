@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -14,16 +14,32 @@ import { useRecoilState } from 'recoil';
 import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
+import ScheduleDate from './schedule-date/ScheduleDate';
+import { getDateRange } from '@/utils/get-date-range';
+import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
+import { motion } from 'framer-motion';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
+import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
 
 const ScheduleCreate: FC<{
 	edit?: boolean;
 	scheduleItem?: ScheduleItemResponse;
 }> = ({ edit = false, scheduleItem }) => {
+	const [isClosePanel, setIsClosePanel] = useState(false);
+
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
+
+	// schedule-date
+	const [isSelectedPeriod, setIsSelectedPeriod] =
+		useRecoilState(selectedPeriodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>(
 		edit && scheduleItem ? scheduleItem.scheduleName : '',
 	);
+
+	// schedule-date
+	const [isPeriodTimes, setIsPeriodTimes] = useState<PeriodsType[]>([]);
+
 	const [isStartEndPeriod, setIsStartEndPeriod] = useState<{
 		startPeriod: string;
 		endPeriod: string;
@@ -37,6 +53,35 @@ const ScheduleCreate: FC<{
 				? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
 				: '',
 	});
+
+	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+
+	const handleChangeDate = (dates: [Date, Date]) => {
+		setDateRange(dates);
+
+		const [startDate, endDate] = dates;
+
+		if (startDate && endDate) {
+			const startPeriod = TranslateDateFormat(startDate, 'yyyy-MM-dd');
+
+			const endPeriod = TranslateDateFormat(endDate, 'yyyy-MM-dd');
+
+			const datesRange = getDateRange(startPeriod, endPeriod);
+
+			// 시작기간 종료기간
+			handleChangeStartEndPeriod(startPeriod, endPeriod);
+
+			setIsSelectedPeriod(datesRange[0]);
+
+			setIsPeriodTimes(
+				datesRange.map(date => ({
+					period: date,
+					startTime: '10:00',
+					endTime: '22:00',
+				})),
+			);
+		}
+	};
 
 	const [isPage, setIsPage] =
 		useState<Union<typeof schdulePages>>('selectGroupPage');
@@ -66,6 +111,12 @@ const ScheduleCreate: FC<{
 		});
 	};
 
+	const handleClosePanel = () => {
+		setIsClosePanel(true);
+	};
+
+	const [startDate, endDate] = dateRange;
+
 	return (
 		<Format title={'schedule-create'}>
 			<div className={styles.container}>
@@ -89,24 +140,24 @@ const ScheduleCreate: FC<{
 									></SelectGroup>
 								)
 							)}
+							{isPage === 'scheduleDatePage' && (
+								<ScheduleDate
+									handleChangePage={handleChangePage}
+									onChangeScheduleName={handleChangeScheduleName}
+									isScheduleName={isScheduleName}
+									onChangePeriods={handleChangePeriods}
+									handleChangeDate={handleChangeDate}
+									startDate={startDate}
+									endDate={endDate}
+									isPeriodTimes={isPeriodTimes}
+								></ScheduleDate>
+							)}
 							{isPage === 'periodPage' && (
 								<SchedulePeriod
 									onChangePage={handleChangePage}
-									onChangePeriods={handleChangePeriods}
-									onChangeScheduleName={handleChangeScheduleName}
-									onChangeStartEndPeriod={handleChangeStartEndPeriod}
 									isPeriods={isPeriods}
-									isScheduleName={isScheduleName}
-									updateStartDate={
-										edit && scheduleItem?.startPeriod
-											? scheduleItem.startPeriod
-											: undefined
-									}
-									updateEndDate={
-										edit && scheduleItem?.endPeriod
-											? scheduleItem.endPeriod
-											: undefined
-									}
+									startDate={startDate}
+									endDate={endDate}
 								></SchedulePeriod>
 							)}
 							{isPage === 'tourismPage' && (
@@ -119,8 +170,28 @@ const ScheduleCreate: FC<{
 						isSelecteGroup={isSelecteGroup}
 						isScheduleName={isScheduleName}
 						isStartEndPeriod={isStartEndPeriod}
+						onChangePage={handleChangePage}
 						isPage={isPage}
+						isClosePanel={isClosePanel}
+						handleClosePanel={handleClosePanel}
 					/>
+
+					{isClosePanel && (
+						<div
+							className={styles.mobile_panel_btn_container}
+							onClick={() => setIsClosePanel(false)}
+						>
+							{isPage === 'tourismPage' ? (
+								<motion.div {...BUTTONGESTURE}>
+									<PiAirplaneDuotone size={28} color="#0a0a0a" />
+								</motion.div>
+							) : (
+								<motion.div {...BUTTONGESTURE}>
+									<PiUsersThreeDuotone size={28} color="#0a0a0a" />
+								</motion.div>
+							)}
+						</div>
+					)}
 				</div>
 			</div>
 		</Format>

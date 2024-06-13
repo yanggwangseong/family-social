@@ -1,0 +1,49 @@
+.main_container {
+	@apply h-full relative mx-4 flex flex-col;
+
+	.contents_container {
+		@apply flex-grow overflow-y-auto;
+
+		// 현재 STEP표시
+		.step_title {
+			@screen md {
+				@apply text-3xl;
+			}
+			@apply font-bold text-lg;
+		}
+
+		// 여행 이름
+		.schedule_name_container {
+			@apply flex flex-col gap-4 my-4;
+
+			.title {
+				@screen md {
+					@apply text-xl;
+				}
+				@apply font-bold text-lg;
+			}
+		}
+
+		.description_container {
+			@apply flex flex-col gap-4;
+
+			.title {
+				@screen md {
+					@apply text-xl;
+				}
+				@apply font-bold text-lg;
+			}
+
+			.subtitle {
+				@apply text-sm text-customGray;
+			}
+		}
+	}
+
+	.button_container {
+		@screen md {
+			@apply flex;
+		}
+		@apply hidden w-full gap-4;
+	}
+}

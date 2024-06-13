@@ -7,11 +7,15 @@ import { PeriodsType } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
+	console.log('isPeriods=', isPeriods);
 	return (
 		<div className={styles.period_container}>
 			<Table headerColumns={periodTableHeaderCol}>
 				{isPeriods.map((period, index) => {
-					const date = new Date(period.period);
+					const [y, m, d] = period.period.split('-');
+
+					const date = new Date(`${parseInt(y)}-${parseInt(m)}-${parseInt(d)}`);
+
 					return (
 						<Fragment key={index}>
 							<tr>
