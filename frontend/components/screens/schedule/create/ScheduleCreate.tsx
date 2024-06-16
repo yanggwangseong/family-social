@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -121,6 +121,26 @@ const ScheduleCreate: FC<{
 	};
 
 	const [startDate, endDate] = dateRange;
+
+	useEffect(() => {
+		if (scheduleItem && scheduleItem.schedulePeriods) {
+			const periods: PeriodsType[] = scheduleItem.schedulePeriods.map(
+				period => ({
+					period: period.period,
+					startTime: period.startTime,
+					endTime: period.endTime,
+					tourisms: period.tourisms?.map(tourism => ({
+						contentId: tourism.contentId,
+						stayTime: tourism.stayTime,
+						tourismImage: tourism.tourismImage,
+						title: tourism.title,
+						position: tourism.position,
+					})),
+				}),
+			);
+			setIsPeriods(periods);
+		}
+	}, [scheduleItem, setIsPeriods]);
 
 	return (
 		<Format title={'schedule-create'}>

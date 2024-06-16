@@ -137,7 +137,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 								onClick={() =>
 									handleChagePeriods({
 										contentId: tour.contentid,
-										stayTime: '02:40',
+										stayTime: '02:00',
 										tourismImage: tour.firstimage,
 										title: tour.title,
 									})
