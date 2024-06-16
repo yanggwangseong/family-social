@@ -138,9 +138,11 @@ const ScheduleCreate: FC<{
 					})),
 				}),
 			);
+
+			setIsSelectedPeriod(periods[0].period);
 			setIsPeriods(periods);
 		}
-	}, [scheduleItem, setIsPeriods]);
+	}, [scheduleItem, setIsPeriods, setIsSelectedPeriod]);
 
 	return (
 		<Format title={'schedule-create'}>

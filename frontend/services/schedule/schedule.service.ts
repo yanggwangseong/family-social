@@ -33,6 +33,24 @@ export const ScheduleService = {
 			`/groups/${groupId}/schedules/${scheduleId}`,
 		);
 
+		data.schedulePeriods.map(item => {
+			item.startTime = `${item.startTime.split(':')[0]}:${
+				item.startTime.split(':')[1]
+			}`;
+
+			item.endTime = `${item.endTime.split(':')[0]}:${
+				item.endTime.split(':')[1]
+			}`;
+
+			item.tourisms.map(data => {
+				const [start, end] = data.stayTime.split(':');
+				data.stayTime = `${start}:${end}`;
+				return data;
+			});
+
+			return item;
+		});
+
 		return data;
 	},
 
