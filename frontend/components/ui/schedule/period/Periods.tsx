@@ -5,15 +5,14 @@ import styles from './Periods.module.scss';
 import { periodTableHeaderCol } from '@/constants/table.constant';
 import { PeriodsType } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
+import { FormatDateToString } from '@/utils/formatDateToString';
 
 const Periods: FC<{ isPeriods: PeriodsType[] }> = ({ isPeriods }) => {
 	return (
 		<div className={styles.period_container}>
 			<Table headerColumns={periodTableHeaderCol}>
 				{isPeriods.map((period, index) => {
-					const [y, m, d] = period.period.split('-');
-
-					const date = new Date(`${parseInt(y)}-${parseInt(m)}-${parseInt(d)}`);
+					const date = FormatDateToString(period.period);
 
 					return (
 						<Fragment key={index}>

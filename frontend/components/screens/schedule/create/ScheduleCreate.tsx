@@ -20,6 +20,7 @@ import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { motion } from 'framer-motion';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
+import { FormatDateToString } from '@/utils/formatDateToString';
 
 const ScheduleCreate: FC<{
 	scheduleItem?: ScheduleItemResponse;
@@ -51,7 +52,14 @@ const ScheduleCreate: FC<{
 			: '',
 	});
 
-	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+	const [dateRange, setDateRange] = useState<Date[]>(
+		scheduleItem
+			? [
+					FormatDateToString(scheduleItem.startPeriod),
+					FormatDateToString(scheduleItem.endPeriod),
+			  ]
+			: [new Date(), new Date()],
+	);
 
 	const handleChangeDate = (dates: [Date, Date]) => {
 		setDateRange(dates);

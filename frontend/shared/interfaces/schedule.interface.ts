@@ -30,8 +30,8 @@ export interface ScheduleResponse {
 	groupId: string;
 	scheduleImage: string;
 	scheduleName: string;
-	startPeriod: Date;
-	endPeriod: Date;
+	startPeriod: string;
+	endPeriod: string;
 	updatedAt: string;
 	sharedMembers: FamSharedMemberResponse[];
 	group: GroupProfileResponse;
