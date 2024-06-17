@@ -115,6 +115,7 @@ export class SchedulesService {
 			endPeriod,
 			...rest,
 		});
+
 		const schedule = await this.scheduleRepository.createSchedule(
 			newSchedule,
 			qr,
@@ -136,15 +137,24 @@ export class SchedulesService {
 	}
 
 	async updateToursSchedule(
-		{ periods, ...rest }: IUpdateTourArgs,
+		{ scheduleItem, ...rest }: IUpdateTourArgs,
 		qr?: QueryRunner,
 	): Promise<ScheduleByIdResDto> {
+		const { scheduleName, periods, sharedFamIds } = scheduleItem;
 		const schedule = await this.scheduleRepository.updateScheduleGroup(
 			{
 				...rest,
+				scheduleName,
 			},
 			qr,
 		);
+
+		// SharedScheduleMember 삭제
+		// 공유된 멤버 삭제
+		await this.deleteSharedScheduleMember(schedule.id, qr);
+
+		// SharedScheduleMember 생성
+		await this.createSharedScheduleMember(sharedFamIds, schedule.id, qr);
 
 		// Tourism 먼저 다 삭제
 		const periodIds =

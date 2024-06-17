@@ -58,7 +58,7 @@ import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-e
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
-import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
+import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
@@ -512,7 +512,7 @@ export class GroupsController {
 		)
 		scheduleId: string,
 		@CurrentUser('sub') sub: string,
-		@Body() dto: TourismPeriodUpdateReqDto[],
+		@Body() dto: ScheduleUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.updateToursSchedule(
@@ -520,7 +520,7 @@ export class GroupsController {
 				memberId: sub,
 				groupId,
 				scheduleId,
-				periods: dto,
+				scheduleItem: dto,
 			},
 			qr,
 		);
