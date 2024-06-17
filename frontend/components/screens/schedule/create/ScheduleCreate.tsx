@@ -1,7 +1,7 @@
 import Header from '@/components/ui/header/Header';
 import Format from '@/components/ui/layout/Format';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
@@ -20,11 +20,11 @@ import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { motion } from 'framer-motion';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
+import { FormatDateToString } from '@/utils/formatDateToString';
 
 const ScheduleCreate: FC<{
-	edit?: boolean;
 	scheduleItem?: ScheduleItemResponse;
-}> = ({ edit = false, scheduleItem }) => {
+}> = ({ scheduleItem }) => {
 	const [isClosePanel, setIsClosePanel] = useState(false);
 
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -34,7 +34,7 @@ const ScheduleCreate: FC<{
 		useRecoilState(selectedPeriodAtom);
 
 	const [isScheduleName, setIsScheduleName] = useState<string>(
-		edit && scheduleItem ? scheduleItem.scheduleName : '',
+		scheduleItem ? scheduleItem.scheduleName : '',
 	);
 
 	// schedule-date
@@ -44,17 +44,22 @@ const ScheduleCreate: FC<{
 		startPeriod: string;
 		endPeriod: string;
 	}>({
-		startPeriod:
-			edit && scheduleItem
-				? TranslateDateFormat(new Date(scheduleItem.startPeriod), 'yyyy-MM-dd')
-				: '',
-		endPeriod:
-			edit && scheduleItem
-				? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
-				: '',
+		startPeriod: scheduleItem
+			? TranslateDateFormat(new Date(scheduleItem.startPeriod), 'yyyy-MM-dd')
+			: '',
+		endPeriod: scheduleItem
+			? TranslateDateFormat(new Date(scheduleItem.endPeriod), 'yyyy-MM-dd')
+			: '',
 	});
 
-	const [dateRange, setDateRange] = useState<Date[]>([new Date(), new Date()]);
+	const [dateRange, setDateRange] = useState<Date[]>(
+		scheduleItem
+			? [
+					FormatDateToString(scheduleItem.startPeriod),
+					FormatDateToString(scheduleItem.endPeriod),
+			  ]
+			: [new Date(), new Date()],
+	);
 
 	const handleChangeDate = (dates: [Date, Date]) => {
 		setDateRange(dates);
@@ -87,7 +92,7 @@ const ScheduleCreate: FC<{
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
-		useMemberBelongToGroups(edit && scheduleItem ? scheduleItem.groupId : '');
+		useMemberBelongToGroups(scheduleItem ? scheduleItem.groupId : '');
 
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);
@@ -116,6 +121,28 @@ const ScheduleCreate: FC<{
 	};
 
 	const [startDate, endDate] = dateRange;
+
+	useEffect(() => {
+		if (scheduleItem && scheduleItem.schedulePeriods) {
+			const periods: PeriodsType[] = scheduleItem.schedulePeriods.map(
+				period => ({
+					period: period.period,
+					startTime: period.startTime,
+					endTime: period.endTime,
+					tourisms: period.tourisms?.map(tourism => ({
+						contentId: tourism.contentId,
+						stayTime: tourism.stayTime,
+						tourismImage: tourism.tourismImage,
+						title: tourism.title,
+						position: tourism.position,
+					})),
+				}),
+			);
+
+			setIsSelectedPeriod(periods[0].period);
+			setIsPeriods(periods);
+		}
+	}, [scheduleItem, setIsPeriods, setIsSelectedPeriod]);
 
 	return (
 		<Format title={'schedule-create'}>
@@ -174,6 +201,7 @@ const ScheduleCreate: FC<{
 						isPage={isPage}
 						isClosePanel={isClosePanel}
 						handleClosePanel={handleClosePanel}
+						scheduleItem={scheduleItem}
 					/>
 
 					{isClosePanel && (

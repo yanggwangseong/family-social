@@ -1,11 +1,3 @@
-import { PickType } from '@nestjs/swagger';
+import { TourismCreateReqDto } from './tourism-create-req.dto';
 
-import { TourismEntity } from '@/models/entities/tourism.entity';
-
-export class TourismUpdateReqDto extends PickType(TourismEntity, [
-	'contentId',
-	'stayTime',
-	'tourismImage',
-	'title',
-	'position',
-] as const) {}
+export class TourismUpdateReqDto extends TourismCreateReqDto {}

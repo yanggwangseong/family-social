@@ -41,6 +41,13 @@
 					.title_period {
 						@apply font-medium text-lg flex items-center text-customGray;
 					}
+
+					.schedule_edit_btn_container {
+						@screen md {
+							@apply ml-auto;
+						}
+						@apply ml-0;
+					}
 				}
 
 				// list

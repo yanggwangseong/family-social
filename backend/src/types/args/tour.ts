@@ -1,12 +1,8 @@
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
-import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 
-export interface IUpdateTourArgs {
-	memberId: string;
-	groupId: string;
+export interface IUpdateTourArgs extends ICreateTourArgs {
 	scheduleId: string;
-	periods: TourismPeriodCreateReqDto[];
 }
 
 export interface ICreateTourArgs {
