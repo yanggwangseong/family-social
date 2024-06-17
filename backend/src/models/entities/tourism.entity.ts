@@ -63,7 +63,7 @@ export class TourismEntity extends DefaultEntity {
 	/**
 	 * 관광순서 정렬 순서로, 오름차순 정렬된다.
 	 */
-	@Column('numeric', { name: 'position', default: 0 })
+	@Column('int4', { name: 'position', default: 0 })
 	@ApiProperty()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
