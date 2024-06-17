@@ -7,6 +7,10 @@ export interface CreateScheduleResponse {
 	id: string;
 }
 
+export interface UpdateScheduleRequest extends CreateScheduleRequest {
+	scheduleId: string;
+}
+
 export interface CreateScheduleRequest {
 	groupId: string;
 	scheduleName: string;
@@ -15,6 +19,9 @@ export interface CreateScheduleRequest {
 	periods: PeriodsType[];
 	sharedFamIds: string[];
 }
+
+export interface UpdateScheduleRequestBody
+	extends OmitStrict<UpdateScheduleRequest, 'groupId' | 'scheduleId'> {}
 
 export interface CreateScheduleRequestBody
 	extends OmitStrict<CreateScheduleRequest, 'groupId'> {}

@@ -5,6 +5,8 @@ import {
 	GetScheduleListResponse,
 	ScheduleItemResponse,
 	UpdateScheduleNameRequestBody,
+	UpdateScheduleRequest,
+	UpdateScheduleRequestBody,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -15,6 +17,21 @@ export const ScheduleService = {
 			{
 				...rest,
 			} satisfies CreateScheduleRequestBody,
+		);
+
+		return data;
+	},
+
+	async updateScheduleByScheduleId({
+		groupId,
+		scheduleId,
+		...rest
+	}: UpdateScheduleRequest) {
+		const { data } = await axiosAPI.put<CreateScheduleResponse>(
+			`/groups/${groupId}/schedules/${scheduleId}`,
+			{
+				...rest,
+			} satisfies UpdateScheduleRequestBody,
 		);
 
 		return data;
