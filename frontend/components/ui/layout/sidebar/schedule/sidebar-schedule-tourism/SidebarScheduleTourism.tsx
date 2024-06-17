@@ -25,6 +25,7 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	isScheduleName,
 	isStartEndPeriod,
 	isPage,
+	scheduleItem,
 }) => {
 	const router = useRouter();
 	const [isValidate, setIsValidate] = useState<boolean>(false);
@@ -135,8 +136,8 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 										{ hours: 0, minutes: 0 },
 									);
 
-									const formattedTotal = `${String(total?.hours)}시간 ${String(
-										total?.minutes,
+									const formattedTotal = `${String(total.hours)}시간 ${String(
+										total.minutes,
 									)}분`;
 									return formattedTotal;
 								}
@@ -172,18 +173,32 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 					</div>
 				</div>
 				<div className={styles.right_sidebar_footer_container}>
-					<CustomButton
-						type="button"
-						className="mt-8 bg-customOrange text-customDark 
+					{scheduleItem ? (
+						<CustomButton
+							type="button"
+							className="mt-8 bg-customOrange text-customDark 
 						font-bold border border-solid border-customDark 
 						rounded-full p-[10px]
 						w-full hover:bg-orange-500
 						"
-						disabled={!isValidate}
-						onClick={() => isValidate && handleCreateSchedule()}
-					>
-						일정 생성
-					</CustomButton>
+							disabled={!isValidate}
+						>
+							일정 수정
+						</CustomButton>
+					) : (
+						<CustomButton
+							type="button"
+							className="mt-8 bg-customOrange text-customDark 
+						font-bold border border-solid border-customDark 
+						rounded-full p-[10px]
+						w-full hover:bg-orange-500
+						"
+							disabled={!isValidate}
+							onClick={() => isValidate && handleCreateSchedule()}
+						>
+							일정 생성
+						</CustomButton>
+					)}
 				</div>
 			</div>
 		)

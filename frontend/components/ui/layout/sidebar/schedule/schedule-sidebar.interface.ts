@@ -1,3 +1,4 @@
+import { ScheduleItemResponse } from '@/shared/interfaces/schedule.interface';
 import { Union, schdulePages } from 'types';
 
 export interface ScheduleSidebarProps {
@@ -11,4 +12,5 @@ export interface ScheduleSidebarProps {
 	onChangePage: (page: Union<typeof schdulePages>) => void;
 	isClosePanel: boolean;
 	handleClosePanel: () => void;
+	scheduleItem?: ScheduleItemResponse;
 }

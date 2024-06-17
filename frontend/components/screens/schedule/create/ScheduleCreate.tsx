@@ -201,6 +201,7 @@ const ScheduleCreate: FC<{
 						isPage={isPage}
 						isClosePanel={isClosePanel}
 						handleClosePanel={handleClosePanel}
+						scheduleItem={scheduleItem}
 					/>
 
 					{isClosePanel && (
