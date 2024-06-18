@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
-import { EntityNotFoundException } from '@/common/exception/service.exception';
-import { ERROR_GROUP_EVENT_TYPE_NOT_FOUND } from '@/constants/business-error';
+import {
+	EntityConflictException,
+	EntityNotFoundException,
+} from '@/common/exception/service.exception';
+import {
+	ERROR_DELETE_GROUP_EVENT,
+	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
+} from '@/constants/business-error';
 import { GroupEventTypeRepository } from '@/models/repositories/group-event-type.repository';
 import { GroupEventRepository } from '@/models/repositories/group-event.repository';
 import { EventType, Union } from '@/types';
@@ -32,6 +38,15 @@ export class GroupEventsService {
 		});
 
 		await this.groupEventRepository.createGroupEvent(newGroupEvent, qr);
+	}
+
+	async deleteGroupEventByGroupEventId(groupEventId: string, qr?: QueryRunner) {
+		const status = await this.groupEventRepository.deleteGroupEvent(
+			groupEventId,
+			qr,
+		);
+
+		if (!status) throw EntityConflictException(ERROR_DELETE_GROUP_EVENT);
 	}
 
 	private async isEventTypeExists(

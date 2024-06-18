@@ -29,4 +29,14 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 
 		await repository.insert(overrideInsertFeilds);
 	}
+
+	async deleteGroupEvent(groupEventId: string, qr?: QueryRunner) {
+		const repository = this.getRepository(qr);
+
+		const { affected } = await repository.delete({
+			id: groupEventId,
+		});
+
+		return !!affected;
+	}
 }
