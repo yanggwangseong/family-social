@@ -49,6 +49,14 @@ export class GroupEventsService {
 		if (!status) throw EntityConflictException(ERROR_DELETE_GROUP_EVENT);
 	}
 
+	async groupEventExistsByGroupEventId(groupEventId: string) {
+		return await this.groupEventRepository.exist({
+			where: {
+				id: groupEventId,
+			},
+		});
+	}
+
 	async isMineGroupEventExists(
 		groupEventId: string,
 		memberId: string,

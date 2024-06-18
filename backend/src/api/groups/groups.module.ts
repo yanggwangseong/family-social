@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { GroupEventExistsMiddleware } from '@/common/middlewares/group-event-exists.middleware';
 import { GroupExistsMiddleware } from '@/common/middlewares/group-exists.middleware';
 import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
 import { FamEntity } from '@/models/entities/fam.entity';
@@ -58,5 +59,10 @@ export class GroupsModule implements NestModule {
 				method: RequestMethod.DELETE,
 			},
 		);
+
+		consumer.apply(GroupEventExistsMiddleware).forRoutes({
+			path: 'groups/:groupId/group-events/:groupEventId',
+			method: RequestMethod.DELETE,
+		});
 	}
 }
