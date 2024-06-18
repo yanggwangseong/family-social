@@ -111,14 +111,14 @@ export class GroupEventEntity extends DefaultEntity {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	eventEndDate!: Date;
+	eventEndDate?: Date;
 
 	@Column({ type: 'time', nullable: true })
 	@ApiPropertyOptional()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	eventEndTime!: Date;
+	eventEndTime?: Date;
 
 	@ManyToOne(() => GroupEventTypeEntity, (evt) => evt.groupEvents)
 	@JoinColumn({ name: 'eventType', referencedColumnName: 'groupEventType' })
