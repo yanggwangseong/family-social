@@ -62,6 +62,7 @@ import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
+import { GroupEventsService } from '../group-events/group-events.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
@@ -77,6 +78,7 @@ export class GroupsController {
 		private readonly membersService: MembersService,
 		private readonly schedulesService: SchedulesService,
 		private readonly mailsService: MailsService,
+		private readonly groupEventsService: GroupEventsService,
 	) {}
 
 	/**
