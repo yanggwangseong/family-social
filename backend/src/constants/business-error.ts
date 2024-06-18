@@ -104,3 +104,6 @@ export const ERROR_GROUP_EVENT_TYPE_NOT_FOUND =
 
 export const ERROR_DELETE_GROUP_EVENT =
 	'해당 그룹 이벤트를 삭제하던 도중 에러가 발생했습니다' as const;
+
+export const ERROR_NO_PERMISSTION_TO_GROUP_EVENT =
+	'해당 그룹 이벤트에 접근 할 권한이 없습니다' as const;
