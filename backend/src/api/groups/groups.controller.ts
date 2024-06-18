@@ -18,6 +18,7 @@ import { QueryRunner } from 'typeorm';
 
 import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
+import { PostGroupEventSwagger } from '@/common/decorators/swagger/swagger-group-event.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
@@ -57,6 +58,7 @@ import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
+import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
 
@@ -551,5 +553,24 @@ export class GroupsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 생성
+	 *
+	 * @tag groups
+	 * @param dto 그룹 아이디
+	 * @param sub 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PostGroupEventSwagger()
+	@UseGuards(GroupMemberShipGuard)
+	@Post('/:groupId/group-events')
+	async postGroupEvent(
+		@Body() dto: GroupEventCreateReqDto,
+		@CurrentUser('sub') sub: string,
+	) {
+		await this.groupEventsService.createGroupEvent(dto, sub);
 	}
 }

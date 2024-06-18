@@ -1,13 +1,3 @@
-import { EventType, Union } from '../index';
+import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
 
-export interface ICreateGroupEventArgs {
-	eventType: Union<typeof EventType>;
-	eventGroupId: string;
-	eventCoverImage: string;
-	eventName: string;
-	eventDescription: string;
-	eventStartDate: string;
-	eventStartTime: string;
-	eventEndDate?: string;
-	eventEndTime?: string;
-}
+export interface ICreateGroupEventArgs extends GroupEventCreateReqDto {}
