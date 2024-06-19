@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
+import { IUpdateGroupEventArgs } from '@/types/args/group-event';
 import { OverrideInsertFeild } from '@/types/repository';
 
 import { GroupEventEntity } from '../entities/group-event.entity';
@@ -28,6 +29,10 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 		const repository = this.getRepository(qr);
 
 		await repository.insert(overrideInsertFeilds);
+	}
+
+	async updateGroupEvent({ groupEventId, ...rest }: IUpdateGroupEventArgs) {
+		await this.update({ id: groupEventId }, { ...rest });
 	}
 
 	async deleteGroupEvent(groupEventId: string, qr?: QueryRunner) {
