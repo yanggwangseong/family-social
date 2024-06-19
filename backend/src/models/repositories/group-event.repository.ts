@@ -31,8 +31,13 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 		await repository.insert(overrideInsertFeilds);
 	}
 
-	async updateGroupEvent({ groupEventId, ...rest }: IUpdateGroupEventArgs) {
-		await this.update({ id: groupEventId }, { ...rest });
+	async updateGroupEvent(
+		{ groupEventId, ...rest }: IUpdateGroupEventArgs,
+		qr?: QueryRunner,
+	) {
+		const repository = this.getRepository(qr);
+
+		await repository.update({ id: groupEventId }, { ...rest });
 	}
 
 	async deleteGroupEvent(groupEventId: string, qr?: QueryRunner) {

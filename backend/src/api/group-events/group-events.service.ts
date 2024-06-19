@@ -13,7 +13,10 @@ import {
 import { GroupEventTypeRepository } from '@/models/repositories/group-event-type.repository';
 import { GroupEventRepository } from '@/models/repositories/group-event.repository';
 import { EventType, Union } from '@/types';
-import { ICreateGroupEventArgs } from '@/types/args/group-event';
+import {
+	ICreateGroupEventArgs,
+	IUpdateGroupEventArgs,
+} from '@/types/args/group-event';
 @Injectable()
 export class GroupEventsService {
 	constructor(
@@ -38,6 +41,13 @@ export class GroupEventsService {
 		});
 
 		await this.groupEventRepository.createGroupEvent(newGroupEvent, qr);
+	}
+
+	async updateGroupEventByGroupEventId(
+		updateGroupEventArgs: IUpdateGroupEventArgs,
+		qr?: QueryRunner,
+	) {
+		await this.groupEventRepository.updateGroupEvent(updateGroupEventArgs, qr);
 	}
 
 	async deleteGroupEventByGroupEventId(groupEventId: string, qr?: QueryRunner) {
