@@ -18,7 +18,10 @@ import { QueryRunner } from 'typeorm';
 
 import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
-import { PostGroupEventSwagger } from '@/common/decorators/swagger/swagger-group-event.decorator';
+import {
+	DeleteGroupEventSwagger,
+	PostGroupEventSwagger,
+} from '@/common/decorators/swagger/swagger-group-event.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
@@ -43,6 +46,7 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { AttachGroupGuard } from '@/common/guards/attach-group.guard';
 import { CheckDuplicateGroupNameGuard } from '@/common/guards/check-duplicate-group-name.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
+import { IsMineGroupEventGaurd } from '@/common/guards/Is-mine-group-event.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -565,12 +569,41 @@ export class GroupsController {
 	 * @returns void
 	 */
 	@PostGroupEventSwagger()
+	@UseInterceptors(TransactionInterceptor)
 	@UseGuards(GroupMemberShipGuard)
 	@Post('/:groupId/group-events')
 	async postGroupEvent(
 		@Body() dto: GroupEventCreateReqDto,
 		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.groupEventsService.createGroupEvent(dto, sub);
+		await this.groupEventsService.createGroupEvent(dto, sub, qr);
+	}
+
+	// [TODO] groupEventId validation middleware
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 삭제
+	 *
+	 * @tag groups
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteGroupEventSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@UseInterceptors(TransactionInterceptor)
+	@Delete('/:groupId/group-events/:groupEventId')
+	async deleteGroupEvent(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.groupEventsService.deleteGroupEventByGroupEventId(
+			groupEventId,
+			qr,
+		);
 	}
 }
