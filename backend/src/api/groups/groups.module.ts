@@ -60,9 +60,15 @@ export class GroupsModule implements NestModule {
 			},
 		);
 
-		consumer.apply(GroupEventExistsMiddleware).forRoutes({
-			path: 'groups/:groupId/group-events/:groupEventId',
-			method: RequestMethod.DELETE,
-		});
+		consumer.apply(GroupEventExistsMiddleware).forRoutes(
+			{
+				path: 'groups/:groupId/group-events/:groupEventId',
+				method: RequestMethod.DELETE,
+			},
+			{
+				path: 'groups/:groupId/group-events/:groupEventId',
+				method: RequestMethod.PUT,
+			},
+		);
 	}
 }

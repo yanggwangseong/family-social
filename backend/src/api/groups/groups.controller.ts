@@ -21,6 +21,7 @@ import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator
 import {
 	DeleteGroupEventSwagger,
 	PostGroupEventSwagger,
+	PutGroupEventSwagger,
 } from '@/common/decorators/swagger/swagger-group-event.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -63,6 +64,7 @@ import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-e
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
+import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
 
@@ -563,7 +565,7 @@ export class GroupsController {
 	 * @summary 특정 그룹의 그룹 이벤트 생성
 	 *
 	 * @tag groups
-	 * @param dto 그룹 아이디
+	 * @param dto 그룹 이벤트 생성을 위한 데이터
 	 * @param sub 인증된 사용자 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
@@ -580,7 +582,6 @@ export class GroupsController {
 		await this.groupEventsService.createGroupEvent(dto, sub, qr);
 	}
 
-	// [TODO] groupEventId validation middleware
 	/**
 	 * @summary 특정 그룹의 그룹 이벤트 삭제
 	 *
@@ -603,6 +604,37 @@ export class GroupsController {
 	) {
 		await this.groupEventsService.deleteGroupEventByGroupEventId(
 			groupEventId,
+			qr,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 수정
+	 *
+	 * @tag groups
+	 * @param dto 그룹 이벤트 수정을 위한 데이터
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PutGroupEventSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@UseInterceptors(TransactionInterceptor)
+	@Put('/:groupId/group-events/:groupEventId')
+	async putGroupEvent(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+		@Body() dto: GroupEventUpdateReaDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.groupEventsService.updateGroupEventByGroupEventId(
+			{
+				...dto,
+				groupEventId,
+			},
 			qr,
 		);
 	}
