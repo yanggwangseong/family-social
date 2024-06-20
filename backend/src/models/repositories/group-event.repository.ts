@@ -22,6 +22,46 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 			: this.repository;
 	}
 
+	async getGroupEventByGroupEventId(groupEventId: string) {
+		return this.repository.findOneOrFail({
+			select: {
+				id: true,
+				eventType: true,
+				eventCoverImage: true,
+				eventName: true,
+				eventDescription: true,
+				eventStartDate: true,
+				eventStartTime: true,
+				eventEndDate: true,
+				eventEndTime: true,
+				eventGroupId: true,
+				eventOrganizerId: true,
+				eventGroup: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+					groupCoverImage: true,
+				},
+				eventOrganizer: {
+					id: true,
+					username: true,
+					profileImage: true,
+					email: true,
+				},
+			},
+			where: {
+				id: groupEventId,
+			},
+			relations: {
+				eventGroup: true,
+				eventOrganizer: true,
+			},
+			order: {
+				eventStartDate: 'ASC',
+			},
+		});
+	}
+
 	async createGroupEvent(
 		overrideInsertFeilds: OverrideInsertFeild<GroupEventEntity>,
 		qr?: QueryRunner,

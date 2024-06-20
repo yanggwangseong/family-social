@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
 	IsIn,
 	IsNotEmpty,
+	IsOptional,
 	IsString,
 	IsUUID,
 	Length,
@@ -107,6 +108,7 @@ export class GroupEventEntity extends DefaultEntity {
 	eventStartTime!: Date;
 
 	@Column({ type: 'date', nullable: true })
+	@IsOptional()
 	@ApiPropertyOptional()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -114,6 +116,7 @@ export class GroupEventEntity extends DefaultEntity {
 	eventEndDate?: Date;
 
 	@Column({ type: 'time', nullable: true })
+	@IsOptional()
 	@ApiPropertyOptional()
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,

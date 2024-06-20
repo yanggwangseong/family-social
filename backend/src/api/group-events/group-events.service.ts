@@ -24,9 +24,14 @@ export class GroupEventsService {
 		private readonly groupEventTypeRepository: GroupEventTypeRepository,
 	) {}
 
+	async findOneGroupEvent(groupEventId: string) {
+		return await this.groupEventRepository.getGroupEventByGroupEventId(
+			groupEventId,
+		);
+	}
+
 	async createGroupEvent(
 		createGroupEventArgs: ICreateGroupEventArgs,
-		eventOrganizerId: string,
 		qr?: QueryRunner,
 	) {
 		const { eventType } = createGroupEventArgs;
@@ -37,7 +42,6 @@ export class GroupEventsService {
 		const newGroupEvent = this.groupEventRepository.create({
 			id: uuidv4(),
 			...createGroupEventArgs,
-			eventOrganizerId,
 		});
 
 		await this.groupEventRepository.createGroupEvent(newGroupEvent, qr);

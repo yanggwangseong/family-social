@@ -4,7 +4,6 @@ import { GroupEventEntity } from '@/models/entities/group-event.entity';
 
 export class GroupEventCreateReqDto extends PickType(GroupEventEntity, [
 	'eventType',
-	'eventGroupId',
 	'eventCoverImage',
 	'eventName',
 	'eventDescription',
