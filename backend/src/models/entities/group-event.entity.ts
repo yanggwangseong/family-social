@@ -29,7 +29,9 @@ export class GroupEventEntity extends DefaultEntity {
 		type: 'varchar',
 		length: 50,
 	})
-	@ApiProperty()
+	@ApiProperty({
+		enum: EventType,
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

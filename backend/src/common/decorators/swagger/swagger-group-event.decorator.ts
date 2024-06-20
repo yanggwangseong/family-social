@@ -4,6 +4,7 @@ import {
 	ApiCreatedResponse,
 	ApiForbiddenResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
 
@@ -15,6 +16,25 @@ import {
 	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
 	ERROR_UUID_PIPE_MESSAGE,
 } from '@/constants/business-error';
+import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+
+export const GetGroupEventByGroupEventIdSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '단일 피드 가져오기',
+		}),
+		ApiOkResponse({
+			description: '단일 피드 가져오기',
+			type: GroupEventItemResDto,
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_GROUP_NOT_FOUND,
+		}),
+		ApiForbiddenResponse({
+			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
+		}),
+	);
+};
 
 export const PostGroupEventSwagger = () => {
 	return applyDecorators(

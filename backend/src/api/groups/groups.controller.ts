@@ -20,6 +20,7 @@ import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorat
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	DeleteGroupEventSwagger,
+	GetGroupEventByGroupEventIdSwagger,
 	PostGroupEventSwagger,
 	PutGroupEventSwagger,
 } from '@/common/decorators/swagger/swagger-group-event.decorator';
@@ -575,11 +576,44 @@ export class GroupsController {
 	@UseGuards(GroupMemberShipGuard)
 	@Post('/:groupId/group-events')
 	async postGroupEvent(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
 		@Body() dto: GroupEventCreateReqDto,
 		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		await this.groupEventsService.createGroupEvent(dto, sub, qr);
+		await this.groupEventsService.createGroupEvent(
+			{
+				...dto,
+				eventGroupId: groupId,
+				eventOrganizerId: sub,
+			},
+			qr,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 가져오기
+	 *
+	 * @tag groups
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@GetGroupEventByGroupEventIdSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@Get('/:groupId/group-events/:groupEventId')
+	async getGroupEventByGroupEventId(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+	) {
+		return await this.groupEventsService.findOneGroupEvent(groupEventId);
 	}
 
 	/**
