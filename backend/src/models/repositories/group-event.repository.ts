@@ -5,6 +5,7 @@ import { QueryRunner, Repository } from 'typeorm';
 import { IUpdateGroupEventArgs } from '@/types/args/group-event';
 import { OverrideInsertFeild } from '@/types/repository';
 
+import { GroupEventItemResDto } from '../dto/group-event/res/group-event-item-res.dto';
 import { GroupEventEntity } from '../entities/group-event.entity';
 
 @Injectable()
@@ -22,7 +23,9 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 			: this.repository;
 	}
 
-	async getGroupEventByGroupEventId(groupEventId: string) {
+	async getGroupEventByGroupEventId(
+		groupEventId: string,
+	): Promise<GroupEventItemResDto> {
 		return this.repository.findOneOrFail({
 			select: {
 				id: true,
