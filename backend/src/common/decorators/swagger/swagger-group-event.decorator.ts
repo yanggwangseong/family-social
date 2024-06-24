@@ -17,14 +17,37 @@ import {
 	ERROR_UUID_PIPE_MESSAGE,
 } from '@/constants/business-error';
 import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
+
+import { PagiNationQuerySwagger } from './query/swagger-pagination-query';
+
+export const GetGroupEventsSwagger = () => {
+	return applyDecorators(
+		PagiNationQuerySwagger(),
+
+		ApiOperation({
+			summary: '특정 그룹의 그룹 이벤트 리스트 가져오기',
+		}),
+		ApiNotFoundResponse({
+			description: ERROR_GROUP_NOT_FOUND,
+		}),
+		ApiOkResponse({
+			description: '특정 그룹의 그룹 이벤트 리스트 가져오기',
+			type: () => withBasicPaginationResponse(GroupEventItemResDto),
+		}),
+		ApiForbiddenResponse({
+			description: ERROR_NO_PERMISSTION_TO_GROUP,
+		}),
+	);
+};
 
 export const GetGroupEventByGroupEventIdSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
-			summary: '단일 피드 가져오기',
+			summary: '특정 그룹의 그룹 이벤트 가져오기',
 		}),
 		ApiOkResponse({
-			description: '단일 피드 가져오기',
+			description: '특정 그룹의 그룹 이벤트 가져오기',
 			type: GroupEventItemResDto,
 		}),
 		ApiNotFoundResponse({
