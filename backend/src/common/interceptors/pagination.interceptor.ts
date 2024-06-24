@@ -29,6 +29,8 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 	) {}
 
 	intercept(context: ExecutionContext, next: CallHandler<any>) {
+		const req = context.switchToHttp().getRequest();
+
 		const paginationType: PaginationEnum = this.reflector.getAllAndOverride(
 			PAGINATION_KEY,
 			[context.getHandler(), context.getClass],
@@ -48,6 +50,8 @@ export class PaginationInterceptor<T extends ObjectLiteral>
 
 		//const pagination = new Pagination();
 		this.setPaginationStrategy(this.pagination, paginationType);
+
+		req.pagination = this.pagination;
 
 		return next.handle().pipe(
 			map((item) => {

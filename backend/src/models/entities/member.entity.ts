@@ -22,6 +22,7 @@ import { CommentEntity } from './comment.entity';
 import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
+import { GroupEventEntity } from './group-event.entity';
 import { LikeCommentEntity } from './like-comment.entity';
 import { LikeFeedEntity } from './like-feed.entity';
 import { MemberChatEntity } from './member-chat.entity';
@@ -187,4 +188,8 @@ export class MemberEntity extends DefaultEntity {
 	// sender-mention
 	@OneToMany(() => MentionEntity, (nt) => nt.mentionSender)
 	senderMentions?: MentionEntity[];
+
+	// group-event
+	@OneToMany(() => GroupEventEntity, (ev) => ev.eventOrganizer)
+	organizerByGroups?: GroupEventEntity[];
 }

@@ -16,6 +16,7 @@ import { stringValidationMessage } from '@/common/validation-message/string-vali
 import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
+import { GroupEventEntity } from './group-event.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_group' })
@@ -74,4 +75,8 @@ export class GroupEntity extends DefaultEntity {
 
 	@OneToMany(() => ScheduleEntity, (sc) => sc.group)
 	schedulesByGroup?: ScheduleEntity[];
+
+	// group event
+	@OneToMany(() => GroupEventEntity, (ev) => ev.eventGroup)
+	eventByGroups?: GroupEventEntity[];
 }

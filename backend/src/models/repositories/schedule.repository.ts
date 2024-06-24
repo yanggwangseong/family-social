@@ -82,13 +82,13 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 				take,
 				skip,
 			})
-			.then((data) => {
+			.then((data): [ScheduleGetListResDto[], number] => {
 				const [schedule, number] = data;
 				const newSchedule = schedule.map((value) => {
 					return this.transformSharedMembers(value);
 				});
-				const result: [ScheduleGetListResDto[], number] = [newSchedule, number];
-				return result;
+
+				return [newSchedule, number];
 			});
 	}
 

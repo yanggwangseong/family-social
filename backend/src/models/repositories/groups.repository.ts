@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { GroupEntity } from '@/models/entities/group.entity';
-import { ICreateGroupArgs } from '@/types/args/group';
 import { OverrideInsertFeild } from '@/types/repository';
 
 import { GroupProfileResDto } from '../dto/group/res/group-profile.rest.dto';

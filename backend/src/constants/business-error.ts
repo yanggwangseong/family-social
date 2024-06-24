@@ -97,3 +97,16 @@ export const ERROR_PARSER_FILTER_WHERE =
 
 export const ERROR_PARSER_FILTER_ORDER =
 	`order 필터는 '__'로 split 했을때 길이가 2여야 합니다` as const;
+
+// group-event
+export const ERROR_GROUP_EVENT_NOT_FOUND =
+	'해당 그룹 이벤트를 찾을 수 없습니다' as const;
+
+export const ERROR_GROUP_EVENT_TYPE_NOT_FOUND =
+	'해당 그룹 이벤트 타입을 찾을 수 없습니다' as const;
+
+export const ERROR_DELETE_GROUP_EVENT =
+	'해당 그룹 이벤트를 삭제하던 도중 에러가 발생했습니다' as const;
+
+export const ERROR_NO_PERMISSTION_TO_GROUP_EVENT =
+	'해당 그룹 이벤트에 접근 할 권한이 없습니다' as const;

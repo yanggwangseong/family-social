@@ -23,3 +23,4 @@ export const MentionType = ['mention_on_feed', 'mention_on_comment'] as const;
 export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;
 export const isFeedOptions = ['TOP', 'MYFEED', 'ALL', 'GROUPFEED'] as const;
 export const OrderOptions = ['ASC', 'DESC'] as const;
+export const EventType = ['BIRTHDAY'] as const;

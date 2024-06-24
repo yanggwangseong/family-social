@@ -11,7 +11,6 @@ import {
 	ERROR_DELETE_GROUP,
 	ERROR_DELETE_GROUP_MEMBER,
 	ERROR_DELETE_GROUP_SELF_ONLY_ADMIN,
-	ERROR_DUPLICATE_GROUP_NAME,
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 	ERROR_NO_PERMISSTION_TO_GROUP,
@@ -88,7 +87,6 @@ export class GroupsService {
 	}
 
 	async updateGroup({
-		memberId,
 		...rest
 	}: {
 		memberId: string;
