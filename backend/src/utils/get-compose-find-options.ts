@@ -24,10 +24,12 @@ export const getComposeFindOptions = <T>(
 	for (const [key, value] of Object.entries(dto)) {
 		if (key.startsWith('where__')) {
 			where = {
+				...where,
 				...ParseWhereFilter(key, value),
 			};
 		} else if (key.startsWith('order__')) {
 			order = {
+				...order,
 				...ParserOrderFilter(key, value),
 			};
 		}
