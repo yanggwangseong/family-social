@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEventExistsMiddleware } from '@/common/middlewares/group-event-exists.middleware';
 import { GroupExistsMiddleware } from '@/common/middlewares/group-exists.middleware';
 import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
+import { Pagination } from '@/common/strategies/context/pagination';
 import { FamEntity } from '@/models/entities/fam.entity';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { FamsRepository } from '@/models/repositories/fams.repository';
@@ -32,7 +33,7 @@ import { SchedulesModule } from '../schedules/schedules.module';
 		GroupEventsModule,
 	],
 	controllers: [GroupsController],
-	providers: [GroupsService, GroupsRepository, FamsRepository],
+	providers: [GroupsService, GroupsRepository, FamsRepository, Pagination],
 	exports: [GroupsService],
 })
 export class GroupsModule implements NestModule {
@@ -61,6 +62,10 @@ export class GroupsModule implements NestModule {
 		);
 
 		consumer.apply(GroupEventExistsMiddleware).forRoutes(
+			{
+				path: 'groups/:groupId/group-events/:groupEventId',
+				method: RequestMethod.GET,
+			},
 			{
 				path: 'groups/:groupId/group-events/:groupEventId',
 				method: RequestMethod.DELETE,

@@ -17,6 +17,7 @@ export class GroupEventItemResDto extends PickType(GroupEventEntity, [
 	'eventEndTime',
 	'eventGroupId',
 	'eventOrganizerId',
+	'createdAt',
 ] as const) {
 	@ApiProperty({
 		nullable: false,

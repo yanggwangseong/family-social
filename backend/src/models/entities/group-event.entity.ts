@@ -8,7 +8,14 @@ import {
 	Length,
 	MaxLength,
 } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	PrimaryColumn,
+} from 'typeorm';
 
 import { isInValidationMessage } from '@/common/validation-message/is-in-validation-message';
 import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
@@ -23,6 +30,7 @@ import { GroupEventTypeEntity } from './group-event-type.entity';
 import { GroupEntity } from './group.entity';
 import { MemberEntity } from './member.entity';
 
+@Index(['eventStartDate'])
 @Entity({ name: 'fam_group_event' })
 export class GroupEventEntity extends DefaultEntity {
 	@PrimaryColumn({

@@ -39,6 +39,7 @@ export class GroupEventRepository extends Repository<GroupEventEntity> {
 				eventEndTime: true,
 				eventGroupId: true,
 				eventOrganizerId: true,
+				createdAt: true,
 				eventGroup: {
 					id: true,
 					groupName: true,
