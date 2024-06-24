@@ -3,7 +3,7 @@ import styles from './GroupDetailFormat.module.scss';
 import Header from '../../header/Header';
 import { GroupDetailFormatProps } from './group-detail-format.interface';
 import LottieLike from '@/components/ui/lottie/LottieLike';
-import { useLottieLike } from '@/hooks/useLottieLike';
+
 import GroupDetailSidebar from '../sidebar/group/detail/GroupDetailSidebar';
 import Image from 'next/image';
 import { PiPencilDuotone } from 'react-icons/pi';
@@ -27,9 +27,10 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
 	lottieLike,
 	groupId,
+	lottieRef,
+	handleLottieComplete,
+	page,
 }) => {
-	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
-
 	const { handleCreateFeed } = useCreateFeed();
 
 	const hiddenFileInput = useRef<HTMLInputElement | null>(null);
@@ -79,7 +80,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 			<Header />
 			<div className={styles.contents_container}>
 				{/* lottie-like */}
-				{lottieLike && (
+				{lottieLike && lottieRef && handleLottieComplete && (
 					<LottieLike
 						lottieRef={lottieRef}
 						onLottieComplete={handleLottieComplete}
@@ -115,19 +116,21 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 								{/* 프로필 */}
 								<Profile username="양광성" role="관리자" />
 								<div className={styles.banner_profile_right_contaienr}>
-									<div className={styles.create_feed_btn}>
-										<CustomButton
-											type="button"
-											className="bg-customOrange text-customDark 
+									{page === 'GROUPFEED' && (
+										<div className={styles.create_feed_btn}>
+											<CustomButton
+												type="button"
+												className="bg-customOrange text-customDark 
 												font-bold border border-solid border-customDark 
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
-											onClick={handleCreateFeed}
-										>
-											+ 피드
-										</CustomButton>
-									</div>
+												onClick={handleCreateFeed}
+											>
+												+ 피드
+											</CustomButton>
+										</div>
+									)}
 									<motion.div
 										className={styles.toggle_menu_container}
 										initial={false}
@@ -161,14 +164,16 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 							{children}
 						</div>
 					</div>
-					<div
-						className={styles.mobile_create_feed_btn_container}
-						onClick={handleCreateFeed}
-					>
-						<motion.div {...BUTTONGESTURE}>
-							<PiPencilDuotone size={28} color="#0a0a0a" />
-						</motion.div>
-					</div>
+					{page === 'GROUPFEED' && (
+						<div
+							className={styles.mobile_create_feed_btn_container}
+							onClick={handleCreateFeed}
+						>
+							<motion.div {...BUTTONGESTURE}>
+								<PiPencilDuotone size={28} color="#0a0a0a" />
+							</motion.div>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

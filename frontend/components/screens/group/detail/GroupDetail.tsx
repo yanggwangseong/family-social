@@ -2,34 +2,20 @@ import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './GroupDetail.module.scss';
 import Format from '@/components/ui/layout/Format';
 import { useRouter } from 'next/router';
-import Header from '@/components/ui/header/Header';
-import GroupDetailSidebar from '@/components/ui/layout/sidebar/group/detail/GroupDetailSidebar';
-import Image from 'next/image';
-import Profile from '@/components/ui/profile/Profile';
-import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import ToggleModal from '@/components/ui/modal/ToggleModal';
-import { InviteMenu } from '@/components/ui/modal/toggle-menu.constants';
-import { useModal } from '@/hooks/useModal';
-import { PiPencilDuotone } from 'react-icons/pi';
+
 import { AnimatePresence, motion } from 'framer-motion';
-import TabMenu from '@/components/ui/tab-menu/TabMenu';
-import { groupTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
-import { BUTTONGESTURE } from '@/utils/animation/gestures';
-import { useCreateFeed } from '@/hooks/useCreateFeed';
-import LottieLike from '@/components/ui/lottie/LottieLike';
+
 import { useLottieLike } from '@/hooks/useLottieLike';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
-import { useInfiniteQuery, useMutation } from 'react-query';
+
 import { FeedService } from '@/services/feed/feed.service';
-import { GroupService } from '@/services/group/group.service';
+
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import FeedItem from '@/components/ui/feed/FeedItem';
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
+
 import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver';
-import axios from 'axios';
-import { MediaService } from '@/services/media/media.service';
+
 import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
 
 const GroupDetail: FC = () => {
@@ -124,7 +110,13 @@ const GroupDetail: FC = () => {
 
 	return (
 		<Format title={'group-detail'}>
-			<GroupDetailFormat lottieLike={true} groupId={groupId}>
+			<GroupDetailFormat
+				lottieLike={true}
+				groupId={groupId}
+				lottieRef={lottieRef}
+				handleLottieComplete={handleLottieComplete}
+				page="GROUPFEED"
+			>
 				<div className={styles.feed_container}>
 					{isLoading && <Skeleton />}
 
