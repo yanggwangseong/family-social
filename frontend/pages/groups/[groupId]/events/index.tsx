@@ -1,8 +1,8 @@
-import GroupDetail from '@/components/screens/group/detail/GroupDetail';
+import GroupDetailEvent from '@/components/screens/group/detail/event/GroupDetailEvent';
 import React, { FC } from 'react';
 
 const GroupDetailEventPage: FC = () => {
-	return <GroupDetail />;
+	return <GroupDetailEvent />;
 };
 
 export default GroupDetailEventPage;

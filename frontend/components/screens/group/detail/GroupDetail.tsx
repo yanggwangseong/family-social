@@ -111,7 +111,6 @@ const GroupDetail: FC = () => {
 	return (
 		<Format title={'group-detail'}>
 			<GroupDetailFormat
-				lottieLike={true}
 				groupId={groupId}
 				lottieRef={lottieRef}
 				handleLottieComplete={handleLottieComplete}

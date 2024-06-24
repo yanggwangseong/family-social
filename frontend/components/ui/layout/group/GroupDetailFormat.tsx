@@ -25,7 +25,6 @@ import axios from 'axios';
 
 const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
-	lottieLike,
 	groupId,
 	lottieRef,
 	handleLottieComplete,
@@ -80,7 +79,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 			<Header />
 			<div className={styles.contents_container}>
 				{/* lottie-like */}
-				{lottieLike && lottieRef && handleLottieComplete && (
+				{page === 'GROUPFEED' && lottieRef && handleLottieComplete && (
 					<LottieLike
 						lottieRef={lottieRef}
 						onLottieComplete={handleLottieComplete}
@@ -159,7 +158,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 							</div>
 							{/* 탭 메뉴 */}
 							<div className={styles.tap_menu_container}>
-								<TabMenu list={groupTabMenus} options={'GROUPFEED'} />
+								<TabMenu list={groupTabMenus} options={page} />
 							</div>
 							{children}
 						</div>
