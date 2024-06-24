@@ -8,12 +8,14 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { GetNotificationListSwagger } from '@/common/decorators/swagger/swagger-notification.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { Pagination } from '@/common/strategies/context/pagination';
 import { PaginationEnum } from '@/constants/pagination.const';
 import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
@@ -63,10 +65,12 @@ export class NotificationsController {
 		// @Query('is_read_options', new ParseIsReadOptionsPipe())
 		// is_read_options: Union<typeof isReadOptions>,
 		@Query() paginationDto: NotificationPaginationReqDto,
+		@PaginationDecorator() pagination: Pagination<NotificationEntity>,
 	) {
 		return await this.notificationsService.getNotificationByMemberId(
 			sub,
 			paginationDto,
+			pagination,
 		);
 	}
 }

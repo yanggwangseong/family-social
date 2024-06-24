@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
@@ -39,6 +40,7 @@ import { PaginationInterceptor } from '@/common/interceptors/pagination.intercep
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	COMMENT_ON_MY_POST_TITLE,
 	LIKE_ON_MY_POST_TITLE,
@@ -134,8 +136,9 @@ export class FeedsController {
 		// )
 		// groupId?: string,
 		@Query() paginationDto: FeedPaginationReqDto,
+		@PaginationDecorator() pagination: Pagination<FeedEntity>,
 	) {
-		return await this.feedsService.findAllFeed(sub, paginationDto);
+		return await this.feedsService.findAllFeed(sub, paginationDto, pagination);
 	}
 
 	/**
