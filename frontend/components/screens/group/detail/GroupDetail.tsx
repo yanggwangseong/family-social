@@ -30,30 +30,31 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver';
 import axios from 'axios';
 import { MediaService } from '@/services/media/media.service';
+import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
 
 const GroupDetail: FC = () => {
 	const router = useRouter();
 
-	const query = router.query as {
-		options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT';
-	};
+	// const query = router.query as {
+	// 	options: 'GROUPFEED' | 'GROUPMEMBER' | 'GROUPEVENT';
+	// };
 
 	//const [observedPost, setObservedPost] = useState('');
 
 	const { groupId } = router.query as { groupId: string };
 
-	const { handleCreateFeed } = useCreateFeed();
+	//const { handleCreateFeed } = useCreateFeed();
 
 	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
-	const hiddenFileInput = useRef<HTMLInputElement | null>(null);
+	//const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
-	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
+	// const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
 
-	const {
-		isShowing: isOpenInvitation,
-		handleToggleModal: handleCloseInvitationModal,
-	} = useModal(invitationModalWrapperRef);
+	// const {
+	// 	isShowing: isOpenInvitation,
+	// 	handleToggleModal: handleCloseInvitationModal,
+	// } = useModal(invitationModalWrapperRef);
 
 	const {
 		data,
@@ -121,162 +122,37 @@ const GroupDetail: FC = () => {
 	// 	return () => {};
 	// }, [data, fetchNextPage, observedPost]);
 
-	const { mutateAsync } = useMutation(
-		['group-cover-image-upload'],
-		async (file: File) =>
-			await MediaService.uploadGroupCoverImage(file, groupId),
-		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
-				Loading.remove();
-				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
-			},
-		},
-	);
-
-	const handleGroupCoverImageUpload = async (
-		event: ChangeEvent<HTMLInputElement>,
-	) => {
-		const uploadedFiles: File[] = Array.from(event.target.files || []);
-
-		await mutateAsync(uploadedFiles[0]);
-	};
-
-	const handleClick = () => {
-		hiddenFileInput.current!.click();
-	};
-
 	return (
 		<Format title={'group-detail'}>
-			<div className={styles.container}>
-				{/* 헤더 */}
-				<Header />
-				<div className={styles.contents_container}>
-					{/* lottie-like */}
-					<LottieLike
-						lottieRef={lottieRef}
-						onLottieComplete={handleLottieComplete}
-					/>
+			<GroupDetailFormat lottieLike={true} groupId={groupId}>
+				<div className={styles.feed_container}>
+					{isLoading && <Skeleton />}
 
-					<GroupDetailSidebar groupId={groupId} />
-					<div className={styles.detail_container}>
-						<div className={styles.main}>
-							<div className={styles.banner_img_container}>
-								<Image
-									fill
-									src={'/images/banner/group-base.png'}
-									alt="banner"
-								></Image>
-								<div className={styles.banner_edit_btn}>
-									<PiPencilDuotone size={22} />
-									<button className={styles.btn_text} onClick={handleClick}>
-										수정
-									</button>
+					{data?.pages.map((page, pageIndex) => (
+						<AnimatePresence key={pageIndex}>
+							{page.list.map((feed, index) => (
+								<FeedItem
+									key={feed.feedId}
+									feed={feed}
+									index={index}
+									onLike={handleUpdateLike}
+									page={page.page}
+									onRefetch={handleRefetch}
+									onLikeComment={handleLikeComment}
+								/>
+							))}
+						</AnimatePresence>
+					))}
 
-									<input
-										type="file"
-										id="fileUpload"
-										style={{ display: 'none' }}
-										onChange={handleGroupCoverImageUpload}
-										ref={hiddenFileInput}
-									/>
-								</div>
-							</div>
-							<div className={styles.main_contents_container}>
-								<div className={styles.banner_profile_contaienr}>
-									{/* 프로필 */}
-									<Profile username="양광성" role="관리자" />
-									<div className={styles.banner_profile_right_contaienr}>
-										<div className={styles.create_feed_btn}>
-											<CustomButton
-												type="button"
-												className="bg-customOrange text-customDark 
-												font-bold border border-solid border-customDark 
-												rounded-full w-full py-[10px] px-7
-												hover:bg-orange-500
-												"
-												onClick={handleCreateFeed}
-											>
-												+ 피드
-											</CustomButton>
-										</div>
-										<motion.div
-											className={styles.toggle_menu_container}
-											initial={false}
-											animate={isOpenInvitation ? 'open' : 'closed'}
-											ref={invitationModalWrapperRef}
-										>
-											<CustomButton
-												type="button"
-												className="bg-customOrange text-customDark 
-												font-bold border border-solid border-customDark 
-												rounded-full w-full py-[10px] px-7
-												hover:bg-orange-500
-												"
-												onClick={handleCloseInvitationModal}
-											>
-												+ 초대하기
-											</CustomButton>
-
-											{/*  toggle modal */}
-											<ToggleModal
-												list={InviteMenu}
-												onClose={handleCloseInvitationModal}
-											/>
-										</motion.div>
-									</div>
-								</div>
-								{/* 탭 메뉴 */}
-								<div className={styles.tap_menu_container}>
-									<TabMenu list={groupTabMenus} options={'GROUPFEED'} />
-								</div>
-								<div className={styles.feed_container}>
-									{isLoading && <Skeleton />}
-
-									{data?.pages.map((page, pageIndex) => (
-										<AnimatePresence key={pageIndex}>
-											{page.list.map((feed, index) => (
-												<FeedItem
-													key={feed.feedId}
-													feed={feed}
-													index={index}
-													onLike={handleUpdateLike}
-													page={page.page}
-													onRefetch={handleRefetch}
-													onLikeComment={handleLikeComment}
-												/>
-											))}
-										</AnimatePresence>
-									))}
-
-									{isRefetching && (
-										<React.Fragment>
-											<Skeleton />
-											<Skeleton />
-											<Skeleton />
-										</React.Fragment>
-									)}
-								</div>
-							</div>
-						</div>
-						<div
-							className={styles.mobile_create_feed_btn_container}
-							onClick={handleCreateFeed}
-						>
-							<motion.div {...BUTTONGESTURE}>
-								<PiPencilDuotone size={28} color="#0a0a0a" />
-							</motion.div>
-						</div>
-					</div>
+					{isRefetching && (
+						<React.Fragment>
+							<Skeleton />
+							<Skeleton />
+							<Skeleton />
+						</React.Fragment>
+					)}
 				</div>
-			</div>
+			</GroupDetailFormat>
 		</Format>
 	);
 };
