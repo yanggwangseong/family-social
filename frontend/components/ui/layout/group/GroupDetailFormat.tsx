@@ -6,7 +6,7 @@ import LottieLike from '@/components/ui/lottie/LottieLike';
 
 import GroupDetailSidebar from '../sidebar/group/detail/GroupDetailSidebar';
 import Image from 'next/image';
-import { PiPencilDuotone } from 'react-icons/pi';
+import { PiPencilDuotone, PiLightningDuotone } from 'react-icons/pi';
 import { motion } from 'framer-motion';
 import TabMenu from '../../tab-menu/TabMenu';
 import { groupTabMenus } from '../../tab-menu/tab-menu.constants';
@@ -22,6 +22,7 @@ import { MediaService } from '@/services/media/media.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
+import { useCreateEvent } from '@/hooks/useCreateEvent';
 
 const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
@@ -31,6 +32,8 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	page,
 }) => {
 	const { handleCreateFeed } = useCreateFeed();
+
+	const { handleCreateEvent } = useCreateEvent();
 
 	const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
@@ -140,6 +143,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
+												onClick={handleCreateEvent}
 											>
 												+ 이벤트 만들기
 											</CustomButton>
@@ -190,9 +194,12 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 					)}
 
 					{page === 'GROUPEVENT' && (
-						<div className={styles.mobile_create_feed_btn_container}>
+						<div
+							className={styles.mobile_create_feed_btn_container}
+							onClick={handleCreateEvent}
+						>
 							<motion.div {...BUTTONGESTURE}>
-								<PiPencilDuotone size={28} color="#0a0a0a" />
+								<PiLightningDuotone size={28} color="#0a0a0a" />
 							</motion.div>
 						</div>
 					)}
