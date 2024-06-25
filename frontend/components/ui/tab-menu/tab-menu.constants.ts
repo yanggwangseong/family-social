@@ -87,7 +87,7 @@ export const notificationsTabMenus: TabeMenuListType[] = [
 
 export const groupTabMenus: TabeMenuListType[] = [
 	{
-		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d/feeds',
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
 		options: 'GROUPFEED',
 		title: '피드',
 	},

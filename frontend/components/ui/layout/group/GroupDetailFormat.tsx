@@ -130,6 +130,21 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 											</CustomButton>
 										</div>
 									)}
+
+									{page === 'GROUPEVENT' && (
+										<div className={styles.create_feed_btn}>
+											<CustomButton
+												type="button"
+												className="bg-customOrange text-customDark 
+												font-bold border border-solid border-customDark 
+												rounded-full w-full py-[10px] px-7
+												hover:bg-orange-500
+												"
+											>
+												+ 이벤트 만들기
+											</CustomButton>
+										</div>
+									)}
 									<motion.div
 										className={styles.toggle_menu_container}
 										initial={false}
@@ -168,6 +183,14 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 							className={styles.mobile_create_feed_btn_container}
 							onClick={handleCreateFeed}
 						>
+							<motion.div {...BUTTONGESTURE}>
+								<PiPencilDuotone size={28} color="#0a0a0a" />
+							</motion.div>
+						</div>
+					)}
+
+					{page === 'GROUPEVENT' && (
+						<div className={styles.mobile_create_feed_btn_container}>
 							<motion.div {...BUTTONGESTURE}>
 								<PiPencilDuotone size={28} color="#0a0a0a" />
 							</motion.div>
