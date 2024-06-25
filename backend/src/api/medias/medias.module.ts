@@ -35,9 +35,15 @@ export class MediasModule implements NestModule {
 			method: RequestMethod.PATCH,
 		});
 
-		consumer.apply(GroupExistsMiddleware).forRoutes({
-			path: 'medias/groups/:groupId/cover-image',
-			method: RequestMethod.PATCH,
-		});
+		consumer.apply(GroupExistsMiddleware).forRoutes(
+			{
+				path: 'medias/groups/:groupId/cover-image',
+				method: RequestMethod.PATCH,
+			},
+			{
+				path: 'medias/groups/:groupId/events/image',
+				method: RequestMethod.PATCH,
+			},
+		);
 	}
 }

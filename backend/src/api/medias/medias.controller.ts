@@ -12,6 +12,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
+	PatchGroupEventUploadImageSwagger,
 	PatchGroupUploadCoverImageSwagger,
 	PatchScheduleUploadThumbnailImageSwagger,
 	PatchUploadMemberCoverImageSwagger,
@@ -31,6 +32,7 @@ import {
 	CreateMemberCoverImageMulterOptions,
 	CreateMemberProfileImageMulterOptions,
 	createGroupCoverImageMulterOptions,
+	createGroupEventImageMulterOptions,
 	createScheduleThumbnailImageMulterOptions,
 } from '@/utils/upload-media';
 
@@ -181,6 +183,31 @@ export class MediasController {
 		const locations = files.map(({ location }) => location);
 
 		await this.groupsService.updateGroupCoverImage(groupId, locations[0]);
+
+		return locations;
+	}
+
+	/**
+	 * @summary 특정 그룹 특정 이벤트 이미지 변경
+	 *
+	 * @tag medias
+	 * @param files 업로드 파일
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns string[]
+	 */
+	@PatchGroupEventUploadImageSwagger()
+	@UseGuards(GroupMemberShipGuard)
+	@UseInterceptors(
+		FilesInterceptor('files', 1, createGroupEventImageMulterOptions()),
+	)
+	@Patch('/groups/:groupId/events/image')
+	async PatchGroupEventUploadImage(
+		@UploadedFiles() files: Express.MulterS3.File[],
+	) {
+		if (!files?.length) {
+			throw BadRequestServiceException(ERROR_FILE_NOT_FOUND);
+		}
+		const locations = files.map(({ location }) => location);
 
 		return locations;
 	}
