@@ -1,0 +1,31 @@
+.create_event_container {
+	@apply mt-10 flex flex-col gap-4;
+
+	.contents_container {
+		@apply flex-grow;
+
+		.top_container {
+			@apply flex flex-col gap-4;
+
+			.banner_img_container {
+				@apply h-[200px] relative border border-solid border-customDark;
+
+				.banner_img {
+					@apply object-cover;
+				}
+
+				.banner_edit_btn {
+					@apply absolute flex gap-1 border border-solid border-customDark rounded px-2 py-1 bottom-4 right-4 bg-customOrange font-semibold;
+
+					.btn_text {
+						@apply text-sm cursor-pointer;
+					}
+				}
+			}
+		}
+	}
+
+	.button_container {
+		@apply w-full;
+	}
+}
