@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useReducer, useRef, useState } from 'react';
 import styles from './CreateEvent.module.scss';
 
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
@@ -18,10 +18,16 @@ import FieldTime from '@/components/ui/field/field-time/FieldTime';
 import Calendar from '@/components/ui/calendar/Calendar';
 
 const CreateEvent: FC = () => {
+	const [isEndDateOpen, setIsEndDateOpen] = useReducer(state => {
+		return !state;
+	}, false);
+
 	const [isEventImage, setIsEventImage] = useState<string>();
 	const FileInput = useRef<HTMLInputElement | null>(null);
 
 	const [isEventStartDate, setIsEventStartDate] = useState<Date>(new Date());
+
+	const [isEventEndDate, setIsEventEndDate] = useState<Date>(new Date());
 
 	const {
 		register,
@@ -35,6 +41,7 @@ const CreateEvent: FC = () => {
 		eventName: string;
 		eventDescription: string;
 		eventStartTime: string;
+		eventEndTime: string;
 	}>({
 		mode: 'onChange',
 	});
@@ -78,8 +85,13 @@ const CreateEvent: FC = () => {
 
 	const handleChangeDate = (date: Date | [Date | null, Date | null]) => {
 		if (date instanceof Date) {
-			console.log(date);
 			setIsEventStartDate(date);
+		}
+	};
+
+	const handleChangeEndDate = (date: Date | [Date | null, Date | null]) => {
+		if (date instanceof Date) {
+			setIsEventEndDate(date);
 		}
 	};
 
@@ -161,24 +173,78 @@ const CreateEvent: FC = () => {
 								error={errors.eventStartTime}
 							/> */}
 
-							{/* 캘린더 */}
-							<Calendar
-								startDate={isEventStartDate}
-								handleChangeDate={handleChangeDate}
-								datePickerOptions={{
-									withPortal: true,
-									minDate: new Date(),
-									selected: isEventStartDate,
-								}}
-							/>
-							<FieldTime
-								control={control}
-								name="eventStartTime"
-								labelText="시작시간"
-								validationOptions={{
-									required: '시작시간을 필수입니다!',
-								}}
-							></FieldTime>
+							<div className={styles.date_and_time_container}>
+								{/* 캘린더 */}
+								<div className={styles.wrap}>
+									<div className={styles.label_text}>시작날짜</div>
+									<Calendar
+										startDate={isEventStartDate}
+										handleChangeDate={handleChangeDate}
+										datePickerOptions={{
+											withPortal: true,
+											minDate: new Date(),
+											selected: isEventStartDate,
+										}}
+									/>
+								</div>
+								<div className={styles.wrap}>
+									<div className={styles.label_text}>시작시간</div>
+									<FieldTime
+										control={control}
+										name="eventStartTime"
+										validationOptions={{
+											required: '시작시간을 필수입니다!',
+										}}
+									></FieldTime>
+								</div>
+							</div>
+							{!isEndDateOpen && (
+								<div
+									className={styles.date_toggle_btn}
+									onClick={setIsEndDateOpen}
+								>
+									+ 종료 날짜 및 시간
+								</div>
+							)}
+
+							{isEndDateOpen && (
+								<>
+									<div className={styles.date_and_time_container}>
+										{/* 캘린더 */}
+										<div className={styles.wrap}>
+											<div className={styles.label_text}>종료날짜</div>
+											<Calendar
+												startDate={isEventEndDate}
+												handleChangeDate={handleChangeEndDate}
+												datePickerOptions={{
+													withPortal: true,
+													minDate: new Date(),
+													selected: isEventEndDate,
+												}}
+											/>
+										</div>
+										<div className={styles.wrap}>
+											<div className={styles.label_text}>종료시간</div>
+											<FieldTime
+												control={control}
+												name="eventEndTime"
+												validationOptions={{
+													required: isEndDateOpen
+														? '종료시간을 필수입니다!'
+														: false,
+												}}
+											></FieldTime>
+										</div>
+									</div>
+
+									<div
+										className={styles.date_toggle_btn}
+										onClick={setIsEndDateOpen}
+									>
+										- 종료 날짜 및 시간
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 				</div>

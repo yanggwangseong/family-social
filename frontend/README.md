@@ -10,3 +10,4 @@
 - 모바일 상태일때 줄였다 늘렸다 숨겼다 보였다 자유로운 UI를 가진 오른쪽 사이드 구현
 - 특정한 state 값에 따른 다른 페이지 랜더링을 효율적으로 랜더링 하는 방법에 대해 [작성블로그](https://threeyears.tistory.com/515)
 - 모바일 환경에서 왼쪽과 오른쪽 사이드바를 사용자 친화적인 UI구성을 위해 오른쪽 사이드바를 resize 가능한 pannel로 구성
+- [true/false toggle 메뉴 구현시 useReducer로 구현하기](https://threeyears.tistory.com/539)

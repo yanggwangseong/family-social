@@ -44,6 +44,7 @@ const Calendar: FC<{
 			<DatePicker
 				className={styles.datePicker}
 				locale={ko}
+				dateFormat={'yyyy-MM-dd'}
 				startDate={startDate}
 				endDate={endDate}
 				// selectsRange={true}
