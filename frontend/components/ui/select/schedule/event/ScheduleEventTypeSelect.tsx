@@ -9,6 +9,7 @@ import {
 	toggleWrapperVariant,
 } from '@/utils/animation/toggle-variant';
 import cn from 'classnames';
+import { PiLightningDuotone } from 'react-icons/pi';
 
 const ScheduleEventTypeSelect: FC<ScheduleEventTypeProps> = ({
 	options,
@@ -54,9 +55,9 @@ const ScheduleEventTypeSelect: FC<ScheduleEventTypeProps> = ({
 					variants={toggleVariant}
 				>
 					<div>
-						<AiOutlineEye size={22} />
+						<PiLightningDuotone size={22} />
 					</div>
-					<div className={styles.modal_title}>피드를 공개/비공개 설정</div>
+					<div className={styles.modal_title}>이벤트 타입 설정</div>
 				</motion.div>
 				<motion.div
 					className={cn(styles.select_item, {

@@ -1,4 +1,11 @@
-import React, { ChangeEvent, FC, useReducer, useRef, useState } from 'react';
+import React, {
+	ChangeEvent,
+	FC,
+	useEffect,
+	useReducer,
+	useRef,
+	useState,
+} from 'react';
 import styles from './CreateEvent.module.scss';
 
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
@@ -17,13 +24,21 @@ import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 import FieldTime from '@/components/ui/field/field-time/FieldTime';
 import Calendar from '@/components/ui/calendar/Calendar';
 
-import { Union, eventOptionsLists } from 'types';
+import { LayerMode, Union, eventOptionsLists } from 'types';
 import ScheduleEventTypeSelect from '@/components/ui/select/schedule/event/ScheduleEventTypeSelect';
+import { GroupService } from '@/services/group/group.service';
+import { GroupEventService } from '@/services/group-event/group-event.service';
+import { CreateGroupEventRequest } from '@/shared/interfaces/group-event.interface';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { Notify } from 'notiflix';
+import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 const CreateEvent: FC = () => {
 	const [isEndDateOpen, setIsEndDateOpen] = useReducer(state => {
 		return !state;
 	}, false);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const [isEventImage, setIsEventImage] = useState<string>();
 	const FileInput = useRef<HTMLInputElement | null>(null);
@@ -43,11 +58,12 @@ const CreateEvent: FC = () => {
 		getValues,
 		watch,
 		control,
+		setValue,
 	} = useForm<{
 		eventName: string;
 		eventDescription: string;
 		eventStartTime: string;
-		eventEndTime: string;
+		eventEndTime?: string;
 	}>({
 		mode: 'onChange',
 	});
@@ -66,6 +82,35 @@ const CreateEvent: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning('실패', `${error.response?.data.message}`, '확인');
+				}
+			},
+		},
+	);
+
+	const { mutateAsync: createGroupEventASync } = useMutation(
+		['create-group-event'],
+		async (data: CreateGroupEventRequest) =>
+			await GroupEventService.createGroupEvent(
+				data,
+				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+			),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+
+				handleSuccessLayerModal({
+					modalTitle: '피드 생성 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'createFeedAnimation',
+					message: '피드가 생성 되었습니다',
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
@@ -105,14 +150,33 @@ const CreateEvent: FC = () => {
 		eventName: string;
 		eventDescription: string;
 		eventStartTime: string;
-	}> = data => {
-		console.log('submit?');
-		//updateGroupSync(data);
+		eventEndTime?: string;
+	}> = async data => {
+		if (!isEventImage) {
+			Notify.warning('이벤트 커버 이미지가 없습니다');
+			return false;
+		}
+
+		await createGroupEventASync({
+			...data,
+			eventCoverImage: isEventImage,
+			eventStartDate: TranslateDateFormat(isEventStartDate, 'yyyy-MM-dd'),
+			eventEndDate: isEndDateOpen
+				? TranslateDateFormat(isEventEndDate, 'yyyy-MM-dd')
+				: undefined,
+			eventType: isEventType,
+		});
 	};
 
 	const handleChangeEventType = (option: Union<typeof eventOptionsLists>) => {
 		setIsEventType(option);
 	};
+
+	useEffect(() => {
+		if (!isEndDateOpen) {
+			setValue('eventEndTime', undefined);
+		}
+	}, [isEndDateOpen, setValue]);
 
 	return (
 		<LayerModalVariantWrapper className={styles.create_event_container}>
@@ -128,7 +192,11 @@ const CreateEvent: FC = () => {
 							></Image>
 							<div className={styles.banner_edit_btn}>
 								<PiPencilDuotone size={22} />
-								<button className={styles.btn_text} onClick={handleClick}>
+								<button
+									type="button"
+									className={styles.btn_text}
+									onClick={handleClick}
+								>
 									수정
 								</button>
 
