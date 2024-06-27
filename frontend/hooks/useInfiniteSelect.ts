@@ -1,10 +1,15 @@
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
+import { GroupEventItemResponse } from '@/shared/interfaces/group-event.interface';
+import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
 import { useState } from 'react';
 import { QueryFunction, useInfiniteQuery } from 'react-query';
 
 export const useInfiniteSelect = <
-	T extends GetScheduleListResponse | FeedsResponse,
+	T extends
+		| GetScheduleListResponse
+		| FeedsResponse
+		| BasicPaginationResponse<GroupEventItemResponse>,
 >(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,

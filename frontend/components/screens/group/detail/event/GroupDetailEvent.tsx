@@ -13,7 +13,7 @@ const GroupDetailEvent: FC = () => {
 		<Format title={'group-detail-event'}>
 			<GroupDetailFormat groupId={groupId} page="GROUPEVENT">
 				<div className={styles.group_event_container}>
-					<GroupEventItem></GroupEventItem>
+					<GroupEventItem index={1}></GroupEventItem>
 				</div>
 			</GroupDetailFormat>
 		</Format>
