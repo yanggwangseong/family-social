@@ -17,6 +17,9 @@ import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 import FieldTime from '@/components/ui/field/field-time/FieldTime';
 import Calendar from '@/components/ui/calendar/Calendar';
 
+import { Union, eventOptionsLists } from 'types';
+import ScheduleEventTypeSelect from '@/components/ui/select/schedule/event/ScheduleEventTypeSelect';
+
 const CreateEvent: FC = () => {
 	const [isEndDateOpen, setIsEndDateOpen] = useReducer(state => {
 		return !state;
@@ -28,6 +31,9 @@ const CreateEvent: FC = () => {
 	const [isEventStartDate, setIsEventStartDate] = useState<Date>(new Date());
 
 	const [isEventEndDate, setIsEventEndDate] = useState<Date>(new Date());
+
+	const [isEventType, setIsEventType] =
+		useState<Union<typeof eventOptionsLists>>('BIRTHDAY');
 
 	const {
 		register,
@@ -104,6 +110,10 @@ const CreateEvent: FC = () => {
 		//updateGroupSync(data);
 	};
 
+	const handleChangeEventType = (option: Union<typeof eventOptionsLists>) => {
+		setIsEventType(option);
+	};
+
 	return (
 		<LayerModalVariantWrapper className={styles.create_event_container}>
 			<form className={styles.create_form} onSubmit={handleSubmit(onSubmit)}>
@@ -149,18 +159,14 @@ const CreateEvent: FC = () => {
 								placeholder="이벤트 이름을 입력 해주세요!"
 								error={errors.eventName}
 							></Field>
-							<FieldWithTextarea
-								fieldClass={'inline_textarea'}
-								labelText={'이벤트 설명'}
-								{...register('eventDescription', {
-									maxLength: {
-										value: 1000,
-										message: '최대 1000자까지 가능합니다',
-									},
-								})}
-								placeholder="상세 정보를 추가하세요"
-								error={errors.eventDescription}
-							></FieldWithTextarea>
+
+							<div className={styles.selectbox_wrap}>
+								<div className={styles.label_text}>이벤트 타입</div>
+								<ScheduleEventTypeSelect
+									options={isEventType}
+									onChangeEventType={handleChangeEventType}
+								/>
+							</div>
 
 							{/* <Field
 								fieldClass={'inline_input'}
@@ -245,6 +251,19 @@ const CreateEvent: FC = () => {
 									</div>
 								</>
 							)}
+
+							<FieldWithTextarea
+								fieldClass={'inline_textarea'}
+								labelText={'이벤트 설명'}
+								{...register('eventDescription', {
+									maxLength: {
+										value: 1000,
+										message: '최대 1000자까지 가능합니다',
+									},
+								})}
+								placeholder="상세 정보를 추가하세요"
+								error={errors.eventDescription}
+							></FieldWithTextarea>
 						</div>
 					</div>
 				</div>
