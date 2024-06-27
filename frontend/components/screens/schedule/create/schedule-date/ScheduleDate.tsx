@@ -51,6 +51,11 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 							startDate={startDate}
 							endDate={endDate}
 							handleChangeDate={handleChangeDate}
+							datePickerOptions={{
+								selectsRange: true,
+								withPortal: true,
+								minDate: new Date(),
+							}}
 						/>
 					</div>
 				</div>

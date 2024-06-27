@@ -14,10 +14,14 @@ import { MediaService } from '@/services/media/media.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Field from '@/components/ui/field/Field';
 import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
+import FieldTime from '@/components/ui/field/field-time/FieldTime';
+import Calendar from '@/components/ui/calendar/Calendar';
 
 const CreateEvent: FC = () => {
 	const [isEventImage, setIsEventImage] = useState<string>();
 	const FileInput = useRef<HTMLInputElement | null>(null);
+
+	const [isEventStartDate, setIsEventStartDate] = useState<Date>(new Date());
 
 	const {
 		register,
@@ -27,7 +31,11 @@ const CreateEvent: FC = () => {
 		getValues,
 		watch,
 		control,
-	} = useForm<{ eventName: string; eventDescription: string }>({
+	} = useForm<{
+		eventName: string;
+		eventDescription: string;
+		eventStartTime: string;
+	}>({
 		mode: 'onChange',
 	});
 
@@ -68,9 +76,17 @@ const CreateEvent: FC = () => {
 		FileInput.current!.click();
 	};
 
+	const handleChangeDate = (date: Date | [Date | null, Date | null]) => {
+		if (date instanceof Date) {
+			console.log(date);
+			setIsEventStartDate(date);
+		}
+	};
+
 	const onSubmit: SubmitHandler<{
 		eventName: string;
 		eventDescription: string;
+		eventStartTime: string;
 	}> = data => {
 		console.log('submit?');
 		//updateGroupSync(data);
@@ -133,6 +149,36 @@ const CreateEvent: FC = () => {
 								placeholder="상세 정보를 추가하세요"
 								error={errors.eventDescription}
 							></FieldWithTextarea>
+
+							{/* <Field
+								fieldClass={'inline_input'}
+								labelText={'시작시간'}
+								{...register('eventStartTime', {
+									required: '시작시간을 필수입니다!',
+								})}
+								className="w-full  md:text-base text-sm"
+								type="time"
+								error={errors.eventStartTime}
+							/> */}
+
+							{/* 캘린더 */}
+							<Calendar
+								startDate={isEventStartDate}
+								handleChangeDate={handleChangeDate}
+								datePickerOptions={{
+									withPortal: true,
+									minDate: new Date(),
+									selected: isEventStartDate,
+								}}
+							/>
+							<FieldTime
+								control={control}
+								name="eventStartTime"
+								labelText="시작시간"
+								validationOptions={{
+									required: '시작시간을 필수입니다!',
+								}}
+							></FieldTime>
 						</div>
 					</div>
 				</div>
