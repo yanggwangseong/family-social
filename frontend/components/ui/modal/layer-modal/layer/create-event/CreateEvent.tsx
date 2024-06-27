@@ -106,10 +106,10 @@ const CreateEvent: FC = () => {
 				Loading.remove();
 
 				handleSuccessLayerModal({
-					modalTitle: '피드 생성 성공',
+					modalTitle: '이벤트 생성 성공',
 					layer: LayerMode.successLayerModal,
-					lottieFile: 'createFeedAnimation',
-					message: '피드가 생성 되었습니다',
+					lottieFile: 'createEventAnimation',
+					message: '새로운 이벤트가 생성 되었습니다',
 				});
 			},
 			onError(error) {
