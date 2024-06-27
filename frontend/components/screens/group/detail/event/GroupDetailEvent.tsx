@@ -3,6 +3,7 @@ import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import styles from './GroupDetailEvent.module.scss';
+import GroupEventItem from '@/components/ui/group/event-item/GroupEventItem';
 
 const GroupDetailEvent: FC = () => {
 	const router = useRouter();
@@ -11,7 +12,9 @@ const GroupDetailEvent: FC = () => {
 	return (
 		<Format title={'group-detail-event'}>
 			<GroupDetailFormat groupId={groupId} page="GROUPEVENT">
-				<div className={styles.group_event_container}>ff</div>
+				<div className={styles.group_event_container}>
+					<GroupEventItem></GroupEventItem>
+				</div>
 			</GroupDetailFormat>
 		</Format>
 	);
