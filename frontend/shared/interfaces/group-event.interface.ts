@@ -1,6 +1,13 @@
-import { Union, eventOptionsLists } from 'types';
+import { OrderOptions, Union, eventOptionsLists } from 'types';
 import { GroupProfileResponse } from './group.interface';
 import { SearchMemberResponse } from './member.interface';
+
+export interface GroupEventQueryOptions {
+	eventStartDate: string;
+	page: number;
+	limit: number;
+	order: Union<typeof OrderOptions>;
+}
 
 export interface CreateGroupEventRequest {
 	eventType: Union<typeof eventOptionsLists>;

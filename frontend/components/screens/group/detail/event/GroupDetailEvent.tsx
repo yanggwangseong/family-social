@@ -7,6 +7,7 @@ import styles from './GroupDetailEvent.module.scss';
 const GroupDetailEvent: FC = () => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
+
 	return (
 		<Format title={'group-detail-event'}>
 			<GroupDetailFormat groupId={groupId} page="GROUPEVENT">
