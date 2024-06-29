@@ -20,6 +20,8 @@ export interface CreateGroupEventRequest {
 	eventEndTime?: string;
 }
 
+export interface UpdateGroupEventRequest extends CreateGroupEventRequest {}
+
 export interface GroupEventItemResponse {
 	id: string;
 	eventType: Union<typeof eventOptionsLists>;

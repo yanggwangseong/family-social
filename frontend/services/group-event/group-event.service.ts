@@ -2,11 +2,20 @@ import {
 	CreateGroupEventRequest,
 	GroupEventItemResponse,
 	GroupEventQueryOptions,
+	UpdateGroupEventRequest,
 } from '@/shared/interfaces/group-event.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import { axiosAPI } from 'api/axios';
 
 export const GroupEventService = {
+	async getOneGroupEvent(groupId: string, groupEventId: string) {
+		const { data } = await axiosAPI.get<GroupEventItemResponse>(
+			`/groups/${groupId}/group-events/${groupEventId}`,
+		);
+
+		return data;
+	},
+
 	async getListGroupEvent(
 		queryOptions: GroupEventQueryOptions,
 		groupId: string,
@@ -29,6 +38,21 @@ export const GroupEventService = {
 		const { data } = await axiosAPI.post(`/groups/${groupId}/group-events`, {
 			...createGroupEventRequest,
 		} satisfies CreateGroupEventRequest);
+
+		return data;
+	},
+
+	async updateGroupEvent(
+		updateGroupEventRequest: UpdateGroupEventRequest,
+		groupId: string,
+		groupEventId: string,
+	) {
+		const { data } = await axiosAPI.put(
+			`/groups/${groupId}/group-events/${groupEventId}`,
+			{
+				...updateGroupEventRequest,
+			} satisfies UpdateGroupEventRequest,
+		);
 
 		return data;
 	},

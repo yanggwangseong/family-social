@@ -15,8 +15,8 @@ import TourismDetail from './layer/tourism-detail/TourismDetail';
 import ScheduleDeleteConfirm from './layer/ScheduleDeleteConfirm';
 import ScheduleThumbnailImage from './layer/schedule-thumbnail-image/ScheduleThumbnailImage';
 import SuccessLayerModal from './layer/success-layer-modal/SuccessLayerModal';
-import CreateEvent from './layer/create-event/CreateEvent';
 import GroupEventDeleteConfirm from './layer/GroupEventDeleteConfirm';
+import CreateEventContainer from './layer/create-event/CreateEventContainer';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -34,7 +34,7 @@ const StatusLookUpTable = {
 	[LayerMode.scheduleDeleteConfirm]: ScheduleDeleteConfirm,
 	[LayerMode.scheduleThumbnailImage]: ScheduleThumbnailImage,
 	[LayerMode.successLayerModal]: SuccessLayerModal,
-	[LayerMode.createEvent]: CreateEvent,
+	[LayerMode.createEvent]: CreateEventContainer,
 	[LayerMode.groupEventDeleteConfirm]: GroupEventDeleteConfirm,
 };
 

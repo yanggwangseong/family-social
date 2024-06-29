@@ -66,4 +66,10 @@ export const GroupEventSettingMenu: ToggleMenu[] = [
 		description: '해당 이벤트를 삭제 할 수 있습니다.',
 		layer: LayerMode.groupEventDeleteConfirm,
 	},
+	{
+		Icon: PiPencilDuotone,
+		title: '이벤트 수정',
+		description: '이벤트를 수정 합니다',
+		layer: LayerMode.createEvent,
+	},
 ];

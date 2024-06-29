@@ -5,6 +5,9 @@ import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface'
 import { useState } from 'react';
 import { QueryFunction, useInfiniteQuery } from 'react-query';
 
+export interface InfiniteOverrideOptions {
+	enabled?: boolean;
+}
 export const useInfiniteSelect = <
 	T extends
 		| GetScheduleListResponse
@@ -13,6 +16,7 @@ export const useInfiniteSelect = <
 >(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,
+	overridOptions?: InfiniteOverrideOptions,
 ) => {
 	return useInfiniteQuery(queryKey, queryFn, {
 		getNextPageParam: (lastPage, allPosts) => {
@@ -20,5 +24,6 @@ export const useInfiniteSelect = <
 				? lastPage.page + 1
 				: undefined;
 		},
+		...overridOptions,
 	});
 };

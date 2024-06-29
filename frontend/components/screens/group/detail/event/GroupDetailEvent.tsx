@@ -34,6 +34,9 @@ const GroupDetailEvent: FC = () => {
 				},
 				groupId,
 			),
+		{
+			enabled: !!groupId,
+		},
 	);
 
 	return (

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useInfiniteSelect } from './useInfiniteSelect';
+import {
+	InfiniteOverrideOptions,
+	useInfiniteSelect,
+} from './useInfiniteSelect';
 
 import { GroupEventItemResponse } from '@/shared/interfaces/group-event.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
@@ -10,6 +13,7 @@ export const useGroupEventItemIntersectionObserver = <
 >(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,
+	overridOptions?: InfiniteOverrideOptions,
 ) => {
 	const [observedPost, setObservedPost] = useState('');
 
@@ -21,7 +25,7 @@ export const useGroupEventItemIntersectionObserver = <
 		hasNextPage,
 		isError,
 		refetch,
-	} = useInfiniteSelect(queryKey, queryFn);
+	} = useInfiniteSelect(queryKey, queryFn, overridOptions);
 
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
