@@ -20,12 +20,12 @@ export class NotificationsService {
 		private readonly notificationsRepository: NotificationsRepository,
 		private readonly notificationTypeRepository: NotificationTypeRepository,
 		private readonly serverSentEventsService: ServerSentEventsService,
-		private readonly pagination: Pagination<NotificationEntity>,
 	) {}
 
 	async getNotificationByMemberId(
 		memberId: string,
 		paginationDto: NotificationPaginationReqDto,
+		pagination: Pagination<NotificationEntity>,
 	): Promise<BasicPaginationResponse<NotificationResDto>> {
 		const { page, limit, is_read_options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
@@ -43,36 +43,32 @@ export class NotificationsService {
 		}
 
 		const { list, count }: { list: NotificationResDto[]; count: number } =
-			await this.pagination.paginate(
-				paginationDto,
-				this.notificationsRepository,
-				{
-					select: {
+			await pagination.paginate(paginationDto, this.notificationsRepository, {
+				select: {
+					id: true,
+					notificationTypeId: true,
+					recipientId: true,
+					senderId: true,
+					notificationTitle: true,
+					notificationDescription: true,
+					notificationFeedId: true,
+					isRead: true,
+					createdAt: true,
+					sender: {
 						id: true,
-						notificationTypeId: true,
-						recipientId: true,
-						senderId: true,
-						notificationTitle: true,
-						notificationDescription: true,
-						notificationFeedId: true,
-						isRead: true,
-						createdAt: true,
-						sender: {
-							id: true,
-							username: true,
-							profileImage: true,
-						},
+						username: true,
+						profileImage: true,
 					},
-					where: {
-						...whereOverride,
-					},
-					relations: {
-						sender: true,
-					},
-					skip,
-					take,
 				},
-			);
+				where: {
+					...whereOverride,
+				},
+				relations: {
+					sender: true,
+				},
+				skip,
+				take,
+			});
 
 		// const [list, count] = await this.notificationsRepository.getNotifications({
 		// 	whereOverride,

@@ -36,7 +36,6 @@ export class FeedsService {
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
-		private readonly pagination: Pagination<FeedEntity>,
 		private dataSource: DataSource,
 	) {}
 
@@ -74,6 +73,7 @@ export class FeedsService {
 	async findAllFeed(
 		memberId: string,
 		paginationDto: FeedPaginationReqDto,
+		pagination: Pagination<FeedEntity>,
 	): Promise<BasicPaginationResponse<FeedResDto>> {
 		const { page, limit, groupId, options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
@@ -95,7 +95,7 @@ export class FeedsService {
 		}: {
 			list: Omit<FeedResDto, 'medias'>[];
 			count: number;
-		} = await this.pagination.paginateQueryBuilder(paginationDto, query);
+		} = await pagination.paginateQueryBuilder(paginationDto, query);
 
 		const mappedList = await Promise.all(
 			list.map(async (feed) => {

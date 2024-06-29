@@ -18,17 +18,7 @@ import axios from 'axios';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import EmailVerify from './email-verify/EmailVerify';
 import { motion } from 'framer-motion';
-
-const visible = {
-	opacity: 1,
-	y: 0,
-	transition: { duration: 0.5 },
-};
-
-const itemVariants = {
-	hidden: { opacity: 0, y: 10 },
-	visible,
-};
+import { itemVariants, visible } from '@/constants/animation.constant';
 
 const SignUp: FC = () => {
 	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);

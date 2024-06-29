@@ -5,6 +5,8 @@ import {
 	GetScheduleListResponse,
 	ScheduleItemResponse,
 	UpdateScheduleNameRequestBody,
+	UpdateScheduleRequest,
+	UpdateScheduleRequestBody,
 } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
 
@@ -15,6 +17,21 @@ export const ScheduleService = {
 			{
 				...rest,
 			} satisfies CreateScheduleRequestBody,
+		);
+
+		return data;
+	},
+
+	async updateScheduleByScheduleId({
+		groupId,
+		scheduleId,
+		...rest
+	}: UpdateScheduleRequest) {
+		const { data } = await axiosAPI.put<CreateScheduleResponse>(
+			`/groups/${groupId}/schedules/${scheduleId}`,
+			{
+				...rest,
+			} satisfies UpdateScheduleRequestBody,
 		);
 
 		return data;
@@ -32,6 +49,24 @@ export const ScheduleService = {
 		const { data } = await axiosAPI.get<ScheduleItemResponse>(
 			`/groups/${groupId}/schedules/${scheduleId}`,
 		);
+
+		data.schedulePeriods.map(item => {
+			item.startTime = `${item.startTime.split(':')[0]}:${
+				item.startTime.split(':')[1]
+			}`;
+
+			item.endTime = `${item.endTime.split(':')[0]}:${
+				item.endTime.split(':')[1]
+			}`;
+
+			item.tourisms.map(data => {
+				const [start, end] = data.stayTime.split(':');
+				data.stayTime = `${start}:${end}`;
+				return data;
+			});
+
+			return item;
+		});
 
 		return data;
 	},

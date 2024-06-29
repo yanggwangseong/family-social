@@ -45,7 +45,7 @@ const SelectGroup: FC<SelectGroupProps> = ({
                     rounded-full p-[10px]
                     w-full hover:bg-orange-500
                     "
-					onClick={() => handleChangePage('periodPage')}
+					onClick={() => handleChangePage('scheduleDatePage')}
 				>
 					다음
 				</CustomButton>

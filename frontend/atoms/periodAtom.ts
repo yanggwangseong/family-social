@@ -14,6 +14,7 @@ export interface TourismType {
 	title: string;
 	position: number;
 }
+
 export const periodAtom = atom<PeriodsType[]>({
 	default: [],
 	key: 'periods',

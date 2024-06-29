@@ -13,16 +13,7 @@ import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import HeartAndStar from '../heart-and-star/HeartAndStar';
 import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
 import { motion } from 'framer-motion';
-
-const visible = {
-	opacity: 1,
-	y: 0,
-	transition: { duration: 0.5 },
-};
-const itemVariants = {
-	hidden: { opacity: 0, y: 10 },
-	visible,
-};
+import { itemVariants } from '@/constants/animation.constant';
 
 const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const router = useRouter();
@@ -137,7 +128,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 								onClick={() =>
 									handleChagePeriods({
 										contentId: tour.contentid,
-										stayTime: '02:40',
+										stayTime: '02:00',
 										tourismImage: tour.firstimage,
 										title: tour.title,
 									})

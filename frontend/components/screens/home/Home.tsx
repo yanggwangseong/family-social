@@ -10,19 +10,10 @@ import Image from 'next/image';
 import LoginButton from '@/components/ui/button/main/LoginButton';
 import { API_URL } from '@/constants/index';
 import { motion } from 'framer-motion';
+import { itemVariants, visible } from '@/constants/animation.constant';
 
 const style = {
 	height: '100%',
-};
-const visible = {
-	opacity: 1,
-	y: 0,
-	transition: { duration: 0.5 },
-};
-
-const itemVariants = {
-	hidden: { opacity: 0, y: 10 },
-	visible,
 };
 
 const Home: FC = () => {

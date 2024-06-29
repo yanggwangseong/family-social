@@ -17,7 +17,16 @@ import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
 import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorator';
+import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
+import {
+	DeleteGroupEventSwagger,
+	GetGroupEventByGroupEventIdSwagger,
+	GetGroupEventsSwagger,
+	PostGroupEventSwagger,
+	PutGroupEventSwagger,
+} from '@/common/decorators/swagger/swagger-group-event.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
 	CreateGroupSwagger,
@@ -42,26 +51,35 @@ import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { AttachGroupGuard } from '@/common/guards/attach-group.guard';
 import { CheckDuplicateGroupNameGuard } from '@/common/guards/check-duplicate-group-name.guard';
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
+import { IsMineGroupEventGaurd } from '@/common/guards/Is-mine-group-event.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 } from '@/constants/business-error';
+import { PaginationEnum } from '@/constants/pagination.const';
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
+import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
+import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
+import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
-import { TourismPeriodUpdateReqDto } from '@/models/dto/schedule/req/tourism-period-update-req.dto';
+import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
+import { GroupEventEntity } from '@/models/entities/group-event.entity';
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
+import { GroupEventsService } from '../group-events/group-events.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
@@ -77,6 +95,7 @@ export class GroupsController {
 		private readonly membersService: MembersService,
 		private readonly schedulesService: SchedulesService,
 		private readonly mailsService: MailsService,
+		private readonly groupEventsService: GroupEventsService,
 	) {}
 
 	/**
@@ -512,7 +531,7 @@ export class GroupsController {
 		)
 		scheduleId: string,
 		@CurrentUser('sub') sub: string,
-		@Body() dto: TourismPeriodUpdateReqDto[],
+		@Body() dto: ScheduleUpdateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.updateToursSchedule(
@@ -520,7 +539,7 @@ export class GroupsController {
 				memberId: sub,
 				groupId,
 				scheduleId,
-				periods: dto,
+				scheduleItem: dto,
 			},
 			qr,
 		);
@@ -549,5 +568,147 @@ export class GroupsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 생성
+	 *
+	 * @tag groups
+	 * @param dto 그룹 이벤트 생성을 위한 데이터
+	 * @param sub 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PostGroupEventSwagger()
+	@UseInterceptors(TransactionInterceptor)
+	@UseGuards(GroupMemberShipGuard)
+	@Post('/:groupId/group-events')
+	async postGroupEvent(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Body() dto: GroupEventCreateReqDto,
+		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.groupEventsService.createGroupEvent(
+			{
+				...dto,
+				eventGroupId: groupId,
+				eventOrganizerId: sub,
+			},
+			qr,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 리스트 가져오기
+	 *
+	 * @tag groups
+	 * @param groupId 그룹 아이디
+	 * @param paginationDto 페이징을 위한 쿼리 옵션
+	 * @param pagination Pagination 인스턴스
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@GetGroupEventsSwagger()
+	@UseGuards(GroupMemberShipGuard)
+	@UseInterceptors(PaginationInterceptor<GroupEventEntity>)
+	@IsPagination(PaginationEnum.BASIC)
+	@Get('/:groupId/group-events')
+	async getGroupEvents(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Query() paginationDto: GroupEventPaginationReqDto,
+		@PaginationDecorator() pagination: Pagination<GroupEventEntity>,
+	) {
+		return await this.groupEventsService.findAllGroupEvent(
+			pagination,
+			paginationDto,
+			groupId,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 가져오기
+	 *
+	 * @tag groups
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@GetGroupEventByGroupEventIdSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@Get('/:groupId/group-events/:groupEventId')
+	async getGroupEventByGroupEventId(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+	) {
+		return await this.groupEventsService.findOneGroupEvent(groupEventId);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 삭제
+	 *
+	 * @tag groups
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@DeleteGroupEventSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@UseInterceptors(TransactionInterceptor)
+	@Delete('/:groupId/group-events/:groupEventId')
+	async deleteGroupEvent(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.groupEventsService.deleteGroupEventByGroupEventId(
+			groupEventId,
+			qr,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹의 그룹 이벤트 수정
+	 *
+	 * @tag groups
+	 * @param dto 그룹 이벤트 수정을 위한 데이터
+	 * @param groupEventId 그룹 이벤트 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PutGroupEventSwagger()
+	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
+	@UseInterceptors(TransactionInterceptor)
+	@Put('/:groupId/group-events/:groupEventId')
+	async putGroupEvent(
+		@Param(
+			'groupEventId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupEventId: string,
+		@Body() dto: GroupEventUpdateReaDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.groupEventsService.updateGroupEventByGroupEventId(
+			{
+				...dto,
+				groupEventId,
+			},
+			qr,
+		);
 	}
 }

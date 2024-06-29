@@ -7,16 +7,7 @@ import { TourismResponse } from '@/shared/interfaces/schedule.interface';
 import { ContentTypeName } from '@/constants/content-type.constant';
 import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
 import { motion } from 'framer-motion';
-import { easeOutAnimation } from '@/utils/animation/ease-out';
-const visible = {
-	opacity: 1,
-	y: 0,
-	transition: { duration: 0.5 },
-};
-const itemVariants = {
-	hidden: { opacity: 0, y: 10 },
-	visible,
-};
+import { itemVariants } from '@/constants/animation.constant';
 
 const ScheduleDetailTourismItem: FC<{
 	index: number;

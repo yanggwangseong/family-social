@@ -28,5 +28,5 @@ export class DefaultPaginationReqDto {
 
 	@IsOptional()
 	@IsIn([...OrderOptions], { message: isInValidationMessage })
-	order__createdAt: Union<typeof OrderOptions> = 'DESC';
+	order__createdAt?: Union<typeof OrderOptions>;
 }

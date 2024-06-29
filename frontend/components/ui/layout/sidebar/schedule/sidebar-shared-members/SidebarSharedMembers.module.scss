@@ -1,16 +1,19 @@
 .container {
-	@apply flex flex-col gap-10 h-full;
+	@apply flex flex-col h-full;
 
 	.title_container {
 		@apply flex gap-4;
 
 		.title {
-			@apply text-xl font-semibold;
+			@screen md {
+				@apply text-xl;
+			}
+			@apply text-base font-semibold;
 		}
 	}
 
 	.select_all_container {
-		@apply flex gap-4 cursor-pointer;
+		@apply flex gap-4 cursor-pointer my-10;
 
 		.select_all_text {
 			@apply text-sm font-medium;
@@ -23,5 +26,13 @@
 
 	.select_profile_container {
 		@apply flex flex-col gap-10 overflow-x-hidden overflow-y-auto mb-10 flex-grow;
+	}
+
+	// 버튼
+	.right_sidebar_footer_container {
+		@screen md {
+			@apply mb-2;
+		}
+		@apply mb-10 flex gap-2;
 	}
 }
