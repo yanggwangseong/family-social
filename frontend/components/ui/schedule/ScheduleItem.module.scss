@@ -26,12 +26,6 @@
 				@apply hidden;
 			}
 
-			.d_day {
-				@screen md {
-					@apply text-sm;
-				}
-				@apply bg-customOrange px-2 py-[1px] border border-solid border-customDark rounded-2xl text-xs;
-			}
 			.title {
 				@screen md {
 					@apply text-base;

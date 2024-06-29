@@ -1,0 +1,40 @@
+.group_event_container {
+	@screen md {
+		@apply gap-4;
+	}
+	@apply border border-solid border-customDark flex flex-row gap-0;
+
+	.group_event_img_container {
+		@apply w-1/3 h-44 relative border-r border-solid border-customDark cursor-pointer;
+	}
+
+	.description_container {
+		@apply p-4 flex flex-col justify-between flex-1;
+
+		.d_day_container {
+			@apply flex gap-4;
+
+			.title {
+				@screen md {
+					@apply text-base;
+				}
+				@apply font-bold text-sm;
+			}
+		}
+
+		.toggle_menu_icon_container {
+			@apply cursor-pointer relative;
+		}
+
+		.eventDescription {
+			@screen md {
+				@apply text-base;
+			}
+			@apply text-customGray text-sm;
+		}
+
+		.setting_btn {
+			@apply w-16 h-8 items-center flex justify-center border border-solid border-customDark rounded cursor-pointer;
+		}
+	}
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import createFeedAnimation from '@/assets/lottie/createFeed.json';
 import createCommentAnimation from '@/assets/lottie/createComment.json';
 import createScheduleAnimation from '@/assets/lottie/createSchedule.json';
+import createEventAnimation from '@/assets/lottie/eventAnimation.json';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { successLayerModalAtom } from '@/atoms/successLayerModalAtom';
@@ -12,6 +13,7 @@ export const successLottie = {
 	createFeedAnimation: createFeedAnimation,
 	createCommentAnimation: createCommentAnimation,
 	createScheduleAnimation: createScheduleAnimation,
+	createEventAnimation: createEventAnimation,
 } as const;
 
 export const useSuccessLayerModal = () => {

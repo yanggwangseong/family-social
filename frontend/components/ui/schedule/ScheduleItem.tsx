@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
 import SharedMembers from '../shared-members/SharedMembers';
+import DDay from '../d-day/DDay';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 	schedule,
@@ -89,7 +90,8 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 							></ScheduleUpdateTitle>
 						) : (
 							<>
-								<div className={styles.d_day}>D-248</div>
+								{/* d-day */}
+								<DDay day={'248'} />
 								<div className={styles.title}>{schedule.scheduleName}</div>
 
 								<div

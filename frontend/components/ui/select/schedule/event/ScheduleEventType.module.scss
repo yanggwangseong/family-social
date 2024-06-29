@@ -1,0 +1,41 @@
+.select_container {
+	@apply relative;
+
+	.toggle_container {
+		@screen md {
+			@apply w-1/2;
+		}
+
+		@apply flex mt-1 px-2 py-1 border 
+        border-solid border-customDark rounded-full cursor-pointer w-full;
+
+		.option_text {
+			@apply font-bold text-sm mx-4 grow;
+		}
+	}
+
+	.select_layer_modal_container {
+		@apply absolute p-4 bg-white z-20 left-0 top-9 w-[300px] border 
+        border-solid border-customDark rounded-tr-[44px] shadow-lg;
+
+		.modal_title_container {
+			@apply flex pb-5;
+
+			.modal_title {
+				@apply text-sm ml-2;
+			}
+		}
+
+		.select_item {
+			@apply text-sm py-5 cursor-pointer flex;
+
+			&.active {
+				@apply text-customOrange;
+			}
+
+			.icon_container {
+				@apply ml-auto border border-solid border-customOrange rounded-full px-[0.1rem] py-[0.1rem];
+			}
+		}
+	}
+}

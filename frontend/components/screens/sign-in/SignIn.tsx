@@ -13,17 +13,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-
-const visible = {
-	opacity: 1,
-	y: 0,
-	transition: { duration: 0.5 },
-};
-
-const itemVariants = {
-	hidden: { opacity: 0, y: 10 },
-	visible,
-};
+import { itemVariants, visible } from '@/constants/animation.constant';
 
 const SignIn: FC = () => {
 	const {

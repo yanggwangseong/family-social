@@ -92,12 +92,12 @@ export const groupTabMenus: TabeMenuListType[] = [
 		title: '피드',
 	},
 	{
-		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d/members',
 		options: 'GROUPMEMBER',
 		title: '멤버',
 	},
 	{
-		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+		link: '/groups/75aca3da-1dac-48ef-84b8-cdf1be8fe37d/events',
 		options: 'GROUPEVENT',
 		title: '이벤트',
 	},

@@ -3,6 +3,7 @@ import {
 	ApiBadRequestResponse,
 	ApiBody,
 	ApiConsumes,
+	ApiForbiddenResponse,
 	ApiNotFoundResponse,
 	ApiOperation,
 	ApiResponse,
@@ -150,8 +151,48 @@ export const PatchGroupUploadCoverImageSwagger = () => {
 			isArray: true,
 			type: String,
 		}),
+		ApiBadRequestResponse({
+			description: `1. ${ERROR_UUID_PIPE_MESSAGE} \n2. ${ERROR_FILE_NOT_FOUND}`,
+		}),
 		ApiNotFoundResponse({
-			description: `1. ${ERROR_GROUP_NOT_FOUND} \n2. ${ERROR_UUID_PIPE_MESSAGE} \n3. ${ERROR_NO_PERMISSTION_TO_GROUP} \n4. ${ERROR_FILE_NOT_FOUND}`,
+			description: `1. ${ERROR_GROUP_NOT_FOUND}`,
+		}),
+		ApiForbiddenResponse({
+			description: ERROR_NO_PERMISSTION_TO_GROUP,
+		}),
+	);
+};
+
+export const PatchGroupEventUploadImageSwagger = () => {
+	return applyDecorators(
+		ApiConsumes('multipart/form-data'),
+		ApiBody({
+			schema: {
+				type: 'object',
+				properties: {
+					files: {
+						type: 'string',
+						format: 'binary',
+					},
+				},
+			},
+		}),
+		ApiOperation({
+			summary: '특정 그룹 특정 이벤트 이미지 변경',
+		}),
+		ApiResponse({
+			description: '특정 그룹 특정 이벤트 이미지 변경',
+			isArray: true,
+			type: String,
+		}),
+		ApiBadRequestResponse({
+			description: `1. ${ERROR_UUID_PIPE_MESSAGE} \n2. ${ERROR_FILE_NOT_FOUND}`,
+		}),
+		ApiNotFoundResponse({
+			description: `1. ${ERROR_GROUP_NOT_FOUND}`,
+		}),
+		ApiForbiddenResponse({
+			description: ERROR_NO_PERMISSTION_TO_GROUP,
 		}),
 	);
 };
