@@ -26,7 +26,7 @@ import Calendar from '@/components/ui/calendar/Calendar';
 
 import { LayerMode, Union, eventOptionsLists } from 'types';
 import ScheduleEventTypeSelect from '@/components/ui/select/schedule/event/ScheduleEventTypeSelect';
-import { GroupService } from '@/services/group/group.service';
+
 import { GroupEventService } from '@/services/group-event/group-event.service';
 import {
 	CreateGroupEventRequest,
@@ -35,8 +35,7 @@ import {
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { Notify } from 'notiflix';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
-import { groupEventIdAtom } from '@/atoms/groupEventIdAtom';
-import { useRecoilState } from 'recoil';
+
 import { CreateEventFields, CreateEventProps } from './create-event.interface';
 import { FormatDateToString } from '@/utils/formatDateToString';
 
@@ -212,7 +211,7 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 			return false;
 		}
 
-		if (!isGroupEventId) {
+		if (!isGroupEventId.groupEventId) {
 			await createGroupEventASync({
 				...data,
 				eventCoverImage: isEventImage,
@@ -224,7 +223,7 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 			});
 		}
 
-		if (isGroupEventId) {
+		if (isGroupEventId.groupEventId) {
 			await updateGroupEventASync({
 				...data,
 				eventCoverImage: isEventImage,

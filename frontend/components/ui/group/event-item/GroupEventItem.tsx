@@ -34,7 +34,7 @@ const GroupEventItem: FC<GroupItemProps> = ({ index, page, data }) => {
 	return (
 		<>
 			<motion.div {...easeOutAnimation(index)}>
-				<div className={styles.group_event_container}>
+				<div className={styles.group_event_container} id={data.id}>
 					<div className={styles.group_event_img_container}>
 						<Image
 							fill
