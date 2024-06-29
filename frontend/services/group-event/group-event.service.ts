@@ -32,4 +32,12 @@ export const GroupEventService = {
 
 		return data;
 	},
+
+	async deleteGroupEvent(groupId: string, groupEventId: string) {
+		const { data } = await axiosAPI.delete<void>(
+			`/groups/${groupId}/group-events/${groupEventId}`,
+		);
+
+		return data;
+	},
 };

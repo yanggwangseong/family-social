@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import styles from './GroupEventItem.module.scss';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
-import { GroupEventItemResponse } from '@/shared/interfaces/group-event.interface';
 import Image from 'next/image';
 import DDay from '@/ui/d-day/DDay';
 import Profile from '../../profile/Profile';
@@ -10,12 +9,28 @@ import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { BsThreeDots } from 'react-icons/bs';
 import { PiCakeDuotone } from 'react-icons/pi';
 import EventTypeIcon from '../../event-type-icon/EventTypeIcon';
+import { useModal } from '@/hooks/useModal';
+import { GroupItemProps } from './group-item.interface';
+import ToggleModal from '../../modal/ToggleModal';
+import { GroupEventSettingMenu } from '../../modal/toggle-menu.constants';
+import { useRecoilState } from 'recoil';
+import { groupEventIdAtom } from '@/atoms/groupEventIdAtom';
 
-const GroupEventItem: FC<{
-	index: number;
-	page: number;
-	data: GroupEventItemResponse;
-}> = ({ index, page, data }) => {
+const GroupEventItem: FC<GroupItemProps> = ({ index, page, data }) => {
+	const ModalWrapperRef = useRef<HTMLDivElement>(null);
+
+	const [, setIsGroupEventId] = useRecoilState(groupEventIdAtom);
+
+	const { isShowing, handleToggleModal } = useModal(ModalWrapperRef);
+
+	const handleClickSettingModal = () => {
+		handleToggleModal();
+		setIsGroupEventId({
+			groupId: data.eventGroupId,
+			groupEventId: data.id,
+		});
+	};
+
 	return (
 		<>
 			<motion.div {...easeOutAnimation(index)}>
@@ -40,8 +55,28 @@ const GroupEventItem: FC<{
 							profileImage={data.eventOrganizer.profileImage}
 						/>
 
-						<motion.div {...INLINEBUTTONGESTURE} className={styles.setting_btn}>
-							<BsThreeDots size={24} />
+						<motion.div
+							className={styles.toggle_menu_icon_container}
+							initial={false}
+							animate={isShowing ? 'open' : 'closed'}
+							ref={ModalWrapperRef}
+						>
+							<motion.div
+								{...INLINEBUTTONGESTURE}
+								className={styles.setting_btn}
+							>
+								<BsThreeDots
+									size={24}
+									onClick={e => {
+										e.stopPropagation();
+										handleClickSettingModal();
+									}}
+								/>
+							</motion.div>
+							<ToggleModal
+								list={GroupEventSettingMenu}
+								onClose={handleToggleModal}
+							/>
 						</motion.div>
 					</div>
 				</div>

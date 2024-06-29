@@ -17,6 +17,7 @@ export const LayerMode = {
 	scheduleThumbnailImage: 'scheduleThumbnailImage',
 	successLayerModal: 'successLayerModal',
 	createEvent: 'createEvent',
+	groupEventDeleteConfirm: 'groupEventDeleteConfirm',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;

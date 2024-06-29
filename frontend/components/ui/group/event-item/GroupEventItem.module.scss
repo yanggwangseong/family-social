@@ -22,6 +22,10 @@
 			}
 		}
 
+		.toggle_menu_icon_container {
+			@apply cursor-pointer relative;
+		}
+
 		.eventDescription {
 			@screen md {
 				@apply text-base;

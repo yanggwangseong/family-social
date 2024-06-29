@@ -16,6 +16,7 @@ import ScheduleDeleteConfirm from './layer/ScheduleDeleteConfirm';
 import ScheduleThumbnailImage from './layer/schedule-thumbnail-image/ScheduleThumbnailImage';
 import SuccessLayerModal from './layer/success-layer-modal/SuccessLayerModal';
 import CreateEvent from './layer/create-event/CreateEvent';
+import GroupEventDeleteConfirm from './layer/GroupEventDeleteConfirm';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -34,6 +35,7 @@ const StatusLookUpTable = {
 	[LayerMode.scheduleThumbnailImage]: ScheduleThumbnailImage,
 	[LayerMode.successLayerModal]: SuccessLayerModal,
 	[LayerMode.createEvent]: CreateEvent,
+	[LayerMode.groupEventDeleteConfirm]: GroupEventDeleteConfirm,
 };
 
 interface StatusProps {
