@@ -13,10 +13,15 @@ export const useGroupEventItemIntersectionObserver = <
 ) => {
 	const [observedPost, setObservedPost] = useState('');
 
-	const { data, isLoading, isRefetching, fetchNextPage } = useInfiniteSelect(
-		queryKey,
-		queryFn,
-	);
+	const {
+		data,
+		isLoading,
+		isRefetching,
+		fetchNextPage,
+		hasNextPage,
+		isError,
+		refetch,
+	} = useInfiniteSelect(queryKey, queryFn);
 
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
@@ -60,7 +65,11 @@ export const useGroupEventItemIntersectionObserver = <
 
 	return {
 		data,
+		fetchNextPage,
+		hasNextPage,
 		isLoading,
+		isError,
 		isRefetching,
+		refetch,
 	};
 };

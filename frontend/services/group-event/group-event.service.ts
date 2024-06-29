@@ -16,7 +16,7 @@ export const GroupEventService = {
 		const { data } = await axiosAPI.get<
 			BasicPaginationResponse<GroupEventItemResponse>
 		>(
-			`/groups/${groupId}/group-events?where__eventStartDate__more_than_or_equal=${eventStartDate}&order__eventStartDate=${order}&page=${page}&limit=${limit}"`,
+			`/groups/${groupId}/group-events?where__eventStartDate__more_than_or_equal=${eventStartDate}&order__eventStartDate=${order}&page=${page}&limit=${limit}`,
 		);
 
 		return data;
