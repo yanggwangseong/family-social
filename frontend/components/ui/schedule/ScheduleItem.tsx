@@ -39,7 +39,10 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 
 	const handleClickSettingModal = () => {
 		handleCloseSettingModal();
-		setIsScheduleId(schedule.id);
+		setIsScheduleId({
+			groupId: schedule.groupId,
+			scheduleId: schedule.id,
+		});
 	};
 
 	const handleUpdateTitle = () => {

@@ -10,9 +10,13 @@ import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { FeedService } from '@/services/feed/feed.service';
 
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const FeedDeleteConfirm: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 	const { mutate: deleteFeedSync } = useMutation(
@@ -24,13 +28,16 @@ const FeedDeleteConfirm: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success(
-					'성공',
-					`피드를 삭제 하는데 성공 하였습니다.`,
-					'확인',
+
+				handleSuccessLayerModal(
+					{
+						modalTitle: '피드 삭제 성공',
+						layer: LayerMode.successLayerModal,
+						lottieFile: 'deleteAnimation',
+						message: '피드를 삭제 하는데 성공 하였습니다',
+					},
 					() => {
 						setIsFeedId('');
-						setIsShowing(false);
 					},
 				);
 			},

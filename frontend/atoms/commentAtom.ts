@@ -4,10 +4,12 @@ export interface commentAtomType {
 	commentId: string;
 	feedId: string;
 }
+
+export const CommentAtomDefaultValue = {
+	commentId: '',
+	feedId: '',
+};
 export const commentAtom = atom<commentAtomType>({
-	default: {
-		commentId: '',
-		feedId: '',
-	},
+	default: CommentAtomDefaultValue,
 	key: 'comment',
 });
