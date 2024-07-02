@@ -11,10 +11,14 @@ import React, { FC } from 'react';
 import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const GroupDeleteConfirm: FC = () => {
 	const { groupId } = router.query as { groupId: string };
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const { mutate: deleteGroupSync } = useMutation(
 		['delete-group'],
@@ -25,8 +29,12 @@ const GroupDeleteConfirm: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `그룹을 삭제 성공 하였습니다.`, '확인', () => {
-					setIsShowing(false);
+
+				handleSuccessLayerModal({
+					modalTitle: '그룹 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '그룹을 삭제 성공 하였습니다',
 				});
 			},
 			onError(error) {
