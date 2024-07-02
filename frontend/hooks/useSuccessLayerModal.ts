@@ -35,17 +35,20 @@ export const useSuccessLayerModal = () => {
 			router.push(`/schedules`);
 	};
 
-	const handleSuccessLayerModal = ({
-		modalTitle,
-		layer,
-		lottieFile,
-		message,
-	}: {
-		modalTitle: string;
-		layer: Union<typeof LayerMode>;
-		lottieFile: keyof typeof successLottie;
-		message: string;
-	}) => {
+	const handleSuccessLayerModal = (
+		{
+			modalTitle,
+			layer,
+			lottieFile,
+			message,
+		}: {
+			modalTitle: string;
+			layer: Union<typeof LayerMode>;
+			lottieFile: keyof typeof successLottie;
+			message: string;
+		},
+		cb?: () => void,
+	) => {
 		setIsLayer({
 			modal_title: modalTitle,
 			layer,
@@ -57,6 +60,8 @@ export const useSuccessLayerModal = () => {
 		});
 
 		!isShowing && setIsShowing(true);
+
+		cb && cb();
 	};
 
 	return {
