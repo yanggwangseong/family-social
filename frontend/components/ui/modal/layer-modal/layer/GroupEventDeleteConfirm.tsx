@@ -12,10 +12,14 @@ import {
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { GroupEventService } from '@/services/group-event/group-event.service';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const GroupEventDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 	const [IsGroupEventId, setIsGroupEventId] = useRecoilState(groupEventIdAtom);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const { mutate: deleteGroupEventSync } = useMutation(
 		['delete-group-event'],
@@ -30,10 +34,15 @@ const GroupEventDeleteConfirm: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `해당 이벤트를 삭제 하였습니다.`, '확인', () => {
-					setIsGroupEventId(groupEventIdAtomDefaultValue);
-					setIsShowing(false);
+
+				handleSuccessLayerModal({
+					modalTitle: '이벤트 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '해당 이벤트를 삭제 하였습니다',
 				});
+
+				setIsGroupEventId(groupEventIdAtomDefaultValue);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
