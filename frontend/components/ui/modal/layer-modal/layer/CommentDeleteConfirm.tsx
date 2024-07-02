@@ -1,4 +1,4 @@
-import { commentAtom } from '@/atoms/commentAtom';
+import { CommentAtomDefaultValue, commentAtom } from '@/atoms/commentAtom';
 import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { CommentService } from '@/services/comment/comment.service';
@@ -8,14 +8,17 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const CommentDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	const [IsComment, setIsComment] = useRecoilState(commentAtom);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const { mutate: deleteCommentSync } = useMutation(
 		['delete-comment'],
@@ -30,10 +33,18 @@ const CommentDeleteConfirm: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `댓글을 삭제 하였습니다.`, '확인', () => {
-					setIsComment({ commentId: '', feedId: '' });
-					setIsShowing(false);
-				});
+
+				handleSuccessLayerModal(
+					{
+						modalTitle: '댓글 삭제 성공',
+						layer: LayerMode.successLayerModal,
+						lottieFile: 'deleteAnimation',
+						message: '댓글을 삭제 하였습니다',
+					},
+					() => {
+						setIsComment({ ...CommentAtomDefaultValue });
+					},
+				);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
