@@ -15,3 +15,4 @@
 - pagination 기능을 위한 pagination module 생성시 발생하는 결합도를 낮추기 위한 Interceptor를 이용한 AOP 구현 [링크](https://threeyears.tistory.com/518)
 - NestJS에서 repository의 insert메서드로 유동적으로 데이터 생성하기 [링크](https://threeyears.tistory.com/526)
 - NestJS Response Dto에 generic을 swagger ApiProperty 데코레이터에 사용하기 [링크](https://threeyears.tistory.com/525)
+- TypeOrm과 js-joda를 이용한 Date타입 대신 LocalDateTime 타입 사용하기 [링크](https://threeyears.tistory.com/549)
