@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { PrimaryColumn } from 'typeorm';
 
+import { CreatedAtDecorator } from '@/common/decorators/entity/created-at.decorator';
+import { UpdatedAtDecorator } from '@/common/decorators/entity/updated-at.decorator';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
@@ -14,20 +16,9 @@ export abstract class DefaultEntity {
 	})
 	id!: string;
 
-	@ApiProperty()
-	@CreateDateColumn({
-		type: 'timestamptz',
-		precision: 3,
-		default: () => 'CURRENT_TIMESTAMP',
-	})
+	@CreatedAtDecorator()
 	createdAt!: Date;
 
-	@ApiProperty()
-	@UpdateDateColumn({
-		type: 'timestamp',
-		precision: 3,
-		default: () => 'CURRENT_TIMESTAMP',
-		// onUpdate: 'CURRENT_TIMESTAMP', mysql에서만 작동
-	})
+	@UpdatedAtDecorator()
 	updatedAt!: Date;
 }

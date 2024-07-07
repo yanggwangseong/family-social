@@ -1,4 +1,5 @@
 import { LocalDateTime } from '@js-joda/core';
+import { Transform } from 'class-transformer';
 import {
 	Column,
 	CreateDateColumn,
@@ -29,6 +30,15 @@ export class TestEntity {
 	})
 	orderDateTime!: LocalDateTime;
 
+	@Transform(
+		({ value }: { value: Date }) => {
+			console.log('*******호출!!!******');
+			return value.toISOString();
+		},
+		{
+			toPlainOnly: true,
+		},
+	)
 	@CreateDateColumn({
 		type: 'timestamptz',
 	})
