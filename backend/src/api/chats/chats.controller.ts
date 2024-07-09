@@ -27,6 +27,7 @@ import { TransactionInterceptor } from '@/common/interceptors/transaction.interc
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
+import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-list-res.dto';
 
 import { ChatsService } from './chats.service';
 
@@ -81,6 +82,8 @@ export class ChatsController {
 	 * @returns 메세지 리스트
 	 */
 	@GetMessagesByChatIdSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GetMessagesListResDto>)
+	@IsResponseDtoDecorator<GetMessagesListResDto>(GetMessagesListResDto)
 	@Get('/:chatId/messages')
 	async getMessagesByChatId(
 		@Param(
