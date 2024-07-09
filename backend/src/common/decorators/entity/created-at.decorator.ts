@@ -1,14 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import { CreateDateColumn } from 'typeorm';
+
+import { CreatedAtResDecorator } from './created-at-res.decorator';
 
 export const CreatedAtDecorator = () => {
 	return applyDecorators(
-		ApiProperty(),
-		Transform(({ value }: { value: Date }) => value.toISOString(), {
-			toPlainOnly: true,
-		}),
+		CreatedAtResDecorator(),
 		CreateDateColumn({
 			type: 'timestamptz',
 			precision: 3,
