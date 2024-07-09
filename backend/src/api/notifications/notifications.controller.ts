@@ -8,16 +8,23 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { GetNotificationListSwagger } from '@/common/decorators/swagger/swagger-notification.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { Pagination } from '@/common/strategies/context/pagination';
 import { PaginationEnum } from '@/constants/pagination.const';
 import { NotificationPaginationReqDto } from '@/models/dto/notification/req/notification-pagination-req.dto';
+import { NotificationResDto } from '@/models/dto/notification/res/notification.res.dto';
+import {
+	ReturnBasicPaginationType,
+	withBasicPaginationResponse,
+} from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { NotificationEntity } from '@/models/entities/notification.entity';
 
 import { NotificationsService } from './notifications.service';
@@ -41,29 +48,17 @@ export class NotificationsController {
 	 * @returns 자신에게 온 알람 리스트
 	 */
 	@GetNotificationListSwagger()
-	@UseInterceptors(PaginationInterceptor<NotificationEntity>)
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof NotificationResDto>
+		>,
+		PaginationInterceptor<NotificationEntity>,
+	)
 	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(NotificationResDto))
 	@Get()
 	async getNotification(
 		@CurrentUser('sub') sub: string,
-		// @Query(
-		// 	'page',
-		// 	new DefaultValuePipe(1),
-		// 	new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
-		// )
-		// page: number,
-
-		// @Query(
-		// 	'limit',
-		// 	new DefaultValuePipe(10),
-		// 	new ParseIntPipe({
-		// 		exceptionFactory: () => parseIntPipeMessage('limit'),
-		// 	}),
-		// )
-		// limit: number,
-
-		// @Query('is_read_options', new ParseIsReadOptionsPipe())
-		// is_read_options: Union<typeof isReadOptions>,
 		@Query() paginationDto: NotificationPaginationReqDto,
 		@PaginationDecorator() pagination: Pagination<NotificationEntity>,
 	) {
