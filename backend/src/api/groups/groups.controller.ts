@@ -82,6 +82,7 @@ import {
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
+import { ScheduleItemResDto } from '@/models/dto/schedule/res/schedule-item-res.dto';
 import { GroupEventEntity } from '@/models/entities/group-event.entity';
 
 import { GroupsService } from './groups.service';
@@ -464,6 +465,8 @@ export class GroupsController {
 	 */
 	@GetOneScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard)
+	@UseInterceptors(ResponseDtoInterceptor<ScheduleItemResDto>)
+	@IsResponseDtoDecorator<ScheduleItemResDto>(ScheduleItemResDto)
 	@Get('/:groupId/schedules/:scheduleId')
 	async getOneScheduleById(
 		@Param(
