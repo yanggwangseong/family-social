@@ -87,9 +87,11 @@ export class GroupEventsService {
 	}
 
 	async findOneGroupEvent(groupEventId: string) {
-		return await this.groupEventRepository.getGroupEventByGroupEventId(
+		const result = await this.groupEventRepository.getGroupEventByGroupEventId(
 			groupEventId,
 		);
+
+		return result;
 	}
 
 	async createGroupEvent(

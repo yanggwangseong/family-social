@@ -30,8 +30,6 @@ export class UsersService {
 			},
 		});
 
-		console.log(result.orderDateTime.minusMonths(1).monthValue()); // 6
-
-		return result.id;
+		return result.createdAt;
 	}
 }

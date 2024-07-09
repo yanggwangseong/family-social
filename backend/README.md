@@ -8,6 +8,7 @@
 
 ## (이런 고민을 했어요)
 
+- [NestJS ResponseDto 적극 활용하기](https://threeyears.tistory.com/553)
 - Nestjs class-validator `ValidateNested` 데코레이터 n개의 중첩객체 validation 방법 [링크](https://threeyears.tistory.com/513)
 - Nestjs class-validator global Validation-pipe 사용시 에러 메세지 커스텀하기
 - cookie-option에서 `secure:true` 사용시 safari 브라우저에서 localhost에 cookie 저장이 안되는 문제 [링크](https://threeyears.tistory.com/517)
