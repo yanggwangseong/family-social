@@ -18,7 +18,7 @@ export class MemberBelongToChatsResDto {
 	chatId!: string;
 
 	@CreatedAtResDecorator()
-	chatCreateAt!: string;
+	chatCreateAt!: Date;
 
 	@ApiProperty({
 		nullable: false,
