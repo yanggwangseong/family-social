@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
@@ -37,6 +38,7 @@ import { IsMineCommentGuard } from '@/common/guards/is-mine-comment.guard';
 import { IsMineFeedGuard } from '@/common/guards/is-mine-feed.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
@@ -52,6 +54,7 @@ import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { FeedsService } from './feeds.service';
@@ -80,6 +83,8 @@ export class FeedsController {
 	 * @returns feed
 	 */
 	@GetFeedDetailSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<FeedResDto>)
+	@IsResponseDtoDecorator<FeedResDto>(FeedResDto)
 	@Get(':feedId')
 	async findFeedById(
 		@Param(
