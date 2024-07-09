@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 import { CommentGetListsResDto } from '../../comments/res/comment-get-lists-res.dto';
 import { MediaResDto } from '../../media/res/media-res.dto';
@@ -60,6 +61,7 @@ export class FeedResDto {
 		nullable: true,
 		type: [CommentGetListsResDto],
 	})
+	@Type(() => CommentGetListsResDto)
 	comments?: CommentGetListsResDto[];
 
 	@ApiPropertyOptional({

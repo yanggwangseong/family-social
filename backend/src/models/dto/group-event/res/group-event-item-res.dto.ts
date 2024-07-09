@@ -1,4 +1,5 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 import { GroupEventEntity } from '@/models/entities/group-event.entity';
 
@@ -22,10 +23,12 @@ export class GroupEventItemResDto extends PickType(GroupEventEntity, [
 	@ApiProperty({
 		nullable: false,
 	})
+	@Type(() => GroupProfileResDto)
 	eventGroup!: GroupProfileResDto;
 
 	@ApiProperty({
 		nullable: false,
 	})
+	@Type(() => MemberSearchResDto)
 	eventOrganizer!: MemberSearchResDto;
 }
