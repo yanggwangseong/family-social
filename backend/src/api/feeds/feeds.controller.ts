@@ -55,6 +55,10 @@ import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import {
+	ReturnBasicPaginationType,
+	withBasicPaginationResponse,
+} from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { FeedsService } from './feeds.service';
@@ -119,8 +123,12 @@ export class FeedsController {
 	 */
 	// @Query('options') options: 'TOP' | 'MYFEED' |  'ALL'로 가져올떄 옵션 추가
 	@GetFeedsSwagger()
-	@UseInterceptors(PaginationInterceptor<FeedEntity>)
+	@UseInterceptors(
+		ResponseDtoInterceptor<ReturnBasicPaginationType<typeof FeedResDto>>,
+		PaginationInterceptor<FeedEntity>,
+	)
 	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(FeedResDto))
 	@Get()
 	async findAllFeed(
 		@CurrentUser('sub') sub: string,
