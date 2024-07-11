@@ -6,19 +6,16 @@ import {
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 
-export interface SucessResponse<T> {
-	data: T;
-	success?: boolean;
-}
+import { SuccessCommonResDto } from '@/models/dto/response/success-common-res.dto';
 
 @Injectable()
 export class SuccessInterceptor<T>
-	implements NestInterceptor<T, SucessResponse<T>>
+	implements NestInterceptor<T, SuccessCommonResDto<T>>
 {
 	intercept(
 		context: ExecutionContext,
 		next: CallHandler,
-	): Observable<SucessResponse<T>> {
+	): Observable<SuccessCommonResDto<T>> {
 		return next.handle().pipe(
 			map((data) => {
 				const request = context.switchToHttp().getRequest();
