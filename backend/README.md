@@ -8,6 +8,7 @@
 
 ## (이런 고민을 했어요)
 
+- [NestJS Swaager 사용시 직관적이고 구체적인 응답 문서화 하기](https://threeyears.tistory.com/555)
 - [NestJS ResponseDto 적극 활용하기](https://threeyears.tistory.com/553)
 - Nestjs class-validator `ValidateNested` 데코레이터 n개의 중첩객체 validation 방법 [링크](https://threeyears.tistory.com/513)
 - Nestjs class-validator global Validation-pipe 사용시 에러 메세지 커스텀하기
