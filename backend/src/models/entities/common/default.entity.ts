@@ -8,7 +8,9 @@ import { notEmptyValidationMessage } from '@/common/validation-message/not-empty
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 export abstract class DefaultEntity {
-	@ApiProperty()
+	@ApiProperty({
+		example: '49fc6eb4-bc34-4de9-85cd-fb0fe66d66a8',
+	})
 	@PrimaryColumn('uuid')
 	@IsUUID(4, { each: true, message: uuidValidationMessage })
 	@IsNotEmpty({

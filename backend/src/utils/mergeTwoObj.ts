@@ -5,6 +5,7 @@ export const mergeObjects = <T extends object = object>(
 	if (!sources.length) {
 		return target;
 	}
+
 	const source = sources.shift();
 	if (source === undefined) {
 		return target;
@@ -13,14 +14,14 @@ export const mergeObjects = <T extends object = object>(
 	if (isMergebleObject(target) && isMergebleObject(source)) {
 		Object.keys(source).forEach(function (key: string) {
 			const sourceTarget = (source as Record<string, any>)[key];
-			let targetItem = (target as Record<string, any>)[key];
+
 			if (isMergebleObject(sourceTarget)) {
-				if (!targetItem) {
-					targetItem = {};
+				if (!(target as Record<string, any>)[key]) {
+					(target as Record<string, any>)[key] = {};
 				}
-				mergeObjects(targetItem, sourceTarget);
+				mergeObjects((target as Record<string, any>)[key], sourceTarget);
 			} else {
-				targetItem = sourceTarget;
+				(target as Record<string, any>)[key] = sourceTarget;
 			}
 		});
 	}

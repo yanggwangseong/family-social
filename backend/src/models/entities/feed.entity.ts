@@ -46,6 +46,7 @@ export class FeedEntity extends DefaultEntity {
 	@Column({ type: 'boolean', nullable: false, default: true })
 	@ApiProperty({
 		nullable: false,
+		example: true,
 	})
 	isPublic!: boolean;
 
