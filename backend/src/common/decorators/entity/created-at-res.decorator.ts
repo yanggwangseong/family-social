@@ -6,6 +6,7 @@ export const CreatedAtResDecorator = () => {
 	return applyDecorators(
 		ApiProperty({
 			nullable: false,
+			description: '생성 날짜',
 		}),
 		Transform(({ value }: { value: Date }) => value.toISOString(), {
 			toPlainOnly: true,

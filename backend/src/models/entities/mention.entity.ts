@@ -70,6 +70,7 @@ export class MentionEntity extends DefaultEntity {
 	@Column('int4', { name: 'mentionPosition', default: 0 })
 	@ApiProperty({
 		nullable: false,
+		description: '멘션 순서',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,

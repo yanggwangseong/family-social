@@ -9,7 +9,7 @@ import { uuidValidationMessage } from '@/common/validation-message/uuid-validati
 
 export abstract class DefaultEntity {
 	@ApiProperty({
-		example: '49fc6eb4-bc34-4de9-85cd-fb0fe66d66a8',
+		description: 'UUID PK',
 	})
 	@PrimaryColumn('uuid')
 	@IsUUID(4, { each: true, message: uuidValidationMessage })
