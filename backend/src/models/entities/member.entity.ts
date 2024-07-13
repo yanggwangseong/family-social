@@ -89,7 +89,9 @@ export class MemberEntity extends DefaultEntity {
 	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
-	@ApiProperty()
+	@ApiProperty({
+		description: '이메일 인증 코드',
+	})
 	@IsOptional()
 	@IsString({
 		message: stringValidationMessage,

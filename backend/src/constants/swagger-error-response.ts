@@ -3,9 +3,12 @@ import {
 	EntityConflictException,
 	EntityNotFoundException,
 	ForBiddenException,
+	UnAuthOrizedException,
+	UnProcessAbleException,
 } from '@/common/exception/service.exception';
 
 import {
+	ERROR_AUTHORIZATION_MEMBER,
 	ERROR_CANNOT_INVITE_SELF,
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
@@ -14,6 +17,8 @@ import {
 	ERROR_DELETE_GROUP_MEMBER,
 	ERROR_DELETE_GROUP_SELF_ONLY_ADMIN,
 	ERROR_DUPLICATE_GROUP_NAME,
+	ERROR_EMAIL_NOT_FOUND,
+	ERROR_EMAIL_VERIFY_CODE_EXISTS,
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
@@ -24,6 +29,8 @@ import {
 	ERROR_NO_PERMISSTION_TO_FEED,
 	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
+	ERROR_PASSWORD_MISMATCH,
+	ERROR_USER_ALREADY_EXISTS,
 	ERROR_USER_NOT_FOUND,
 	ERROR_UUID_PIPE_MESSAGE,
 } from './business-error';
@@ -41,12 +48,51 @@ export const BadRequestErrorResponse = {
 
 // 멤버
 export const MemberErrorResponse = {
+	// 401
+	'Member-401-1': {
+		model: UnAuthOrizedException,
+		exampleDescription: '비밀번호가 일치 하지 않았을떄 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_PASSWORD_MISMATCH}`,
+		message: `${ERROR_PASSWORD_MISMATCH}`,
+	},
+	'Member-401-2': {
+		model: UnAuthOrizedException,
+		exampleDescription: '해당 멤버에 대한 권한이 없을 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_AUTHORIZATION_MEMBER}`,
+		message: `${ERROR_AUTHORIZATION_MEMBER}`,
+	},
+
 	// 404
 	'Member-404-1': {
 		model: EntityNotFoundException,
 		exampleDescription: '해당하는 유저가 존재하지 않을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_USER_NOT_FOUND}`,
 		message: `${ERROR_USER_NOT_FOUND}`,
+	},
+	'Member-404-2': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'이메일에 해당하는 유저가 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_EMAIL_NOT_FOUND}`,
+		message: `${ERROR_EMAIL_NOT_FOUND}`,
+	},
+
+	//409
+	'Member-409-1': {
+		model: EntityConflictException,
+		exampleDescription:
+			'이미 해당 이메일에 해당하는 유저가 존재 할 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_USER_ALREADY_EXISTS}`,
+		message: `${ERROR_USER_ALREADY_EXISTS}`,
+	},
+
+	// 422
+	'Member-422-1': {
+		model: UnProcessAbleException,
+		exampleDescription:
+			'이메일 검증 코드가 일치 하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_EMAIL_VERIFY_CODE_EXISTS}`,
+		message: `${ERROR_EMAIL_VERIFY_CODE_EXISTS}`,
 	},
 };
 
