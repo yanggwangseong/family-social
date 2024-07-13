@@ -29,7 +29,9 @@ import {
 	ERROR_NO_PERMISSTION_TO_FEED,
 	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
+	ERROR_NO_PERMISSTION_TO_SCHEDULE,
 	ERROR_PASSWORD_MISMATCH,
+	ERROR_SCHEDULE_NOT_FOUND,
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_USER_NOT_FOUND,
 	ERROR_UUID_PIPE_MESSAGE,
@@ -43,6 +45,27 @@ export const BadRequestErrorResponse = {
 		exampleDescription: 'uuid 형식이 올바르지 않을때 발생하는 에러입니다',
 		exampleTitle: `${ERROR_UUID_PIPE_MESSAGE}`,
 		message: `${ERROR_UUID_PIPE_MESSAGE}`,
+	},
+};
+
+// 일정
+export const ScheduleErrorResponse = {
+	// 403
+	'Schedule-403-1': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'해당 여행 일정에 접근 권한이 없을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_NO_PERMISSTION_TO_SCHEDULE}`,
+		message: `${ERROR_NO_PERMISSTION_TO_SCHEDULE}`,
+	},
+
+	// 404
+	'Schedule-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'해당하는 여행일정이 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_SCHEDULE_NOT_FOUND}`,
+		message: `${ERROR_SCHEDULE_NOT_FOUND}`,
 	},
 };
 
