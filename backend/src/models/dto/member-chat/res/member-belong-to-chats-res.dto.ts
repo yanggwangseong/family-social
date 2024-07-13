@@ -9,11 +9,13 @@ import { RecentMessageResDto } from '../../message/res/recent-message-res.dto';
 export class MemberBelongToChatsResDto {
 	@ApiProperty({
 		nullable: false,
+		description: '대상 유저 아이디',
 	})
 	targetMemberId!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '채팅방 아이디',
 	})
 	chatId!: string;
 
@@ -29,6 +31,7 @@ export class MemberBelongToChatsResDto {
 
 	@ApiProperty({
 		nullable: false,
+		description: '참여 멤버 수',
 	})
 	joinMemberCount!: number;
 
