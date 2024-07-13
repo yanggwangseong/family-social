@@ -33,7 +33,7 @@ export const GetGroupEventsSwagger = () => {
 			},
 		]),
 		ErrorResponse(HttpStatus.NOT_FOUND, [GroupErrorResponse['Group-404-1']]),
-		ErrorResponse(HttpStatus.CONFLICT, [GroupErrorResponse['Group-409-1']]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [GroupErrorResponse['Group-403-1']]),
 	);
 };
 
@@ -50,9 +50,9 @@ export const GetGroupEventByGroupEventIdSwagger = () => {
 			},
 		]),
 		ErrorResponse(HttpStatus.NOT_FOUND, [GroupErrorResponse['Group-404-1']]),
-		ErrorResponse(HttpStatus.CONFLICT, [
-			GroupErrorResponse['Group-409-1'],
-			GroupEventErrorResponse['GroupEvent-409-1'],
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
 		]),
 	);
 };
@@ -70,7 +70,7 @@ export const PostGroupEventSwagger = () => {
 			GroupErrorResponse['Group-404-1'],
 			GroupEventErrorResponse['GroupEvent-404-1'],
 		]),
-		ErrorResponse(HttpStatus.CONFLICT, [GroupErrorResponse['Group-409-1']]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [GroupErrorResponse['Group-403-1']]),
 	);
 };
 
@@ -86,9 +86,9 @@ export const DeleteGroupEventSwagger = () => {
 			GroupErrorResponse['Group-404-1'],
 			GroupEventErrorResponse['GroupEvent-404-1'],
 		]),
-		ErrorResponse(HttpStatus.CONFLICT, [
-			GroupErrorResponse['Group-409-1'],
-			GroupEventErrorResponse['GroupEvent-409-1'],
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
 		]),
 
 		ErrorResponse(HttpStatus.BAD_REQUEST, [
@@ -109,9 +109,9 @@ export const PutGroupEventSwagger = () => {
 			GroupErrorResponse['Group-404-1'],
 			GroupEventErrorResponse['GroupEvent-404-1'],
 		]),
-		ErrorResponse(HttpStatus.CONFLICT, [
-			GroupErrorResponse['Group-409-1'],
-			GroupEventErrorResponse['GroupEvent-409-1'],
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
 		]),
 		ErrorResponse(HttpStatus.BAD_REQUEST, [
 			BadRequestErrorResponse['BadRequest-400-1'],

@@ -6,16 +6,25 @@ import {
 } from '@/common/exception/service.exception';
 
 import {
+	ERROR_CANNOT_INVITE_SELF,
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
 	ERROR_DELETE_FEED_OR_MEDIA,
+	ERROR_DELETE_GROUP,
+	ERROR_DELETE_GROUP_MEMBER,
+	ERROR_DELETE_GROUP_SELF_ONLY_ADMIN,
+	ERROR_DUPLICATE_GROUP_NAME,
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
 	ERROR_GROUP_NOT_FOUND,
+	ERROR_INVITED_GROUP_NOT_FOUND,
+	ERROR_INVITED_MEMBER_NOT_FOUND,
+	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 	ERROR_NO_PERMISSTION_TO_FEED,
 	ERROR_NO_PERMISSTION_TO_GROUP,
 	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
+	ERROR_USER_NOT_FOUND,
 	ERROR_UUID_PIPE_MESSAGE,
 } from './business-error';
 
@@ -30,6 +39,17 @@ export const BadRequestErrorResponse = {
 	},
 };
 
+// 멤버
+export const MemberErrorResponse = {
+	// 404
+	'Member-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription: '해당하는 유저가 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_USER_NOT_FOUND}`,
+		message: `${ERROR_USER_NOT_FOUND}`,
+	},
+};
+
 // 그룹 이벤트
 export const GroupEventErrorResponse = {
 	// 404
@@ -40,9 +60,9 @@ export const GroupEventErrorResponse = {
 		exampleTitle: `${ERROR_GROUP_EVENT_TYPE_NOT_FOUND}`,
 		message: `${ERROR_GROUP_EVENT_TYPE_NOT_FOUND}`,
 	},
-	//409
-	'GroupEvent-409-1': {
-		model: EntityConflictException,
+	//403
+	'GroupEvent-403-1': {
+		model: ForBiddenException,
 		exampleDescription:
 			'해당 그룹 이벤트에 접근 권한이 없을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
@@ -52,6 +72,20 @@ export const GroupEventErrorResponse = {
 
 // 그룹
 export const GroupErrorResponse = {
+	// 400
+	'Group-400-1': {
+		model: BadRequestServiceException,
+		exampleDescription: '그룹에 자기 자신을 초대 했을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_CANNOT_INVITE_SELF}`,
+		message: `${ERROR_CANNOT_INVITE_SELF}`,
+	},
+	'Group-400-2': {
+		model: BadRequestServiceException,
+		exampleDescription: '초대받은 멤버와 다를 경우 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_INVITED_MEMBER_NOT_FOUND}`,
+		message: `${ERROR_INVITED_MEMBER_NOT_FOUND}`,
+	},
+
 	// 404
 	'Group-404-1': {
 		model: EntityNotFoundException,
@@ -59,12 +93,54 @@ export const GroupErrorResponse = {
 		exampleTitle: `${ERROR_GROUP_NOT_FOUND}`,
 		message: `${ERROR_GROUP_NOT_FOUND}`,
 	},
-	//409
-	'Group-409-1': {
-		model: EntityConflictException,
+	'Group-404-2': {
+		model: EntityNotFoundException,
+		exampleDescription: '초대 받은 그룹을 찾을 수 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_INVITED_GROUP_NOT_FOUND}`,
+		message: `${ERROR_INVITED_GROUP_NOT_FOUND}`,
+	},
+
+	// 403
+	'Group-403-1': {
+		model: ForBiddenException,
 		exampleDescription: '해당 그룹에 접근 권한이 없을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
 		message: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
+	},
+	'Group-403-2': {
+		model: ForBiddenException,
+		exampleDescription:
+			'해당 그룹에 그룹을 삭제 할 권한이 없을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_NO_PERMISSION_TO_DELETE_GROUP}`,
+		message: `${ERROR_NO_PERMISSION_TO_DELETE_GROUP}`,
+	},
+	'Group-403-3': {
+		model: ForBiddenException,
+		exampleDescription:
+			'해당 그룹에 관리자 본인 1명외 멤버가 있을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_DELETE_GROUP_SELF_ONLY_ADMIN}`,
+		message: `${ERROR_DELETE_GROUP_SELF_ONLY_ADMIN}`,
+	},
+
+	//409
+	'Group-409-1': {
+		model: EntityConflictException,
+		exampleDescription:
+			'중복된 그룹 이름을 생성 하려고 할때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_DUPLICATE_GROUP_NAME}`,
+		message: `${ERROR_DUPLICATE_GROUP_NAME}`,
+	},
+	'Group-409-2': {
+		model: EntityConflictException,
+		exampleDescription: '그룹을 삭제중 에러가 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_DELETE_GROUP}`,
+		message: `${ERROR_DELETE_GROUP}`,
+	},
+	'Group-409-3': {
+		model: EntityConflictException,
+		exampleDescription: '그룹멤버를 삭제중 에러가 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_DELETE_GROUP_MEMBER}`,
+		message: `${ERROR_DELETE_GROUP_MEMBER}`,
 	},
 };
 

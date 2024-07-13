@@ -26,7 +26,9 @@ export type roleType = 'main' | 'user';
 @Index(['memberId'])
 @Index(['groupId'])
 export class FamEntity extends DefaultEntity {
-	@ApiProperty()
+	@ApiProperty({
+		description: '역할',
+	})
 	@Column({
 		type: 'varchar',
 		length: 30,
