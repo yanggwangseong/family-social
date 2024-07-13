@@ -27,6 +27,7 @@ export class GroupEntity extends DefaultEntity {
 	@ApiProperty({
 		maxLength: 60,
 		nullable: false,
+		description: '그룹 이름',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -41,6 +42,7 @@ export class GroupEntity extends DefaultEntity {
 	@ApiPropertyOptional({
 		maxLength: 1000,
 		nullable: true,
+		description: '그룹 설명',
 	})
 	@IsOptional()
 	@IsString({

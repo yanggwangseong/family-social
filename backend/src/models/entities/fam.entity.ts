@@ -35,7 +35,9 @@ export class FamEntity extends DefaultEntity {
 	})
 	role!: roleType;
 
-	@ApiProperty()
+	@ApiProperty({
+		description: '초대 수락 여부',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

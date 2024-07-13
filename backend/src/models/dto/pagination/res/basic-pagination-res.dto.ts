@@ -15,11 +15,13 @@ export function withBasicPaginationResponse<T extends Constructor>(Base: T) {
 
 		@ApiProperty({
 			nullable: false,
+			description: '페이지 번호',
 		})
 		page!: number;
 
 		@ApiProperty({
 			nullable: false,
+			description: '총 페이지',
 		})
 		totalPage!: number;
 	}
