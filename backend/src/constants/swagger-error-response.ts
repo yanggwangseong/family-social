@@ -11,9 +11,62 @@ import {
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
+	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
+	ERROR_GROUP_NOT_FOUND,
 	ERROR_NO_PERMISSTION_TO_FEED,
+	ERROR_NO_PERMISSTION_TO_GROUP,
+	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
 	ERROR_UUID_PIPE_MESSAGE,
 } from './business-error';
+
+// validation 에러
+export const BadRequestErrorResponse = {
+	// 400
+	'BadRequest-400-1': {
+		model: BadRequestServiceException,
+		exampleDescription: 'uuid 형식이 올바르지 않을때 발생하는 에러입니다',
+		exampleTitle: `${ERROR_UUID_PIPE_MESSAGE}`,
+		message: `${ERROR_UUID_PIPE_MESSAGE}`,
+	},
+};
+
+// 그룹 이벤트
+export const GroupEventErrorResponse = {
+	// 404
+	'GroupEvent-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'해당하는 그룹 이벤트가 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_GROUP_EVENT_TYPE_NOT_FOUND}`,
+		message: `${ERROR_GROUP_EVENT_TYPE_NOT_FOUND}`,
+	},
+	//409
+	'GroupEvent-409-1': {
+		model: EntityConflictException,
+		exampleDescription:
+			'해당 그룹 이벤트에 접근 권한이 없을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
+		message: `${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
+	},
+};
+
+// 그룹
+export const GroupErrorResponse = {
+	// 404
+	'Group-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription: '해당하는 그룹이 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_GROUP_NOT_FOUND}`,
+		message: `${ERROR_GROUP_NOT_FOUND}`,
+	},
+	//409
+	'Group-409-1': {
+		model: EntityConflictException,
+		exampleDescription: '해당 그룹에 접근 권한이 없을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
+		message: `${ERROR_NO_PERMISSTION_TO_GROUP}`,
+	},
+};
 
 // 댓글
 export const CommentErrorResponse = {
@@ -35,13 +88,6 @@ export const CommentErrorResponse = {
 
 // 피드
 export const FeedErrorResponse = {
-	// 400
-	'Feed-400-1': {
-		model: BadRequestServiceException,
-		exampleDescription: '피드 ID값이 uuid 형식이 아닐때 발생하는 에러 입니다',
-		exampleTitle: `${ERROR_UUID_PIPE_MESSAGE}`,
-		message: `${ERROR_UUID_PIPE_MESSAGE}`,
-	},
 	// 403
 	'Feed-403-1': {
 		model: ForBiddenException,

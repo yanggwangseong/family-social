@@ -5,7 +5,10 @@ import {
 	ApiOperation,
 } from '@nestjs/swagger';
 
-import { FeedErrorResponse } from '@/constants/swagger-error-response';
+import {
+	BadRequestErrorResponse,
+	FeedErrorResponse,
+} from '@/constants/swagger-error-response';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
@@ -104,7 +107,9 @@ export const DeleteFeedSwagger = () => {
 			description: '피드 삭제 성공',
 		}),
 
-		ErrorResponse(HttpStatus.BAD_REQUEST, [FeedErrorResponse['Feed-400-1']]),
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
 		ErrorResponse(HttpStatus.NOT_FOUND, [
 			FeedErrorResponse['Feed-404-1'],
 			FeedErrorResponse['Feed-404-2'],
