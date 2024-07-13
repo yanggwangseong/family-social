@@ -6,12 +6,32 @@ import {
 } from '@/common/exception/service.exception';
 
 import {
+	ERROR_COMMENT_NOT_FOUND,
+	ERROR_DELETE_COMMENT,
 	ERROR_DELETE_FEED_OR_MEDIA,
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 	ERROR_NO_PERMISSTION_TO_FEED,
 	ERROR_UUID_PIPE_MESSAGE,
 } from './business-error';
+
+// 댓글
+export const CommentErrorResponse = {
+	// 404
+	'Comment-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription: '해당하는 댓글이 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_COMMENT_NOT_FOUND}`,
+		message: `${ERROR_COMMENT_NOT_FOUND}`,
+	},
+	//409
+	'Comment-409-1': {
+		model: EntityConflictException,
+		exampleDescription: '댓글을 삭제중 에러가 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_DELETE_COMMENT}`,
+		message: `${ERROR_DELETE_COMMENT}`,
+	},
+};
 
 // 피드
 export const FeedErrorResponse = {

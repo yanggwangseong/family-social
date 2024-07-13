@@ -35,18 +35,9 @@ export const ErrorResponse = (
 ) => {
 	const examples = errorResponseOptions
 		.map((error: ErrorResponseOption) => {
-			//let innerErrorDto;
-
 			if (typeof error.message !== 'string') {
 				throw Error('http오류는 넘겨줄때 string 타입으로 주셔야합니다.');
 			}
-
-			// innerErrorDto = new HttpExceptionErrorResponseDto(
-			// 	StatusCode,
-			// 	error.model.name,
-			// 	error.message,
-			// 	error.code,
-			// );
 
 			const commonErrorInstance =
 				makeInstanceByApiProperty<HttpExceptionResponse>(HttpExceptionResponse);
@@ -54,7 +45,7 @@ export const ErrorResponse = (
 			commonErrorInstance.timestamp = new Date().toISOString();
 			commonErrorInstance.message = error.message;
 			commonErrorInstance.status = StatusCode;
-			//commonErrorInstance.error = innerErrorDto;
+
 			return {
 				[error.exampleTitle]: {
 					value: commonErrorInstance,
