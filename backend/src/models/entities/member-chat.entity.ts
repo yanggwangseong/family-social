@@ -17,6 +17,7 @@ export class MemberChatEntity extends CreatedAtEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({
 		nullable: false,
+		description: '채팅 멤버 아이디',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,

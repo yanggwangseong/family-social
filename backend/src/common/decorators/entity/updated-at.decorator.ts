@@ -5,7 +5,11 @@ import { UpdateDateColumn } from 'typeorm';
 
 export const UpdatedAtDecorator = () => {
 	return applyDecorators(
-		ApiProperty(),
+		ApiProperty({
+			nullable: false,
+			description: '수정 날짜',
+			type: String,
+		}),
 		Transform(({ value }: { value: Date }) => value.toISOString(), {
 			toPlainOnly: true,
 		}),

@@ -1,16 +1,16 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
-	ApiConflictResponse,
 	ApiCreatedResponse,
-	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
 
 import {
-	ERROR_COMMENT_NOT_FOUND,
-	ERROR_DELETE_COMMENT,
-	ERROR_FEED_NOT_FOUND,
-} from '@/constants/business-error';
+	CommentErrorResponse,
+	FeedErrorResponse,
+} from '@/constants/swagger-error-response';
+
+import { ErrorResponse } from './error-response.decorator';
 
 export const CreateCommentSwagger = () => {
 	return applyDecorators(
@@ -20,9 +20,8 @@ export const CreateCommentSwagger = () => {
 		ApiCreatedResponse({
 			description: '댓글 생성 성공',
 		}),
-		ApiNotFoundResponse({
-			description: ERROR_FEED_NOT_FOUND,
-		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [FeedErrorResponse['Feed-404-1']]),
 	);
 };
 
@@ -31,12 +30,14 @@ export const UpdateCommentSwagger = () => {
 		ApiOperation({
 			summary: '댓글 수정',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '댓글 수정 성공',
 		}),
-		ApiNotFoundResponse({
-			description: `1. ${ERROR_FEED_NOT_FOUND} \n2. ${ERROR_COMMENT_NOT_FOUND}`,
-		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			FeedErrorResponse['Feed-404-1'],
+			CommentErrorResponse['Comment-404-1'],
+		]),
 	);
 };
 
@@ -45,15 +46,14 @@ export const DeleteCommentSwagger = () => {
 		ApiOperation({
 			summary: '댓글 삭제',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '댓글 삭제 성공',
 		}),
-		ApiNotFoundResponse({
-			description: `1. ${ERROR_FEED_NOT_FOUND} \n2. ${ERROR_COMMENT_NOT_FOUND}`,
-		}),
-		ApiConflictResponse({
-			description: ERROR_DELETE_COMMENT,
-		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			FeedErrorResponse['Feed-404-1'],
+			CommentErrorResponse['Comment-404-1'],
+		]),
+		ErrorResponse(HttpStatus.CONFLICT, [CommentErrorResponse['Comment-409-1']]),
 	);
 };
 
@@ -62,12 +62,13 @@ export const LikesCommentSwagger = () => {
 		ApiOperation({
 			summary: '댓글 좋아요',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '댓글 좋아요',
 			type: Boolean,
 		}),
-		ApiNotFoundResponse({
-			description: ERROR_COMMENT_NOT_FOUND,
-		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			FeedErrorResponse['Feed-404-1'],
+			CommentErrorResponse['Comment-404-1'],
+		]),
 	);
 };

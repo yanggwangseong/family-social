@@ -8,6 +8,7 @@ import {
 	UNPROCESSABLE_ENTITY,
 	INTERNAL_SERVER_ERROR,
 } from '@/models/dto/error/error-code.dto';
+import { HttpExceptionResponse } from '@/models/dto/error/error-common-res.dto';
 
 // UNAUTHORIZED SERVICE EXCEPTION
 export const UnAuthOrizedException = (message?: string): ServiceException => {
@@ -48,13 +49,13 @@ export const InternalServerErrorException = (
 	return new ServiceException(INTERNAL_SERVER_ERROR, message);
 };
 
-interface HttpExceptionResponse {
-	readonly success: boolean;
-	readonly timestamp: string;
-	readonly status: number;
-	readonly message: string;
-	readonly path: string;
-}
+// interface HttpExceptionResponse {
+// 	readonly success: boolean;
+// 	readonly timestamp: string;
+// 	readonly status: number;
+// 	readonly message: string;
+// 	readonly path: string;
+// }
 
 export class ServiceException extends Error {
 	constructor(

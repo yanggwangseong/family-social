@@ -27,6 +27,7 @@ export class GroupEntity extends DefaultEntity {
 	@ApiProperty({
 		maxLength: 60,
 		nullable: false,
+		description: '그룹 이름',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -41,6 +42,7 @@ export class GroupEntity extends DefaultEntity {
 	@ApiPropertyOptional({
 		maxLength: 1000,
 		nullable: true,
+		description: '그룹 설명',
 	})
 	@IsOptional()
 	@IsString({
@@ -57,7 +59,9 @@ export class GroupEntity extends DefaultEntity {
 	 * @maxLength 2048
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
-	@ApiProperty()
+	@ApiProperty({
+		description: '그룹 커버 이미지',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

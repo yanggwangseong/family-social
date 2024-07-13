@@ -13,18 +13,20 @@ import { MentionResDto } from '../../mention/res/mention-res.dto';
 export class CommentGetListsResDto extends PickType(CommentEntity, [
 	'id',
 	'commentContents',
-	'updatedAt',
 	'replyId',
 	'parentId',
 	'feedId',
+	'updatedAt',
 ] as const) {
 	@ApiProperty({
 		nullable: true,
+		description: '나의 해당 댓글 좋아요 여/부',
 	})
 	myLikeByComment?: boolean;
 
 	@ApiProperty({
 		nullable: true,
+		description: '해당 댓글 좋아요 갯수',
 	})
 	sumLikeByComment?: number;
 

@@ -5,7 +5,9 @@ import { Transform } from 'class-transformer';
 export const CreatedAtResDecorator = () => {
 	return applyDecorators(
 		ApiProperty({
+			type: String,
 			nullable: false,
+			description: `생성 날짜`,
 		}),
 		Transform(({ value }: { value: Date }) => value.toISOString(), {
 			toPlainOnly: true,

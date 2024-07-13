@@ -1,25 +1,21 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
-	ApiBadRequestResponse,
 	ApiCreatedResponse,
-	ApiForbiddenResponse,
-	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
 } from '@nestjs/swagger';
 
 import {
-	ERROR_GROUP_EVENT_NOT_FOUND,
-	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
-	ERROR_GROUP_NOT_FOUND,
-	ERROR_NO_PERMISSTION_TO_GROUP,
-	ERROR_NO_PERMISSTION_TO_GROUP_EVENT,
-	ERROR_UUID_PIPE_MESSAGE,
-} from '@/constants/business-error';
+	BadRequestErrorResponse,
+	GroupErrorResponse,
+	GroupEventErrorResponse,
+} from '@/constants/swagger-error-response';
 import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
 import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 
+import { ErrorResponse } from './error-response.decorator';
 import { PagiNationQuerySwagger } from './query/swagger-pagination-query';
+import { SuccessResponse } from './sucess-response.decorator';
 
 export const GetGroupEventsSwagger = () => {
 	return applyDecorators(
@@ -28,16 +24,16 @@ export const GetGroupEventsSwagger = () => {
 		ApiOperation({
 			summary: '특정 그룹의 그룹 이벤트 리스트 가져오기',
 		}),
-		ApiNotFoundResponse({
-			description: ERROR_GROUP_NOT_FOUND,
-		}),
-		ApiOkResponse({
-			description: '특정 그룹의 그룹 이벤트 리스트 가져오기',
-			type: () => withBasicPaginationResponse(GroupEventItemResDto),
-		}),
-		ApiForbiddenResponse({
-			description: ERROR_NO_PERMISSTION_TO_GROUP,
-		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(GroupEventItemResDto),
+				exampleTitle: '그룹 이벤트 리스트 가져오기',
+				exampleDescription: '특정 그룹의 그룹 이벤트 리스트 가져오기',
+			},
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [GroupErrorResponse['Group-404-1']]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [GroupErrorResponse['Group-403-1']]),
 	);
 };
 
@@ -46,16 +42,18 @@ export const GetGroupEventByGroupEventIdSwagger = () => {
 		ApiOperation({
 			summary: '특정 그룹의 그룹 이벤트 가져오기',
 		}),
-		ApiOkResponse({
-			description: '특정 그룹의 그룹 이벤트 가져오기',
-			type: GroupEventItemResDto,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_GROUP_NOT_FOUND,
-		}),
-		ApiForbiddenResponse({
-			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
-		}),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: GroupEventItemResDto,
+				exampleTitle: '그룹 특정 이벤트 가져오기',
+				exampleDescription: '특정 그룹의 특정 이벤트 가져오기',
+			},
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [GroupErrorResponse['Group-404-1']]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
+		]),
 	);
 };
 
@@ -67,12 +65,12 @@ export const PostGroupEventSwagger = () => {
 		ApiCreatedResponse({
 			description: '특정 그룹의 그룹 이벤트 생성 성공',
 		}),
-		ApiNotFoundResponse({
-			description: `1. ${ERROR_GROUP_EVENT_TYPE_NOT_FOUND} \n2. ${ERROR_GROUP_NOT_FOUND}`,
-		}),
-		ApiForbiddenResponse({
-			description: ERROR_NO_PERMISSTION_TO_GROUP,
-		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			GroupEventErrorResponse['GroupEvent-404-1'],
+		]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [GroupErrorResponse['Group-403-1']]),
 	);
 };
 
@@ -81,18 +79,21 @@ export const DeleteGroupEventSwagger = () => {
 		ApiOperation({
 			summary: '특정 그룹의 그룹 이벤트 삭제',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '특정 그룹의 그룹 이벤트 삭제 성공',
 		}),
-		ApiNotFoundResponse({
-			description: `1. ${ERROR_GROUP_EVENT_NOT_FOUND} \n2. ${ERROR_GROUP_NOT_FOUND}`,
-		}),
-		ApiForbiddenResponse({
-			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
-		}),
-		ApiBadRequestResponse({
-			description: ERROR_UUID_PIPE_MESSAGE,
-		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			GroupEventErrorResponse['GroupEvent-404-1'],
+		]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
 	);
 };
 
@@ -101,17 +102,19 @@ export const PutGroupEventSwagger = () => {
 		ApiOperation({
 			summary: '특정 그룹의 그룹 이벤트 수정',
 		}),
-		ApiCreatedResponse({
+		ApiOkResponse({
 			description: '특정 그룹의 그룹 이벤트 수정',
 		}),
-		ApiNotFoundResponse({
-			description: `1. ${ERROR_GROUP_EVENT_NOT_FOUND} \n2. ${ERROR_GROUP_NOT_FOUND}`,
-		}),
-		ApiForbiddenResponse({
-			description: `1. ${ERROR_NO_PERMISSTION_TO_GROUP} \n2. ${ERROR_NO_PERMISSTION_TO_GROUP_EVENT}`,
-		}),
-		ApiBadRequestResponse({
-			description: ERROR_UUID_PIPE_MESSAGE,
-		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			GroupEventErrorResponse['GroupEvent-404-1'],
+		]),
+		ErrorResponse(HttpStatus.FORBIDDEN, [
+			GroupEventErrorResponse['GroupEvent-403-1'],
+			GroupErrorResponse['Group-403-1'],
+		]),
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
 	);
 };

@@ -28,6 +28,7 @@ export class CommentEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: false })
 	@ApiProperty({
 		nullable: false,
+		description: '댓글 내용',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -39,6 +40,7 @@ export class CommentEntity extends DefaultEntity {
 
 	@ApiPropertyOptional({
 		nullable: true,
+		description: '실제 답글 단 댓글의 uuid',
 	})
 	@IsOptional()
 	@IsUUID(4, { message: uuidValidationMessage })
@@ -47,6 +49,7 @@ export class CommentEntity extends DefaultEntity {
 
 	@ApiPropertyOptional({
 		nullable: true,
+		description: '최초 부모격인 댓글 uuid',
 	})
 	@IsOptional()
 	@IsUUID(4, { message: uuidValidationMessage })
@@ -54,7 +57,9 @@ export class CommentEntity extends DefaultEntity {
 	public readonly parentId?: string; //최초 부모격인 댓글 uuid
 
 	@Column({ type: 'uuid', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '댓글에 해당하는 피드 아이디',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

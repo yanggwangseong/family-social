@@ -37,7 +37,9 @@ export class FeedMediaEntity extends DefaultEntity {
 	 * @maxLength 2048
 	 */
 	@Column('varchar', { length: 2048 })
-	@ApiProperty()
+	@ApiProperty({
+		description: '미디어 url 주소',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
