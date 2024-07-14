@@ -29,3 +29,21 @@ export interface ICreateTourismArgs {
 	title: string;
 	position: number;
 }
+
+export interface TourHttpResponse<T> {
+	response: {
+		header: TourHttpHeader;
+		body: TourHttpBody<T>;
+	};
+}
+
+export interface TourHttpHeader {
+	resultMsg: string;
+	resultCode: string;
+}
+
+export interface TourHttpBody<T> {
+	numOfRows: number;
+	totalCount: number;
+	items: T;
+}
