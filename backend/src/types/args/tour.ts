@@ -45,5 +45,9 @@ export interface TourHttpHeader {
 export interface TourHttpBody<T> {
 	numOfRows: number;
 	totalCount: number;
-	items: T;
+	items: TourHttpItem<T>;
+}
+
+export interface TourHttpItem<T> {
+	item: T[];
 }

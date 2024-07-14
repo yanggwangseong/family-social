@@ -1,9 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError } from 'axios';
-import { catchError, firstValueFrom } from 'rxjs';
+import { AxiosError, AxiosResponse } from 'axios';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
+import { catchError, firstValueFrom, map } from 'rxjs';
 
+import { InternalServerErrorException } from '@/common/exception/service.exception';
+import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
 import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
@@ -11,6 +14,7 @@ import {
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
+import { TourHttpResponse } from '@/types/args/tour';
 
 @Injectable()
 export class ToursService {
@@ -138,7 +142,7 @@ export class ToursService {
 		return this.HttpServiceResponse(httpServiceUrl);
 	}
 
-	async getHttpTourApiAdditionalExplanation({
+	async getHttpTourApiAdditionalExplanation<T>({
 		contentId,
 		numOfRows,
 		pageNo,
@@ -153,7 +157,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
 		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		return this.HttpServiceResponse<T>(httpServiceUrl);
 	}
 
 	async getHttpTourApiCommonInformation({
@@ -191,32 +195,31 @@ export class ToursService {
 				pageNo,
 				contentTypeId,
 			}),
-			await this.HttpServiceResponse(httpServiceUrl),
+			await this.HttpServiceResponse<any>(httpServiceUrl),
 			await this.getHttpTourApiAdditionalExplanation({
 				contentId,
 				numOfRows,
 				pageNo,
 				contentTypeId,
 			}),
-			await this.getHttpTourApiImagesByCotentId({
+			await this.getHttpTourApiImagesByCotentId<any>({
 				contentId,
 				numOfRows,
 				pageNo,
 			}),
 		];
 
-		const commonInfromation = {
-			items: common.items,
+		return {
+			items: {
+				item: common.items.item,
+				introduction: introduction.items,
+				additional: additional.items,
+				image: images.items,
+			},
 		};
-
-		commonInfromation.items.introduction = introduction.items;
-		commonInfromation.items.additional = additional.items;
-		commonInfromation.items.image = images.items;
-
-		return commonInfromation;
 	}
 
-	async getHttpTourApiImagesByCotentId({
+	async getHttpTourApiImagesByCotentId<T>({
 		contentId,
 		numOfRows,
 		pageNo,
@@ -232,7 +235,7 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		return this.HttpServiceResponse<T>(httpServiceUrl);
 	}
 
 	async getHttpTourApiFestivalSchedule({
@@ -250,8 +253,7 @@ export class ToursService {
 		sigunguCode: number;
 		arrange: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
+		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&arrange=${arrange}`;
 
 		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
@@ -277,19 +279,41 @@ export class ToursService {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
 		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		return this.HttpServiceResponse<any[]>(httpServiceUrl);
 	}
 
-	private async HttpServiceResponse(url: string) {
-		const { data } = await firstValueFrom(
+	private async HttpServiceResponse<T>(url: string) {
+		const { data } = await firstValueFrom<AxiosResponse<TourHttpResponse<T>>>(
 			this.httpService.get(url).pipe(
 				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
+					throw InternalServerErrorException(error.message);
 				}),
 			),
 		);
 
-		return data.response.body;
+		const result = XMLValidator.validate(`${data}`);
+		if (result === true) {
+			const options = {
+				ignoreAttributes: false,
+				attributeNamePrefix: '@_',
+			};
+			const parser = new XMLParser(options);
+			const result = parser.parse(`${data}`);
+
+			// [TODO] slack
+			// throw InternalServerErrorException(
+			// 	`code: ${result.OpenAPI_ServiceResponse.cmmMsgHeader.returnReasonCode}`,
+			// );
+			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		}
+
+		// [TODO] slack
+		if (typeof data.response.body.items === 'string')
+			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+
+		const { response } = data;
+		const { body } = response;
+
+		return body;
 	}
 }
