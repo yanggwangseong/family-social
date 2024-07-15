@@ -23,6 +23,7 @@ import {
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
+import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 
 import { ToursService } from './tours.service';
 
@@ -43,6 +44,16 @@ export class ToursController {
 	// @param cat1 - 대분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
 	// @param cat2 - 중분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
 	// @param cat3 - 소분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpTourismListResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(
+		withBasicPaginationResponse(TourHttpTourismListResDto),
+	)
 	@Get()
 	async findAll(
 		@Query('arrange') arrange: string,
