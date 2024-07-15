@@ -7,9 +7,20 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ObjectLiteral } from 'typeorm';
 
+import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
+import { PaginationEnum } from '@/constants/pagination.const';
+import {
+	ReturnBasicPaginationType,
+	withBasicPaginationResponse,
+} from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 
 import { ToursService } from './tours.service';
 
@@ -150,6 +161,16 @@ export class ToursController {
 	// }
 
 	//행사정보조회 행사 시작일에 따른 행사 정보 조회
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpFestivalScheduleResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(
+		withBasicPaginationResponse(TourHttpFestivalScheduleResDto),
+	)
 	@Get('/festival')
 	async getHttpTourApiFestivalSchedule(
 		@Query('numOfRows') numOfRows: string,

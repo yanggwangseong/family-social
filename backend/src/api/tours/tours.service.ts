@@ -11,10 +11,12 @@ import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
+import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse } from '@/types/args/tour';
+import { BasicPaginationResponse } from '@/types/pagination';
 
 @Injectable()
 export class ToursService {
@@ -296,7 +298,7 @@ export class ToursService {
 		areaCode: string;
 		sigunguCode: string;
 		arrange: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpFestivalScheduleResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/searchFestival1`,
 		);
@@ -310,7 +312,16 @@ export class ToursService {
 		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
 		if (sigunguCode) newUrl.searchParams.append('sigunguCode', sigunguCode);
 
-		return this.HttpServiceResponse(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpFestivalScheduleResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiSearch({

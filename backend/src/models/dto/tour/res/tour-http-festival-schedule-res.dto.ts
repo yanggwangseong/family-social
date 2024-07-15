@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 export class TourHttpFestivalScheduleResDto {
 	@ApiProperty({
@@ -13,12 +13,6 @@ export class TourHttpFestivalScheduleResDto {
 		description: '상세주소',
 	})
 	addr2!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: '교과서속여행지 여부',
-	})
-	booktour!: string;
 
 	@ApiProperty({
 		nullable: false,
@@ -52,12 +46,6 @@ export class TourHttpFestivalScheduleResDto {
 
 	@ApiProperty({
 		nullable: false,
-		description: '등록일',
-	})
-	createdtime!: string;
-
-	@ApiProperty({
-		nullable: false,
 		description: '이벤트 시작일',
 	})
 	eventstartdate!: string;
@@ -82,38 +70,6 @@ export class TourHttpFestivalScheduleResDto {
 
 	@ApiProperty({
 		nullable: false,
-		description:
-			'저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
-	cpyrhtDivCd!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: 'GPS X좌표',
-	})
-	mapx!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: 'GPS Y좌표',
-	})
-	mapy!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: 'Map Level',
-	})
-	mlevel!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: '수정일',
-	})
-	@Exclude()
-	modifiedtime!: string;
-
-	@ApiProperty({
-		nullable: false,
 		description: '지역코드',
 	})
 	areacode!: string;
@@ -135,4 +91,68 @@ export class TourHttpFestivalScheduleResDto {
 		description: '제목',
 	})
 	title!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: '등록일',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	createdtime!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: '교과서속여행지 여부',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	booktour!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description:
+			'저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	cpyrhtDivCd!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: 'GPS X좌표',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	mapx!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: 'GPS Y좌표',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	mapy!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: 'Map Level',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	mlevel!: string;
+
+	@ApiProperty({
+		nullable: false,
+		description: '수정일',
+	})
+	@Exclude({
+		toPlainOnly: true,
+	})
+	modifiedtime!: string;
 }
