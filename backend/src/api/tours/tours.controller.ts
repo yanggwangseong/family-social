@@ -22,6 +22,7 @@ import {
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 
 import { ToursService } from './tours.service';
 
@@ -88,6 +89,17 @@ export class ToursController {
 		});
 	}
 
+	// 서비스 분류 코드조회
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpServiceCategoryResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(
+		withBasicPaginationResponse(TourHttpServiceCategoryResDto),
+	)
 	@Get('/service-categories')
 	async getHttpTourApiServiceCategories(
 		@Query('numOfRows') numOfRows: string,

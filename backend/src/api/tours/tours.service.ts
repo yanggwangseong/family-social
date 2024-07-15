@@ -13,6 +13,7 @@ import {
 } from '@/constants/env-keys.const';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -155,7 +156,16 @@ export class ToursService {
 		if (cat2) newUrl.searchParams.append('cat2', cat2);
 		if (cat3) newUrl.searchParams.append('cat3', cat3);
 
-		return this.HttpServiceResponse(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpServiceCategoryResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiIntroduction({
