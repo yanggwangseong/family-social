@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError, AxiosResponse } from 'axios';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { catchError, firstValueFrom, map } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 
 import { InternalServerErrorException } from '@/common/exception/service.exception';
 import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
@@ -13,6 +13,7 @@ import {
 } from '@/constants/env-keys.const';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
@@ -71,7 +72,7 @@ export class ToursService {
 		cat1: string;
 		cat2: string;
 		cat3: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpTourismListResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaBasedList1`,
 		);
@@ -115,7 +116,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		areaCode: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpAreaCodeResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaCode1`,
 		);
@@ -151,7 +152,7 @@ export class ToursService {
 		cat1: string;
 		cat2: string;
 		cat3: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/categoryCode1`,
 		);
@@ -366,7 +367,7 @@ export class ToursService {
 		keyword: string;
 		arrange: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpSearchTourismResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/searchKeyword1`,
 		);
@@ -378,7 +379,16 @@ export class ToursService {
 		newUrl.searchParams.append('contentTypeId', contentTypeId);
 		newUrl.searchParams.append('keyword', keyword);
 
-		return this.HttpServiceResponse<any[]>(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpSearchTourismResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	private CreateTourHttpUrl(httpUrl: string) {
