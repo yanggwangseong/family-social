@@ -59,25 +59,38 @@ export class ToursService {
 	}: {
 		arrange: string;
 		contentTypeId: string;
-		areaCode: number;
-		sigunguCode: number;
-		numOfRows: number;
-		pageNo: number;
+		areaCode: string;
+		sigunguCode: string;
+		numOfRows: string;
+		pageNo: string;
 		cat1: string;
 		cat2: string;
 		cat3: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/areaBasedList1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&MobileApp=${this.MobileApp}&_type=${this._type}&listYN=${this.listYN}
-		&arrange=${arrange}&contentTypeId=${contentTypeId}
-		&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/areaBasedList1`,
+		);
 
-		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
-		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
-		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
+		const paramObj = {
+			numOfRows,
+			pageNo,
+			arrange,
+			contentTypeId,
+			areaCode,
+			sigunguCode,
+		};
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		for (const [key, value] of Object.entries(paramObj)) {
+			newUrl.searchParams.append(key, value);
+		}
+
+		newUrl.searchParams.append('listYN', this.listYN);
+
+		if (cat1) newUrl.searchParams.append('cat1', cat1);
+		if (cat2) newUrl.searchParams.append('cat2', cat2);
+		if (cat3) newUrl.searchParams.append('cat3', cat3);
+
+		return this.HttpServiceResponse(newUrl.toString());
 	}
 
 	async getHttpTourApiAreaCodes({
@@ -85,16 +98,20 @@ export class ToursService {
 		pageNo,
 		areaCode,
 	}: {
-		numOfRows: number;
-		pageNo: number;
-		areaCode: number;
+		numOfRows: string;
+		pageNo: string;
+		areaCode: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/areaCode1?serviceKey=${this.serviceKey}&numOfRows=${numOfRows}
-		&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/areaCode1`,
+		);
 
-		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
+
+		return this.HttpServiceResponse(newUrl.toString());
 	}
 
 	async getHttpTourApiServiceCategories({
@@ -105,23 +122,28 @@ export class ToursService {
 		cat2,
 		cat3,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
 		cat1: string;
 		cat2: string;
 		cat3: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&MobileApp=${this.MobileApp}&_type=${this._type}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/categoryCode1`,
+		);
 
-		if (contentTypeId) httpServiceUrl += `&contentTypeId=${contentTypeId}`;
-		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
-		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
-		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('numOfRows', numOfRows);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (contentTypeId)
+			newUrl.searchParams.append('contentTypeId', contentTypeId);
+
+		if (cat1) newUrl.searchParams.append('cat1', cat1);
+		if (cat2) newUrl.searchParams.append('cat2', cat2);
+		if (cat3) newUrl.searchParams.append('cat3', cat3);
+
+		return this.HttpServiceResponse(newUrl.toString());
 	}
 
 	async getHttpTourApiIntroduction({
@@ -131,15 +153,20 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
 	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailIntro1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailIntro1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
+
+		return this.HttpServiceResponse(newUrl.toString());
 	}
 
 	async getHttpTourApiAdditionalExplanation<T>({
@@ -149,15 +176,20 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
 	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailInfo1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailInfo1`,
+		);
 
-		return this.HttpServiceResponse<T>(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
+
+		return this.HttpServiceResponse<T>(newUrl.toString());
 	}
 
 	async getHttpTourApiCommonInformation({
@@ -167,8 +199,8 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
 	}) {
 		const config = {
@@ -181,12 +213,18 @@ export class ToursService {
 			overviewYN: 'Y', // 콘텐츠개요조회여부( Y,N )
 		};
 
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailCommon1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}
-		&defaultYN=${config.defaultYN}&firstImageYN=${config.firstImageYN}&areacodeYN=${config.areacodeYN}
-		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
-		`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailCommon1`,
+		);
+
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
+
+		for (const [key, value] of Object.entries(config)) {
+			newUrl.searchParams.append(key, value);
+		}
 
 		const [introduction, common, additional, images] = [
 			await this.getHttpTourApiIntroduction({
@@ -195,7 +233,7 @@ export class ToursService {
 				pageNo,
 				contentTypeId,
 			}),
-			await this.HttpServiceResponse<any>(httpServiceUrl),
+			await this.HttpServiceResponse<any>(newUrl.toString()),
 			await this.getHttpTourApiAdditionalExplanation({
 				contentId,
 				numOfRows,
@@ -225,17 +263,23 @@ export class ToursService {
 		pageNo,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 	}) {
 		const imageYN: string = 'Y'; // 이미지조회1 : Y=콘텐츠이미지조회 N=”음식점”타입의음식메뉴이미지
 		const subImageYN: string = 'Y'; // 이미지조회2 : Y=원본,썸네일이미지조회,공공누리 저작권유형정보조회 N=Null
 
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailImage1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailImage1`,
+		);
 
-		return this.HttpServiceResponse<T>(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentId', contentId);
+		newUrl.searchParams.append('imageYN', imageYN);
+		newUrl.searchParams.append('subImageYN', subImageYN);
+
+		return this.HttpServiceResponse<T>(newUrl.toString());
 	}
 
 	async getHttpTourApiFestivalSchedule({
@@ -246,20 +290,27 @@ export class ToursService {
 		sigunguCode,
 		arrange,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		eventStartDate: string;
-		areaCode: number;
-		sigunguCode: number;
+		areaCode: string;
+		sigunguCode: string;
 		arrange: string;
 	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&arrange=${arrange}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/searchFestival1`,
+		);
 
-		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
-		if (sigunguCode) httpServiceUrl += `&sigunguCode=${sigunguCode}`;
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('listYN', this.listYN);
+		newUrl.searchParams.append('eventStartDate', eventStartDate);
+		newUrl.searchParams.append('arrange', arrange);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
+		if (sigunguCode) newUrl.searchParams.append('sigunguCode', sigunguCode);
+
+		return this.HttpServiceResponse(newUrl.toString());
 	}
 
 	async getHttpTourApiSearch({
@@ -269,17 +320,35 @@ export class ToursService {
 		arrange,
 		contentTypeId,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		keyword: string;
 		arrange: string;
 		contentTypeId: string;
 	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/searchKeyword1`,
+		);
 
-		return this.HttpServiceResponse<any[]>(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('listYN', this.listYN);
+		newUrl.searchParams.append('arrange', arrange);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('keyword', keyword);
+
+		return this.HttpServiceResponse<any[]>(newUrl.toString());
+	}
+
+	private CreateTourHttpUrl(httpUrl: string) {
+		const url = new URL(httpUrl);
+		url.searchParams.append('serviceKey', decodeURIComponent(this.serviceKey));
+
+		url.searchParams.append('MobileOS', this.MobileOS);
+		url.searchParams.append('MobileApp', this.MobileApp);
+		url.searchParams.append('_type', this._type);
+
+		return url;
 	}
 
 	private async HttpServiceResponse<T>(url: string) {

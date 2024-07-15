@@ -70,8 +70,8 @@ export class SearchController {
 		@Param('keyword') keyword: string,
 		@Query('arrange') arrange: string,
 		@Query('contentTypeId') contentTypeId: string,
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
 	) {
 		return await this.toursService.getHttpTourApiSearch({
 			keyword,

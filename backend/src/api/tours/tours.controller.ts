@@ -34,10 +34,10 @@ export class ToursController {
 	async findAll(
 		@Query('arrange') arrange: string,
 		@Query('contentTypeId') contentTypeId: string,
-		@Query('areaCode') areaCode: number,
-		@Query('sigunguCode') sigunguCode: number,
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
+		@Query('areaCode') areaCode: string,
+		@Query('sigunguCode') sigunguCode: string,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
 		@Query('cat1') cat1: string,
 		@Query('cat2') cat2: string,
 		@Query('cat3') cat3: string,
@@ -57,9 +57,9 @@ export class ToursController {
 
 	@Get('/area')
 	async getHttpTourApiAreaCodes(
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
-		@Query('areaCode') areaCode: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
+		@Query('areaCode') areaCode: string,
 	) {
 		return await this.toursService.getHttpTourApiAreaCodes({
 			numOfRows,
@@ -70,8 +70,8 @@ export class ToursController {
 
 	@Get('/service-categories')
 	async getHttpTourApiServiceCategories(
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
 		@Query('contentTypeId') contentTypeId: string,
 		@Query('cat1') cat1: string,
 		@Query('cat2') cat2: string,
@@ -91,8 +91,8 @@ export class ToursController {
 	@Get('/:contentId/common-information')
 	async getHttpTourApiCommonInformation(
 		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
 		@Query('contentTypeId') contentTypeId: string,
 	) {
 		return await this.toursService.getHttpTourApiCommonInformation({
@@ -152,10 +152,10 @@ export class ToursController {
 	//행사정보조회 행사 시작일에 따른 행사 정보 조회
 	@Get('/festival')
 	async getHttpTourApiFestivalSchedule(
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
-		@Query('areaCode') areaCode: number,
-		@Query('sigunguCode') sigunguCode: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
+		@Query('areaCode') areaCode: string,
+		@Query('sigunguCode') sigunguCode: string,
 		@Query('eventStartDate') eventStartDate: string,
 		@Query('arrange') arrange: string,
 	) {
