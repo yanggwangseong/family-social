@@ -20,6 +20,7 @@ import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 
 import { ToursService } from './tours.service';
@@ -66,6 +67,14 @@ export class ToursController {
 		});
 	}
 
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpAreaCodeResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpAreaCodeResDto))
 	@Get('/area')
 	async getHttpTourApiAreaCodes(
 		@Query('numOfRows') numOfRows: string,

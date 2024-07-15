@@ -11,6 +11,7 @@ import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
+import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
@@ -32,9 +33,9 @@ export class ToursService {
 		this.configService.get<string>(ENV_TOUR_API_SERVICE_KEY) ?? '';
 	private readonly MobileApp: string = 'FAM';
 	private endPoint = this.configService.get<string>(ENV_TOUR_API_END_POINT);
-	private listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
-	private MobileOS: string = 'ETC';
-	private _type: string = 'json';
+	private listYN = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
+	private MobileOS = 'ETC';
+	private _type = 'json';
 
 	// private readonly config: {
 	// 	serviceKey?: string;
@@ -113,7 +114,16 @@ export class ToursService {
 
 		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
 
-		return this.HttpServiceResponse(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpAreaCodeResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiServiceCategories({
