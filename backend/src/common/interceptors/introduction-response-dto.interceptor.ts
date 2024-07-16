@@ -8,14 +8,14 @@ import { plainToInstance } from 'class-transformer';
 import { map } from 'rxjs';
 
 import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
-import { TourHttpAccommodationResDto } from '@/models/dto/tour/res/tour-http-accommodation-res.dto';
-import { TourHttpCulturalResDto } from '@/models/dto/tour/res/tour-http-cultural-res.dto';
-import { TourHttpFestivalResDto } from '@/models/dto/tour/res/tour-http-festival-res.dto';
-import { TourHttpLeisureResDto } from '@/models/dto/tour/res/tour-http-leisure-res.dto';
-import { TourHttpRestaurantResDto } from '@/models/dto/tour/res/tour-http-restaurant-res.dto';
-import { TourHttpShoppingResDto } from '@/models/dto/tour/res/tour-http-shopping-res.dto';
-import { TourHttpTouristResDto } from '@/models/dto/tour/res/tour-http-tourist-res.dto';
-import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/tour-http-travel-course-res.dto';
+import { TourHttpAccommodationResDto } from '@/models/dto/tour/res/introduction/tour-http-accommodation-res.dto';
+import { TourHttpCulturalResDto } from '@/models/dto/tour/res/introduction/tour-http-cultural-res.dto';
+import { TourHttpFestivalResDto } from '@/models/dto/tour/res/introduction/tour-http-festival-res.dto';
+import { TourHttpLeisureResDto } from '@/models/dto/tour/res/introduction/tour-http-leisure-res.dto';
+import { TourHttpRestaurantResDto } from '@/models/dto/tour/res/introduction/tour-http-restaurant-res.dto';
+import { TourHttpShoppingResDto } from '@/models/dto/tour/res/introduction/tour-http-shopping-res.dto';
+import { TourHttpTouristResDto } from '@/models/dto/tour/res/introduction/tour-http-tourist-res.dto';
+import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/introduction/tour-http-travel-course-res.dto';
 import { TourContentTypeId } from '@/types/type';
 
 @Injectable()

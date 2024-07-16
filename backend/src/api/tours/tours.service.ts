@@ -13,11 +13,9 @@ import {
 } from '@/constants/env-keys.const';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
-import { TourHttpIntroductionResdto } from '@/models/dto/tour/res/tour-http-introduction-res.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
-import { TourHttpTouristResDto } from '@/models/dto/tour/res/tour-http-tourist-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
@@ -192,7 +190,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourCommonInformationInterSactionType>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/detailIntro1`,
 		);
@@ -207,9 +205,17 @@ export class ToursService {
 		 *  관광 타입에 따라 다른 response 값 return
 		 *
 		 */
-		return this.HttpServiceResponse<TourCommonInformationInterSactionType>(
-			newUrl.toString(),
-		);
+		const data =
+			await this.HttpServiceResponse<TourCommonInformationInterSactionType>(
+				newUrl.toString(),
+			);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiAdditionalExplanation<T>({
