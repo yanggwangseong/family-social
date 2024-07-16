@@ -14,6 +14,7 @@ import {
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
@@ -311,7 +312,7 @@ export class ToursService {
 		};
 	}
 
-	async getHttpTourApiImagesByCotentId<T>({
+	async getHttpTourApiImagesByCotentId({
 		contentId,
 		numOfRows,
 		pageNo,
@@ -319,7 +320,7 @@ export class ToursService {
 		contentId: string;
 		numOfRows: string;
 		pageNo: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpImagesResDto>> {
 		const imageYN: string = 'Y'; // 이미지조회1 : Y=콘텐츠이미지조회 N=”음식점”타입의음식메뉴이미지
 		const subImageYN: string = 'Y'; // 이미지조회2 : Y=원본,썸네일이미지조회,공공누리 저작권유형정보조회 N=Null
 
@@ -333,7 +334,16 @@ export class ToursService {
 		newUrl.searchParams.append('imageYN', imageYN);
 		newUrl.searchParams.append('subImageYN', subImageYN);
 
-		return this.HttpServiceResponse<T>(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpImagesResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiFestivalSchedule({

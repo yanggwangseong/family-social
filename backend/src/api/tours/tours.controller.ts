@@ -24,6 +24,7 @@ import {
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 
@@ -176,35 +177,43 @@ export class ToursController {
 		});
 	}
 
-	//위의 정보 말고도 부가설명이라고,해서 추가 정보를 제공해주는것
-	// @Get('/:contentId/additional-explanation')
-	// async getHttpTourApiAdditionalExplanation(
-	// 	@Param('contentId') contentId: string,
-	// 	@Query('numOfRows') numOfRows: number,
-	// 	@Query('pageNo') pageNo: number,
-	// 	@Query('contentTypeId') contentTypeId: string,
-	// ) {
-	// 	return await this.toursService.getHttpTourApiAdditionalExplanation({
-	// 		contentId,
-	// 		numOfRows,
-	// 		pageNo,
-	// 		contentTypeId,
-	// 	});
-	// }
+	// 반복 정보 조회
+	@Get('/:contentId/additional-explanation')
+	async getHttpTourApiAdditionalExplanation(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
+		@Query('contentTypeId') contentTypeId: string,
+	) {
+		return await this.toursService.getHttpTourApiAdditionalExplanation({
+			contentId,
+			numOfRows,
+			pageNo,
+			contentTypeId,
+		});
+	}
 
 	//contentId에 해당하는 관광정보에 매핑되는 이미지 정보 조회 (없을 수 도 있다.)
-	// @Get('/:contentId/Images')
-	// async getHttpTourApiImagesByCotentId(
-	// 	@Param('contentId') contentId: string,
-	// 	@Query('numOfRows') numOfRows: number,
-	// 	@Query('pageNo') pageNo: number,
-	// ) {
-	// 	return await this.toursService.getHttpTourApiImagesByCotentId({
-	// 		contentId,
-	// 		numOfRows,
-	// 		pageNo,
-	// 	});
-	// }
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpImagesResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpImagesResDto))
+	@Get('/:contentId/Images')
+	async getHttpTourApiImagesByCotentId(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
+	) {
+		return await this.toursService.getHttpTourApiImagesByCotentId({
+			contentId,
+			numOfRows,
+			pageNo,
+		});
+	}
 
 	//행사정보조회 행사 시작일에 따른 행사 정보 조회
 	@UseInterceptors(
