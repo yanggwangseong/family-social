@@ -12,6 +12,7 @@ import {
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
+import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
@@ -251,7 +252,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpCommonResDto>> {
 		const config = {
 			defaultYN: 'Y', // 기본정보조회여부( Y,N )
 			firstImageYN: 'Y', // 원본, 썸네일대표 이미지, 이미지 공공누리유형정보 조회여부( Y,N )
@@ -298,7 +299,9 @@ export class ToursService {
 		// 	}),
 		// ];
 
-		const data = await this.HttpServiceResponse(newUrl.toString());
+		const data = await this.HttpServiceResponse<TourHttpCommonResDto>(
+			newUrl.toString(),
+		);
 
 		return {
 			list: data.items.item,

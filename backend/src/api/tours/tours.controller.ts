@@ -22,6 +22,7 @@ import {
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
+import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
@@ -131,6 +132,14 @@ export class ToursController {
 		});
 	}
 
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpCommonResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpCommonResDto))
 	@Get('/:contentId/common-information')
 	async getHttpTourApiCommonInformation(
 		@Param('contentId') contentId: string,
