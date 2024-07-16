@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * 관광지(14) Cultural
+ * 문화시설(14) Cultural
  */
 export class TourHttpCulturalResDto {
 	@ApiProperty({

@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
-/**
- * 관광지(12) Tourist
- */
 export class TourHttpIntroductionResdto {
 	@ApiProperty({
 		nullable: false,

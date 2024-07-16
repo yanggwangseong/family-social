@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
-export class TourHttpDetailCommonResDto {
+/**
+ * 관광지(12) Tourist
+ */
+export class TourHttpTouristResDto {
 	@ApiProperty({
 		nullable: false,
 		description: '콘텐츠ID',
@@ -167,4 +170,11 @@ export class TourHttpDetailCommonResDto {
 		toPlainOnly: true,
 	})
 	mlevel!: string;
+
+	@Expose({
+		toPlainOnly: true,
+	})
+	get fullAddr() {
+		return `(${this.areacode}) ${this.addr1} ${this.addr2}`;
+	}
 }
