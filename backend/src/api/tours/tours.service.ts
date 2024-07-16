@@ -202,7 +202,14 @@ export class ToursService {
 		newUrl.searchParams.append('contentTypeId', contentTypeId);
 		newUrl.searchParams.append('contentId', contentId);
 
-		return this.HttpServiceResponse(newUrl.toString());
+		/**
+		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
+		 *  관광 타입에 따라 다른 response 값 return
+		 *
+		 */
+		return this.HttpServiceResponse<TourCommonInformationInterSactionType>(
+			newUrl.toString(),
+		);
 	}
 
 	async getHttpTourApiAdditionalExplanation<T>({
@@ -238,7 +245,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}): Promise<BasicPaginationResponse<TourCommonInformationInterSactionType>> {
+	}) {
 		const config = {
 			defaultYN: 'Y', // 기본정보조회여부( Y,N )
 			firstImageYN: 'Y', // 원본, 썸네일대표 이미지, 이미지 공공누리유형정보 조회여부( Y,N )
@@ -285,15 +292,7 @@ export class ToursService {
 		// 	}),
 		// ];
 
-		/**
-		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
-		 *  관광 타입에 따라 다른 response 값 return
-		 *
-		 */
-		const data =
-			await this.HttpServiceResponse<TourCommonInformationInterSactionType>(
-				newUrl.toString(),
-			);
+		const data = await this.HttpServiceResponse(newUrl.toString());
 
 		return {
 			list: data.items.item,

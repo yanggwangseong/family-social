@@ -19,9 +19,7 @@ import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/tour-http-trav
 import { TourContentTypeId } from '@/types/type';
 
 @Injectable()
-export class CommonInformationResponseDtoInterceptor
-	implements NestInterceptor
-{
+export class IntroductionResponseDtoInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler<any>) {
 		const req = context.switchToHttp().getRequest();
 

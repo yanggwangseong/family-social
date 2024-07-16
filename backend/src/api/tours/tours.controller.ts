@@ -12,7 +12,7 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { CommonInformationResponseDtoInterceptor } from '@/common/interceptors/common-information-response-dto.interceptor';
+import { IntroductionResponseDtoInterceptor } from '@/common/interceptors/introduction-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
@@ -131,12 +131,6 @@ export class ToursController {
 		});
 	}
 
-	// 타입별 공통 기본정보
-	@UseInterceptors(
-		CommonInformationResponseDtoInterceptor,
-		PaginationInterceptor<ObjectLiteral>,
-	)
-	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/common-information')
 	async getHttpTourApiCommonInformation(
 		@Param('contentId') contentId: string,
@@ -152,7 +146,12 @@ export class ToursController {
 		});
 	}
 
-	// 간단한 소개정보 쉬는날, 개장기간 등 내역
+	// 소개 정보
+	@UseInterceptors(
+		IntroductionResponseDtoInterceptor,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/introduction')
 	async getHttpTourApiIntroduction(
 		@Param('contentId') contentId: string,
