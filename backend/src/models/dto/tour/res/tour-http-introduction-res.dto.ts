@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
+import { TourContentTypeId } from '@/types/type';
+
 export class TourHttpIntroductionResdto {
 	@ApiProperty({
 		nullable: false,
@@ -12,7 +14,7 @@ export class TourHttpIntroductionResdto {
 		nullable: false,
 		description: '콘텐츠타입ID',
 	})
-	contenttypeid!: string;
+	contenttypeid!: TourContentTypeId;
 
 	@ApiProperty({
 		nullable: false,

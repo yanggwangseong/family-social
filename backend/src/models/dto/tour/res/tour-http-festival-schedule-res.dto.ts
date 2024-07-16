@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 
+import { TourContentTypeId } from '@/types/type';
+
 export class TourHttpFestivalScheduleResDto {
 	@ApiProperty({
 		nullable: false,
@@ -42,7 +44,7 @@ export class TourHttpFestivalScheduleResDto {
 		nullable: false,
 		description: '콘텐츠타입ID',
 	})
-	contenttypeid!: string;
+	contenttypeid!: TourContentTypeId;
 
 	@ApiProperty({
 		nullable: false,

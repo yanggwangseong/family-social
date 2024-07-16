@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { TourContentTypeId } from '@/types/type';
+
 /**
  * 축제공연행사(15) Festival
  */
@@ -14,7 +16,7 @@ export class TourHttpFestivalResDto {
 		nullable: false,
 		description: '콘텐츠타입ID',
 	})
-	contenttypeid!: string;
+	contenttypeid!: TourContentTypeId;
 
 	@ApiProperty({
 		nullable: false,
