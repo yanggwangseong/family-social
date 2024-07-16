@@ -13,14 +13,17 @@ import {
 } from '@/constants/env-keys.const';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpIntroductionResdto } from '@/models/dto/tour/res/tour-http-introduction-res.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
+import { TourHttpTouristResDto } from '@/models/dto/tour/res/tour-http-tourist-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
+import { TourCommonInformationInterSactionType } from '@/types/type';
 
 @Injectable()
 export class ToursService {
@@ -235,7 +238,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourCommonInformationInterSactionType>> {
 		const config = {
 			defaultYN: 'Y', // 기본정보조회여부( Y,N )
 			firstImageYN: 'Y', // 원본, 썸네일대표 이미지, 이미지 공공누리유형정보 조회여부( Y,N )
@@ -259,34 +262,44 @@ export class ToursService {
 			newUrl.searchParams.append(key, value);
 		}
 
-		const [introduction, common, additional, images] = [
-			await this.getHttpTourApiIntroduction({
-				contentId,
-				numOfRows,
-				pageNo,
-				contentTypeId,
-			}),
-			await this.HttpServiceResponse<any>(newUrl.toString()),
-			await this.getHttpTourApiAdditionalExplanation({
-				contentId,
-				numOfRows,
-				pageNo,
-				contentTypeId,
-			}),
-			await this.getHttpTourApiImagesByCotentId<any>({
-				contentId,
-				numOfRows,
-				pageNo,
-			}),
-		];
+		// const [introduction, common, additional, images] = [
+		// 	await this.getHttpTourApiIntroduction({
+		// 		contentId,
+		// 		numOfRows,
+		// 		pageNo,
+		// 		contentTypeId,
+		// 	}),
+		// 	await this.HttpServiceResponse<TourHttpDetailCommonResDto>(
+		// 		newUrl.toString(),
+		// 	),
+		// 	await this.getHttpTourApiAdditionalExplanation({
+		// 		contentId,
+		// 		numOfRows,
+		// 		pageNo,
+		// 		contentTypeId,
+		// 	}),
+		// 	await this.getHttpTourApiImagesByCotentId<any>({
+		// 		contentId,
+		// 		numOfRows,
+		// 		pageNo,
+		// 	}),
+		// ];
+
+		/**
+		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
+		 *  관광 타입에 따라 다른 response 값 return
+		 *
+		 */
+		const data =
+			await this.HttpServiceResponse<TourCommonInformationInterSactionType>(
+				newUrl.toString(),
+			);
 
 		return {
-			items: {
-				item: common.items.item,
-				introduction: introduction.items,
-				additional: additional.items,
-				image: images.items,
-			},
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
 		};
 	}
 

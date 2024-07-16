@@ -12,6 +12,7 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { CommonInformationResponseDtoInterceptor } from '@/common/interceptors/common-information-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
@@ -131,6 +132,11 @@ export class ToursController {
 	}
 
 	// 타입별 공통 기본정보
+	@UseInterceptors(
+		CommonInformationResponseDtoInterceptor,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/common-information')
 	async getHttpTourApiCommonInformation(
 		@Param('contentId') contentId: string,
@@ -147,20 +153,20 @@ export class ToursController {
 	}
 
 	// 간단한 소개정보 쉬는날, 개장기간 등 내역
-	// @Get('/:contentId/introduction')
-	// async getHttpTourApiIntroduction(
-	// 	@Param('contentId') contentId: string,
-	// 	@Query('numOfRows') numOfRows: number,
-	// 	@Query('pageNo') pageNo: number,
-	// 	@Query('contentTypeId') contentTypeId: string,
-	// ) {
-	// 	return await this.toursService.getHttpTourApiIntroduction({
-	// 		contentId,
-	// 		numOfRows,
-	// 		pageNo,
-	// 		contentTypeId,
-	// 	});
-	// }
+	@Get('/:contentId/introduction')
+	async getHttpTourApiIntroduction(
+		@Param('contentId') contentId: string,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
+		@Query('contentTypeId') contentTypeId: string,
+	) {
+		return await this.toursService.getHttpTourApiIntroduction({
+			contentId,
+			numOfRows,
+			pageNo,
+			contentTypeId,
+		});
+	}
 
 	//위의 정보 말고도 부가설명이라고,해서 추가 정보를 제공해주는것
 	// @Get('/:contentId/additional-explanation')
