@@ -14,6 +14,7 @@ import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.deco
 import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
 import {
 	GetHttpTourApiAdditionalExplanationSwagger,
+	GetHttpTourApiCommonInformationSwagger,
 	GetHttpTourApiFestivalSwagger,
 	GetHttpTourApiImagesByCotentIdSwagger,
 	GetHttpTourApiIntroductionSwagger,
@@ -153,7 +154,7 @@ export class ToursController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 소개 정보
 	 */
-
+	@GetHttpTourApiCommonInformationSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpCommonResDto>

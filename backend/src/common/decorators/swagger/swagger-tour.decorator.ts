@@ -170,3 +170,29 @@ export const GetHttpTourApiIntroductionSwagger = () => {
 		]),
 	);
 };
+
+export const GetHttpTourApiCommonInformationSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '공통정보 조회',
+		}),
+
+		ApiOkResponse({
+			description: 'contentId에 따라 공통정보를 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpCommonResDto),
+				exampleTitle: '공통정보 조회',
+				exampleDescription: 'contentId에 따라 공통정보를 제공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+			BadRequestErrorResponse['BadRequest-400-5'],
+		]),
+	);
+};
