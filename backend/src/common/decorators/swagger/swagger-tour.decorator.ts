@@ -17,6 +17,7 @@ import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/introduction/t
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
+import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
@@ -186,6 +187,32 @@ export const GetHttpTourApiCommonInformationSwagger = () => {
 				model: withBasicPaginationResponse(TourHttpCommonResDto),
 				exampleTitle: '공통정보 조회',
 				exampleDescription: 'contentId에 따라 공통정보를 제공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+			BadRequestErrorResponse['BadRequest-400-5'],
+		]),
+	);
+};
+
+export const GetHttpTourApiServiceCategoriesSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '서비스 분류 코드 조회',
+		}),
+
+		ApiOkResponse({
+			description: '서비스 분류 코드 정보를 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpServiceCategoryResDto),
+				exampleTitle: '서비스 분류 코드 조회',
+				exampleDescription: '서비스 분류 코드 정보를 제공',
 			},
 		]),
 

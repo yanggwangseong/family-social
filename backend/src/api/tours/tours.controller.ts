@@ -18,6 +18,7 @@ import {
 	GetHttpTourApiFestivalSwagger,
 	GetHttpTourApiImagesByCotentIdSwagger,
 	GetHttpTourApiIntroductionSwagger,
+	GetHttpTourApiServiceCategoriesSwagger,
 } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { InformationTypeResponseDtoInterceptor } from '@/common/interceptors/information-type-response-dto.interceptor';
@@ -31,6 +32,7 @@ import {
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourBasicQueryReqDto } from '@/models/dto/tour/req/tour-basic-query-req.dto';
+import { TourCategoryQueryReqDto } from '@/models/dto/tour/req/tour-category-query-req.dto';
 import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
 import { TourPaginationQueryReqDto } from '@/models/dto/tour/req/tour-pagination-query-req.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
@@ -115,7 +117,16 @@ export class ToursController {
 		});
 	}
 
-	// 서비스 분류 코드조회
+	/**
+	 * @summary 서비스 분류 코드조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 소개 정보
+	 */
+	@GetHttpTourApiServiceCategoriesSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpServiceCategoryResDto>
@@ -128,21 +139,9 @@ export class ToursController {
 	)
 	@Get('/service-categories')
 	async getHttpTourApiServiceCategories(
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('contentTypeId') contentTypeId: string,
-		@Query('cat1') cat1: string,
-		@Query('cat2') cat2: string,
-		@Query('cat3') cat3: string,
+		@Query() queryDto: TourCategoryQueryReqDto,
 	) {
-		return await this.toursService.getHttpTourApiServiceCategories({
-			numOfRows,
-			pageNo,
-			contentTypeId,
-			cat1,
-			cat2,
-			cat3,
-		});
+		return await this.toursService.getHttpTourApiServiceCategories(queryDto);
 	}
 
 	/**
