@@ -11,12 +11,14 @@ import { ObjectLiteral } from 'typeorm';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
+import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
-import { IntroductionResponseDtoInterceptor } from '@/common/interceptors/introduction-response-dto.interceptor';
+import { InformationTypeResponseDtoInterceptor } from '@/common/interceptors/information-type-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { PaginationEnum } from '@/constants/pagination.const';
+import { TourInformationEnum } from '@/constants/tour-information-type.const';
 import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
@@ -158,9 +160,10 @@ export class ToursController {
 
 	// 소개 정보
 	@UseInterceptors(
-		IntroductionResponseDtoInterceptor,
+		InformationTypeResponseDtoInterceptor,
 		PaginationInterceptor<ObjectLiteral>,
 	)
+	@IsTourInformationType(TourInformationEnum.INTRO)
 	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/introduction')
 	async getHttpTourApiIntroduction(
@@ -178,6 +181,12 @@ export class ToursController {
 	}
 
 	// 반복 정보 조회
+	@UseInterceptors(
+		InformationTypeResponseDtoInterceptor,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsTourInformationType(TourInformationEnum.ADDITIONAL)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/additional-explanation')
 	async getHttpTourApiAdditionalExplanation(
 		@Param('contentId') contentId: string,
@@ -208,6 +217,7 @@ export class ToursController {
 		@Query('numOfRows') numOfRows: string,
 		@Query('pageNo') pageNo: string,
 	) {
+		// TourHttpImagesResDto
 		return await this.toursService.getHttpTourApiImagesByCotentId({
 			contentId,
 			numOfRows,

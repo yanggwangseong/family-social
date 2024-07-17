@@ -1,3 +1,6 @@
+import { AdditionalAccommodationResDto } from '@/models/dto/tour/res/additional-explanation/additional-accommodation-res.dto';
+import { AdditionalCommonResDto } from '@/models/dto/tour/res/additional-explanation/addtional-common-res.dto';
+import { AdditionalTravelCourseResDto } from '@/models/dto/tour/res/additional-explanation/addtional-travel-course-res.dto';
 import { TourHttpAccommodationResDto } from '@/models/dto/tour/res/introduction/tour-http-accommodation-res.dto';
 import { TourHttpCulturalResDto } from '@/models/dto/tour/res/introduction/tour-http-cultural-res.dto';
 import { TourHttpFestivalResDto } from '@/models/dto/tour/res/introduction/tour-http-festival-res.dto';
@@ -25,3 +28,7 @@ export type TourCommonInformationInterSactionType = TourHttpTouristResDto &
 	TourHttpAccommodationResDto &
 	TourHttpShoppingResDto &
 	TourHttpRestaurantResDto;
+
+export type AdditionalInterSactionType = AdditionalCommonResDto &
+	AdditionalTravelCourseResDto &
+	AdditionalAccommodationResDto;

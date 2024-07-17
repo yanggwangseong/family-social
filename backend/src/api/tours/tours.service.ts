@@ -23,7 +23,10 @@ import { TourismPeriodRepository } from '@/models/repositories/tourism-period.re
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
-import { TourCommonInformationInterSactionType } from '@/types/type';
+import {
+	AdditionalInterSactionType,
+	TourCommonInformationInterSactionType,
+} from '@/types/type';
 
 @Injectable()
 export class ToursService {
@@ -220,7 +223,7 @@ export class ToursService {
 		};
 	}
 
-	async getHttpTourApiAdditionalExplanation<T>({
+	async getHttpTourApiAdditionalExplanation({
 		contentId,
 		numOfRows,
 		pageNo,
@@ -230,7 +233,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<AdditionalInterSactionType>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/detailInfo1`,
 		);
@@ -240,7 +243,21 @@ export class ToursService {
 		newUrl.searchParams.append('contentTypeId', contentTypeId);
 		newUrl.searchParams.append('contentId', contentId);
 
-		return this.HttpServiceResponse<T>(newUrl.toString());
+		/**
+		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
+		 *  관광 타입에 따라 다른 response 값 return
+		 *
+		 */
+		const data = await this.HttpServiceResponse<AdditionalInterSactionType>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiCommonInformation({
@@ -458,9 +475,13 @@ export class ToursService {
 			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
 		}
 
-		// [TODO] slack
-		if (typeof data.response.body.items === 'string')
-			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		// [TODO] slack throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		if (typeof data.response.body.items === 'string') {
+			const item = {
+				item: [],
+			};
+			data.response.body.items = item;
+		}
 
 		const { response } = data;
 		const { body } = response;
