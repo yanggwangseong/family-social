@@ -12,6 +12,7 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
+import { GetHttpTourApiFestivalSwagger } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { InformationTypeResponseDtoInterceptor } from '@/common/interceptors/information-type-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
@@ -23,6 +24,7 @@ import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
@@ -225,7 +227,15 @@ export class ToursController {
 		});
 	}
 
-	//행사정보조회 행사 시작일에 따른 행사 정보 조회
+	/**
+	 * @summary 행사정보조회 행사 시작일에 따른 행사 정보 조회
+	 *
+	 * @tag tours
+	 * @param queryDto 행사 정보 조회를 위한 query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {TourHttpFestivalScheduleResDto}
+	 */
+	@GetHttpTourApiFestivalSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpFestivalScheduleResDto>
@@ -238,20 +248,8 @@ export class ToursController {
 	)
 	@Get('/festival')
 	async getHttpTourApiFestivalSchedule(
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('areaCode') areaCode: string,
-		@Query('sigunguCode') sigunguCode: string,
-		@Query('eventStartDate') eventStartDate: string,
-		@Query('arrange') arrange: string,
+		@Query() queryDto: TourFestivalQueryReqDto,
 	) {
-		return await this.toursService.getHttpTourApiFestivalSchedule({
-			numOfRows,
-			pageNo,
-			eventStartDate,
-			areaCode,
-			sigunguCode,
-			arrange,
-		});
+		return await this.toursService.getHttpTourApiFestivalSchedule(queryDto);
 	}
 }
