@@ -46,6 +46,26 @@ export const BadRequestErrorResponse = {
 		exampleTitle: `${ERROR_UUID_PIPE_MESSAGE}`,
 		message: `${ERROR_UUID_PIPE_MESSAGE}`,
 	},
+	'BadRequest-400-2': {
+		model: BadRequestServiceException,
+		exampleDescription: 'string validation 에러 입니다',
+		exampleTitle: `String을 입력 해주세요`,
+		message: `String을 입력 해주세요`,
+	},
+	'BadRequest-400-3': {
+		model: BadRequestServiceException,
+		exampleDescription:
+			'해당 property에 값이 없을 때 발생하는 validation 에러 입니다',
+		exampleTitle: `값이 없습니다`,
+		message: `값이 없습니다`,
+	},
+	'BadRequest-400-4': {
+		model: BadRequestServiceException,
+		exampleDescription:
+			'해당 property에 길이가 맞지 않아 발생하는 validation 에러 입니다',
+		exampleTitle: `글자를 입력 해주세요`,
+		message: `글자를 입력 해주세요`,
+	},
 };
 
 // 일정
