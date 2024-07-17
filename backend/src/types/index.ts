@@ -24,3 +24,13 @@ export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;
 export const isFeedOptions = ['TOP', 'MYFEED', 'ALL', 'GROUPFEED'] as const;
 export const OrderOptions = ['ASC', 'DESC'] as const;
 export const EventType = ['BIRTHDAY'] as const;
+export const contentTypeId = [
+	'12',
+	'14',
+	'15',
+	'25',
+	'28',
+	'32',
+	'38',
+	'39',
+] as const;

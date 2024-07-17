@@ -14,6 +14,7 @@ import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
 import {
+	GetHttpTourApiAdditionalExplanationSwagger,
 	GetHttpTourApiFestivalSwagger,
 	GetHttpTourApiImagesByCotentIdSwagger,
 } from '@/common/decorators/swagger/swagger-tour.decorator';
@@ -29,6 +30,7 @@ import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourBasicQueryReqDto } from '@/models/dto/tour/req/tour-basic-query-req.dto';
 import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
 import { TourPaginationQueryReqDto } from '@/models/dto/tour/req/tour-pagination-query-req.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
@@ -188,7 +190,16 @@ export class ToursController {
 		});
 	}
 
-	// 반복 정보 조회
+	/**
+	 * @summary 반복 추가 정보 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 반복 정보
+	 */
+	@GetHttpTourApiAdditionalExplanationSwagger()
 	@UseInterceptors(
 		InformationTypeResponseDtoInterceptor,
 		PaginationInterceptor<ObjectLiteral>,
@@ -197,16 +208,16 @@ export class ToursController {
 	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/additional-explanation')
 	async getHttpTourApiAdditionalExplanation(
-		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('contentTypeId') contentTypeId: string,
+		@Param(
+			'contentId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		contentId: string,
+		@Query() queryDto: TourBasicQueryReqDto,
 	) {
 		return await this.toursService.getHttpTourApiAdditionalExplanation({
 			contentId,
-			numOfRows,
-			pageNo,
-			contentTypeId,
+			...queryDto,
 		});
 	}
 
@@ -215,7 +226,7 @@ export class ToursController {
 	 *
 	 * @tag tours
 	 * @param contentId 컨텐츠 아이디
-	 * @param queryDto 행사 정보 조회를 위한 query 옵션
+	 * @param queryDto query 옵션
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns {TourHttpImagesResDto}
 	 */
@@ -247,7 +258,7 @@ export class ToursController {
 	 * @summary 행사정보조회 행사 시작일에 따른 행사 정보 조회
 	 *
 	 * @tag tours
-	 * @param queryDto 행사 정보 조회를 위한 query 옵션
+	 * @param queryDto query 옵션
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns {TourHttpFestivalScheduleResDto}
 	 */

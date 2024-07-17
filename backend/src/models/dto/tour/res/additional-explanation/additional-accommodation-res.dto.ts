@@ -197,105 +197,89 @@ export class AdditionalAccommodationResDto {
 	})
 	roomimg5alt!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '케이블설치여부',
-	})
+	/**
+	 * 케이블설치여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomcable!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '테이블여부',
-	})
+	/**
+	 * 테이블여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomtable!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '세면도구여부',
-	})
+	/**
+	 * 세면도구여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomtoiletries!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '소파여부',
-	})
+	/**
+	 * 소파여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomsofa!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '취사용품여부',
-	})
+	/**
+	 * 취사용품여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomcook!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '드라이기여부',
-	})
+	/**
+	 * 드라이기여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	roomhairdryer!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'객실사진 1 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 객실사진 1 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	cpyrhtDivCd1!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'객실사진 2 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 객실사진 2 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	cpyrhtDivCd2!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'객실사진 3 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 객실사진 3 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	cpyrhtDivCd3!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'객실사진 4 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 객실사진 4 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	cpyrhtDivCd4!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'객실사진 5 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 객실사진 5 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})

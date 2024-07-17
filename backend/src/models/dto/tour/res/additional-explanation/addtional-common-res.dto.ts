@@ -30,19 +30,17 @@ export class AdditionalCommonResDto {
 	})
 	infotext!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '일련번호',
-	})
+	/**
+	 * 일련번호
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	fldgubun!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '숙박/여행코스제외타입 : 반복일련번호',
-	})
+	/**
+	 * 숙박/여행코스제외타입 : 반복일련번호
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})

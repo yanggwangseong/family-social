@@ -66,6 +66,12 @@ export const BadRequestErrorResponse = {
 		exampleTitle: `글자를 입력 해주세요`,
 		message: `글자를 입력 해주세요`,
 	},
+	'BadRequest-400-5': {
+		model: BadRequestServiceException,
+		exampleDescription: '해당 property에 정해진 값만 올 수 있습니다',
+		exampleTitle: `값이 올바르지 않습니다`,
+		message: `값이 올바르지 않습니다`,
+	},
 };
 
 // 일정
