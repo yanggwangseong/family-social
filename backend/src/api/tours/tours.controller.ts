@@ -2,6 +2,7 @@ import {
 	Controller,
 	Get,
 	Param,
+	ParseUUIDPipe,
 	Query,
 	UseGuards,
 	UseInterceptors,
@@ -12,12 +13,16 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
-import { GetHttpTourApiFestivalSwagger } from '@/common/decorators/swagger/swagger-tour.decorator';
+import {
+	GetHttpTourApiFestivalSwagger,
+	GetHttpTourApiImagesByCotentIdSwagger,
+} from '@/common/decorators/swagger/swagger-tour.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { InformationTypeResponseDtoInterceptor } from '@/common/interceptors/information-type-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
+import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { PaginationEnum } from '@/constants/pagination.const';
 import { TourInformationEnum } from '@/constants/tour-information-type.const';
 import {
@@ -25,6 +30,7 @@ import {
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
+import { TourPaginationQueryReqDto } from '@/models/dto/tour/req/tour-pagination-query-req.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
@@ -204,7 +210,16 @@ export class ToursController {
 		});
 	}
 
-	//contentId에 해당하는 관광정보에 매핑되는 이미지 정보 조회 (없을 수 도 있다.)
+	/**
+	 * @summary contentId에 해당하는 관광정보에 매핑되는 이미지 정보 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto 행사 정보 조회를 위한 query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {TourHttpImagesResDto}
+	 */
+	@GetHttpTourApiImagesByCotentIdSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpImagesResDto>
@@ -215,15 +230,16 @@ export class ToursController {
 	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpImagesResDto))
 	@Get('/:contentId/Images')
 	async getHttpTourApiImagesByCotentId(
-		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
+		@Param(
+			'contentId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		contentId: string,
+		@Query() queryDto: TourPaginationQueryReqDto,
 	) {
-		// TourHttpImagesResDto
 		return await this.toursService.getHttpTourApiImagesByCotentId({
 			contentId,
-			numOfRows,
-			pageNo,
+			...queryDto,
 		});
 	}
 
