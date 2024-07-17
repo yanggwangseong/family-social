@@ -294,29 +294,6 @@ export class ToursService {
 			newUrl.searchParams.append(key, value);
 		}
 
-		// const [introduction, common, additional, images] = [
-		// 	await this.getHttpTourApiIntroduction({
-		// 		contentId,
-		// 		numOfRows,
-		// 		pageNo,
-		// 		contentTypeId,
-		// 	}),
-		// 	await this.HttpServiceResponse<TourHttpDetailCommonResDto>(
-		// 		newUrl.toString(),
-		// 	),
-		// 	await this.getHttpTourApiAdditionalExplanation({
-		// 		contentId,
-		// 		numOfRows,
-		// 		pageNo,
-		// 		contentTypeId,
-		// 	}),
-		// 	await this.getHttpTourApiImagesByCotentId<any>({
-		// 		contentId,
-		// 		numOfRows,
-		// 		pageNo,
-		// 	}),
-		// ];
-
 		const data = await this.HttpServiceResponse<TourHttpCommonResDto>(
 			newUrl.toString(),
 		);

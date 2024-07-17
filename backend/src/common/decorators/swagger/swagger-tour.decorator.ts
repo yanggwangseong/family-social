@@ -6,6 +6,15 @@ import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-p
 import { AdditionalAccommodationResDto } from '@/models/dto/tour/res/additional-explanation/additional-accommodation-res.dto';
 import { AdditionalCommonResDto } from '@/models/dto/tour/res/additional-explanation/addtional-common-res.dto';
 import { AdditionalTravelCourseResDto } from '@/models/dto/tour/res/additional-explanation/addtional-travel-course-res.dto';
+import { TourHttpAccommodationResDto } from '@/models/dto/tour/res/introduction/tour-http-accommodation-res.dto';
+import { TourHttpCulturalResDto } from '@/models/dto/tour/res/introduction/tour-http-cultural-res.dto';
+import { TourHttpFestivalResDto } from '@/models/dto/tour/res/introduction/tour-http-festival-res.dto';
+import { TourHttpLeisureResDto } from '@/models/dto/tour/res/introduction/tour-http-leisure-res.dto';
+import { TourHttpRestaurantResDto } from '@/models/dto/tour/res/introduction/tour-http-restaurant-res.dto';
+import { TourHttpShoppingResDto } from '@/models/dto/tour/res/introduction/tour-http-shopping-res.dto';
+import { TourHttpTouristResDto } from '@/models/dto/tour/res/introduction/tour-http-tourist-res.dto';
+import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/introduction/tour-http-travel-course-res.dto';
+import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
 
@@ -58,7 +67,6 @@ export const GetHttpTourApiImagesByCotentIdSwagger = () => {
 		]),
 
 		ErrorResponse(HttpStatus.BAD_REQUEST, [
-			BadRequestErrorResponse['BadRequest-400-1'],
 			BadRequestErrorResponse['BadRequest-400-2'],
 			BadRequestErrorResponse['BadRequest-400-3'],
 		]),
@@ -95,7 +103,67 @@ export const GetHttpTourApiAdditionalExplanationSwagger = () => {
 		]),
 
 		ErrorResponse(HttpStatus.BAD_REQUEST, [
-			BadRequestErrorResponse['BadRequest-400-1'],
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+			BadRequestErrorResponse['BadRequest-400-5'],
+		]),
+	);
+};
+
+export const GetHttpTourApiIntroductionSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '소개 정보 조회',
+		}),
+
+		ApiOkResponse({
+			description: 'contentId에 따라 다른 소개 정보 조회를 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpTouristResDto),
+				exampleTitle: '관광지 조회',
+				exampleDescription: '관광지(12)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpCulturalResDto),
+				exampleTitle: '문화시설 조회',
+				exampleDescription: '문화시설(14)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpFestivalResDto),
+				exampleTitle: '축제공연행사 조회',
+				exampleDescription: '축제공연행사(15)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpTravelCourseResDto),
+				exampleTitle: '여행코스 조회',
+				exampleDescription: '여행코스(25)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpLeisureResDto),
+				exampleTitle: '레저 조회',
+				exampleDescription: '레저(28)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpAccommodationResDto),
+				exampleTitle: '숙박 조회',
+				exampleDescription: '숙박(32)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpShoppingResDto),
+				exampleTitle: '쇼핑 조회',
+				exampleDescription: '쇼핑(38)',
+			},
+			{
+				model: withBasicPaginationResponse(TourHttpRestaurantResDto),
+				exampleTitle: '음식점 조회',
+				exampleDescription: '음식점(39)',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
 			BadRequestErrorResponse['BadRequest-400-2'],
 			BadRequestErrorResponse['BadRequest-400-3'],
 			BadRequestErrorResponse['BadRequest-400-5'],

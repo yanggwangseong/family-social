@@ -2,7 +2,6 @@ import {
 	Controller,
 	Get,
 	Param,
-	ParseUUIDPipe,
 	Query,
 	UseGuards,
 	UseInterceptors,
@@ -17,13 +16,13 @@ import {
 	GetHttpTourApiAdditionalExplanationSwagger,
 	GetHttpTourApiFestivalSwagger,
 	GetHttpTourApiImagesByCotentIdSwagger,
+	GetHttpTourApiIntroductionSwagger,
 } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { InformationTypeResponseDtoInterceptor } from '@/common/interceptors/information-type-response-dto.interceptor';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
-import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { PaginationEnum } from '@/constants/pagination.const';
 import { TourInformationEnum } from '@/constants/tour-information-type.const';
 import {
@@ -145,6 +144,16 @@ export class ToursController {
 		});
 	}
 
+	/**
+	 * @summary 공통정보 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 소개 정보
+	 */
+
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpCommonResDto>
@@ -156,19 +165,24 @@ export class ToursController {
 	@Get('/:contentId/common-information')
 	async getHttpTourApiCommonInformation(
 		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('contentTypeId') contentTypeId: string,
+		@Query() queryDto: TourBasicQueryReqDto,
 	) {
 		return await this.toursService.getHttpTourApiCommonInformation({
 			contentId,
-			numOfRows,
-			pageNo,
-			contentTypeId,
+			...queryDto,
 		});
 	}
 
-	// 소개 정보
+	/**
+	 * @summary 소개 정보 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 소개 정보
+	 */
+	@GetHttpTourApiIntroductionSwagger()
 	@UseInterceptors(
 		InformationTypeResponseDtoInterceptor,
 		PaginationInterceptor<ObjectLiteral>,
@@ -178,15 +192,11 @@ export class ToursController {
 	@Get('/:contentId/introduction')
 	async getHttpTourApiIntroduction(
 		@Param('contentId') contentId: string,
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('contentTypeId') contentTypeId: string,
+		@Query() queryDto: TourBasicQueryReqDto,
 	) {
 		return await this.toursService.getHttpTourApiIntroduction({
 			contentId,
-			numOfRows,
-			pageNo,
-			contentTypeId,
+			...queryDto,
 		});
 	}
 
@@ -208,11 +218,7 @@ export class ToursController {
 	@IsPagination(PaginationEnum.BASIC)
 	@Get('/:contentId/additional-explanation')
 	async getHttpTourApiAdditionalExplanation(
-		@Param(
-			'contentId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		contentId: string,
+		@Param('contentId') contentId: string,
 		@Query() queryDto: TourBasicQueryReqDto,
 	) {
 		return await this.toursService.getHttpTourApiAdditionalExplanation({
@@ -241,11 +247,7 @@ export class ToursController {
 	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpImagesResDto))
 	@Get('/:contentId/Images')
 	async getHttpTourApiImagesByCotentId(
-		@Param(
-			'contentId',
-			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
-		)
-		contentId: string,
+		@Param('contentId') contentId: string,
 		@Query() queryDto: TourPaginationQueryReqDto,
 	) {
 		return await this.toursService.getHttpTourApiImagesByCotentId({
