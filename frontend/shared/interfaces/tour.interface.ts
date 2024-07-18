@@ -5,7 +5,7 @@ export interface TourAreaCodeItem {
 }
 
 // getServiceCategories
-export interface TourServiceCategoriesResponse {}
+export interface TourServiceCategoriesResponse extends TourAreaCodeItem {}
 
 export interface TourListResponse {
 	items: {

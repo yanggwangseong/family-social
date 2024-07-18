@@ -36,7 +36,9 @@ export const TourService = {
 		if (secondCategory) url += `&cat2=${secondCategory}`;
 		if (thirdCategory) url += `&cat3=${thirdCategory}`;
 
-		const { data } = await axiosAPI.get<TourServiceCategoriesResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourServiceCategoriesResponse>
+		>(url);
 		return data;
 	},
 
