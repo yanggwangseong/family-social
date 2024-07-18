@@ -14,10 +14,12 @@ import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.deco
 import { IsTourInformationType } from '@/common/decorators/is-tour-information-type.decorator';
 import {
 	GetHttpTourApiAdditionalExplanationSwagger,
+	GetHttpTourApiAreaCodesSwagger,
 	GetHttpTourApiCommonInformationSwagger,
 	GetHttpTourApiFestivalSwagger,
 	GetHttpTourApiImagesByCotentIdSwagger,
 	GetHttpTourApiIntroductionSwagger,
+	GetHttpTourApiListSwagger,
 	GetHttpTourApiServiceCategoriesSwagger,
 } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
@@ -35,6 +37,7 @@ import { TourAreaCodeQueryReqDto } from '@/models/dto/tour/req/tour-area-code-qu
 import { TourBasicQueryReqDto } from '@/models/dto/tour/req/tour-basic-query-req.dto';
 import { TourCategoryQueryReqDto } from '@/models/dto/tour/req/tour-category-query-req.dto';
 import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
+import { TourListQueryReqDto } from '@/models/dto/tour/req/tour-list-query-req.dto';
 import { TourPaginationQueryReqDto } from '@/models/dto/tour/req/tour-pagination-query-req.dto';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
@@ -52,16 +55,16 @@ import { ToursService } from './tours.service';
 export class ToursController {
 	constructor(private readonly toursService: ToursService) {}
 
-	// [프론트에서 위에 검색 옵션들로 인해 검색을 눌렸을때 아래에 생성되는 관광 리스트들]
-	// @param arrange 정렬구분 (A=제목순, C=수정일순, D=생성일순) 대표이미지가반드시있는정렬(O=제목순, Q=수정일순, R=생성일순)
-	// @param contentTypeId 관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점) ID
-	// @param areaCode - 지역코드(지역코드조회 참고)
-	// @param sigunguCode - 시군구코드(지역코드조회 참고)
-	// @param numOfRows - 한페이지 결과수
-	// @param pageNo - 페이지 번호
-	// @param cat1 - 대분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
-	// @param cat2 - 중분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
-	// @param cat3 - 소분류 (getHttpTourApiServiceCategories 여기서 가져온 코드)
+	/**
+	 * @summary 지역기반 관광정보 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 소개 정보
+	 */
+	@GetHttpTourApiListSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpTourismListResDto>
@@ -73,28 +76,8 @@ export class ToursController {
 		withBasicPaginationResponse(TourHttpTourismListResDto),
 	)
 	@Get()
-	async findAll(
-		@Query('arrange') arrange: string,
-		@Query('contentTypeId') contentTypeId: string,
-		@Query('areaCode') areaCode: string,
-		@Query('sigunguCode') sigunguCode: string,
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('cat1') cat1: string,
-		@Query('cat2') cat2: string,
-		@Query('cat3') cat3: string,
-	) {
-		return await this.toursService.findAll({
-			arrange,
-			contentTypeId,
-			areaCode,
-			sigunguCode,
-			numOfRows,
-			pageNo,
-			cat1,
-			cat2,
-			cat3,
-		});
+	async findAll(@Query() queryDto: TourListQueryReqDto) {
+		return await this.toursService.findAll(queryDto);
 	}
 
 	/**
@@ -106,6 +89,7 @@ export class ToursController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 소개 정보
 	 */
+	@GetHttpTourApiAreaCodesSwagger()
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpAreaCodeResDto>

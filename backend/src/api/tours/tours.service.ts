@@ -21,7 +21,7 @@ import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-touri
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
-import { TourHttpResponse } from '@/types/args/tour';
+import { TourHttpResponse, TourListArgs } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
 import {
 	AdditionalInterSactionType,
@@ -58,41 +58,16 @@ export class ToursService {
 	// 	_type: 'json',
 	// };
 
-	async findAll({
-		arrange,
-		contentTypeId,
-		areaCode,
-		sigunguCode,
-		numOfRows,
-		pageNo,
-		cat1,
-		cat2,
-		cat3,
-	}: {
-		arrange: string;
-		contentTypeId: string;
-		areaCode: string;
-		sigunguCode: string;
-		numOfRows: string;
-		pageNo: string;
-		cat1: string;
-		cat2: string;
-		cat3: string;
-	}): Promise<BasicPaginationResponse<TourHttpTourismListResDto>> {
+	async findAll(
+		findQueryArgs: TourListArgs,
+	): Promise<BasicPaginationResponse<TourHttpTourismListResDto>> {
+		const { cat1, cat2, cat3 } = findQueryArgs;
+
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaBasedList1`,
 		);
 
-		const paramObj = {
-			numOfRows,
-			pageNo,
-			arrange,
-			contentTypeId,
-			areaCode,
-			sigunguCode,
-		};
-
-		for (const [key, value] of Object.entries(paramObj)) {
+		for (const [key, value] of Object.entries(findQueryArgs)) {
 			newUrl.searchParams.append(key, value);
 		}
 

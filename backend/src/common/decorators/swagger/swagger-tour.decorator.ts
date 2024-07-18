@@ -18,6 +18,7 @@ import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
+import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
@@ -239,6 +240,31 @@ export const GetHttpTourApiAreaCodesSwagger = () => {
 				model: withBasicPaginationResponse(TourHttpServiceCategoryResDto),
 				exampleTitle: '지역 코드 조회',
 				exampleDescription: '지역 코드 정보를 제공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+		]),
+	);
+};
+
+export const GetHttpTourApiListSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '지역 기반 관광정보 조회',
+		}),
+
+		ApiOkResponse({
+			description: '지역 기반 관광정보를 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpTourismListResDto),
+				exampleTitle: '지역 기반 관광정보 조회',
+				exampleDescription: '지역 기반 관광정보를 제공',
 			},
 		]),
 

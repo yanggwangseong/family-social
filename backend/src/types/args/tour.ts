@@ -1,5 +1,6 @@
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
+import { TourListQueryReqDto } from '@/models/dto/tour/req/tour-list-query-req.dto';
 
 export interface IUpdateTourArgs extends ICreateTourArgs {
 	scheduleId: string;
@@ -52,3 +53,5 @@ export interface TourHttpBody<T> {
 export interface TourHttpItem<T> {
 	item: T[];
 }
+
+export interface TourListArgs extends TourListQueryReqDto {}

@@ -34,3 +34,5 @@ export const contentTypeId = [
 	'38',
 	'39',
 ] as const;
+
+export const TourArrange = ['A', 'C', 'D', 'O', 'Q', 'R'] as const;
