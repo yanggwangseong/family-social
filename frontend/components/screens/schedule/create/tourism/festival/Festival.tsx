@@ -52,9 +52,8 @@ const Festival: FC<TourFestivalProps> = ({ onChangePeriods }) => {
 			}),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.pageNo !==
-					Math.ceil(allPosts[0].totalCount / allPosts[0].numOfRows)
-					? lastPage.pageNo + 1
+				return lastPage.page !== Math.ceil(allPosts[0].totalPage / 10)
+					? lastPage.page + 1
 					: undefined;
 			},
 			enabled: !!startDate,

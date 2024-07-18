@@ -3,6 +3,7 @@ import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interfac
 import {
 	TourAreaCodeItem,
 	TourDetailResponse,
+	TourFestivalItem,
 	TourListResponse,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
@@ -124,6 +125,7 @@ export const TourService = {
 		eventStartDate: string;
 	}) {
 		let arrange = 'O';
+
 		if (isSelected === 'orderSubject') {
 			arrange = 'O';
 		} else if (isSelected === 'orderCreated') {
@@ -136,7 +138,10 @@ export const TourService = {
 		&numOfRows=${numOfRows}&pageNo=${pageNo}
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}
 		&eventStartDate=${eventStartDate}`;
-		const { data } = await axiosAPI.get<TourListResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourFestivalItem>
+		>(url);
+
 		return data;
 	},
 

@@ -69,14 +69,11 @@ export class SearchController {
 	/**
 	 * @summary 관광 아이템 키워드 검색
 	 *
-	 * @tag members
-	 * @param keyword 검색어
-	 * @param arrange 범위
-	 * @param contentTypeId 컨텐츠 아이디
-	 * @param numOfRows 페이징 가져올 로우 갯수
-	 * @param pageNo 페이징 페이지 번호
+	 * @tag search
+	 * @param keyword 검색 키워드
+	 * @param queryDto query 옵션
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 검색된 유저정보 리스트
+	 * @returns {TourHttpSearchTourismResDto}
 	 */
 	@GetHttpTourApiSearchSwagger()
 	@UseInterceptors(
