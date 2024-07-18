@@ -2,6 +2,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Pagination } from '@/common/strategies/context/pagination';
 import { ScheduleEntity } from '@/models/entities/schedule.entity';
 import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 import { TourismEntity } from '@/models/entities/tourism.entity';
@@ -27,6 +28,7 @@ import { ToursService } from './tours.service';
 		ScheduleRepository,
 		TourismPeriodRepository,
 		TourismRepository,
+		Pagination,
 	],
 	exports: [ToursService],
 })

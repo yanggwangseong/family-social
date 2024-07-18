@@ -1,16 +1,32 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { catchError, firstValueFrom } from 'rxjs';
 
+import { InternalServerErrorException } from '@/common/exception/service.exception';
+import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
 import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
+import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
+import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
+import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
+import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
+import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
+import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
+import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
+import { TourHttpResponse, TourListArgs } from '@/types/args/tour';
+import { BasicPaginationResponse } from '@/types/pagination';
+import {
+	AdditionalInterSactionType,
+	TourCommonInformationInterSactionType,
+} from '@/types/type';
 
 @Injectable()
 export class ToursService {
@@ -26,9 +42,9 @@ export class ToursService {
 		this.configService.get<string>(ENV_TOUR_API_SERVICE_KEY) ?? '';
 	private readonly MobileApp: string = 'FAM';
 	private endPoint = this.configService.get<string>(ENV_TOUR_API_END_POINT);
-	private listYN: string = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
-	private MobileOS: string = 'ETC';
-	private _type: string = 'json';
+	private listYN = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
+	private MobileOS = 'ETC';
+	private _type = 'json';
 
 	// private readonly config: {
 	// 	serviceKey?: string;
@@ -42,38 +58,35 @@ export class ToursService {
 	// 	_type: 'json',
 	// };
 
-	async findAll({
-		arrange,
-		contentTypeId,
-		areaCode,
-		sigunguCode,
-		numOfRows,
-		pageNo,
-		cat1,
-		cat2,
-		cat3,
-	}: {
-		arrange: string;
-		contentTypeId: string;
-		areaCode: number;
-		sigunguCode: number;
-		numOfRows: number;
-		pageNo: number;
-		cat1: string;
-		cat2: string;
-		cat3: string;
-	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/areaBasedList1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&MobileApp=${this.MobileApp}&_type=${this._type}&listYN=${this.listYN}
-		&arrange=${arrange}&contentTypeId=${contentTypeId}
-		&areaCode=${areaCode}&sigunguCode=${sigunguCode}`;
+	async findAll(
+		findQueryArgs: TourListArgs,
+	): Promise<BasicPaginationResponse<TourHttpTourismListResDto>> {
+		const { cat1, cat2, cat3 } = findQueryArgs;
 
-		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
-		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
-		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/areaBasedList1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		for (const [key, value] of Object.entries(findQueryArgs)) {
+			newUrl.searchParams.append(key, value);
+		}
+
+		newUrl.searchParams.append('listYN', this.listYN);
+
+		if (cat1) newUrl.searchParams.append('cat1', cat1);
+		if (cat2) newUrl.searchParams.append('cat2', cat2);
+		if (cat3) newUrl.searchParams.append('cat3', cat3);
+
+		const data = await this.HttpServiceResponse<TourHttpTourismListResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiAreaCodes({
@@ -81,16 +94,29 @@ export class ToursService {
 		pageNo,
 		areaCode,
 	}: {
-		numOfRows: number;
-		pageNo: number;
-		areaCode: number;
-	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/areaCode1?serviceKey=${this.serviceKey}&numOfRows=${numOfRows}
-		&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}`;
+		numOfRows: string;
+		pageNo: string;
+		areaCode: string;
+	}): Promise<BasicPaginationResponse<TourHttpAreaCodeResDto>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/areaCode1`,
+		);
 
-		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
+
+		const data = await this.HttpServiceResponse<TourHttpAreaCodeResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiServiceCategories({
@@ -101,23 +127,37 @@ export class ToursService {
 		cat2,
 		cat3,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
 		cat1: string;
 		cat2: string;
 		cat3: string;
-	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/categoryCode1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&MobileApp=${this.MobileApp}&_type=${this._type}`;
+	}): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/categoryCode1`,
+		);
 
-		if (contentTypeId) httpServiceUrl += `&contentTypeId=${contentTypeId}`;
-		if (cat1) httpServiceUrl += `&cat1=${cat1}`;
-		if (cat2) httpServiceUrl += `&cat2=${cat2}`;
-		if (cat3) httpServiceUrl += `&cat3=${cat3}`;
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('numOfRows', numOfRows);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (contentTypeId)
+			newUrl.searchParams.append('contentTypeId', contentTypeId);
+
+		if (cat1) newUrl.searchParams.append('cat1', cat1);
+		if (cat2) newUrl.searchParams.append('cat2', cat2);
+		if (cat3) newUrl.searchParams.append('cat3', cat3);
+
+		const data = await this.HttpServiceResponse<TourHttpServiceCategoryResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiIntroduction({
@@ -127,15 +167,35 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
-	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailIntro1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
+	}): Promise<BasicPaginationResponse<TourCommonInformationInterSactionType>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailIntro1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
+
+		/**
+		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
+		 *  관광 타입에 따라 다른 response 값 return
+		 *
+		 */
+		const data =
+			await this.HttpServiceResponse<TourCommonInformationInterSactionType>(
+				newUrl.toString(),
+			);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiAdditionalExplanation({
@@ -145,15 +205,34 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
-	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailInfo1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}`;
+	}): Promise<BasicPaginationResponse<AdditionalInterSactionType>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailInfo1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
+
+		/**
+		 *  관광타입(12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점)
+		 *  관광 타입에 따라 다른 response 값 return
+		 *
+		 */
+		const data = await this.HttpServiceResponse<AdditionalInterSactionType>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiCommonInformation({
@@ -163,10 +242,10 @@ export class ToursService {
 		contentTypeId,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<BasicPaginationResponse<TourHttpCommonResDto>> {
 		const config = {
 			defaultYN: 'Y', // 기본정보조회여부( Y,N )
 			firstImageYN: 'Y', // 원본, 썸네일대표 이미지, 이미지 공공누리유형정보 조회여부( Y,N )
@@ -177,43 +256,29 @@ export class ToursService {
 			overviewYN: 'Y', // 콘텐츠개요조회여부( Y,N )
 		};
 
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailCommon1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}
-		&contentTypeId=${contentTypeId}&MobileApp=${this.MobileApp}&_type=${this._type}&contentId=${contentId}
-		&defaultYN=${config.defaultYN}&firstImageYN=${config.firstImageYN}&areacodeYN=${config.areacodeYN}
-		&catcodeYN=${config.catcodeYN}&addrinfoYN=${config.addrinfoYN}&mapinfoYN=${config.mapinfoYN}&overviewYN=${config.overviewYN}
-		`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailCommon1`,
+		);
 
-		const [introduction, common, additional, images] = [
-			await this.getHttpTourApiIntroduction({
-				contentId,
-				numOfRows,
-				pageNo,
-				contentTypeId,
-			}),
-			await this.HttpServiceResponse(httpServiceUrl),
-			await this.getHttpTourApiAdditionalExplanation({
-				contentId,
-				numOfRows,
-				pageNo,
-				contentTypeId,
-			}),
-			await this.getHttpTourApiImagesByCotentId({
-				contentId,
-				numOfRows,
-				pageNo,
-			}),
-		];
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('contentId', contentId);
 
-		const commonInfromation = {
-			items: common.items,
+		for (const [key, value] of Object.entries(config)) {
+			newUrl.searchParams.append(key, value);
+		}
+
+		const data = await this.HttpServiceResponse<TourHttpCommonResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
 		};
-
-		commonInfromation.items.introduction = introduction.items;
-		commonInfromation.items.additional = additional.items;
-		commonInfromation.items.image = images.items;
-
-		return commonInfromation;
 	}
 
 	async getHttpTourApiImagesByCotentId({
@@ -222,17 +287,32 @@ export class ToursService {
 		pageNo,
 	}: {
 		contentId: string;
-		numOfRows: number;
-		pageNo: number;
-	}) {
+		numOfRows: string;
+		pageNo: string;
+	}): Promise<BasicPaginationResponse<TourHttpImagesResDto>> {
 		const imageYN: string = 'Y'; // 이미지조회1 : Y=콘텐츠이미지조회 N=”음식점”타입의음식메뉴이미지
 		const subImageYN: string = 'Y'; // 이미지조회2 : Y=원본,썸네일이미지조회,공공누리 저작권유형정보조회 N=Null
 
-		const httpServiceUrl = `${this.endPoint}/KorService1/detailImage1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&contentId=${contentId}&imageYN=${imageYN}&subImageYN=${subImageYN}`;
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/detailImage1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('contentId', contentId);
+		newUrl.searchParams.append('imageYN', imageYN);
+		newUrl.searchParams.append('subImageYN', subImageYN);
+
+		const data = await this.HttpServiceResponse<TourHttpImagesResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiFestivalSchedule({
@@ -243,21 +323,36 @@ export class ToursService {
 		sigunguCode,
 		arrange,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		eventStartDate: string;
-		areaCode: number;
-		sigunguCode: number;
+		areaCode: string;
+		sigunguCode: string;
 		arrange: string;
-	}) {
-		let httpServiceUrl = `${this.endPoint}/KorService1/searchFestival1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&eventStartDate=${eventStartDate}&arrange=${arrange}`;
+	}): Promise<BasicPaginationResponse<TourHttpFestivalScheduleResDto>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/searchFestival1`,
+		);
 
-		if (areaCode) httpServiceUrl += `&areaCode=${areaCode}`;
-		if (sigunguCode) httpServiceUrl += `&sigunguCode=${sigunguCode}`;
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('listYN', this.listYN);
+		newUrl.searchParams.append('eventStartDate', eventStartDate);
+		newUrl.searchParams.append('arrange', arrange);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		if (areaCode) newUrl.searchParams.append('areaCode', areaCode);
+		if (sigunguCode) newUrl.searchParams.append('sigunguCode', sigunguCode);
+
+		const data = await this.HttpServiceResponse<TourHttpFestivalScheduleResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
 	async getHttpTourApiSearch({
@@ -267,29 +362,82 @@ export class ToursService {
 		arrange,
 		contentTypeId,
 	}: {
-		numOfRows: number;
-		pageNo: number;
+		numOfRows: string;
+		pageNo: string;
 		keyword: string;
 		arrange: string;
 		contentTypeId: string;
-	}) {
-		const httpServiceUrl = `${this.endPoint}/KorService1/searchKeyword1?serviceKey=${this.serviceKey}
-		&numOfRows=${numOfRows}&pageNo=${pageNo}&MobileOS=${this.MobileOS}&MobileApp=${this.MobileApp}&_type=${this._type}
-		&listYN=${this.listYN}&arrange=${arrange}&contentTypeId=${contentTypeId}&keyword=${keyword}`;
+	}): Promise<BasicPaginationResponse<TourHttpSearchTourismResDto>> {
+		const newUrl = this.CreateTourHttpUrl(
+			`${this.endPoint}/KorService1/searchKeyword1`,
+		);
 
-		return this.HttpServiceResponse(httpServiceUrl);
+		newUrl.searchParams.append('numOfRows', numOfRows);
+		newUrl.searchParams.append('pageNo', pageNo);
+		newUrl.searchParams.append('listYN', this.listYN);
+		newUrl.searchParams.append('arrange', arrange);
+		newUrl.searchParams.append('contentTypeId', contentTypeId);
+		newUrl.searchParams.append('keyword', keyword);
+
+		const data = await this.HttpServiceResponse<TourHttpSearchTourismResDto>(
+			newUrl.toString(),
+		);
+
+		return {
+			list: data.items.item,
+			page: data.pageNo,
+			take: data.numOfRows,
+			count: data.totalCount,
+		};
 	}
 
-	private async HttpServiceResponse(url: string) {
-		const { data } = await firstValueFrom(
+	private CreateTourHttpUrl(httpUrl: string) {
+		const url = new URL(httpUrl);
+		url.searchParams.append('serviceKey', decodeURIComponent(this.serviceKey));
+
+		url.searchParams.append('MobileOS', this.MobileOS);
+		url.searchParams.append('MobileApp', this.MobileApp);
+		url.searchParams.append('_type', this._type);
+
+		return url;
+	}
+
+	private async HttpServiceResponse<T>(url: string) {
+		const { data } = await firstValueFrom<AxiosResponse<TourHttpResponse<T>>>(
 			this.httpService.get(url).pipe(
 				catchError((error: AxiosError) => {
-					console.log(error);
-					throw 'An error happened!';
+					throw InternalServerErrorException(error.message);
 				}),
 			),
 		);
 
-		return data.response.body;
+		const result = XMLValidator.validate(`${data}`);
+		if (result === true) {
+			const options = {
+				ignoreAttributes: false,
+				attributeNamePrefix: '@_',
+			};
+			const parser = new XMLParser(options);
+			const result = parser.parse(`${data}`);
+
+			// [TODO] slack
+			// throw InternalServerErrorException(
+			// 	`code: ${result.OpenAPI_ServiceResponse.cmmMsgHeader.returnReasonCode}`,
+			// );
+			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		}
+
+		// [TODO] slack throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		if (typeof data.response.body.items === 'string') {
+			const item = {
+				item: [],
+			};
+			data.response.body.items = item;
+		}
+
+		const { response } = data;
+		const { body } = response;
+
+		return body;
 	}
 }

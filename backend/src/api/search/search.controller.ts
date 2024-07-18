@@ -7,12 +7,23 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ObjectLiteral } from 'typeorm';
 
+import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { GetMembersByUserNameSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { PaginationEnum } from '@/constants/pagination.const';
+import {
+	ReturnBasicPaginationType,
+	withBasicPaginationResponse,
+} from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 
 import { MembersService } from '../members/members.service';
 import { ToursService } from '../tours/tours.service';
@@ -65,13 +76,23 @@ export class SearchController {
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 검색된 유저정보 리스트
 	 */
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof TourHttpSearchTourismResDto>
+		>,
+		PaginationInterceptor<ObjectLiteral>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(
+		withBasicPaginationResponse(TourHttpSearchTourismResDto),
+	)
 	@Get('/tours/keyword/:keyword')
 	async getHttpTourApiSearch(
 		@Param('keyword') keyword: string,
 		@Query('arrange') arrange: string,
 		@Query('contentTypeId') contentTypeId: string,
-		@Query('numOfRows') numOfRows: number,
-		@Query('pageNo') pageNo: number,
+		@Query('numOfRows') numOfRows: string,
+		@Query('pageNo') pageNo: string,
 	) {
 		return await this.toursService.getHttpTourApiSearch({
 			keyword,
