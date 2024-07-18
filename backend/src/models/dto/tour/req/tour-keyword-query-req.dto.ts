@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
 import { isInValidationMessage } from '@/common/validation-message/is-in-validation-message';
-import { lengthValidationMessage } from '@/common/validation-message/length-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
-import { TourArrange, Union } from '@/types';
+import { contentTypeId, TourArrange, Union } from '@/types';
 
-export class TourFestivalQueryReqDto {
+export class TourKeywordQueryReqDto {
 	@ApiProperty({
 		nullable: false,
 		description: '가지고 올 갯수',
@@ -49,38 +48,12 @@ export class TourFestivalQueryReqDto {
 
 	@ApiProperty({
 		nullable: false,
-		description: '지역 코드',
-	})
-	@IsString({
-		message: stringValidationMessage,
+		description: '컨텐츠 타입',
+		enum: contentTypeId,
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	areaCode!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: '시군구코드',
-	})
-	@IsString({
-		message: stringValidationMessage,
-	})
-	@IsNotEmpty({
-		message: notEmptyValidationMessage,
-	})
-	sigunguCode!: string;
-
-	@ApiProperty({
-		nullable: false,
-		description: '축제 시작 일자',
-	})
-	@IsString({
-		message: stringValidationMessage,
-	})
-	@IsNotEmpty({
-		message: notEmptyValidationMessage,
-	})
-	@Length(8, 8, { message: lengthValidationMessage })
-	eventStartDate!: string;
+	@IsIn(contentTypeId, { message: isInValidationMessage })
+	contentTypeId!: Union<typeof contentTypeId>;
 }
