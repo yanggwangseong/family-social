@@ -31,6 +31,7 @@ import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
+import { TourAreaCodeQueryReqDto } from '@/models/dto/tour/req/tour-area-code-query-req.dto';
 import { TourBasicQueryReqDto } from '@/models/dto/tour/req/tour-basic-query-req.dto';
 import { TourCategoryQueryReqDto } from '@/models/dto/tour/req/tour-category-query-req.dto';
 import { TourFestivalQueryReqDto } from '@/models/dto/tour/req/tour-festival-query-req.dto';
@@ -96,6 +97,15 @@ export class ToursController {
 		});
 	}
 
+	/**
+	 * @summary 지역 코드 조회
+	 *
+	 * @tag tours
+	 * @param contentId 컨텐츠 아이디
+	 * @param queryDto query 옵션
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 소개 정보
+	 */
 	@UseInterceptors(
 		ResponseDtoInterceptor<
 			ReturnBasicPaginationType<typeof TourHttpAreaCodeResDto>
@@ -105,16 +115,8 @@ export class ToursController {
 	@IsPagination(PaginationEnum.BASIC)
 	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpAreaCodeResDto))
 	@Get('/area')
-	async getHttpTourApiAreaCodes(
-		@Query('numOfRows') numOfRows: string,
-		@Query('pageNo') pageNo: string,
-		@Query('areaCode') areaCode: string,
-	) {
-		return await this.toursService.getHttpTourApiAreaCodes({
-			numOfRows,
-			pageNo,
-			areaCode,
-		});
+	async getHttpTourApiAreaCodes(@Query() queryDto: TourAreaCodeQueryReqDto) {
+		return await this.toursService.getHttpTourApiAreaCodes(queryDto);
 	}
 
 	/**

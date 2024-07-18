@@ -223,3 +223,28 @@ export const GetHttpTourApiServiceCategoriesSwagger = () => {
 		]),
 	);
 };
+
+export const GetHttpTourApiAreaCodesSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '지역 코드 조회',
+		}),
+
+		ApiOkResponse({
+			description: '지역 코드 정보를 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpServiceCategoryResDto),
+				exampleTitle: '지역 코드 조회',
+				exampleDescription: '지역 코드 정보를 제공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+		]),
+	);
+};
