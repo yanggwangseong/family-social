@@ -1,6 +1,7 @@
 import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
+import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import {
-	TourAreaCodesResponse,
+	TourAreaCodeItem,
 	TourDetailResponse,
 	TourListResponse,
 	TourServiceCategoriesResponse,
@@ -11,7 +12,9 @@ export const TourService = {
 	async getTourAreaCodes(areaCode?: string) {
 		let url = `tours/area?numOfRows=100&pageNo=1`;
 		if (areaCode) url += `&areaCode=${areaCode}`;
-		const { data } = await axiosAPI.get<TourAreaCodesResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourAreaCodeItem>
+		>(url);
 		return data;
 	},
 

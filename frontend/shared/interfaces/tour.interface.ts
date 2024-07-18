@@ -1,12 +1,3 @@
-export interface TourAreaCodesResponse {
-	items: {
-		item: TourAreaCodeItem[];
-	};
-	numOfRows: number;
-	pageNo: number;
-	totalCount: number;
-}
-
 export interface TourAreaCodeItem {
 	code: string;
 	name: string;
@@ -14,7 +5,7 @@ export interface TourAreaCodeItem {
 }
 
 // getServiceCategories
-export interface TourServiceCategoriesResponse extends TourAreaCodesResponse {}
+export interface TourServiceCategoriesResponse {}
 
 export interface TourListResponse {
 	items: {
