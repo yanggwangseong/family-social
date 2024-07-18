@@ -26,18 +26,19 @@ export class TourHttpImagesResDto {
 	})
 	smallimageurl!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
+	/**
+	 * 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
+	@Exclude({
+		toPlainOnly: true,
 	})
-	@Exclude()
 	cpyrhtDivCd!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '이미지일련번호',
+	/**
+	 * 이미지일련번호
+	 */
+	@Exclude({
+		toPlainOnly: true,
 	})
-	@Exclude()
 	serialnum!: string;
 }

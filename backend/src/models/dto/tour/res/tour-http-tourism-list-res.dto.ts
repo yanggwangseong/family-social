@@ -88,70 +88,66 @@ export class TourHttpTourismListResDto {
 	})
 	zipcode!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '수정일',
-	})
+	/**
+	 * 수정일
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	modifiedtime!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '교과서속여행지 여부',
-	})
+	/**
+	 * 교과서속여행지 여부
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	booktour!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: '등록일',
-	})
+	/**
+	 * 등록일
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	createdtime!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: 'Map Level',
-	})
+	/**
+	 * Map Level
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	mlevel!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: 'GPS X좌표',
-	})
+	/**
+	 * GPS X좌표
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	mapx!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description: 'GPS Y좌표',
-	})
+	/**
+	 * GPS Y좌표
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	mapy!: string;
 
-	@ApiProperty({
-		nullable: false,
-		description:
-			'저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)',
-	})
+	/**
+	 * 저작권 유형 (Type1:제1유형(출처표시-권장), Type3:제3유형(제1유형+변경금지)
+	 */
 	@Exclude({
 		toPlainOnly: true,
 	})
 	cpyrhtDivCd!: string;
 
+	@ApiProperty({
+		nullable: false,
+		description: '전체 주소',
+	})
 	@Expose({
 		toPlainOnly: true,
 	})
