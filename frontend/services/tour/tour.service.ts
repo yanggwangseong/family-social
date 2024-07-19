@@ -5,6 +5,7 @@ import {
 	TourDetailResponse,
 	TourFestivalItem,
 	TourListResponse,
+	TourSearchItem,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
 import { axiosAPI } from 'api/axios';
@@ -105,7 +106,10 @@ export const TourService = {
 
 		let url = `search/tours/keyword/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
 
-		const { data } = await axiosAPI.get<TourListResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourSearchItem>
+		>(url);
+
 		return data;
 	},
 

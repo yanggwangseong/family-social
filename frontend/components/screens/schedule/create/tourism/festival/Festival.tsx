@@ -156,12 +156,8 @@ const Festival: FC<TourFestivalProps> = ({ onChangePeriods }) => {
 								visible: { transition: { staggerChildren: 0.1 } },
 							}}
 						>
-							{page.items.item.map((tour: any, index: number) => (
-								<TourismItem
-									key={index}
-									tour={tour}
-									onChangePeriods={handleChangePeriods}
-								/>
+							{page.list.map((tour, index: number) => (
+								<TourismItem key={index} tourItem={tour} />
 							))}
 						</motion.div>
 					))}

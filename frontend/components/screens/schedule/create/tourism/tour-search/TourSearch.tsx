@@ -40,9 +40,8 @@ const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 			}),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.pageNo !==
-					Math.ceil(allPosts[0].totalCount / allPosts[0].numOfRows)
-					? lastPage.pageNo + 1
+				return lastPage.page !== Math.ceil(allPosts[0].totalPage / 10)
+					? lastPage.page + 1
 					: undefined;
 			},
 			enabled: !!isKeyword,
@@ -104,12 +103,8 @@ const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 							visible: { transition: { staggerChildren: 0.1 } },
 						}}
 					>
-						{page.items.item.map((tour: any, index: number) => (
-							<TourismItem
-								key={index}
-								tour={tour}
-								onChangePeriods={handleChangePeriods}
-							/>
+						{page.list.map((tour, index: number) => (
+							<TourismItem key={index} tourItem={tour} />
 						))}
 					</motion.div>
 				))}

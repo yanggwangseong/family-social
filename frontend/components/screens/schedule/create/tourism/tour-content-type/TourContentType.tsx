@@ -226,12 +226,8 @@ const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 				{isLoading && <Skeleton />}
 				{data?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>
-						{page.items.item.map((tour: any, index: number) => (
-							<TourismItem
-								key={index}
-								tour={tour}
-								onChangePeriods={handleChangePeriods}
-							/>
+						{page.items.item.map((tour, index: number) => (
+							<TourismItem key={index} tour={tour} />
 						))}
 					</React.Fragment>
 				))}
