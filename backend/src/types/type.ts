@@ -20,15 +20,17 @@ export type TourContentTypeId =
 	| '38'
 	| '39';
 
-export type TourCommonInformationInterSactionType = TourHttpTouristResDto &
-	TourHttpCulturalResDto &
-	TourHttpFestivalResDto &
-	TourHttpTravelCourseResDto &
-	TourHttpLeisureResDto &
-	TourHttpAccommodationResDto &
-	TourHttpShoppingResDto &
-	TourHttpRestaurantResDto;
+export type TourCommonInformationUnionType =
+	| TourHttpTouristResDto
+	| TourHttpCulturalResDto
+	| TourHttpFestivalResDto
+	| TourHttpTravelCourseResDto
+	| TourHttpLeisureResDto
+	| TourHttpAccommodationResDto
+	| TourHttpShoppingResDto
+	| TourHttpRestaurantResDto;
 
-export type AdditionalInterSactionType = AdditionalCommonResDto &
-	AdditionalTravelCourseResDto &
-	AdditionalAccommodationResDto;
+export type AdditionalUnionType =
+	| AdditionalCommonResDto
+	| AdditionalTravelCourseResDto
+	| AdditionalAccommodationResDto;
