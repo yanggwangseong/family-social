@@ -19,6 +19,8 @@ import {
 	IoChevronUp,
 } from 'react-icons/io5';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import IntroductionTourist from '@/components/ui/tour/introduction/tourist/IntroductionTourist';
+import TourIntroductionController from '@/components/ui/tour/TourIntroductionController';
 
 const TourismDetail: FC = () => {
 	const [isDescription, setIsDescription] = useState<boolean>(false);
@@ -31,6 +33,17 @@ const TourismDetail: FC = () => {
 				isContentIdTypeId.contentId,
 				isContentIdTypeId.contentTypeId,
 			),
+	);
+
+	const { data: IntroductionData, isLoading: IntroductionLoading } = useQuery(
+		['tour-introduction', isContentIdTypeId.contentId],
+		async () =>
+			await TourService.getIntroductionByContentTypeId({
+				contentId: isContentIdTypeId.contentId,
+				contentTypeId: isContentIdTypeId.contentTypeId,
+				pageNo: '1',
+				numOfRows: '10',
+			}),
 	);
 
 	const handleDescriptionToggle = () => {
@@ -108,6 +121,13 @@ const TourismDetail: FC = () => {
 									{data.list[0].fullAddr}
 								</div>
 							</div>
+
+							{IntroductionData && IntroductionData.list.length > 0 && (
+								<TourIntroductionController
+									status={IntroductionData.list[0].kind}
+									list={IntroductionData.list}
+								/>
+							)}
 							{/* <div className={styles.phone_number_container}>
 								<div className="flex gap-2">
 									<div className="flex items-center">

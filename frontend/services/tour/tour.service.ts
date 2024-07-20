@@ -205,7 +205,7 @@ export const TourService = {
 		pageNo: string;
 		contentTypeId: string;
 	}) {
-		const url = `tours/${contentId}/images?numOfRows=${numOfRows}&pageNo=${pageNo}`;
+		const url = `tours/${contentId}/introduction?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}`;
 
 		const { data } = await axiosAPI.get<
 			BasicPaginationResponse<TourIntroductionUnionType>
