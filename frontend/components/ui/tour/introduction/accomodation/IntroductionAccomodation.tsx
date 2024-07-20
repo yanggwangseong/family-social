@@ -1,10 +1,18 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
+import { isAccomodation } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
 const IntroductionAccomodation: FC<{
 	list: TourIntroductionUnionType[];
-}> = () => {
-	return <div></div>;
+}> = ({ list }) => {
+	return (
+		<>
+			{list.map(
+				(item, index) =>
+					isAccomodation(item) && <div key={index}>{item.contenttypeid}</div>,
+			)}
+		</>
+	);
 };
 
 export default IntroductionAccomodation;

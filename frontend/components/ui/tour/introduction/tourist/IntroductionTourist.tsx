@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
 import styles from './IntroductionTourist.module.scss';
-import {
-	TourIntroductionTourist,
-	TourIntroductionUnionType,
-} from '@/shared/interfaces/tour.interface';
+import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isTourist } from '@/utils/type-guard';
 
 const IntroductionTourist: FC<{ list: TourIntroductionUnionType[] }> = ({
