@@ -2,7 +2,7 @@ import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tou
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import {
 	TourAreaCodeItem,
-	TourDetailResponse,
+	TourDetailItem,
 	TourFestivalItem,
 	TourResponseItem,
 	TourSearchItem,
@@ -155,7 +155,9 @@ export const TourService = {
 	async getTourDetail(contentId: string, contentTypeId: string) {
 		const url = `tours/${contentId}/common-information?numOfRows=10&pageNo=1&contentTypeId=${contentTypeId}`;
 
-		const { data } = await axiosAPI.get<TourDetailResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourDetailItem>
+		>(url);
 		return data;
 	},
 };

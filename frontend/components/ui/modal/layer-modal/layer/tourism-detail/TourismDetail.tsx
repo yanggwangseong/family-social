@@ -58,7 +58,7 @@ const TourismDetail: FC = () => {
 				) : (
 					data && (
 						<div className="flex flex-col gap-4">
-							<ImagesGallary images={data.items.image.item}></ImagesGallary>
+							{/* <ImagesGallary images={data.list.image.item}></ImagesGallary> */}
 							<div className={styles.intro_container}>
 								<div className="flex gap-2">
 									<div className="flex">
@@ -72,7 +72,7 @@ const TourismDetail: FC = () => {
 								{isDescription ? (
 									<div className="flex-1 flex ">
 										<div className="text-sm text-customDark font-normal flex-1 overflow-y-auto max-h-16">
-											{data.items.item[0].overview}
+											{data.list[0].overview}
 										</div>
 										<div
 											className="cursor-pointer"
@@ -87,7 +87,7 @@ const TourismDetail: FC = () => {
 										onClick={handleDescriptionToggle}
 									>
 										<div className="text-ellipsis whitespace-nowrap overflow-hidden text-sm text-customDark font-normal">
-											{data.items.item[0].overview}
+											{data.list[0].overview}
 										</div>
 										<div>
 											<IoChevronDownOutline size={18} color="#0a0a0a" />
@@ -105,10 +105,10 @@ const TourismDetail: FC = () => {
 									</div>
 								</div>
 								<div className="text-sm text-customDark font-normal">
-									{`(${data.items.item[0].zipcode})${data.items.item[0].addr1}${data.items.item[0].addr2}`}
+									{data.list[0].fullAddr}
 								</div>
 							</div>
-							<div className={styles.phone_number_container}>
+							{/* <div className={styles.phone_number_container}>
 								<div className="flex gap-2">
 									<div className="flex items-center">
 										<IoCall size={18} color="#0a0a0a" />
@@ -120,8 +120,8 @@ const TourismDetail: FC = () => {
 								<div className="text-sm text-customDark font-normal">
 									{`${data.items.introduction.item[0].infocenter ?? ''}`}
 								</div>
-							</div>
-							<div className={styles.store_time_container}>
+							</div> */}
+							{/* <div className={styles.store_time_container}>
 								<div className="flex gap-2">
 									<div className="flex items-center">
 										<IoTimeSharp size={18} color="#0a0a0a" />
@@ -133,7 +133,7 @@ const TourismDetail: FC = () => {
 								<div className="text-sm text-customDark font-normal">
 									{`${data.items.introduction.item[0].usetime ?? ''}`}
 								</div>
-							</div>
+							</div> */}
 						</div>
 					)
 				)}

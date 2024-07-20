@@ -13,6 +13,7 @@ const ImagesGallary: FC<{ images: any[] }> = ({ images }) => {
 	const navigationPrevRef = React.useRef(null);
 	const navigationNextRef = React.useRef(null);
 	const swiperRef = useRef<SwiperCore>();
+	// todo image useQuery
 
 	return (
 		<div className={styles.images_gallary_container}>

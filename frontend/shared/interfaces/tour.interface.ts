@@ -57,19 +57,23 @@ export interface TourSearchItem
 	fullAddr: string;
 }
 
-export interface TourismItem {}
-
-export interface TourDetailResponse {
-	items: {
-		additional: {
-			item: any[];
-		};
-		item: any[];
-		image: {
-			item: any[];
-		};
-		introduction: {
-			item: any[];
-		};
-	};
+export interface TourDetailItem {
+	contentid: string;
+	contenttypeid: string;
+	title: string;
+	tel: string;
+	telname: string;
+	homepage: string;
+	firstimage: string;
+	firstimage2: string;
+	areacode: string;
+	sigungucode: string;
+	cat1: string;
+	cat2: string;
+	cat3: string;
+	addr1: string;
+	addr2: string;
+	zipcode: string;
+	overview: string;
+	fullAddr: string;
 }
