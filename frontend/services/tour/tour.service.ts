@@ -4,6 +4,7 @@ import {
 	TourAreaCodeItem,
 	TourDetailItem,
 	TourFestivalItem,
+	TourImageItem,
 	TourResponseItem,
 	TourSearchItem,
 	TourServiceCategoriesResponse,
@@ -158,6 +159,27 @@ export const TourService = {
 		const { data } = await axiosAPI.get<
 			BasicPaginationResponse<TourDetailItem>
 		>(url);
+		return data;
+	},
+
+	/**
+	 * 이미지 정보 조회
+	 * @param contentId 컨텐츠 아이디
+	 * @param numOfRows 가져 올 갯수
+	 * @param pageNo 페이지 번호
+	 * @returns {BasicPaginationResponse<TourImageItem>}
+	 */
+	async getTourImages(
+		contentId: string,
+		numOfRows: string,
+		pageNo: string,
+	): Promise<BasicPaginationResponse<TourImageItem>> {
+		const url = `tours/${contentId}/images?numOfRows=${numOfRows}&pageNo=${pageNo}`;
+
+		const { data } = await axiosAPI.get<BasicPaginationResponse<TourImageItem>>(
+			url,
+		);
+
 		return data;
 	},
 };

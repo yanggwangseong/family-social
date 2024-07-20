@@ -15,8 +15,6 @@ import ImagesGallary from './images-gallary/ImagesGallary';
 import {
 	IoInformationCircle,
 	IoLocationSharp,
-	IoCall,
-	IoTimeSharp,
 	IoChevronDownOutline,
 	IoChevronUp,
 } from 'react-icons/io5';
@@ -58,7 +56,9 @@ const TourismDetail: FC = () => {
 				) : (
 					data && (
 						<div className="flex flex-col gap-4">
-							{/* <ImagesGallary images={data.list.image.item}></ImagesGallary> */}
+							<ImagesGallary
+								contentIdTypeId={isContentIdTypeId}
+							></ImagesGallary>
 							<div className={styles.intro_container}>
 								<div className="flex gap-2">
 									<div className="flex">

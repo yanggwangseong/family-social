@@ -77,3 +77,10 @@ export interface TourDetailItem {
 	overview: string;
 	fullAddr: string;
 }
+
+export interface TourImageItem {
+	contentid: string;
+	imgname: string;
+	originimgurl: string;
+	smallimageurl: string;
+}

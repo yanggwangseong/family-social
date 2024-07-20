@@ -231,7 +231,7 @@ export class ToursController {
 	)
 	@IsPagination(PaginationEnum.BASIC)
 	@IsResponseDtoDecorator(withBasicPaginationResponse(TourHttpImagesResDto))
-	@Get('/:contentId/Images')
+	@Get('/:contentId/images')
 	async getHttpTourApiImagesByCotentId(
 		@Param('contentId') contentId: string,
 		@Query() queryDto: TourPaginationQueryReqDto,
