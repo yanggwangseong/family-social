@@ -5,6 +5,8 @@ import {
 	TourDetailItem,
 	TourFestivalItem,
 	TourImageItem,
+	TourIntroductionTourist,
+	TourIntroductionUnionType,
 	TourResponseItem,
 	TourSearchItem,
 	TourServiceCategoriesResponse,
@@ -179,6 +181,35 @@ export const TourService = {
 		const { data } = await axiosAPI.get<BasicPaginationResponse<TourImageItem>>(
 			url,
 		);
+
+		return data;
+	},
+
+	/**
+	 * 소개 정보 조회
+	 * @description 컨텐츠 타입에 따라 다른 소개 정보를 제공 한다
+	 * @param contentId 컨텐츠 아이디
+	 * @param numOfRows 가져 올 갯수
+	 * @param pageNo 페이지 번호
+	 * @param contentTypeId 컨텐츠 타입 (12, 14, 15, 25, 28, 32, 38, 39)
+	 *
+	 */
+	async getIntroductionByContentTypeId({
+		contentId,
+		numOfRows,
+		pageNo,
+		contentTypeId,
+	}: {
+		contentId: string;
+		numOfRows: string;
+		pageNo: string;
+		contentTypeId: string;
+	}) {
+		const url = `tours/${contentId}/images?numOfRows=${numOfRows}&pageNo=${pageNo}`;
+
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourIntroductionUnionType>
+		>(url);
 
 		return data;
 	},

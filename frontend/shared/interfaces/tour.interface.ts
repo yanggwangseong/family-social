@@ -84,3 +84,357 @@ export interface TourImageItem {
 	originimgurl: string;
 	smallimageurl: string;
 }
+
+export type TourIntroductionUnionType =
+	| TourIntroductionTourist
+	| TourIntroductionCultural
+	| TourIntroductionFestival
+	| TourIntroductionTourCourse
+	| TourIntroductionLeports
+	| TourIntroductionAccomodation
+	| TourIntroductionShopping
+	| TourIntroductionRestaurant;
+
+/**
+ * 관광지조회 (12)
+ *
+ */
+export interface TourIntroductionTourist {
+	kind: 'tourist';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 세계문화유산유무 */
+	heritage1: string;
+	/** 세계자연유산유무 */
+	heritage2: string;
+	/** 세계기록유산유무 */
+	heritage3: string;
+	/** 문의및안내 */
+	infocenter: string;
+	/** 개장일 */
+	opendate: string;
+	/** 쉬는날 */
+	restdate: string;
+	/** 체험안내 */
+	expguide: string;
+	/** 체험가능연령 */
+	expagerange: string;
+	/** 수용인원 */
+	accomcount: string;
+	/** 이용시기 */
+	useseason: string;
+	/** 이용시간 */
+	usetime: string;
+	/** 주차시설 */
+	parking: string;
+	/** 유모차대여정보 */
+	chkbabycarriage: string;
+	/** 애완동물동반가능정보 */
+	chkpet: string;
+	/** 신용카드가능정보 */
+	chkcreditcard: string;
+}
+
+/**
+ * 문화시설 (14)
+ *
+ */
+export interface TourIntroductionCultural {
+	kind: 'cultural';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 규모 */
+	scale: string;
+	/** 이용요금 */
+	usefee: string;
+	/** 할인정보 */
+	discountinfo: string;
+	/** 관람소요시간 */
+	spendtime: string;
+	/** 주차요금 */
+	parkingfee: string;
+	/** 문의및안내 */
+	infocenterculture: string;
+	/** 수용인원 */
+	accomcountculture: string;
+	/** 이용시간 */
+	usetimeculture: string;
+	/** 쉬는날 */
+	restdateculture: string;
+	/** 주차시설 */
+	parkingculture: string;
+	/** 유모차대여정보 */
+	chkbabycarriageculture: string;
+	/** 애완동물동반가능정보 */
+	chkpetculture: string;
+	/** 신용카드가능정보 */
+	chkcreditcardculture: string;
+}
+
+/**
+ * 축제공연행사 (15)
+ *
+ */
+export interface TourIntroductionFestival {
+	kind: 'festival';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 주최자정보 */
+	sponsor1: string;
+	/** 주최자연락처 */
+	sponsor1tel: string;
+	/** 주관사정보 */
+	sponsor2: string;
+	/** 주관사연락처 */
+	sponsor2tel: string;
+	/** 행사종료일 */
+	eventenddate: string;
+	/** 공연시간 */
+	playtime: string;
+	/** 행사장소 */
+	eventplace: string;
+	/** 행사홈페이지 */
+	eventhomepage: string;
+	/** 관람가능연령 */
+	agelimit: string;
+	/** 예매처 */
+	bookingplace: string;
+	/** 행사장위치안내 */
+	placeinfo: string;
+	/** 부대행사 */
+	subevent: string;
+	/** 행사프로그램 */
+	program: string;
+	/** 행사시작일 */
+	eventstartdate: string;
+	/** 이용요금 */
+	usetimefestival: string;
+	/** 할인정보 */
+	discountinfofestival: string;
+	/** 관람소요시간 */
+	spendtimefestival: string;
+	/** 축제등급 */
+	festivalgrade: string;
+}
+
+/**
+ * 여행코스 (25)
+ *
+ */
+export interface TourIntroductionTourCourse {
+	kind: 'tourCourse';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 문의및안내 */
+	infocentertourcourse: string;
+	/** 코스총거리 */
+	distance: string;
+	/** 코스일정 */
+	schedule: string;
+	/** 코스총소요시간 */
+	taketime: string;
+	/** 코스테마 */
+	theme: string;
+}
+
+/**
+ * 레저 (28)
+ *
+ */
+export interface TourIntroductionLeports {
+	kind: 'leports';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 개장기간 */
+	openperiod: string;
+	/** 예약안내 */
+	reservation: string;
+	/** 문의및안내 */
+	infocenterleports: string;
+	/** 규모 */
+	scaleleports: string;
+	/** 수용인원 */
+	accomcountleports: string;
+	/** 쉬는날 */
+	restdateleports: string;
+	/** 이용시간 */
+	usetimeleports: string;
+	/** 입장료 */
+	usefeeleports: string;
+	/** 체험가능연령 */
+	expagerangeleports: string;
+	/** 주차시설 */
+	parkingleports: string;
+	/** 주차요금 */
+	parkingfeeleports: string;
+	/** 유모차대여정보 */
+	chkbabycarriageleports: string;
+	/** 애완동물동반가능정보 */
+	chkpetleports: string;
+	/** 신용카드가능정보 */
+	chkcreditcardleports: string;
+}
+
+/**
+ * 숙박 (32)
+ *
+ */
+export interface TourIntroductionAccomodation {
+	kind: 'accomodation';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 굿스테이여부 */
+	goodstay: string;
+	/** 베니키아여부 */
+	benikia: string;
+	/** 한옥여부 */
+	hanok: string;
+	/** 객실수 */
+	roomcount: string;
+	/** 객실유형 */
+	roomtype: string;
+	/** 환불규정 */
+	refundregulation: string;
+	/** 입실시간 */
+	checkintime: string;
+	/** 퇴실시간 */
+	checkouttime: string;
+	/** 객실내취사여부 */
+	chkcooking: string;
+	/** 세미나실여부 */
+	seminar: string;
+	/** 스포츠시설여부 */
+	sports: string;
+	/** 사우나실여부 */
+	sauna: string;
+	/** 뷰티시설정보 */
+	beauty: string;
+	/** 식음료장여부 */
+	beverage: string;
+	/** 노래방여부 */
+	karaoke: string;
+	/** 바비큐장여부 */
+	barbecue: string;
+	/** 캠프파이어여부 */
+	campfire: string;
+	/** 자전거대여여부 */
+	bicycle: string;
+	/** 휘트니스센터여부 */
+	fitness: string;
+	/** 공용 PC실여부 */
+	publicpc: string;
+	/** 공용샤워실여부 */
+	publicbath: string;
+	/** 부대시설 (기타) */
+	subfacility: string;
+	/** 식음료장 */
+	foodplace: string;
+	/** 예약안내홈페이지 */
+	reservationurl: string;
+	/** 픽업서비스 */
+	pickup: string;
+	/** 문의및안내 */
+	infocenterlodging: string;
+	/** 주차시설 */
+	parkinglodging: string;
+	/** 예약안내 */
+	reservationlodging: string;
+	/** 규모 */
+	scalelodging: string;
+	/** 수용가능인원 */
+	accomcountlodging: string;
+}
+
+/**
+ * 쇼핑 (38)
+ *
+ */
+export interface TourIntroductionShopping {
+	kind: 'shopping';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 판매품목 */
+	saleitem: string;
+	/** 판매품목별가격 */
+	saleitemcost: string;
+	/** 장서는날 */
+	fairday: string;
+	/** 개장일 */
+	opendateshopping: string;
+	/** 매장안내 */
+	shopguide: string;
+	/** 문화센터바로가기 */
+	culturecenter: string;
+	/** 화장실설명 */
+	restroom: string;
+	/** 문의및안내 */
+	infocentershopping: string;
+	/** 규모 */
+	scaleshopping: string;
+	/** 쉬는날 */
+	restdateshopping: string;
+	/** 주차시설 */
+	parkingshopping: string;
+	/** 유모차대여정보 */
+	chkbabycarriageshopping: string;
+	/** 애완동물동반가능정보 */
+	chkpetshopping: string;
+	/** 신용카드가능정보 */
+	chkcreditcardshopping: string;
+	/** 영업시간 */
+	opentime: string;
+}
+
+/**
+ * 음식점 (39)
+ *
+ */
+export interface TourIntroductionRestaurant {
+	kind: 'restaurant';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/** 좌석수 */
+	seat: string;
+	/** 어린이놀이방여부 */
+	kidsfacility: string;
+	/** 대표메뉴 */
+	firstmenu: string;
+	/** 취급메뉴 */
+	treatmenu: string;
+	/** 금연/흡연여부 */
+	smoking: string;
+	/** 문의및안내 */
+	infocenterfood: string;
+	/** 규모 */
+	scalefood: string;
+	/** 주차시설 */
+	parkingfood: string;
+	/** 개업일 */
+	opendatefood: string;
+	/** 영업시간 */
+	opentimefood: string;
+	/** 할인정보 */
+	discountinfofood: string;
+	/** 신용카드가능정보 */
+	chkcreditcardfood: string;
+	/** 예약안내 */
+	reservationfood: string;
+	/** 인허가번호 */
+	lcnsno: string;
+}
