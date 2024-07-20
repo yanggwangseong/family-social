@@ -93,9 +93,8 @@ const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 			}),
 		{
 			getNextPageParam: (lastPage, allPosts) => {
-				return lastPage.pageNo !==
-					Math.ceil(allPosts[0].totalCount / allPosts[0].numOfRows)
-					? lastPage.pageNo + 1
+				return lastPage.page !== Math.ceil(allPosts[0].totalPage / 10)
+					? lastPage.page + 1
 					: undefined;
 			},
 			enabled: !!(
@@ -226,8 +225,8 @@ const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 				{isLoading && <Skeleton />}
 				{data?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>
-						{page.items.item.map((tour, index: number) => (
-							<TourismItem key={index} tour={tour} />
+						{page.list.map((tour, index: number) => (
+							<TourismItem key={index} tourItem={tour} />
 						))}
 					</React.Fragment>
 				))}

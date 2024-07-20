@@ -4,7 +4,7 @@ import {
 	TourAreaCodeItem,
 	TourDetailResponse,
 	TourFestivalItem,
-	TourListResponse,
+	TourResponseItem,
 	TourSearchItem,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
@@ -78,7 +78,10 @@ export const TourService = {
 		&areaCode=${areaCode}&sigunguCode=${sigunguCode}&cat1=${cat1}&cat2=${cat2}&cat3=${cat3}
 		`;
 
-		const { data } = await axiosAPI.get<TourListResponse>(url);
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<TourResponseItem>
+		>(url);
+
 		return data;
 	},
 

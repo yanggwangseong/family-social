@@ -9,13 +9,23 @@ export interface TourAreaCodeItem {
 // getServiceCategories
 export interface TourServiceCategoriesResponse extends TourAreaCodeItem {}
 
-export interface TourListResponse {
-	items: {
-		item: any[];
-	};
-	numOfRows: number;
-	pageNo: number;
-	totalCount: number;
+export interface TourResponseItem {
+	kind: 'tour';
+	addr1: string;
+	addr2: string;
+	areacode: string;
+	cat1: string;
+	cat2: string;
+	cat3: string;
+	contentid: string;
+	contenttypeid: string;
+	firstimage: string;
+	firstimage2: string;
+	sigungucode: string;
+	tel: string;
+	title: string;
+	zipcode: string;
+	fullAddr: string;
 }
 
 export interface TourFestivalItem {
