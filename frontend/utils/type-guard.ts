@@ -63,7 +63,7 @@ export const isRestaurant = (
 };
 
 /**
- * 반복 추가 정보 공통조회 (12, 14, 15, 25, 28, 32, 38, 39) 타입 가드
+ * 반복 추가 정보 공통조회 (12, 14, 15, 28, 38, 39) 타입 가드
  * @param data 반복 정보 유니온 타입
  * @returns {TourAdditionalCommon} 공통조회 인터페이스 타입 가드
  */
