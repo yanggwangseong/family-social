@@ -2,9 +2,7 @@ import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isShopping } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
-const IntroductionShopping: FC<{ list: TourIntroductionUnionType[] }> = ({
-	list,
-}) => {
+const TourShopping: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
@@ -15,4 +13,4 @@ const IntroductionShopping: FC<{ list: TourIntroductionUnionType[] }> = ({
 	);
 };
 
-export default IntroductionShopping;
+export default TourShopping;

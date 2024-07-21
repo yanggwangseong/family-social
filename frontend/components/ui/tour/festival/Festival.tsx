@@ -3,9 +3,7 @@ import styles from './introductionFestival.module.scss';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isFestival } from '@/utils/type-guard';
 
-const IntroductionFestival: FC<{ list: TourIntroductionUnionType[] }> = ({
-	list,
-}) => {
+const TourFestival: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
@@ -16,4 +14,4 @@ const IntroductionFestival: FC<{ list: TourIntroductionUnionType[] }> = ({
 	);
 };
 
-export default IntroductionFestival;
+export default TourFestival;

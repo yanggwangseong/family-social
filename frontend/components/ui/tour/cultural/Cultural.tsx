@@ -2,9 +2,7 @@ import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isCultural } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
-const IntroductionCultural: FC<{ list: TourIntroductionUnionType[] }> = ({
-	list,
-}) => {
+const TourCultural: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
@@ -15,4 +13,4 @@ const IntroductionCultural: FC<{ list: TourIntroductionUnionType[] }> = ({
 	);
 };
 
-export default IntroductionCultural;
+export default TourCultural;

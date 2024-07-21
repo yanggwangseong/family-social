@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
-import IntroductionTourist from './introduction/tourist/IntroductionTourist';
+import Tourist from './tourist/Tourist';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
-import IntroductionCultural from './introduction/cultural/IntroductionCultural';
+import TourCultural from './cultural/Cultural';
 import { Union } from 'types';
-import IntroductionFestival from './introduction/festival/IntroductionFestival';
-import IntroductionTourCourse from './introduction/tour-course/TourCourse';
-import IntroductionLeports from './introduction/leports/IntroductionLeports';
-import IntroductionAccomodation from './introduction/accomodation/IntroductionAccomodation';
-import IntroductionShopping from './introduction/shopping/IntroductionShopping';
-import IntroductionRestaurant from './introduction/restaurant/IntroductionRestaurant';
+import TourFestival from './festival/Festival';
+import TourCourse from './tour-course/TourCourse';
+import TourLeports from './leports/Leports';
+import Accomodation from './accomodation/Accomodation';
+import Restaurant from './restaurant/Restaurant';
+import TourShopping from './shopping/Shopping';
 
 const LayerMode = {
 	tourist: 'tourist',
@@ -22,14 +22,14 @@ const LayerMode = {
 } as const;
 
 const StatusLookUpTable = {
-	[LayerMode.tourist]: IntroductionTourist,
-	[LayerMode.cultural]: IntroductionCultural,
-	[LayerMode.festival]: IntroductionFestival,
-	[LayerMode.tourCourse]: IntroductionTourCourse,
-	[LayerMode.leports]: IntroductionLeports,
-	[LayerMode.accomodation]: IntroductionAccomodation,
-	[LayerMode.shopping]: IntroductionShopping,
-	[LayerMode.restaurant]: IntroductionRestaurant,
+	[LayerMode.tourist]: Tourist,
+	[LayerMode.cultural]: TourCultural,
+	[LayerMode.festival]: TourFestival,
+	[LayerMode.tourCourse]: TourCourse,
+	[LayerMode.leports]: TourLeports,
+	[LayerMode.accomodation]: Accomodation,
+	[LayerMode.shopping]: TourShopping,
+	[LayerMode.restaurant]: Restaurant,
 };
 
 interface StatusProps {

@@ -2,9 +2,8 @@ import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isTourCourse } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
-const IntroductionTourCourse: FC<{ list: TourIntroductionUnionType[] }> = ({
-	list,
-}) => {
+// 여행코스 (25)
+const TourCourse: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
@@ -15,4 +14,4 @@ const IntroductionTourCourse: FC<{ list: TourIntroductionUnionType[] }> = ({
 	);
 };
 
-export default IntroductionTourCourse;
+export default TourCourse;

@@ -19,7 +19,6 @@ import {
 	IoChevronUp,
 } from 'react-icons/io5';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
-import IntroductionTourist from '@/components/ui/tour/introduction/tourist/IntroductionTourist';
 import TourIntroductionController from '@/components/ui/tour/TourIntroductionController';
 
 const TourismDetail: FC = () => {

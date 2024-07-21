@@ -1,18 +1,18 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
-import { isAccomodation } from '@/utils/type-guard';
+import { isRestaurant } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
-const IntroductionAccomodation: FC<{
+const TourRestaurant: FC<{
 	list: TourIntroductionUnionType[];
 }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
 				(item, index) =>
-					isAccomodation(item) && <div key={index}>{item.contenttypeid}</div>,
+					isRestaurant(item) && <div key={index}>{item.contenttypeid}</div>,
 			)}
 		</>
 	);
 };
 
-export default IntroductionAccomodation;
+export default TourRestaurant;

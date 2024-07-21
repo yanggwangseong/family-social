@@ -2,9 +2,7 @@ import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isLeports } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
-const IntroductionLeports: FC<{ list: TourIntroductionUnionType[] }> = ({
-	list,
-}) => {
+const TourLeports: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
 	return (
 		<>
 			{list.map(
@@ -15,4 +13,4 @@ const IntroductionLeports: FC<{ list: TourIntroductionUnionType[] }> = ({
 	);
 };
 
-export default IntroductionLeports;
+export default TourLeports;
