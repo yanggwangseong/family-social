@@ -85,6 +85,203 @@ export interface TourImageItem {
 	smallimageurl: string;
 }
 
+export type TourAdditionalUnionType =
+	| TourAdditionalCommon
+	| TourAdditionalTourCourse
+	| TourAdditionalAccomodation;
+
+/**
+ * 반복 추가 정보 공통조회 (12, 14, 15, 25, 28, 32, 38, 39)
+ *
+ */
+export interface TourAdditionalCommon {
+	kind: 'additionalCommon';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/**
+	 * 제목
+	 */
+	infoname: string;
+	/**
+	 * 내용
+	 */
+	infotext: string;
+}
+
+/**
+ * 반복 추가 정보 여행코스조회 (25)
+ *
+ */
+export interface TourAdditionalTourCourse {
+	kind: 'additionalTourCourse';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/**
+	 * 반복일련번호
+	 */
+	subnum: string;
+	/**
+	 * 하위콘텐츠ID
+	 */
+	subcontentid: string;
+
+	/**
+	 * 코스명
+	 */
+	subname: string;
+
+	/**
+	 * 코스개요
+	 */
+	subdetailoverview: string;
+
+	/**
+	 * 코스이미지
+	 */
+	subdetailimg: string;
+
+	/**
+	 * 코스이미지설명
+	 */
+	subdetailalt: string;
+}
+
+/**
+ * 반복 추가 정보 숙박조회 (32)
+ *
+ */
+export interface TourAdditionalAccomodation {
+	kind: 'additionalAccomodation';
+	/** 콘텐츠ID */
+	contentid: string;
+	/** 콘텐츠타입ID */
+	contenttypeid: string;
+	/**
+	 * 객실코드
+	 */
+	roomcode: string;
+	/**
+	 * 객실명칭
+	 */
+	roomtitle: string;
+	/**
+	 * 객실크기(평)
+	 */
+	roomsize1: string;
+	/**
+	 * 객실수
+	 */
+	roomcount: string;
+	/**
+	 * 기준인원
+	 */
+	roombasecount: string;
+	/**
+	 * 최대인원
+	 */
+	roommaxcount: string;
+	/**
+	 * 비수기주중최소
+	 */
+	roomoffseasonminfee1: string;
+	/**
+	 * 비수기주말최소
+	 */
+	roomoffseasonminfee2: string;
+	/**
+	 * 성수기주중최소
+	 */
+	roompeakseasonminfee1: string;
+	/**
+	 * 성수기주말최소
+	 */
+	roompeakseasonminfee2: string;
+	/**
+	 * 객실소개
+	 */
+	roomintro: string;
+	/**
+	 * 목욕시설여부
+	 */
+	roombathfacility: string;
+	/**
+	 * 욕조여부
+	 */
+	roombath: string;
+	/**
+	 * 홈시어터여부
+	 */
+	roomhometheater: string;
+	/**
+	 * 에어컨여부
+	 */
+	roomaircondition: string;
+	/**
+	 * TV 여부
+	 */
+	roomtv: string;
+	/**
+	 * PC 여부
+	 */
+	roompc: string;
+	/**
+	 * 인터넷여부
+	 */
+	roominternet: string;
+	/**
+	 * 냉장고여부
+	 */
+	roomrefrigerator: string;
+	/**
+	 * 객실크기(평방미터)
+	 */
+	roomsize2: string;
+	/**
+	 * 객실사진1
+	 */
+	roomimg1: string;
+	/**
+	 * 객실사진1 설명
+	 */
+	roomimg1alt: string;
+	/**
+	 * 객실사진2
+	 */
+	roomimg2: string;
+	/**
+	 * 객실사진2 설명
+	 */
+	roomimg2alt: string;
+	/**
+	 * 객실사진3
+	 */
+	roomimg3: string;
+	/**
+	 * 객실사진3
+	 */
+	roomimg3alt: string;
+	/**
+	 * 객실사진4
+	 */
+	roomimg4: string;
+	/**
+	 * 객실사진4 설명
+	 */
+	roomimg4alt: string;
+	/**
+	 * 객실사진5
+	 */
+	roomimg5: string;
+	/**
+	 * 객실사진5 설명
+	 */
+	roomimg5alt: string;
+}
+
 export type TourIntroductionUnionType =
 	| TourIntroductionTourist
 	| TourIntroductionCultural
@@ -96,7 +293,7 @@ export type TourIntroductionUnionType =
 	| TourIntroductionRestaurant;
 
 /**
- * 관광지조회 (12)
+ * 소개 정보 관광지조회 (12)
  *
  */
 export interface TourIntroductionTourist {
@@ -138,7 +335,7 @@ export interface TourIntroductionTourist {
 }
 
 /**
- * 문화시설 (14)
+ * 소개 정보 문화시설 (14)
  *
  */
 export interface TourIntroductionCultural {
@@ -176,7 +373,7 @@ export interface TourIntroductionCultural {
 }
 
 /**
- * 축제공연행사 (15)
+ * 소개 정보 축제공연행사 (15)
  *
  */
 export interface TourIntroductionFestival {
@@ -224,7 +421,7 @@ export interface TourIntroductionFestival {
 }
 
 /**
- * 여행코스 (25)
+ * 소개 정보 여행코스 (25)
  *
  */
 export interface TourIntroductionTourCourse {
@@ -246,7 +443,7 @@ export interface TourIntroductionTourCourse {
 }
 
 /**
- * 레저 (28)
+ * 소개 정보 레저 (28)
  *
  */
 export interface TourIntroductionLeports {
@@ -286,7 +483,7 @@ export interface TourIntroductionLeports {
 }
 
 /**
- * 숙박 (32)
+ * 소개 정보 숙박 (32)
  *
  */
 export interface TourIntroductionAccomodation {
@@ -358,7 +555,7 @@ export interface TourIntroductionAccomodation {
 }
 
 /**
- * 쇼핑 (38)
+ * 소개 정보 쇼핑 (38)
  *
  */
 export interface TourIntroductionShopping {
@@ -400,7 +597,7 @@ export interface TourIntroductionShopping {
 }
 
 /**
- * 음식점 (39)
+ * 소개 정보 음식점 (39)
  *
  */
 export interface TourIntroductionRestaurant {
