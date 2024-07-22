@@ -18,22 +18,6 @@
 	}
 }
 
-.additional_container {
-	@apply flex flex-col gap-4 mt-4;
-
-	.title_container {
-		@apply flex gap-2;
-
-		.title {
-			@apply text-sm text-customDark font-normal;
-		}
-
-		.btn_container {
-			@apply cursor-pointer ml-auto;
-		}
-	}
-}
-
 .item_wrap {
 	@apply flex;
 

@@ -1,6 +1,5 @@
-import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
-import { isAdditionalCommon, isRestaurant } from '@/utils/type-guard';
+import { isRestaurant } from '@/utils/type-guard';
 import React, { FC } from 'react';
 import {
 	IoChevronDownOutline,
@@ -8,12 +7,14 @@ import {
 	IoInformationCircle,
 } from 'react-icons/io5';
 import styles from './Restaurant.module.scss';
+import { useToggleState } from '@/hooks/useToggleState';
+import AdditionalCommon from '../additional-common/AdditionalCommon';
 
 // 음식점 (39)
 const TourRestaurant: FC<{
 	list: TourIntroductionUnionType;
 }> = ({ list }) => {
-	const { data } = useTourAdditionalExplanation();
+	const { isToggle, setIsToggle } = useToggleState();
 
 	return (
 		<>
@@ -24,15 +25,15 @@ const TourRestaurant: FC<{
 							<IoInformationCircle size={18} color="#0a0a0a" />
 						</div>
 						<div className={styles.title}>소개 정보:</div>
-						<div className={styles.btn_container} onClick={setIsIntroduction}>
-							{isIntroduction ? (
+						<div className={styles.btn_container} onClick={setIsToggle}>
+							{isToggle ? (
 								<IoChevronUp size={18} color="#0a0a0a" />
 							) : (
 								<IoChevronDownOutline size={18} color="#0a0a0a" />
 							)}
 						</div>
 					</div>
-					{isIntroduction && (
+					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
 								<>
@@ -63,35 +64,8 @@ const TourRestaurant: FC<{
 				</div>
 			)}
 
-			{data && isAdditionalCommon(data) && data.list.length > 0 && (
-				<div className={styles.additional_container}>
-					<div className={styles.title_container}>
-						<div>
-							<IoInformationCircle size={18} color="#0a0a0a" />
-						</div>
-						<div className={styles.title}>추가 정보:</div>
-						<div className={styles.btn_container} onClick={setIsAdditional}>
-							{isAdditional ? (
-								<IoChevronUp size={18} color="#0a0a0a" />
-							) : (
-								<IoChevronDownOutline size={18} color="#0a0a0a" />
-							)}
-						</div>
-					</div>
-					{isAdditional && (
-						<>
-							{data.list.map((data, index) => (
-								<>
-									<div className={styles.item_wrap} key={index}>
-										<div className={styles.item_title}>{data.infoname}</div>
-										<div className={styles.item_value}>{data.infotext}</div>
-									</div>
-								</>
-							))}
-						</>
-					)}
-				</div>
-			)}
+			{/* additional */}
+			<AdditionalCommon />
 		</>
 	);
 };
