@@ -8,14 +8,13 @@ import {
 	TourFestivalItem,
 	TourImageItem,
 	TourIntroductionUnionType,
-	TourIntroductionUnionTypeResponse,
 	TourResponseItem,
 	TourSearchItem,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
 import { switchCaseMach } from '@/utils/switch-case-mach';
 import { axiosAPI } from 'api/axios';
-import { Union } from 'types';
+import { TourAdditionalType, Union } from 'types';
 
 export const TourService = {
 	async getTourAreaCodes(areaCode?: string) {
@@ -275,13 +274,38 @@ export const TourService = {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<TourAdditionalUnionType> {
 		const url = `tours/${contentId}/additional-explanation?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}`;
 
-		const { data } = await axiosAPI.get<
-			BasicPaginationResponse<TourAdditionalUnionType>
-		>(url);
+		const { data } = await axiosAPI.get<TourAdditionalUnionType>(url);
 
-		return data;
+		const kind = switchCaseMach<string, Union<typeof TourAdditionalType>>(
+			contentTypeId,
+		)
+			// 12, 14, 15, 28, 38, 39
+			.on(
+				x =>
+					x === '12' ||
+					x === '14' ||
+					x === '15' ||
+					x === '28' ||
+					x === '38' ||
+					x === '39',
+				() => 'additionalCommon',
+			)
+			.on(
+				x => x === '25',
+				() => 'additionalTourCourse',
+			)
+			.on(
+				x => x === '32',
+				() => 'additionalAccomodation',
+			)
+			.otherwise(() => 'additionalCommon');
+
+		return {
+			...data,
+			kind,
+		};
 	},
 };

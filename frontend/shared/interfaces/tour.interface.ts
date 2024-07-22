@@ -1,4 +1,4 @@
-import { OmitStrict, Union } from 'types';
+import { OmitStrict, TourAdditionalType, Union } from 'types';
 import { BasicPaginationResponse } from './pagination.interface';
 import { TourLayerMode } from '@/components/ui/tour/TourIntroductionController';
 
@@ -97,17 +97,21 @@ export interface TourImageItem {
 	smallimageurl: string;
 }
 
+export interface TourAdditionalUnionTypeResponse<T>
+	extends BasicPaginationResponse<T> {
+	kind: Union<typeof TourAdditionalType>;
+}
+
 export type TourAdditionalUnionType =
-	| TourAdditionalCommon
-	| TourAdditionalTourCourse
-	| TourAdditionalAccomodation;
+	| TourAdditionalUnionTypeResponse<TourAdditionalCommon>
+	| TourAdditionalUnionTypeResponse<TourAdditionalTourCourse>
+	| TourAdditionalUnionTypeResponse<TourAdditionalAccomodation>;
 
 /**
- * 반복 추가 정보 공통조회 (12, 14, 15, 25, 28, 32, 38, 39)
+ * 반복 추가 정보 공통조회 (12, 14, 15, 28, 38, 39)
  *
  */
 export interface TourAdditionalCommon {
-	kind: 'additionalCommon';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -127,7 +131,6 @@ export interface TourAdditionalCommon {
  *
  */
 export interface TourAdditionalTourCourse {
-	kind: 'additionalTourCourse';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -167,7 +170,6 @@ export interface TourAdditionalTourCourse {
  *
  */
 export interface TourAdditionalAccomodation {
-	kind: 'additionalAccomodation';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */

@@ -13,13 +13,9 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 				list.list.map((item, index) => <div key={index}>{item.schedule}</div>)}
 
 			{data &&
-				data.length > 0 &&
-				data.map(
-					(item, index) =>
-						isAdditionalTourCourse(item) && (
-							<div key={index}>{item.contenttypeid}</div>
-						),
-				)}
+				isAdditionalTourCourse(data) &&
+				data.list.length > 0 &&
+				data.list.map((item, index) => <div key={index}>{item.subname}</div>)}
 		</>
 	);
 };

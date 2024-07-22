@@ -15,11 +15,9 @@ const Tourist: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 					<div key={index}>{item.chkbabycarriage}</div>
 				))}
 			{data &&
-				data.length > 0 &&
-				data.map(
-					(item, index) =>
-						isAdditionalCommon(item) && <div key={index}>{`456456`}</div>,
-				)}
+				isAdditionalCommon(data) &&
+				data.list.length > 0 &&
+				data.list.map((item, index) => <div key={index}>{item.infoname}</div>)}
 		</>
 	);
 };

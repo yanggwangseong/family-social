@@ -17,13 +17,9 @@ const TourAccomodation: FC<{
 				))}
 
 			{data &&
-				data.length > 0 &&
-				data.map(
-					(item, index) =>
-						isAdditionalAccomodation(item) && (
-							<div key={index}>{item.contenttypeid}</div>
-						),
-				)}
+				isAdditionalAccomodation(data) &&
+				data.list.length > 0 &&
+				data.list.map((item, index) => <div key={index}>{item.roomcount}</div>)}
 		</>
 	);
 };

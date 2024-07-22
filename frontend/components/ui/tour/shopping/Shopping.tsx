@@ -13,13 +13,9 @@ const TourShopping: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 				list.list.map((item, index) => <div key={index}>{item.fairday}</div>)}
 
 			{data &&
-				data.length > 0 &&
-				data.map(
-					(item, index) =>
-						isAdditionalCommon(item) && (
-							<div key={index}>{item.contenttypeid}</div>
-						),
-				)}
+				isAdditionalCommon(data) &&
+				data.list.length > 0 &&
+				data.list.map((item, index) => <div key={index}>{item.infoname}</div>)}
 		</>
 	);
 };

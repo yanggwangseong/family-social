@@ -3,6 +3,7 @@ import {
 	TourAdditionalCommon,
 	TourAdditionalTourCourse,
 	TourAdditionalUnionType,
+	TourAdditionalUnionTypeResponse,
 	TourIntroductionAccomodation,
 	TourIntroductionCultural,
 	TourIntroductionFestival,
@@ -70,7 +71,7 @@ export const isRestaurant = (
  */
 export const isAdditionalCommon = (
 	data: TourAdditionalUnionType,
-): data is TourAdditionalCommon => {
+): data is TourAdditionalUnionTypeResponse<TourAdditionalCommon> => {
 	return data.kind === 'additionalCommon';
 };
 
@@ -81,7 +82,7 @@ export const isAdditionalCommon = (
  */
 export const isAdditionalTourCourse = (
 	data: TourAdditionalUnionType,
-): data is TourAdditionalTourCourse => {
+): data is TourAdditionalUnionTypeResponse<TourAdditionalTourCourse> => {
 	return data.kind === 'additionalTourCourse';
 };
 
@@ -92,6 +93,6 @@ export const isAdditionalTourCourse = (
  */
 export const isAdditionalAccomodation = (
 	data: TourAdditionalUnionType,
-): data is TourAdditionalAccomodation => {
+): data is TourAdditionalUnionTypeResponse<TourAdditionalAccomodation> => {
 	return data.kind === 'additionalAccomodation';
 };

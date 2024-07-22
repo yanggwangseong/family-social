@@ -18,6 +18,6 @@ export const useTourAdditionalExplanation = () => {
 	);
 
 	return {
-		data: data?.list,
+		data,
 	};
 };
