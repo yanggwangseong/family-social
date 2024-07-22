@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './TourismDetail.module.scss';
 import { TourService } from '@/services/tour/tour.service';
 import { useQuery } from 'react-query';
@@ -9,7 +9,7 @@ import {
 	ContentTypeId,
 	ContentTypeName,
 } from '@/constants/content-type.constant';
-import { Union } from 'types';
+import { LayerMode, Union } from 'types';
 import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
 import ImagesGallary from './images-gallary/ImagesGallary';
 import {
@@ -23,6 +23,7 @@ import TourIntroductionController from '@/components/ui/tour/TourIntroductionCon
 
 const TourismDetail: FC = () => {
 	const [isDescription, setIsDescription] = useState<boolean>(false);
+
 	const isContentIdTypeId = useRecoilValue(tourDetailAtom);
 
 	const { data, isLoading } = useQuery(
@@ -123,8 +124,8 @@ const TourismDetail: FC = () => {
 
 							{IntroductionData && IntroductionData.list.length > 0 && (
 								<TourIntroductionController
-									status={IntroductionData.list[0].kind}
-									list={IntroductionData.list}
+									status={IntroductionData.kind}
+									list={IntroductionData}
 								/>
 							)}
 							{/* <div className={styles.phone_number_container}>

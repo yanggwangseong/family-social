@@ -10,7 +10,7 @@ import Accomodation from './accomodation/Accomodation';
 import Restaurant from './restaurant/Restaurant';
 import TourShopping from './shopping/Shopping';
 
-const LayerMode = {
+export const TourLayerMode = {
 	tourist: 'tourist',
 	cultural: 'cultural',
 	festival: 'festival',
@@ -22,19 +22,19 @@ const LayerMode = {
 } as const;
 
 const StatusLookUpTable = {
-	[LayerMode.tourist]: Tourist,
-	[LayerMode.cultural]: TourCultural,
-	[LayerMode.festival]: TourFestival,
-	[LayerMode.tourCourse]: TourCourse,
-	[LayerMode.leports]: TourLeports,
-	[LayerMode.accomodation]: Accomodation,
-	[LayerMode.shopping]: TourShopping,
-	[LayerMode.restaurant]: Restaurant,
+	[TourLayerMode.tourist]: Tourist,
+	[TourLayerMode.cultural]: TourCultural,
+	[TourLayerMode.festival]: TourFestival,
+	[TourLayerMode.tourCourse]: TourCourse,
+	[TourLayerMode.leports]: TourLeports,
+	[TourLayerMode.accomodation]: Accomodation,
+	[TourLayerMode.shopping]: TourShopping,
+	[TourLayerMode.restaurant]: Restaurant,
 };
 
 interface StatusProps {
-	status: Union<typeof LayerMode>;
-	list: TourIntroductionUnionType[];
+	status: Union<typeof TourLayerMode>;
+	list: TourIntroductionUnionType;
 }
 
 const TourIntroductionController: FC<StatusProps> = ({ status, list }) => {

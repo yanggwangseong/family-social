@@ -4,15 +4,15 @@ import { isAdditionalCommon, isLeports } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
 // 레저 (28)
-const TourLeports: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
+const TourLeports: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 	const { data } = useTourAdditionalExplanation();
 
 	return (
 		<>
-			{list.map(
-				(item, index) =>
-					isLeports(item) && <div key={index}>{item.contenttypeid}</div>,
-			)}
+			{isLeports(list) &&
+				list.list.map((item, index) => (
+					<div key={index}>{item.chkpetleports}</div>
+				))}
 
 			{data &&
 				data.length > 0 &&

@@ -4,15 +4,13 @@ import { isAdditionalTourCourse, isTourCourse } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
 // 여행코스 (25)
-const TourCourse: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
+const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 	const { data } = useTourAdditionalExplanation();
 
 	return (
 		<>
-			{list.map(
-				(item, index) =>
-					isTourCourse(item) && <div key={index}>{item.contenttypeid}</div>,
-			)}
+			{isTourCourse(list) &&
+				list.list.map((item, index) => <div key={index}>{item.schedule}</div>)}
 
 			{data &&
 				data.length > 0 &&

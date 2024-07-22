@@ -1,4 +1,16 @@
-import { OmitStrict } from 'types';
+import { OmitStrict, Union } from 'types';
+import { BasicPaginationResponse } from './pagination.interface';
+import { TourLayerMode } from '@/components/ui/tour/TourIntroductionController';
+
+export type TourContentTypeId =
+	| '12'
+	| '14'
+	| '15'
+	| '25'
+	| '28'
+	| '32'
+	| '38'
+	| '39';
 
 export interface TourAreaCodeItem {
 	code: string;
@@ -282,22 +294,26 @@ export interface TourAdditionalAccomodation {
 	roomimg5alt: string;
 }
 
+export interface TourIntroductionUnionTypeResponse<T>
+	extends BasicPaginationResponse<T> {
+	kind: Union<typeof TourLayerMode>;
+}
+
 export type TourIntroductionUnionType =
-	| TourIntroductionTourist
-	| TourIntroductionCultural
-	| TourIntroductionFestival
-	| TourIntroductionTourCourse
-	| TourIntroductionLeports
-	| TourIntroductionAccomodation
-	| TourIntroductionShopping
-	| TourIntroductionRestaurant;
+	| TourIntroductionUnionTypeResponse<TourIntroductionTourist>
+	| TourIntroductionUnionTypeResponse<TourIntroductionCultural>
+	| TourIntroductionUnionTypeResponse<TourIntroductionFestival>
+	| TourIntroductionUnionTypeResponse<TourIntroductionTourCourse>
+	| TourIntroductionUnionTypeResponse<TourIntroductionLeports>
+	| TourIntroductionUnionTypeResponse<TourIntroductionAccomodation>
+	| TourIntroductionUnionTypeResponse<TourIntroductionShopping>
+	| TourIntroductionUnionTypeResponse<TourIntroductionRestaurant>;
 
 /**
  * 소개 정보 관광지조회 (12)
  *
  */
 export interface TourIntroductionTourist {
-	kind: 'tourist';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -339,7 +355,6 @@ export interface TourIntroductionTourist {
  *
  */
 export interface TourIntroductionCultural {
-	kind: 'cultural';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -377,7 +392,6 @@ export interface TourIntroductionCultural {
  *
  */
 export interface TourIntroductionFestival {
-	kind: 'festival';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -425,7 +439,6 @@ export interface TourIntroductionFestival {
  *
  */
 export interface TourIntroductionTourCourse {
-	kind: 'tourCourse';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -447,7 +460,6 @@ export interface TourIntroductionTourCourse {
  *
  */
 export interface TourIntroductionLeports {
-	kind: 'leports';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -487,7 +499,6 @@ export interface TourIntroductionLeports {
  *
  */
 export interface TourIntroductionAccomodation {
-	kind: 'accomodation';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -559,7 +570,6 @@ export interface TourIntroductionAccomodation {
  *
  */
 export interface TourIntroductionShopping {
-	kind: 'shopping';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */
@@ -601,7 +611,6 @@ export interface TourIntroductionShopping {
  *
  */
 export interface TourIntroductionRestaurant {
-	kind: 'restaurant';
 	/** 콘텐츠ID */
 	contentid: string;
 	/** 콘텐츠타입ID */

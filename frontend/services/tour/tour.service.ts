@@ -1,4 +1,5 @@
 import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
+import { TourLayerMode } from '@/components/ui/tour/TourIntroductionController';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import {
 	TourAdditionalUnionType,
@@ -7,11 +8,14 @@ import {
 	TourFestivalItem,
 	TourImageItem,
 	TourIntroductionUnionType,
+	TourIntroductionUnionTypeResponse,
 	TourResponseItem,
 	TourSearchItem,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
+import { switchCaseMach } from '@/utils/switch-case-mach';
 import { axiosAPI } from 'api/axios';
+import { Union } from 'types';
 
 export const TourService = {
 	async getTourAreaCodes(areaCode?: string) {
@@ -204,14 +208,52 @@ export const TourService = {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}) {
+	}): Promise<TourIntroductionUnionType> {
 		const url = `tours/${contentId}/introduction?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}`;
 
-		const { data } = await axiosAPI.get<
-			BasicPaginationResponse<TourIntroductionUnionType>
-		>(url);
+		const { data } = await axiosAPI.get<TourIntroductionUnionType>(url);
 
-		return data;
+		const kind = switchCaseMach<string, Union<typeof TourLayerMode>>(
+			contentTypeId,
+		)
+			.on(
+				x => x === '12',
+				() => 'tourist',
+			)
+			.on(
+				x => x === '14',
+				() => 'cultural',
+			)
+			.on(
+				x => x === '15',
+				() => 'festival',
+			)
+			.on(
+				x => x === '25',
+				() => 'tourCourse',
+			)
+			.on(
+				x => x === '28',
+				() => 'leports',
+			)
+			.on(
+				x => x === '32',
+				() => 'accomodation',
+			)
+			.on(
+				x => x === '38',
+				() => 'shopping',
+			)
+			.on(
+				x => x === '39',
+				() => 'restaurant',
+			)
+			.otherwise(() => 'tourist');
+
+		return {
+			...data,
+			kind,
+		};
 	},
 
 	/**

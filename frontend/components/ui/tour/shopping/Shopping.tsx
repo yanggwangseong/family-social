@@ -4,15 +4,13 @@ import { isAdditionalCommon, isShopping } from '@/utils/type-guard';
 import React, { FC } from 'react';
 
 // 쇼핑 (38)
-const TourShopping: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
+const TourShopping: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 	const { data } = useTourAdditionalExplanation();
 
 	return (
 		<>
-			{list.map(
-				(item, index) =>
-					isShopping(item) && <div key={index}>{item.contenttypeid}</div>,
-			)}
+			{isShopping(list) &&
+				list.list.map((item, index) => <div key={index}>{item.fairday}</div>)}
 
 			{data &&
 				data.length > 0 &&

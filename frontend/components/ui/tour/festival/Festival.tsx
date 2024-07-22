@@ -5,15 +5,15 @@ import { isAdditionalCommon, isFestival } from '@/utils/type-guard';
 import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
 
 // 축제공연행사 (15)
-const TourFestival: FC<{ list: TourIntroductionUnionType[] }> = ({ list }) => {
+const TourFestival: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 	const { data } = useTourAdditionalExplanation();
 
 	return (
 		<>
-			{list.map(
-				(item, index) =>
-					isFestival(item) && <div key={index}>{item.contenttypeid}</div>,
-			)}
+			{isFestival(list) &&
+				list.list.map((item, index) => (
+					<div key={index}>{item.bookingplace}</div>
+				))}
 
 			{data &&
 				data.length > 0 &&

@@ -12,53 +12,54 @@ import {
 	TourIntroductionTourCourse,
 	TourIntroductionTourist,
 	TourIntroductionUnionType,
+	TourIntroductionUnionTypeResponse,
 } from '@/shared/interfaces/tour.interface';
 
 export const isTourist = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionTourist => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionTourist> => {
 	return data.kind === 'tourist';
 };
 
 export const isCultural = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionCultural => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionCultural> => {
 	return data.kind === 'cultural';
 };
 
 export const isFestival = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionFestival => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionFestival> => {
 	return data.kind === 'festival';
 };
 
 export const isTourCourse = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionTourCourse => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionTourCourse> => {
 	return data.kind === 'tourCourse';
 };
 
 export const isLeports = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionLeports => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionLeports> => {
 	return data.kind === 'leports';
 };
 
 export const isAccomodation = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionAccomodation => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionAccomodation> => {
 	return data.kind === 'accomodation';
 };
 
 export const isShopping = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionShopping => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionShopping> => {
 	return data.kind === 'shopping';
 };
 
 export const isRestaurant = (
 	data: TourIntroductionUnionType,
-): data is TourIntroductionRestaurant => {
+): data is TourIntroductionUnionTypeResponse<TourIntroductionRestaurant> => {
 	return data.kind === 'restaurant';
 };
 

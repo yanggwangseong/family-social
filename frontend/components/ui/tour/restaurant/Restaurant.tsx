@@ -5,16 +5,14 @@ import React, { FC } from 'react';
 
 // 음식점 (39)
 const TourRestaurant: FC<{
-	list: TourIntroductionUnionType[];
+	list: TourIntroductionUnionType;
 }> = ({ list }) => {
 	const { data } = useTourAdditionalExplanation();
 
 	return (
 		<>
-			{list.map(
-				(item, index) =>
-					isRestaurant(item) && <div key={index}>{item.contenttypeid}</div>,
-			)}
+			{isRestaurant(list) &&
+				list.list.map((item, index) => <div key={index}>{item.firstmenu}</div>)}
 
 			{data &&
 				data.length > 0 &&
