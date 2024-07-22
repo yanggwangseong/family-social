@@ -17,6 +17,7 @@ import { TourHttpTravelCourseResDto } from '@/models/dto/tour/res/introduction/t
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
 import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res.dto';
+import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
 
@@ -45,6 +46,7 @@ export const GetHttpTourApiFestivalSwagger = () => {
 			BadRequestErrorResponse['BadRequest-400-2'],
 			BadRequestErrorResponse['BadRequest-400-3'],
 			BadRequestErrorResponse['BadRequest-400-4'],
+			BadRequestErrorResponse['BadRequest-400-5'],
 		]),
 	);
 };
@@ -271,6 +273,32 @@ export const GetHttpTourApiListSwagger = () => {
 		ErrorResponse(HttpStatus.BAD_REQUEST, [
 			BadRequestErrorResponse['BadRequest-400-2'],
 			BadRequestErrorResponse['BadRequest-400-3'],
+		]),
+	);
+};
+
+export const GetHttpTourApiSearchSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '관광 아이템 키워드 검색',
+		}),
+
+		ApiOkResponse({
+			description: '키워드 검색을 통해 관광 아이템을 제공',
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(TourHttpSearchTourismResDto),
+				exampleTitle: '관광 아이템 키워드 검색',
+				exampleDescription: '키워드 검색을 통해 관광 아이템을 제공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-2'],
+			BadRequestErrorResponse['BadRequest-400-3'],
+			BadRequestErrorResponse['BadRequest-400-5'],
 		]),
 	);
 };

@@ -162,6 +162,11 @@ export class TourHttpCommonResDto {
 	})
 	mlevel!: string;
 
+	@ApiProperty({
+		nullable: false,
+		description: '전체 주소',
+		type: String,
+	})
 	@Expose({
 		toPlainOnly: true,
 	})

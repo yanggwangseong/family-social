@@ -51,6 +51,12 @@ export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;
 export const eventOptionsLists = ['BIRTHDAY'] as const;
 export const OrderOptions = ['ASC', 'DESC'] as const;
 
+export const TourAdditionalType = [
+	'additionalCommon',
+	'additionalTourCourse',
+	'additionalAccomodation',
+] as const;
+
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict

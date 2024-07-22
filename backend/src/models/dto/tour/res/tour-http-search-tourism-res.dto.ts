@@ -146,6 +146,7 @@ export class TourHttpSearchTourismResDto {
 
 	@ApiProperty({
 		nullable: false,
+		type: String,
 		description: '전체 주소',
 	})
 	@Expose({

@@ -24,8 +24,8 @@ import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse, TourListArgs } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
 import {
-	AdditionalInterSactionType,
-	TourCommonInformationInterSactionType,
+	AdditionalUnionType,
+	TourCommonInformationUnionType,
 } from '@/types/type';
 
 @Injectable()
@@ -170,7 +170,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}): Promise<BasicPaginationResponse<TourCommonInformationInterSactionType>> {
+	}): Promise<BasicPaginationResponse<TourCommonInformationUnionType>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/detailIntro1`,
 		);
@@ -185,10 +185,9 @@ export class ToursService {
 		 *  관광 타입에 따라 다른 response 값 return
 		 *
 		 */
-		const data =
-			await this.HttpServiceResponse<TourCommonInformationInterSactionType>(
-				newUrl.toString(),
-			);
+		const data = await this.HttpServiceResponse<TourCommonInformationUnionType>(
+			newUrl.toString(),
+		);
 
 		return {
 			list: data.items.item,
@@ -208,7 +207,7 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-	}): Promise<BasicPaginationResponse<AdditionalInterSactionType>> {
+	}): Promise<BasicPaginationResponse<AdditionalUnionType>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/detailInfo1`,
 		);
@@ -223,7 +222,7 @@ export class ToursService {
 		 *  관광 타입에 따라 다른 response 값 return
 		 *
 		 */
-		const data = await this.HttpServiceResponse<AdditionalInterSactionType>(
+		const data = await this.HttpServiceResponse<AdditionalUnionType>(
 			newUrl.toString(),
 		);
 

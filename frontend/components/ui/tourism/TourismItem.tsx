@@ -15,7 +15,7 @@ import { useTourismDetailLayerModal } from '@/hooks/useTourismDetailLayerModal';
 import { motion } from 'framer-motion';
 import { itemVariants } from '@/constants/animation.constant';
 
-const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
+const TourismItem: FC<TourismItemProps> = ({ tourItem }) => {
 	const router = useRouter();
 	const query = router.query as {
 		menu: 'TOURCONTENTTYPE' | 'FESTIVAL' | 'TOURSEARCH';
@@ -29,7 +29,7 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 	const [isAddTourism, setIsAddTourism] = useState<string>('');
 
 	const { handleTourismDetailLayerModal } = useTourismDetailLayerModal(
-		tour.title,
+		tourItem.title,
 	);
 
 	const handleChagePeriods = (tour: {
@@ -79,13 +79,13 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 			setIsAddTourism(''); // 기본 default값으로 비우고 이후에 속하는 contentId만 담기
 			isPeriods.map(item =>
 				item.tourisms?.map(v => {
-					if (v.contentId === tour.contentid) {
+					if (v.contentId === tourItem.contentid) {
 						setIsAddTourism(v.contentId);
 					}
 				}),
 			);
 		}
-	}, [isPeriods, isSelectedPeriod, tour.contentid]);
+	}, [isPeriods, isSelectedPeriod, tourItem.contentid]);
 
 	return (
 		<motion.div variants={itemVariants} className={styles.container}>
@@ -93,31 +93,34 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 				<div
 					className={styles.tour_img_title_container}
 					onClick={() =>
-						handleTourismDetailLayerModal(tour.contentid, tour.contenttypeid)
+						handleTourismDetailLayerModal(
+							tourItem.contentid,
+							tourItem.contenttypeid,
+						)
 					}
 				>
 					<div className={styles.img_container}>
-						<Image fill src={tour.firstimage} alt="img"></Image>
+						<Image fill src={tourItem.firstimage} alt="img"></Image>
 					</div>
 					<div className={styles.tour_description_container}>
-						<div className={styles.tour_title}>{tour.title}</div>
+						<div className={styles.tour_title}>{tourItem.title}</div>
 						<div className={styles.tour_addr_container}>
 							<div className={styles.tour_content_type_name}>
 								{ContentTypeName['12']}
 							</div>
-							<div className={styles.tour_addr}>{tour.addr1}</div>
+							<div className={styles.tour_addr}>{tourItem.addr1}</div>
 						</div>
 						{/* heart와 별점 */}
 						<HeartAndStar></HeartAndStar>
 					</div>
 				</div>
 				<div className={styles.tour_right_btn_container}>
-					{isAddTourism && isAddTourism === tour.contentid ? (
+					{isAddTourism && isAddTourism === tourItem.contentid ? (
 						<div
 							className={cn(styles.btn_container, {
-								[styles.active]: isAddTourism === tour.contentid,
+								[styles.active]: isAddTourism === tourItem.contentid,
 							})}
-							onClick={() => handleDeleteTourism(tour.contentid)}
+							onClick={() => handleDeleteTourism(tourItem.contentid)}
 						>
 							<AiOutlineCheck size={24} color="#0a0a0a" />
 						</div>
@@ -127,10 +130,10 @@ const TourismItem: FC<TourismItemProps> = ({ tour, onChangePeriods }) => {
 								size={24}
 								onClick={() =>
 									handleChagePeriods({
-										contentId: tour.contentid,
+										contentId: tourItem.contentid,
 										stayTime: '02:00',
-										tourismImage: tour.firstimage,
-										title: tour.title,
+										tourismImage: tourItem.firstimage,
+										title: tourItem.title,
 									})
 								}
 							/>

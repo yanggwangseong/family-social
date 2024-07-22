@@ -16,12 +16,6 @@ const ServiceCategory: FC = () => {
 		serviceCategoriesAtom,
 	);
 
-	const [isServiceCategoriesState, setIsServiceCategoriesState] = useState({
-		firstCategory: '',
-		secondCategory: '',
-		thirdCategory: '',
-	});
-
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 
 	// 대분류 서비스 코드
@@ -120,7 +114,7 @@ const ServiceCategory: FC = () => {
 					<div className={styles.service_category_container}>
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>대분류</div>
-							{serviceCategoryData.items.item.map((item, index) => (
+							{serviceCategoryData.list.map((item, index) => (
 								<div
 									className={cn(styles.service_category_item, {
 										[styles.active]:
@@ -137,7 +131,7 @@ const ServiceCategory: FC = () => {
 						</div>
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>중분류</div>
-							{secondServiceCategoryData?.items.item.map((item, index) => (
+							{secondServiceCategoryData?.list.map((item, index) => (
 								<div
 									className={cn(styles.service_category_item, {
 										[styles.active]:
@@ -154,7 +148,7 @@ const ServiceCategory: FC = () => {
 						</div>
 						<div className={styles.service_category_item_wrap}>
 							<div className={styles.service_category_header}>소분류</div>
-							{thirdServiceCategoryData?.items.item.map((item, index) => (
+							{thirdServiceCategoryData?.list.map((item, index) => (
 								<div
 									className={cn(styles.service_category_item, {
 										[styles.active]:
