@@ -18,6 +18,7 @@ import { QueryRunner } from 'typeorm';
 
 import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorator';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
@@ -55,6 +56,7 @@ import { IsMineGroupEventGaurd } from '@/common/guards/Is-mine-group-event.guard
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
@@ -73,8 +75,14 @@ import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dt
 import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
 import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
+import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+import {
+	ReturnBasicPaginationType,
+	withBasicPaginationResponse,
+} from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
+import { ScheduleItemResDto } from '@/models/dto/schedule/res/schedule-item-res.dto';
 import { GroupEventEntity } from '@/models/entities/group-event.entity';
 
 import { GroupsService } from './groups.service';
@@ -457,6 +465,8 @@ export class GroupsController {
 	 */
 	@GetOneScheduleSwagger()
 	@UseGuards(GroupMemberShipGuard)
+	@UseInterceptors(ResponseDtoInterceptor<ScheduleItemResDto>)
+	@IsResponseDtoDecorator<ScheduleItemResDto>(ScheduleItemResDto)
 	@Get('/:groupId/schedules/:scheduleId')
 	async getOneScheduleById(
 		@Param(
@@ -615,8 +625,14 @@ export class GroupsController {
 	 */
 	@GetGroupEventsSwagger()
 	@UseGuards(GroupMemberShipGuard)
-	@UseInterceptors(PaginationInterceptor<GroupEventEntity>)
+	@UseInterceptors(
+		ResponseDtoInterceptor<
+			ReturnBasicPaginationType<typeof GroupEventItemResDto>
+		>,
+		PaginationInterceptor<GroupEventEntity>,
+	)
 	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(GroupEventItemResDto))
 	@Get('/:groupId/group-events')
 	async getGroupEvents(
 		@Param(
@@ -637,12 +653,15 @@ export class GroupsController {
 	/**
 	 * @summary 특정 그룹의 그룹 이벤트 가져오기
 	 *
+	 *
 	 * @tag groups
 	 * @param groupEventId 그룹 이벤트 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns void
 	 */
 	@GetGroupEventByGroupEventIdSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GroupEventItemResDto>)
+	@IsResponseDtoDecorator<GroupEventItemResDto>(GroupEventItemResDto)
 	@UseGuards(GroupMemberShipGuard, IsMineGroupEventGaurd)
 	@Get('/:groupId/group-events/:groupEventId')
 	async getGroupEventByGroupEventId(
@@ -652,7 +671,9 @@ export class GroupsController {
 		)
 		groupEventId: string,
 	) {
-		return await this.groupEventsService.findOneGroupEvent(groupEventId);
+		const event = await this.groupEventsService.findOneGroupEvent(groupEventId);
+
+		return event;
 	}
 
 	/**

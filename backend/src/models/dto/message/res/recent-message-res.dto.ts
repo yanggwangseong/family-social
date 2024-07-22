@@ -11,6 +11,7 @@ export class RecentMessageResDto extends PickType(MessageEntity, [
 ] as const) {
 	@ApiProperty({
 		nullable: false,
+		description: '최신 메세지의 멤버 이름',
 	})
 	memberName!: string;
 }

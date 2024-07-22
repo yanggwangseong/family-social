@@ -11,6 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { QueryRunner } from 'typeorm';
 
+import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	GetMemberChatsSwagger,
@@ -20,10 +21,13 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
+import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
+import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
+import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-list-res.dto';
 
 import { ChatsService } from './chats.service';
 
@@ -43,6 +47,8 @@ export class ChatsController {
 	 * @returns 채팅방 리스트
 	 */
 	@GetMemberChatsSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GetChatListResDto>)
+	@IsResponseDtoDecorator<GetChatListResDto>(GetChatListResDto)
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);
@@ -76,6 +82,8 @@ export class ChatsController {
 	 * @returns 메세지 리스트
 	 */
 	@GetMessagesByChatIdSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GetMessagesListResDto>)
+	@IsResponseDtoDecorator<GetMessagesListResDto>(GetMessagesListResDto)
 	@Get('/:chatId/messages')
 	async getMessagesByChatId(
 		@Param(

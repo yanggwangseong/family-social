@@ -26,7 +26,9 @@ export type roleType = 'main' | 'user';
 @Index(['memberId'])
 @Index(['groupId'])
 export class FamEntity extends DefaultEntity {
-	@ApiProperty()
+	@ApiProperty({
+		description: '역할',
+	})
 	@Column({
 		type: 'varchar',
 		length: 30,
@@ -35,7 +37,9 @@ export class FamEntity extends DefaultEntity {
 	})
 	role!: roleType;
 
-	@ApiProperty()
+	@ApiProperty({
+		description: '초대 수락 여부',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

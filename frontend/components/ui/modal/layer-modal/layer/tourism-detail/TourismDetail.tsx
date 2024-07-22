@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './TourismDetail.module.scss';
 import { TourService } from '@/services/tour/tour.service';
 import { useQuery } from 'react-query';
@@ -9,21 +9,21 @@ import {
 	ContentTypeId,
 	ContentTypeName,
 } from '@/constants/content-type.constant';
-import { Union } from 'types';
+import { LayerMode, Union } from 'types';
 import HeartAndStar from '@/components/ui/heart-and-star/HeartAndStar';
 import ImagesGallary from './images-gallary/ImagesGallary';
 import {
 	IoInformationCircle,
 	IoLocationSharp,
-	IoCall,
-	IoTimeSharp,
 	IoChevronDownOutline,
 	IoChevronUp,
 } from 'react-icons/io5';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import TourIntroductionController from '@/components/ui/tour/TourIntroductionController';
 
 const TourismDetail: FC = () => {
 	const [isDescription, setIsDescription] = useState<boolean>(false);
+
 	const isContentIdTypeId = useRecoilValue(tourDetailAtom);
 
 	const { data, isLoading } = useQuery(
@@ -33,6 +33,17 @@ const TourismDetail: FC = () => {
 				isContentIdTypeId.contentId,
 				isContentIdTypeId.contentTypeId,
 			),
+	);
+
+	const { data: IntroductionData, isLoading: IntroductionLoading } = useQuery(
+		['tour-introduction', isContentIdTypeId.contentId],
+		async () =>
+			await TourService.getIntroductionByContentTypeId({
+				contentId: isContentIdTypeId.contentId,
+				contentTypeId: isContentIdTypeId.contentTypeId,
+				pageNo: '1',
+				numOfRows: '10',
+			}),
 	);
 
 	const handleDescriptionToggle = () => {
@@ -58,7 +69,10 @@ const TourismDetail: FC = () => {
 				) : (
 					data && (
 						<div className="flex flex-col gap-4">
-							<ImagesGallary images={data.items.image.item}></ImagesGallary>
+							<ImagesGallary
+								contentIdTypeId={isContentIdTypeId}
+							></ImagesGallary>
+
 							<div className={styles.intro_container}>
 								<div className="flex gap-2">
 									<div className="flex">
@@ -72,7 +86,7 @@ const TourismDetail: FC = () => {
 								{isDescription ? (
 									<div className="flex-1 flex ">
 										<div className="text-sm text-customDark font-normal flex-1 overflow-y-auto max-h-16">
-											{data.items.item[0].overview}
+											{data.list[0].overview}
 										</div>
 										<div
 											className="cursor-pointer"
@@ -87,7 +101,7 @@ const TourismDetail: FC = () => {
 										onClick={handleDescriptionToggle}
 									>
 										<div className="text-ellipsis whitespace-nowrap overflow-hidden text-sm text-customDark font-normal">
-											{data.items.item[0].overview}
+											{data.list[0].overview}
 										</div>
 										<div>
 											<IoChevronDownOutline size={18} color="#0a0a0a" />
@@ -105,34 +119,16 @@ const TourismDetail: FC = () => {
 									</div>
 								</div>
 								<div className="text-sm text-customDark font-normal">
-									{`(${data.items.item[0].zipcode})${data.items.item[0].addr1}${data.items.item[0].addr2}`}
+									{data.list[0].fullAddr}
 								</div>
 							</div>
-							<div className={styles.phone_number_container}>
-								<div className="flex gap-2">
-									<div className="flex items-center">
-										<IoCall size={18} color="#0a0a0a" />
-									</div>
-									<div className="text-sm text-customDark font-normal">
-										전화번호:
-									</div>
-								</div>
-								<div className="text-sm text-customDark font-normal">
-									{`${data.items.introduction.item[0].infocenter ?? ''}`}
-								</div>
-							</div>
-							<div className={styles.store_time_container}>
-								<div className="flex gap-2">
-									<div className="flex items-center">
-										<IoTimeSharp size={18} color="#0a0a0a" />
-									</div>
-									<div className="text-sm text-customDark font-normal">
-										영업시간:
-									</div>
-								</div>
-								<div className="text-sm text-customDark font-normal">
-									{`${data.items.introduction.item[0].usetime ?? ''}`}
-								</div>
+							<div className="overflow-y-auto h-[10vh]">
+								{IntroductionData && IntroductionData.list.length > 0 && (
+									<TourIntroductionController
+										status={IntroductionData.kind}
+										list={IntroductionData}
+									/>
+								)}
 							</div>
 						</div>
 					)

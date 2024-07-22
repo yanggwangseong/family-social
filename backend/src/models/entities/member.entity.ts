@@ -38,7 +38,9 @@ import { ScheduleEntity } from './schedule.entity';
 @Index(['updatedAt'])
 export class MemberEntity extends DefaultEntity {
 	@Column({ type: 'varchar', length: 30, nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '멤버 이름',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -49,7 +51,9 @@ export class MemberEntity extends DefaultEntity {
 	username!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '이메일',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -85,7 +89,9 @@ export class MemberEntity extends DefaultEntity {
 	phoneNumber!: string;
 
 	@Column({ type: 'varchar', length: 60, nullable: true })
-	@ApiProperty()
+	@ApiProperty({
+		description: '이메일 인증 코드',
+	})
 	@IsOptional()
 	@IsString({
 		message: stringValidationMessage,
@@ -104,7 +110,9 @@ export class MemberEntity extends DefaultEntity {
 	 * @maxLength 2048
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
-	@ApiProperty()
+	@ApiProperty({
+		description: '프로필 이미지',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

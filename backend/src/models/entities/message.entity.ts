@@ -16,7 +16,9 @@ import { MemberEntity } from './member.entity';
 @Index(['chatId'])
 export class MessageEntity extends DefaultEntity {
 	@Column({ type: 'uuid', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '메세지에 해당하는 채팅방 아이디',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -24,7 +26,9 @@ export class MessageEntity extends DefaultEntity {
 	public readonly chatId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '메세지에 작성자 아이디',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -33,6 +37,7 @@ export class MessageEntity extends DefaultEntity {
 
 	@ApiProperty({
 		nullable: false,
+		description: '메세지 내용',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,

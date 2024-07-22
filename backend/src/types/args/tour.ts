@@ -1,5 +1,6 @@
 import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-req.dto';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
+import { TourListQueryReqDto } from '@/models/dto/tour/req/tour-list-query-req.dto';
 
 export interface IUpdateTourArgs extends ICreateTourArgs {
 	scheduleId: string;
@@ -29,3 +30,28 @@ export interface ICreateTourismArgs {
 	title: string;
 	position: number;
 }
+
+export interface TourHttpResponse<T> {
+	response: {
+		header: TourHttpHeader;
+		body: TourHttpBody<T>;
+	};
+}
+
+export interface TourHttpHeader {
+	resultMsg: string;
+	resultCode: string;
+}
+
+export interface TourHttpBody<T> {
+	numOfRows: number;
+	pageNo: number;
+	totalCount: number;
+	items: TourHttpItem<T>;
+}
+
+export interface TourHttpItem<T> {
+	item: T[];
+}
+
+export interface TourListArgs extends TourListQueryReqDto {}

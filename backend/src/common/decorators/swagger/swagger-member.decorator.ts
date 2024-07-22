@@ -1,26 +1,18 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
-	ApiConflictResponse,
 	ApiCreatedResponse,
-	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
-	ApiUnauthorizedResponse,
-	ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
-import {
-	ERROR_PASSWORD_MISMATCH,
-	ERROR_EMAIL_NOT_FOUND,
-	ERROR_USER_NOT_FOUND,
-	ERROR_USER_ALREADY_EXISTS,
-	ERROR_EMAIL_VERIFY_CODE_EXISTS,
-	ERROR_AUTHORIZATION_MEMBER,
-} from '@/constants/business-error';
+import { MemberErrorResponse } from '@/constants/swagger-error-response';
 import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberSearchResDto } from '@/models/dto/member/res/member-search-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
+
+import { ErrorResponse } from './error-response.decorator';
+import { SuccessResponse } from './sucess-response.decorator';
 
 export const LoginMemberSwagger = () => {
 	return applyDecorators(
@@ -30,12 +22,11 @@ export const LoginMemberSwagger = () => {
 		ApiOkResponse({
 			description: '멤버 로그인 성공',
 		}),
-		ApiUnauthorizedResponse({
-			description: ERROR_PASSWORD_MISMATCH,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_EMAIL_NOT_FOUND,
-		}),
+
+		ErrorResponse(HttpStatus.UNAUTHORIZED, [
+			MemberErrorResponse['Member-401-1'],
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-2']]),
 	);
 };
 
@@ -44,16 +35,17 @@ export const CreateMemberSwagger = () => {
 		ApiOperation({
 			summary: '멤버 생성',
 		}),
-		ApiCreatedResponse({
-			description: '멤버 생성 성공',
-			type: MemberProfileImageResDto,
-		}),
-		ApiConflictResponse({
-			description: ERROR_USER_ALREADY_EXISTS,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_USER_NOT_FOUND,
-		}),
+
+		SuccessResponse(HttpStatus.CREATED, [
+			{
+				model: MemberProfileImageResDto,
+				exampleTitle: '멤버 생성',
+				exampleDescription: '멤버 생성 성공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.CONFLICT, [MemberErrorResponse['Member-409-1']]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-1']]),
 	);
 };
 
@@ -76,9 +68,9 @@ export const UpdateMemberProfileSwagger = () => {
 		ApiCreatedResponse({
 			description: '멤버 프로필 수정 성공',
 		}),
-		ApiUnauthorizedResponse({
-			description: ERROR_AUTHORIZATION_MEMBER,
-		}),
+		ErrorResponse(HttpStatus.UNAUTHORIZED, [
+			MemberErrorResponse['Member-401-2'],
+		]),
 	);
 };
 
@@ -87,16 +79,19 @@ export const VerifyEmailSwagger = () => {
 		ApiOperation({
 			summary: '이메일 인증코드 검증',
 		}),
-		ApiOkResponse({
-			description: '이메일 인증 성공',
-			type: VerifyEmailResDto,
-		}),
-		ApiUnprocessableEntityResponse({
-			description: ERROR_EMAIL_VERIFY_CODE_EXISTS,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_EMAIL_NOT_FOUND,
-		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: VerifyEmailResDto,
+				exampleTitle: '이메일 인증',
+				exampleDescription: '이메일 인증 성공',
+			},
+		]),
+		ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, [
+			MemberErrorResponse['Member-422-1'],
+		]),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-2']]),
 	);
 };
 
@@ -131,13 +126,16 @@ export const GetMemberByMemberIdSwagger = () => {
 		ApiOperation({
 			summary: '특정 멤버 유저 아이디로 조회',
 		}),
-		ApiCreatedResponse({
-			description: '특정 멤버 유저 아이디로 조회 성공',
-			type: MemberProfileImageResDto,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_USER_NOT_FOUND,
-		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: MemberProfileImageResDto,
+				exampleTitle: '멤버 아이디 조회',
+				exampleDescription: '특정 멤버 유저 아이디로 조회 성공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-1']]),
 	);
 };
 
@@ -146,12 +144,14 @@ export const GetMemberByEmailSwagger = () => {
 		ApiOperation({
 			summary: '특정 멤버 유저 이메일로 조회',
 		}),
-		ApiCreatedResponse({
-			description: '특정 멤버 유저 이메일로 조회 성공',
-			type: MemberAccountResDto,
-		}),
-		ApiNotFoundResponse({
-			description: ERROR_USER_NOT_FOUND,
-		}),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: MemberAccountResDto,
+				exampleTitle: '멤버 이메일 조회',
+				exampleDescription: '특정 멤버 유저 이메일로 조회 성공',
+			},
+		]),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-1']]),
 	);
 };

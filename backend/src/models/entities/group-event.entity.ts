@@ -39,6 +39,7 @@ export class GroupEventEntity extends DefaultEntity {
 	})
 	@ApiProperty({
 		enum: EventType,
+		description: '이벤트 타입',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -47,7 +48,9 @@ export class GroupEventEntity extends DefaultEntity {
 	public readonly eventType!: Union<typeof EventType>;
 
 	@PrimaryColumn('uuid')
-	@ApiProperty()
+	@ApiProperty({
+		description: '해당 이벤트 그룹 아이디',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -55,7 +58,9 @@ export class GroupEventEntity extends DefaultEntity {
 	public readonly eventGroupId!: string;
 
 	@Column({ type: 'uuid', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '해당 이벤트 생성 멤버 아이디',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -70,7 +75,9 @@ export class GroupEventEntity extends DefaultEntity {
 	 * @maxLength 2048
 	 */
 	@Column('varchar', { length: 2048, nullable: true })
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({
+		description: '이벤트 커버 이미지',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -81,7 +88,9 @@ export class GroupEventEntity extends DefaultEntity {
 	eventCoverImage!: string;
 
 	@Column({ type: 'varchar', length: 100, nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		description: '이벤트 이름',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -94,6 +103,7 @@ export class GroupEventEntity extends DefaultEntity {
 	@Column({ type: 'text', nullable: true })
 	@ApiPropertyOptional({
 		nullable: true,
+		description: '이벤트 설명',
 	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
@@ -104,14 +114,20 @@ export class GroupEventEntity extends DefaultEntity {
 	eventDescription!: string;
 
 	@Column({ type: 'date', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		type: String,
+		description: '이벤트 시작일자',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
 	eventStartDate!: Date;
 
 	@Column({ type: 'time', nullable: false })
-	@ApiProperty()
+	@ApiProperty({
+		type: String,
+		description: '이벤트 시작시간',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -119,7 +135,10 @@ export class GroupEventEntity extends DefaultEntity {
 
 	@Column({ type: 'date', nullable: true })
 	@IsOptional()
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({
+		type: String,
+		description: '이벤트 종료일자',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
@@ -127,7 +146,10 @@ export class GroupEventEntity extends DefaultEntity {
 
 	@Column({ type: 'time', nullable: true })
 	@IsOptional()
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({
+		type: String,
+		description: '이벤트 종료시간',
+	})
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})

@@ -7,20 +7,27 @@ import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { useMutation } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
-import { scheduleIdAtom } from '@/atoms/scheduleIdAtom';
+import {
+	ScheduleIdAtomDefaultValue,
+	scheduleIdAtom,
+} from '@/atoms/scheduleIdAtom';
 
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const ScheduleDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
 	const [IsScheduleId, setIsScheduleId] = useRecoilState(scheduleIdAtom);
 
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
+
 	const { mutate: deleteScheduleSync } = useMutation(
 		['delete-schedule'],
 		() =>
 			ScheduleService.deleteSchedule(
-				IsScheduleId,
-				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+				IsScheduleId.scheduleId,
+				IsScheduleId.groupId,
 			),
 		{
 			onMutate: variable => {
@@ -28,13 +35,18 @@ const ScheduleDeleteConfirm: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success(
-					'성공',
-					`해당 여행일정을 삭제 하였습니다.`,
-					'확인',
+
+				handleSuccessLayerModal(
+					{
+						modalTitle: '여행 일정 삭제 성공',
+						layer: LayerMode.successLayerModal,
+						lottieFile: 'deleteAnimation',
+						message: '해당 여행일정을 삭제 하였습니다',
+					},
 					() => {
-						setIsScheduleId('');
-						setIsShowing(false);
+						setIsScheduleId({
+							...ScheduleIdAtomDefaultValue,
+						});
 					},
 				);
 			},

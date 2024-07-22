@@ -57,7 +57,7 @@ const AreaCode: FC = () => {
 						<div className={styles.area_code_main_item_wrap}>
 							<div className={styles.area_code_header}>시/도</div>
 							<div className={styles.area_code_lst_container}>
-								{data.items.item.map((item, index) => (
+								{data.list.map((item, index) => (
 									<div key={index} className={styles.area_code_item_container}>
 										<div
 											className={cn(styles.area_code_item, {
@@ -74,7 +74,7 @@ const AreaCode: FC = () => {
 						<div className={styles.area_code_sub_item_wrap}>
 							<div className={styles.area_code_header}>시/군/구</div>
 							<div className={styles.area_code_lst_container}>
-								{areaCodeData?.items.item.map((item, index) => (
+								{areaCodeData?.list.map((item, index) => (
 									<div key={index} className={styles.area_code_item_container}>
 										<div
 											className={cn(styles.area_code_item, {

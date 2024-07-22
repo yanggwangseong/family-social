@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 import { CommentGetListsResDto } from '../../comments/res/comment-get-lists-res.dto';
 import { MediaResDto } from '../../media/res/media-res.dto';
@@ -7,46 +8,55 @@ import { MentionResDto } from '../../mention/res/mention-res.dto';
 export class FeedResDto {
 	@ApiProperty({
 		nullable: false,
+		description: '피드 아이디',
 	})
 	feedId!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드 내용',
 	})
 	contents!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드 공개/비공개',
 	})
 	isPublic!: boolean;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드의 그룹 아이디',
 	})
 	groupId!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드의 그룹 이름',
 	})
 	groupName!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드 작성 멤버 아이디',
 	})
 	memberId!: string;
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드 작성 멤버 이름',
 	})
 	username!: string;
 
 	@ApiProperty({
 		nullable: true,
+		description: '피드 내가 좋아요 여/부',
 	})
 	myLike?: boolean;
 
 	@ApiProperty({
 		nullable: true,
+		description: '피드 좋아요 갯수',
 	})
 	sumLike?: number;
 
@@ -60,6 +70,7 @@ export class FeedResDto {
 		nullable: true,
 		type: [CommentGetListsResDto],
 	})
+	@Type(() => CommentGetListsResDto)
 	comments?: CommentGetListsResDto[];
 
 	@ApiPropertyOptional({

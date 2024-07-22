@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, HttpStatus } from '@nestjs/common';
 import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -9,15 +9,24 @@ import { ERROR_CHAT_NOT_FOUND } from '@/constants/business-error';
 import { GetChatListResDto } from '@/models/dto/chat/res/get-chat-list-res.dto';
 import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-list-res.dto';
 
+import { SuccessResponse } from './sucess-response.decorator';
+
 export const GetMemberChatsSwagger = () => {
 	return applyDecorators(
 		ApiOperation({
 			summary: '유저가 속한 모든 채팅방 가져오기',
 		}),
-		ApiOkResponse({
-			description: '유저가 속한 모든 채팅방 가져오기',
-			type: GetChatListResDto,
-		}),
+		// ApiOkResponse({
+		// 	description: '유저가 속한 모든 채팅방 가져오기',
+		// 	type: GetChatListResDto,
+		// }),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: GetChatListResDto,
+				exampleTitle: '채팅방 리스트 가져오기',
+				exampleDescription: '유저가 속한 모든 채팅방 가져오기',
+			},
+		]),
 	);
 };
 

@@ -8,6 +8,9 @@
 
 ## (이런 고민을 했어요)
 
+- [NestJS Swaager 사용시 직관적이고 구체적인 응답 문서화 하기](https://threeyears.tistory.com/555)
+- [NestJS ResponseDto 적극 활용하기](https://threeyears.tistory.com/553)
+- [외부 api사용시 class-transformer의 클래스 인스턴스화 하기](https://threeyears.tistory.com/560)
 - Nestjs class-validator `ValidateNested` 데코레이터 n개의 중첩객체 validation 방법 [링크](https://threeyears.tistory.com/513)
 - Nestjs class-validator global Validation-pipe 사용시 에러 메세지 커스텀하기
 - cookie-option에서 `secure:true` 사용시 safari 브라우저에서 localhost에 cookie 저장이 안되는 문제 [링크](https://threeyears.tistory.com/517)
@@ -15,3 +18,4 @@
 - pagination 기능을 위한 pagination module 생성시 발생하는 결합도를 낮추기 위한 Interceptor를 이용한 AOP 구현 [링크](https://threeyears.tistory.com/518)
 - NestJS에서 repository의 insert메서드로 유동적으로 데이터 생성하기 [링크](https://threeyears.tistory.com/526)
 - NestJS Response Dto에 generic을 swagger ApiProperty 데코레이터에 사용하기 [링크](https://threeyears.tistory.com/525)
+- TypeOrm과 js-joda를 이용한 Date타입 대신 LocalDateTime 타입 사용하기 [링크](https://threeyears.tistory.com/549)

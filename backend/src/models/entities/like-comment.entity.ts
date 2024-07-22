@@ -1,23 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import {
-	CreateDateColumn,
-	Entity,
-	Index,
-	JoinColumn,
-	ManyToOne,
-	PrimaryColumn,
-} from 'typeorm';
+import { Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 
 import { CommentEntity } from './comment.entity';
+import { CreatedAtEntity } from './common/created-at.entity';
 import { MemberEntity } from './member.entity';
 
 @Entity({ name: 'fam_like_comment' })
 @Index(['createdAt'])
-export class LikeCommentEntity {
+export class LikeCommentEntity extends CreatedAtEntity {
 	@PrimaryColumn('uuid')
 	@ApiProperty({
 		nullable: false,
@@ -45,12 +39,4 @@ export class LikeCommentEntity {
 	@ManyToOne(() => CommentEntity, (cm) => cm.LikedByComments)
 	@JoinColumn({ name: 'commentId', referencedColumnName: 'id' })
 	comment!: CommentEntity;
-
-	@ApiProperty()
-	@CreateDateColumn({
-		type: 'timestamp',
-		precision: 3,
-		default: () => 'CURRENT_TIMESTAMP',
-	})
-	createdAt!: Date;
 }

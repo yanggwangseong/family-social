@@ -67,7 +67,7 @@ export class MemberChatRepository extends Repository<MemberChatEntity> {
 					return {
 						targetMemberId: value.memberId,
 						chatId: value.chat.id,
-						chatCreateAt: value.chat.createdAt.toISOString(),
+						chatCreateAt: value.chat.createdAt,
 					};
 				});
 			});
