@@ -1,0 +1,46 @@
+.tourist_container {
+	@apply flex flex-col gap-4;
+
+	.tourist_top_container {
+		@apply flex gap-2;
+
+		.title {
+			@apply text-sm text-customDark font-normal;
+		}
+
+		.btn_container {
+			@apply cursor-pointer ml-auto;
+		}
+	}
+
+	.tourist_introduction_container {
+		@apply flex flex-col gap-4;
+	}
+}
+
+.tourist_additional_container {
+	@apply flex flex-col gap-4 mt-4;
+
+	.title_container {
+		@apply flex gap-2;
+
+		.title {
+			@apply text-sm text-customDark font-normal;
+		}
+		.btn_container {
+			@apply cursor-pointer ml-auto;
+		}
+	}
+}
+
+.item_wrap {
+	@apply flex;
+
+	.item_title {
+		@apply flex-[1] text-sm font-medium;
+	}
+
+	.item_value {
+		@apply flex-[1] text-customGray text-sm;
+	}
+}

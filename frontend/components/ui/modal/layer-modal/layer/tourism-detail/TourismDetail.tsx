@@ -72,6 +72,7 @@ const TourismDetail: FC = () => {
 							<ImagesGallary
 								contentIdTypeId={isContentIdTypeId}
 							></ImagesGallary>
+
 							<div className={styles.intro_container}>
 								<div className="flex gap-2">
 									<div className="flex">
@@ -121,39 +122,14 @@ const TourismDetail: FC = () => {
 									{data.list[0].fullAddr}
 								</div>
 							</div>
-
-							{IntroductionData && IntroductionData.list.length > 0 && (
-								<TourIntroductionController
-									status={IntroductionData.kind}
-									list={IntroductionData}
-								/>
-							)}
-							{/* <div className={styles.phone_number_container}>
-								<div className="flex gap-2">
-									<div className="flex items-center">
-										<IoCall size={18} color="#0a0a0a" />
-									</div>
-									<div className="text-sm text-customDark font-normal">
-										전화번호:
-									</div>
-								</div>
-								<div className="text-sm text-customDark font-normal">
-									{`${data.items.introduction.item[0].infocenter ?? ''}`}
-								</div>
-							</div> */}
-							{/* <div className={styles.store_time_container}>
-								<div className="flex gap-2">
-									<div className="flex items-center">
-										<IoTimeSharp size={18} color="#0a0a0a" />
-									</div>
-									<div className="text-sm text-customDark font-normal">
-										영업시간:
-									</div>
-								</div>
-								<div className="text-sm text-customDark font-normal">
-									{`${data.items.introduction.item[0].usetime ?? ''}`}
-								</div>
-							</div> */}
+							<div className="overflow-y-auto h-[10vh]">
+								{IntroductionData && IntroductionData.list.length > 0 && (
+									<TourIntroductionController
+										status={IntroductionData.kind}
+										list={IntroductionData}
+									/>
+								)}
+							</div>
 						</div>
 					)
 				)}
