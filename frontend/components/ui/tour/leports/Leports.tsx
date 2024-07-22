@@ -1,6 +1,6 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isLeports } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import AdditionalCommon from '../additional-common/AdditionalCommon';
 import styles from './Leports.module.scss';
 import {
@@ -34,8 +34,8 @@ const TourLeports: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
-								<>
-									<div className={styles.introduction_container} key={index}>
+								<Fragment key={index}>
+									<div className={styles.introduction_container}>
 										<div className={styles.item_wrap}>
 											<div className={styles.item_title}>체험가능연령</div>
 											<div className={styles.item_value}>
@@ -65,7 +65,7 @@ const TourLeports: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 											</div>
 										</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

@@ -1,6 +1,6 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isTourCourse } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import {
 	IoChevronDownOutline,
 	IoChevronUp,
@@ -34,8 +34,8 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
-								<>
-									<div className={styles.introduction_container} key={index}>
+								<Fragment key={index}>
+									<div className={styles.introduction_container}>
 										<div className={styles.item_wrap}>
 											<div className={styles.item_title}>코스 테마</div>
 											<div className={styles.item_value}>{item.theme}</div>
@@ -51,7 +51,7 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 											</div>
 										</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

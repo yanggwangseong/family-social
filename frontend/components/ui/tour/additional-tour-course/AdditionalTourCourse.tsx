@@ -1,7 +1,7 @@
 import { useToggleState } from '@/hooks/useToggleState';
 import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
 import { isAdditionalTourCourse } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import styles from './AdditionalTourCourse.module.scss';
 import {
 	IoChevronDownOutline,
@@ -34,8 +34,8 @@ const AdditionalTourCourse: FC = () => {
 					{isToggle && (
 						<>
 							{data.list.map((data, index) => (
-								<>
-									<div className={styles.item_wrap} key={index}>
+								<Fragment key={index}>
+									<div className={styles.item_wrap}>
 										<div className={styles.item_title}>코스명</div>
 										<div className={styles.item_value}>{data.subname}</div>
 									</div>
@@ -43,7 +43,7 @@ const AdditionalTourCourse: FC = () => {
 										<div className={styles.item_title}>코스 설명</div>
 										<div className={styles.item_value}>{data.subdetailalt}</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

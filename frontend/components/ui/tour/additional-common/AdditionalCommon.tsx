@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import styles from './AdditionalCommon.module.scss';
 import {
 	IoChevronDownOutline,
@@ -34,12 +34,12 @@ const AdditionalCommon: FC = () => {
 					{isToggle && (
 						<>
 							{data.list.map((data, index) => (
-								<>
+								<Fragment key={index}>
 									<div className={styles.item_wrap} key={index}>
 										<div className={styles.item_title}>{data.infoname}</div>
 										<div className={styles.item_value}>{data.infotext}</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

@@ -1,6 +1,6 @@
 import { useToggleState } from '@/hooks/useToggleState';
 import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import styles from './AdditionalAccomodation.module.scss';
 import { isAdditionalAccomodation } from '@/utils/type-guard';
 import {
@@ -34,8 +34,8 @@ const AdditionalAccomodation: FC = () => {
 					{isToggle && (
 						<>
 							{data.list.map((data, index) => (
-								<>
-									<div className={styles.item_wrap} key={index}>
+								<Fragment key={index}>
+									<div className={styles.item_wrap}>
 										<div className={styles.item_title}>TV 여부</div>
 										<div className={styles.item_value}>{data.roomtv}</div>
 									</div>
@@ -55,7 +55,7 @@ const AdditionalAccomodation: FC = () => {
 										<div className={styles.item_title}>인터넷여부</div>
 										<div className={styles.item_value}>{data.roominternet}</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

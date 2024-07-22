@@ -1,6 +1,6 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isCultural } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import AdditionalCommon from '../additional-common/AdditionalCommon';
 import styles from './Cultural.module.scss';
 import {
@@ -34,8 +34,8 @@ const TourCultural: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
-								<>
-									<div className={styles.introduction_container} key={index}>
+								<Fragment key={index}>
+									<div className={styles.introduction_container}>
 										<div className={styles.item_wrap}>
 											<div className={styles.item_title}>이용 요금</div>
 											<div className={styles.item_value}>{item.usefee}</div>
@@ -55,7 +55,7 @@ const TourCultural: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 											</div>
 										</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

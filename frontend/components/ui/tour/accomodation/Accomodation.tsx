@@ -1,7 +1,7 @@
 import { useToggleState } from '@/hooks/useToggleState';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isAccomodation } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import AdditionalAccomodation from '../additional-accomodation/AdditionalAccomodation';
 import styles from './Accomodation.module.scss';
 import {
@@ -36,8 +36,8 @@ const TourAccomodation: FC<{
 					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
-								<>
-									<div className={styles.introduction_container} key={index}>
+								<Fragment key={index}>
+									<div className={styles.introduction_container}>
 										<div className={styles.item_wrap}>
 											<div className={styles.item_title}>입실시간</div>
 											<div className={styles.item_value}>
@@ -73,7 +73,7 @@ const TourAccomodation: FC<{
 											</div>
 										</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}

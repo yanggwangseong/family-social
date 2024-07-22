@@ -1,6 +1,6 @@
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isRestaurant } from '@/utils/type-guard';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import {
 	IoChevronDownOutline,
 	IoChevronUp,
@@ -36,8 +36,8 @@ const TourRestaurant: FC<{
 					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
-								<>
-									<div className={styles.introduction_container} key={index}>
+								<Fragment key={index}>
+									<div className={styles.introduction_container}>
 										<div className={styles.item_wrap}>
 											<div className={styles.item_title}>대표메뉴</div>
 											<div className={styles.item_value}>{item.firstmenu}</div>
@@ -57,7 +57,7 @@ const TourRestaurant: FC<{
 											</div>
 										</div>
 									</div>
-								</>
+								</Fragment>
 							))}
 						</>
 					)}
