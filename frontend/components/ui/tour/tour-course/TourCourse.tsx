@@ -85,10 +85,8 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 										<div className={styles.item_value}>{data.subname}</div>
 									</div>
 									<div className={styles.item_wrap} key={index}>
-										<div className={styles.item_title}>코스개요</div>
-										<div className={styles.item_value}>
-											{data.subdetailoverview}
-										</div>
+										<div className={styles.item_title}>코스 설명</div>
+										<div className={styles.item_value}>{data.subdetailalt}</div>
 									</div>
 								</>
 							))}
