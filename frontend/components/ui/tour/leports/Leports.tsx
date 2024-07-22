@@ -1,4 +1,3 @@
-import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
 import { isLeports } from '@/utils/type-guard';
 import React, { FC } from 'react';
