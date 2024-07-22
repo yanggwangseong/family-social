@@ -1,7 +1,5 @@
-import { useIntroductionAndAdditional } from '@/hooks/useIntroductionAndAdditional';
-import { useTourAdditionalExplanation } from '@/hooks/useTourAdditionalExplanation';
 import { TourIntroductionUnionType } from '@/shared/interfaces/tour.interface';
-import { isAdditionalTourCourse, isTourCourse } from '@/utils/type-guard';
+import { isTourCourse } from '@/utils/type-guard';
 import React, { FC } from 'react';
 import {
 	IoChevronDownOutline,
@@ -9,13 +7,12 @@ import {
 	IoInformationCircle,
 } from 'react-icons/io5';
 import styles from './TourCourse.module.scss';
+import { useToggleState } from '@/hooks/useToggleState';
+import AdditionalTourCourse from '../additional-tour-course/AdditionalTourCourse';
 
 // 여행코스 (25)
 const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
-	const { data } = useTourAdditionalExplanation();
-
-	const { isIntroduction, setIsIntroduction, isAdditional, setIsAdditional } =
-		useIntroductionAndAdditional();
+	const { isToggle, setIsToggle } = useToggleState();
 
 	return (
 		<>
@@ -26,15 +23,15 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 							<IoInformationCircle size={18} color="#0a0a0a" />
 						</div>
 						<div className={styles.title}>소개 정보:</div>
-						<div className={styles.btn_container} onClick={setIsIntroduction}>
-							{isIntroduction ? (
+						<div className={styles.btn_container} onClick={setIsToggle}>
+							{isToggle ? (
 								<IoChevronUp size={18} color="#0a0a0a" />
 							) : (
 								<IoChevronDownOutline size={18} color="#0a0a0a" />
 							)}
 						</div>
 					</div>
-					{isIntroduction && (
+					{isToggle && (
 						<>
 							{list.list.map((item, index) => (
 								<>
@@ -61,39 +58,8 @@ const TourCourse: FC<{ list: TourIntroductionUnionType }> = ({ list }) => {
 				</div>
 			)}
 
-			{data && isAdditionalTourCourse(data) && data.list.length > 0 && (
-				<div className={styles.additional_container}>
-					<div className={styles.title_container}>
-						<div>
-							<IoInformationCircle size={18} color="#0a0a0a" />
-						</div>
-						<div className={styles.title}>추가 정보:</div>
-						<div className={styles.btn_container} onClick={setIsAdditional}>
-							{isAdditional ? (
-								<IoChevronUp size={18} color="#0a0a0a" />
-							) : (
-								<IoChevronDownOutline size={18} color="#0a0a0a" />
-							)}
-						</div>
-					</div>
-					{isAdditional && (
-						<>
-							{data.list.map((data, index) => (
-								<>
-									<div className={styles.item_wrap} key={index}>
-										<div className={styles.item_title}>코스명</div>
-										<div className={styles.item_value}>{data.subname}</div>
-									</div>
-									<div className={styles.item_wrap} key={index}>
-										<div className={styles.item_title}>코스 설명</div>
-										<div className={styles.item_value}>{data.subdetailalt}</div>
-									</div>
-								</>
-							))}
-						</>
-					)}
-				</div>
-			)}
+			{/* additional */}
+			<AdditionalTourCourse />
 		</>
 	);
 };
