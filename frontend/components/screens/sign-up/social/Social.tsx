@@ -98,7 +98,7 @@ const Social: FC = () => {
 						<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 							<div className={styles.contents_wrap}>
 								<div className={styles.signin__header_title}>
-									GOOGLE 계정을 이용한 회원가입
+									{`${data.socialType.toUpperCase()} 계정을 이용한 회원가입`}
 								</div>
 								<div className={styles.signin__header_subtitle}>
 									이메일과 비밀번호를 이용하여 로그인 할 수 있습니다.

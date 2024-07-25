@@ -1,6 +1,7 @@
 import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/EditProfile/edit-profile.interface';
 import {
 	MemberAccountResponse,
+	MemberByMemberIdResponse,
 	MembersBelongToGroupResponse,
 	MembersResponse,
 	SearchMemberResponse,
@@ -44,7 +45,7 @@ export const MemberService = {
 	},
 
 	async getMemberByMemberId(memberId: string) {
-		const { data } = await axiosAPI.get<MembersResponse>(
+		const { data } = await axiosAPI.get<MemberByMemberIdResponse>(
 			`/members/${memberId}`,
 		);
 		return data;
