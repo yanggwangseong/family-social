@@ -23,6 +23,7 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GoogleGuard } from '@/common/guards/google.guard';
+import { NaverGuard } from '@/common/guards/naver.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -32,7 +33,7 @@ import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto'
 import { MemberSocialCreateReqDto } from '@/models/dto/member/req/member-social-create-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
 import { ICreateSocialMemberArgs } from '@/types/args/member';
-import { GoogleOAuth2Request } from '@/types/request';
+import { GoogleOAuth2Request, NaverOAuth2Request } from '@/types/request';
 import { IRefreshTokenArgs } from '@/types/token';
 
 import { AuthService } from './auth.service';
@@ -123,6 +124,33 @@ export class AuthController {
 			);
 		}
 	}
+
+	/**
+	 * @summary Naver Oauth2 로그인 요청 들어오는 api
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@Get('/naver/sign-in')
+	@UseGuards(NaverGuard)
+	async naverOauth2Signin() {}
+
+	/**
+	 * @summary Naver Oauth2 검증된 후 콜백 api
+	 *
+	 * @tag auth
+	 * @param {NaverOAuth2Request} req - 검증된 유저 정보를 가지고 있는 객체
+	 * @param {Response} res
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
+	@Get('/naver/callback')
+	@UseGuards(NaverGuard)
+	async naverOauth2CallBack(
+		@Req() req: NaverOAuth2Request,
+		@Res({ passthrough: true }) res: Response,
+	) {}
 
 	/**
 	 * @summary Local User 로그인

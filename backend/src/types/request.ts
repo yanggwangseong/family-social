@@ -7,6 +7,16 @@ interface GoogleAuthenticateUser {
 	lastName: string;
 }
 
+interface NaverAuthenticateUser {
+	email: string;
+	photo: string;
+	username: string;
+}
+
 export interface GoogleOAuth2Request extends Request {
 	user: GoogleAuthenticateUser;
+}
+
+export interface NaverOAuth2Request extends Request {
+	user: NaverAuthenticateUser;
 }
