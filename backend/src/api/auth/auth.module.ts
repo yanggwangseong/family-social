@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccessTokenStrategy } from '@/common/strategies/accessToken.strategy';
 import { GoogleStrategy } from '@/common/strategies/google.strategy';
+import { KakaoStrategy } from '@/common/strategies/kakao.strategy';
 import { NaverStrategy } from '@/common/strategies/naver.strategy';
 import { RefreshTokenStrategy } from '@/common/strategies/refreshToken.strategy';
 import {
@@ -40,6 +41,7 @@ import { MembersModule } from '../members/members.module';
 		RefreshTokenStrategy,
 		GoogleStrategy,
 		NaverStrategy,
+		KakaoStrategy,
 	],
 	exports: [AuthService],
 })
