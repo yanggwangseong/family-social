@@ -150,7 +150,54 @@ export class AuthController {
 	async naverOauth2CallBack(
 		@Req() req: NaverOAuth2Request,
 		@Res({ passthrough: true }) res: Response,
-	) {}
+	) {
+		const { email, photo, username } = req.user;
+
+		const Exists = await this.membersService.memberExistsByEmail(email);
+
+		if (Exists) {
+			const { id, username, isFirstLogin } = Exists;
+
+			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
+			if (!isFirstLogin) {
+				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+			}
+
+			const [accessToken, refreshToken] =
+				await this.authService.signatureTokens(id, username);
+
+			await this.authService.setCurrentRefreshToken(id, refreshToken);
+
+			this.authService.ResponseTokenInCookie({
+				type: 'accessToken',
+				token: accessToken,
+				res,
+			});
+			this.authService.ResponseTokenInCookie({
+				type: 'refreshToken',
+				token: refreshToken,
+				res,
+			});
+
+			res.redirect(`http://localhost:3000/oauth2/redirect`);
+		} else {
+			const tmpDto: ICreateSocialMemberArgs = {
+				email,
+				username: username,
+				phoneNumber: '00000000000',
+				profileImage: photo,
+				socialType: 'naver',
+			};
+
+			const tmpMember = await this.authService.createMemberWithVerifyToken(
+				tmpDto,
+			);
+
+			res.redirect(
+				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+			);
+		}
+	}
 
 	/**
 	 * @summary Local User 로그인

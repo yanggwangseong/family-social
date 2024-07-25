@@ -10,7 +10,7 @@ export interface ICreateMemberArgs {
 
 export interface ICreateSocialMemberArgs extends ICreateMemberArgs {
 	profileImage: string;
-	socialType: 'google';
+	socialType: 'google' | 'naver';
 }
 
 export interface IVerifyEmailArgs extends Pick<ICreateMemberArgs, 'email'> {
