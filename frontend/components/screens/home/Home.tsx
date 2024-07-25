@@ -98,13 +98,13 @@ const Home: FC = () => {
 									></LoginButton>
 
 									<LoginButton
-										link="/"
+										link={`${API_URL}/auth/naver/sign-in`}
 										text="네이버 로그인"
 										imgUrn="/images/naver/naver_btn.png"
 									></LoginButton>
 
 									<LoginButton
-										link="/"
+										link={`${API_URL}/auth/kakao/sign-in`}
 										text="카카오 로그인"
 										imgUrn="/images/kakao/kakao_btn.png"
 									></LoginButton>

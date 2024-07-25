@@ -7,6 +7,7 @@ import {
 
 import { MemberErrorResponse } from '@/constants/swagger-error-response';
 import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
+import { MemberByIdResDto } from '@/models/dto/member/res/member-by-id-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MemberSearchResDto } from '@/models/dto/member/res/member-search-res.dto';
 import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto';
@@ -129,7 +130,7 @@ export const GetMemberByMemberIdSwagger = () => {
 
 		SuccessResponse(HttpStatus.OK, [
 			{
-				model: MemberProfileImageResDto,
+				model: MemberByIdResDto,
 				exampleTitle: '멤버 아이디 조회',
 				exampleDescription: '특정 멤버 유저 아이디로 조회 성공',
 			},
