@@ -7,10 +7,12 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import styles from './PeriodItem.module.scss';
 import TimePicker from '@/components/ui/time-picker/TimePicker';
 import { useForm } from 'react-hook-form';
+import { isAfter, isBefore } from 'date-fns';
+import { stringToTime } from '@/utils/string-to-time';
 
 const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
-	const [startTime, setStartTime] = useState(period.startTime || '10:00');
-	const [endTime, setEndTime] = useState(period.endTime || '22:00');
+	//const [startTime, setStartTime] = useState(period.startTime || '10:00');
+	//const [endTime, setEndTime] = useState(period.endTime || '22:00');
 	const date = FormatDateToString(period.period);
 
 	const {
@@ -24,25 +26,16 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 		setValue,
 	} = useForm({
 		mode: 'onChange',
+		defaultValues: {
+			startTime: stringToTime(period.startTime),
+			endTime: stringToTime(period.endTime),
+		},
 	});
 
-	const handleChangeTime = (e: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-
-		if (name === 'startTime') {
-			if (value >= endTime) {
-				e.currentTarget.blur();
-				Report.info(
-					`${TranslateDateFormat(date, 'MM/dd')} 시작시간`,
-					'종료 시간은 시작 시간 이후여야 합니다.',
-					'확인',
-				);
-				return;
-			}
-			setStartTime(value);
-		} else if (name === 'endTime') {
-			if (value <= startTime) {
-				e.currentTarget.blur();
+	const hanldeChangeTime = (name: 'startTime' | 'endTime', time: Date) => {
+		if (name === 'endTime') {
+			const startTime = getValues('startTime');
+			if (isBefore(time, startTime)) {
 				Report.info(
 					`${TranslateDateFormat(date, 'MM/dd')} 종료시간`,
 					'종료 시간은 시작 시간 이후여야 합니다.',
@@ -50,8 +43,19 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 				);
 				return;
 			}
-			setEndTime(value);
+		} else if (name === 'startTime') {
+			const endTime = getValues('endTime');
+			if (isAfter(time, endTime)) {
+				Report.info(
+					`${TranslateDateFormat(date, 'MM/dd')} 시작시간`,
+					'종료 시간은 시작 시간 이후여야 합니다.',
+					'확인',
+				);
+				return;
+			}
 		}
+
+		setValue(name, time);
 	};
 
 	return (
@@ -71,7 +75,11 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 						value={startTime}
 						onChange={handleChangeTime}
 					/> */}
-					<TimePicker control={control} name="testStartTime"></TimePicker>
+					<TimePicker
+						control={control}
+						name="startTime"
+						onChangeTime={hanldeChangeTime}
+					></TimePicker>
 				</td>
 			</tr>
 			<tr>
@@ -87,7 +95,11 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 						value={endTime}
 						onChange={handleChangeTime}
 					/> */}
-					<TimePicker control={control} name="testEndTime"></TimePicker>
+					<TimePicker
+						control={control}
+						name="endTime"
+						onChangeTime={hanldeChangeTime}
+					></TimePicker>
 				</td>
 			</tr>
 		</>

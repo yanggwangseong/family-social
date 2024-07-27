@@ -12,10 +12,11 @@ interface Props<T extends Record<string, any>> {
 		RegisterOptions<T, Path<T>>,
 		'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
 	>;
+	onChangeTime: (name: Path<T>, date: Date) => void;
 }
 
 const TimePicker = <T extends Record<string, any>>(props: Props<T>) => {
-	const { control, name, validationOptions } = props;
+	const { control, name, validationOptions, onChangeTime } = props;
 
 	const {
 		field,
@@ -27,6 +28,10 @@ const TimePicker = <T extends Record<string, any>>(props: Props<T>) => {
 		rules: { ...validationOptions },
 	});
 
+	const handleChangeTime = (date: Date) => {
+		onChangeTime(name, date);
+	};
+
 	return (
 		<DatePicker
 			className={styles.datePicker}
@@ -37,7 +42,7 @@ const TimePicker = <T extends Record<string, any>>(props: Props<T>) => {
 			timeCaption="Time"
 			dateFormat="HH:mm"
 			selected={field.value}
-			onChange={field.onChange}
+			onChange={handleChangeTime}
 			timeClassName={d => {
 				return styles.unselectedDay;
 			}}
