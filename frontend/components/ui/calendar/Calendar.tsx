@@ -1,17 +1,11 @@
 import React, { FC } from 'react';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
-import { addMonths, getMonth, getYear } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './Calendar.module.scss';
 import { getDateRange } from '@/utils/get-date-range';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { CgArrowLeft, CgArrowRight } from 'react-icons/cg';
-
-const YEARS = Array.from(
-	{ length: getYear(new Date()) + 1 - 2000 },
-	(_, i) => getYear(new Date()) - i,
-);
 
 interface DatePickerOptions {
 	selectsRange?: boolean;

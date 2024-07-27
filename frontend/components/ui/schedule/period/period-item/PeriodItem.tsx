@@ -5,11 +5,26 @@ import { TranslateDateFormat } from '@/utils/translate-date-format';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import React, { ChangeEvent, FC, useState } from 'react';
 import styles from './PeriodItem.module.scss';
+import TimePicker from '@/components/ui/time-picker/TimePicker';
+import { useForm } from 'react-hook-form';
 
 const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 	const [startTime, setStartTime] = useState(period.startTime || '10:00');
 	const [endTime, setEndTime] = useState(period.endTime || '22:00');
 	const date = FormatDateToString(period.period);
+
+	const {
+		register,
+		formState: { errors, isValid },
+		handleSubmit,
+		reset,
+		getValues,
+		watch,
+		control,
+		setValue,
+	} = useForm({
+		mode: 'onChange',
+	});
 
 	const handleChangeTime = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -49,24 +64,30 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 					{TranslateDateFormat(date, 'eee')}
 				</td>
 				<td className={`${styles.table_row} ${styles.no_boder}`} align="center">
-					<Field
+					{/* <Field
 						className="w-full bg-basic md:text-base text-sm"
 						type="time"
 						name="startTime"
 						value={startTime}
 						onChange={handleChangeTime}
-					/>
+					/> */}
+					<TimePicker control={control} name="testStartTime"></TimePicker>
 				</td>
 			</tr>
 			<tr>
 				<td className={styles.table_row} align="center">
-					<Field
+					{/* <Field
 						className="w-full bg-basic md:text-base text-sm"
 						type="time"
+						required={true}
 						name="endTime"
+						min="05:00"
+						max="00:00"
+						step="900"
 						value={endTime}
 						onChange={handleChangeTime}
-					/>
+					/> */}
+					<TimePicker control={control} name="testEndTime"></TimePicker>
 				</td>
 			</tr>
 		</>
