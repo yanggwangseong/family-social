@@ -16,11 +16,9 @@ import { TourService } from '@/services/tour/tour.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { motion } from 'framer-motion';
 import TourismItem from '@/components/ui/tourism/TourismItem';
-import { TourFestivalProps } from './tour-festival.interface';
-import { PeriodsType } from '@/atoms/periodAtom';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 
-const Festival: FC<TourFestivalProps> = ({ onChangePeriods }) => {
+const Festival: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -74,10 +72,6 @@ const Festival: FC<TourFestivalProps> = ({ onChangePeriods }) => {
 
 	const handleTourSearch = () => {
 		fetchNextPage();
-	};
-
-	const handleChangePeriods = (dates: PeriodsType[]) => {
-		onChangePeriods(dates);
 	};
 
 	useEffect(() => {

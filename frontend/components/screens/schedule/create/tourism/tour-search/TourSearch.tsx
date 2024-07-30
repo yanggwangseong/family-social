@@ -10,11 +10,9 @@ import { useInfiniteQuery } from 'react-query';
 import { TourService } from '@/services/tour/tour.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
-import { TourSearchProps } from './tour-search.interface';
-import { PeriodsType } from '@/atoms/periodAtom';
 import { motion } from 'framer-motion';
 
-const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
+const TourSearch: FC = () => {
 	const [isKeyword, setIsKeyword] = useState<string>('');
 
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
@@ -50,10 +48,6 @@ const TourSearch: FC<TourSearchProps> = ({ onChangePeriods }) => {
 
 	const handleTourSearch = () => {
 		fetchNextPage();
-	};
-
-	const handleChangePeriods = (dates: PeriodsType[]) => {
-		onChangePeriods(dates);
 	};
 
 	return (

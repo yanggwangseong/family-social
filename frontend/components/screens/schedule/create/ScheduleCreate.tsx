@@ -187,9 +187,7 @@ const ScheduleCreate: FC<{
 									endDate={endDate}
 								></SchedulePeriod>
 							)}
-							{isPage === 'tourismPage' && (
-								<Tourism onChangePeriods={handleChangePeriods}></Tourism>
-							)}
+							{isPage === 'tourismPage' && <Tourism></Tourism>}
 						</div>
 					</div>
 					{/* 오른쪽 사이드바 */}
