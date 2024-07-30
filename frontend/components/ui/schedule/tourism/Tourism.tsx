@@ -55,7 +55,9 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 							if (item.position === position) {
 								return {
 									...item,
-									stayTime: `${String(hour)}:${String(minute)}`,
+									stayTime: `${String(hour).padStart(2, '0')}:${String(
+										minute,
+									).padStart(2, '0')}`,
 								};
 							}
 							return item;
