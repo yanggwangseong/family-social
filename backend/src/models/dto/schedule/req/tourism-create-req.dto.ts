@@ -8,4 +8,5 @@ export class TourismCreateReqDto extends PickType(TourismEntity, [
 	'tourismImage',
 	'title',
 	'position',
+	'stayTimeWritable',
 ] as const) {}

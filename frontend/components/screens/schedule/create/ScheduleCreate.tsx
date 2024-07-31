@@ -135,6 +135,7 @@ const ScheduleCreate: FC<{
 						tourismImage: tourism.tourismImage,
 						title: tourism.title,
 						position: tourism.position,
+						stayTimeWritable: tourism.stayTimeWritable,
 					})),
 				}),
 			);

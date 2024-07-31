@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { isInValidationMessage } from '@/common/validation-message/is-in-validation-message';
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
@@ -46,6 +46,7 @@ export class TourCategoryQueryReqDto {
 		nullable: false,
 		description: '대분류 코드',
 	})
+	@IsOptional()
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -58,6 +59,7 @@ export class TourCategoryQueryReqDto {
 		nullable: false,
 		description: '중분류 코드',
 	})
+	@IsOptional()
 	@IsString({
 		message: stringValidationMessage,
 	})
@@ -70,6 +72,7 @@ export class TourCategoryQueryReqDto {
 		nullable: false,
 		description: '소분류 코드',
 	})
+	@IsOptional()
 	@IsString({
 		message: stringValidationMessage,
 	})

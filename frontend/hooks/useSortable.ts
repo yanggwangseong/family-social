@@ -14,8 +14,10 @@ import { useEffect, useState } from 'react';
  *   lists: T[],
  * }
  */
-export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
-	const [lists, setLists] = useState<T[]>(targetLists);
+export const useSortable = <T, U extends HTMLElement>(
+	lists: T[],
+	handleSetList: (grap: T, target: T, lists: T[]) => void,
+) => {
 	const [grab, setGrab] = useState<U | null>(null);
 
 	const handleDragOver = (e: React.DragEvent) => {
@@ -59,21 +61,20 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 
 		if (grab && grabPosition !== undefined) {
 			const updatedList = [...lists];
+
 			updatedList[grabPosition] = updatedList.splice(
 				targetPosition,
 				1,
 				updatedList[grabPosition],
 			)[0];
 
-			setLists(updatedList);
+			handleSetList(
+				updatedList[grabPosition],
+				updatedList[targetPosition],
+				updatedList,
+			);
 		}
 	};
-
-	useEffect(() => {
-		if (targetLists) {
-			setLists(targetLists);
-		}
-	}, [targetLists]);
 
 	return {
 		handleDragOver,
@@ -83,6 +84,5 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		handleDragLeave,
 		handleDrop,
 		lists,
-		setLists,
 	};
 };
