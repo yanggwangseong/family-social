@@ -26,23 +26,14 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 			return prev.map(value => {
 				if (value.period === isSelectedPeriod && value.tourisms) {
 					const updatedTourism = list.map(item => {
+						// grap의 position을 target의 position으로 변경
 						if (item.contentId === grap.contentId) {
-							// grap의 position을 target의 position으로 변경
-							return {
-								...item,
-								position: target.position,
-							};
-						}
-
-						if (item.contentId === target.contentId) {
+							return { ...item, position: target.position };
 							// target의 position을 grap의 position으로 변경
-							return {
-								...item,
-								position: grap.position,
-							};
+						} else if (item.contentId === target.contentId) {
+							return { ...item, position: grap.position };
 						}
-
-						return item; // 다른 항목은 변경하지 않음
+						return item;
 					});
 
 					return {
@@ -50,8 +41,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 						tourisms: updatedTourism,
 					};
 				}
-
-				return value; // period가 일치하지 않으면 그대로 반환
+				return value;
 			});
 		});
 	};
@@ -120,16 +110,16 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 		});
 	};
 
-	// const calculateTimeDifference = (startTime: Date, endTime: Date): number => {
-	// 	return differenceInMinutes(endTime, startTime);
-	// };
+	const calculateTimeDifference = (startTime: Date, endTime: Date): number => {
+		return differenceInMinutes(endTime, startTime);
+	};
 
-	// const calculateTime = (time: Date) => {
-	// 	const hours = getHours(time);
-	// 	const minutes = getMinutes(time);
+	const calculateTime = (time: Date) => {
+		const hours = getHours(time);
+		const minutes = getMinutes(time);
 
-	// 	return hours * 60 + minutes;
-	// };
+		return hours * 60 + minutes;
+	};
 
 	// useEffect(() => {
 	// 	console.log('tourList 변경시에 호출');
@@ -146,7 +136,6 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	// 					0,
 	// 				);
 
-	// 				console.log('***writableTime***=', writableTime);
 	// 				const totalTime = calculateTimeDifference(
 	// 					stringToTime(value.startTime),
 	// 					stringToTime(value.endTime),

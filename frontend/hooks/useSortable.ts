@@ -28,12 +28,10 @@ export const useSortable = <T, U extends HTMLElement>(
 		setGrab(e.currentTarget);
 		e.currentTarget.classList.add('grabbing');
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
 	};
 
 	const handleDragEnd = (e: React.DragEvent) => {
 		grab?.classList.remove('grabbing');
-		e.dataTransfer.dropEffect = 'move';
 		setGrab(null);
 	};
 
@@ -59,14 +57,12 @@ export const useSortable = <T, U extends HTMLElement>(
 		const grabPosition = Number(grab?.dataset.position);
 		const targetPosition = Number(e.currentTarget.dataset.position);
 
-		if (grab && grabPosition !== undefined) {
+		if (grab && grabPosition !== undefined && targetPosition !== undefined) {
 			const updatedList = [...lists];
-
-			updatedList[grabPosition] = updatedList.splice(
-				targetPosition,
-				1,
+			[updatedList[grabPosition], updatedList[targetPosition]] = [
+				updatedList[targetPosition],
 				updatedList[grabPosition],
-			)[0];
+			];
 
 			handleSetList(
 				updatedList[grabPosition],
