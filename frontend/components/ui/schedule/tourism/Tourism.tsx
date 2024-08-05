@@ -121,58 +121,68 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 		return hours * 60 + minutes;
 	};
 
-	// useEffect(() => {
-	// 	console.log('tourList 변경시에 호출');
+	useEffect(() => {
+		console.log('tourList 변경시에 호출');
 
-	// 	setIsPeriods(prev => {
-	// 		return prev.map(value => {
-	// 			let tourisms;
-	// 			if (value.period === isSelectedPeriod && value.tourisms) {
-	// 				const writableTime = value.tourisms.reduce(
-	// 					(prev, cur) =>
-	// 						cur.stayTimeWritable
-	// 							? 0
-	// 							: calculateTime(stringToTime(cur.stayTime)) + prev,
-	// 					0,
-	// 				);
+		setIsPeriods(prev => {
+			return prev.map(value => {
+				if (value.period !== isSelectedPeriod || !value.tourisms) {
+					return value;
+				}
 
-	// 				const totalTime = calculateTimeDifference(
-	// 					stringToTime(value.startTime),
-	// 					stringToTime(value.endTime),
-	// 				);
+				const writableTime = value.tourisms.reduce(
+					(prev, cur) =>
+						cur.stayTimeWritable
+							? 0
+							: calculateTime(stringToTime(cur.stayTime)) + prev,
+					0,
+				);
 
-	// 				const commonDivider = Math.floor(totalTime / value.tourisms.length);
+				console.log(writableTime);
 
-	// 				const remainder = totalTime % value.tourisms.length;
+				const totalTime = calculateTimeDifference(
+					stringToTime(value.startTime),
+					stringToTime(value.endTime),
+				);
 
-	// 				tourisms = value.tourisms.map((item, index) => {
-	// 					const stayTimeInMinutes =
-	// 						index === value.tourisms!.length - 1
-	// 							? commonDivider + remainder
-	// 							: commonDivider;
+				const commonDivider = Math.floor(totalTime / value.tourisms.length);
+				const remainder = totalTime % value.tourisms.length;
 
-	// 					const hours = Math.floor(stayTimeInMinutes / 60);
-	// 					const minutes = stayTimeInMinutes % 60;
-	// 					const stayTime = `${String(hours).padStart(2, '0')}:${String(
-	// 						minutes,
-	// 					).padStart(2, '0')}`;
+				const tourisms = value.tourisms.map((item, index) => {
+					const stayTimeInMinutes =
+						index === value.tourisms!.length - 1
+							? commonDivider + remainder
+							: commonDivider;
 
-	// 					item.stayTimeWritable; // false 일때
+					const hours = Math.floor(stayTimeInMinutes / 60);
+					const minutes = stayTimeInMinutes % 60;
+					const stayTime = `${String(hours).padStart(2, '0')}:${String(
+						minutes,
+					).padStart(2, '0')}`;
 
-	// 					return {
-	// 						...item,
-	// 						stayTime,
-	// 					};
-	// 				});
-	// 			}
+					// stayTimeWritable가 false일 때만 업데이트
+					if (!item.stayTimeWritable && item.stayTime !== stayTime) {
+						return {
+							...item,
+							stayTime,
+						};
+					}
 
-	// 			return {
-	// 				...value,
-	// 				tourisms: tourisms || value.tourisms,
-	// 			};
-	// 		});
-	// 	});
-	// }, [isSelectedPeriod, setIsPeriods, tourList]);
+					return item;
+				});
+
+				// 상태가 변경되지 않으면 원래 상태를 반환하여 업데이트 방지
+				if (JSON.stringify(value.tourisms) === JSON.stringify(tourisms)) {
+					return value;
+				}
+
+				return {
+					...value,
+					tourisms,
+				};
+			});
+		});
+	}, [isSelectedPeriod, setIsPeriods, tourList]);
 
 	return (
 		<div className={styles.wrap}>
