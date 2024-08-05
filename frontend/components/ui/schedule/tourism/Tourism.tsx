@@ -122,8 +122,6 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	};
 
 	useEffect(() => {
-		console.log('tourList 변경시에 호출');
-
 		setIsPeriods(prev => {
 			return prev.map(value => {
 				if (value.period !== isSelectedPeriod || !value.tourisms) {
@@ -133,20 +131,25 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 				const writableTime = value.tourisms.reduce(
 					(prev, cur) =>
 						cur.stayTimeWritable
-							? 0
-							: calculateTime(stringToTime(cur.stayTime)) + prev,
+							? prev + calculateTime(stringToTime(cur.stayTime))
+							: prev,
 					0,
 				);
 
-				console.log(writableTime);
-
-				const totalTime = calculateTimeDifference(
-					stringToTime(value.startTime),
-					stringToTime(value.endTime),
+				const unWritableTourism = value.tourisms.filter(
+					item => !item.stayTimeWritable,
 				);
 
-				const commonDivider = Math.floor(totalTime / value.tourisms.length);
-				const remainder = totalTime % value.tourisms.length;
+				if (unWritableTourism.length === 0) return value;
+
+				const totalTime =
+					calculateTimeDifference(
+						stringToTime(value.startTime),
+						stringToTime(value.endTime),
+					) - writableTime;
+
+				const commonDivider = Math.floor(totalTime / unWritableTourism.length);
+				const remainder = totalTime % unWritableTourism.length;
 
 				const tourisms = value.tourisms.map((item, index) => {
 					const stayTimeInMinutes =
