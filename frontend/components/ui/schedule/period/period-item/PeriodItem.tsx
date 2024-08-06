@@ -8,16 +8,10 @@ import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import styles from './PeriodItem.module.scss';
 import TimePicker from '@/components/ui/time-picker/TimePicker';
 import { useForm } from 'react-hook-form';
-import {
-	addMinutes,
-	differenceInMinutes,
-	format,
-	isAfter,
-	isBefore,
-	isEqual,
-} from 'date-fns';
+import { isAfter, isBefore, isEqual } from 'date-fns';
 import { stringToTime } from '@/utils/string-to-time';
 import { useRecoilState } from 'recoil';
+import { calculateTimeDifference } from '@/utils/calculate-time-defference';
 
 const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 	//const [startTime, setStartTime] = useState(period.startTime || '10:00');
@@ -43,10 +37,6 @@ const PeriodItem: FC<{ period: PeriodsType }> = ({ period }) => {
 			endTime: stringToTime(period.endTime),
 		},
 	});
-
-	const calculateTimeDifference = (startTime: Date, endTime: Date): number => {
-		return differenceInMinutes(endTime, startTime);
-	};
 
 	const hanldeChangeTime = (name: 'startTime' | 'endTime', time: Date) => {
 		if (name === 'endTime') {

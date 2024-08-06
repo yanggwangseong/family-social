@@ -1,9 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './Tourism.module.scss';
-import Image from 'next/image';
-import { ContentTypeName } from '@/constants/content-type.constant';
 import { ScheduleTourismProps } from './tourism.interface';
-import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
+import { TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useSortable } from '@/hooks/useSortable';
 import TourismCartItem from './tourism-cart-item/TourismCartItem';
 import { useRecoilState } from 'recoil';
@@ -11,6 +9,8 @@ import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { differenceInMinutes, getHours, getMinutes } from 'date-fns';
 import { stringToTime } from '@/utils/string-to-time';
 import { Report } from 'notiflix/build/notiflix-report-aio';
+import { calculateTimeDifference } from '@/utils/calculate-time-defference';
+import { calculateTime } from '@/utils/calculate-time';
 
 const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -128,17 +128,6 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 				};
 			});
 		});
-	};
-
-	const calculateTimeDifference = (startTime: Date, endTime: Date): number => {
-		return differenceInMinutes(endTime, startTime);
-	};
-
-	const calculateTime = (time: Date) => {
-		const hours = getHours(time);
-		const minutes = getMinutes(time);
-
-		return hours * 60 + minutes;
 	};
 
 	useEffect(() => {
