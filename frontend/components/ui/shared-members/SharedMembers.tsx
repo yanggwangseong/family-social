@@ -38,11 +38,10 @@ const SharedMembers: FC<SharedMembersProps> = ({
 						className={styles.profile_img}
 						fill
 						src={
-							sharedMembers.length > 0
-								? sharedMembers[0].member.profileImage
-								: '/images/banner/group-base.png'
+							sharedMembers[0].member.profileImage ??
+							'/images/profile/profile.png'
 						}
-						alt=""
+						alt="profile-img"
 					></Image>
 
 					{isHovering === 1 && (

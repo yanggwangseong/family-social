@@ -16,13 +16,12 @@ import { TourService } from '@/services/tour/tour.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import SelectBox from '@/components/ui/select/SelectBox';
-import { PeriodsType } from '@/atoms/periodAtom';
+
 import { useSelect } from '@/hooks/useSelect';
 import { orderSelectOptionsKeys } from '../tourism.interface';
 import { optionsLists } from '../tourism.constants';
-import { TourContentTypeProps } from './tour-content-type.interface';
 
-const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
+const TourContentType: FC = () => {
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
 		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
 
@@ -110,10 +109,6 @@ const TourContentType: FC<TourContentTypeProps> = ({ onChangePeriods }) => {
 
 	const handleTourSearch = () => {
 		fetchNextPage();
-	};
-
-	const handleChangePeriods = (dates: PeriodsType[]) => {
-		onChangePeriods(dates);
 	};
 
 	useEffect(() => {

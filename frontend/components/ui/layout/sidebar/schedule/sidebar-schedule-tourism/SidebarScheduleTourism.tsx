@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styles from './SidebarScheduleTourism.module.scss';
 import SchedulePeriodSelect from '@/components/ui/select/schedule/SchedulePeriodSelect';
-import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { PeriodsType, TourismType, periodAtom } from '@/atoms/periodAtom';
 import { useRecoilState } from 'recoil';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { getSumTime } from '@/utils/get-sum-time';

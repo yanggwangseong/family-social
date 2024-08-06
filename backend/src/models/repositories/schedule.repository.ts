@@ -117,6 +117,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 							tourismImage: true,
 							title: true,
 							position: true,
+							stayTimeWritable: true,
 						},
 					},
 					sharedMembers: {

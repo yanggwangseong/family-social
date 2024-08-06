@@ -32,6 +32,10 @@ const TourismItem: FC<TourismItemProps> = ({ tourItem }) => {
 		tourItem.title,
 	);
 
+	/**
+	 *
+	 * + 아이콘으로 장바구니 담을때
+	 */
 	const handleChagePeriods = (tour: {
 		contentId: string;
 		stayTime: string;
@@ -51,6 +55,7 @@ const TourismItem: FC<TourismItemProps> = ({ tourItem }) => {
 								tourismImage: tour.tourismImage,
 								title: tour.title,
 								position: item.tourisms ? item.tourisms.length : 0,
+								stayTimeWritable: false,
 							},
 						],
 					};

@@ -63,6 +63,7 @@ export interface TourismResponse {
 	tourismImage: string;
 	title: string;
 	position: number;
+	stayTimeWritable: boolean;
 }
 
 export interface UpdateScheduleNameRequestBody {
