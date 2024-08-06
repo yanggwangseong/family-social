@@ -54,6 +54,7 @@ const GroupDetail: FC = () => {
 		['group-feeds', groupId],
 		async ({ pageParam = 1 }) =>
 			await FeedService.getFeeds(pageParam, 'GROUPFEED', groupId),
+		'GROUPFEED',
 	);
 
 	const handleRefetch = (pageValue: number) => {

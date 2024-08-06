@@ -7,8 +7,9 @@ import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,
+	options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
 ) => {
-	const [observedPost, setObservedPost] = useState('');
+	const [observedPost, setObservedPost] = useState<string | null>(null);
 
 	const {
 		data,
@@ -60,6 +61,11 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 		}
 		return () => {};
 	}, [data, fetchNextPage, observedPost]);
+
+	// Reset the observed post when options change
+	useEffect(() => {
+		setObservedPost(null);
+	}, [options]);
 
 	return {
 		data,
