@@ -10,6 +10,7 @@ import { useRecoilState } from 'recoil';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { differenceInMinutes, getHours, getMinutes } from 'date-fns';
 import { stringToTime } from '@/utils/string-to-time';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 
 const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	const [isPeriods, setIsPeriods] = useRecoilState(periodAtom);
@@ -84,7 +85,7 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 	const handleCompleTime = (position: number, hour: number, minute: number) => {
 		setIsPeriods(prev => {
 			return prev.map(value => {
-				let tourisms;
+				let tourisms: TourismType[] | undefined;
 				if (value.period === isSelectedPeriod) {
 					tourisms =
 						value.tourisms &&
@@ -100,6 +101,25 @@ const ScheduleTourism: FC<ScheduleTourismProps> = ({ tourList }) => {
 							}
 							return item;
 						});
+
+					const totalTime = calculateTimeDifference(
+						stringToTime(value.startTime),
+						stringToTime(value.endTime),
+					);
+
+					const useStayTime = tourisms!.reduce(
+						(prev, cur) => prev + calculateTime(stringToTime(cur.stayTime)),
+						0,
+					);
+
+					if (useStayTime > totalTime) {
+						Report.info(
+							`총 시간`,
+							'머무르는 시간은 총시간을 초과 할 수 없습니다',
+							'확인',
+						);
+						return value;
+					}
 				}
 
 				return {
