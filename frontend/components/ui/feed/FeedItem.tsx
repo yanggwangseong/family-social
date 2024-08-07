@@ -18,6 +18,7 @@ import {
 	PiChatDuotone,
 	PiChatTextDuotone,
 	PiHeartDuotone,
+	PiLockKeyDuotone,
 } from 'react-icons/pi';
 import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '../swiper/SwiperContainer';
@@ -90,21 +91,29 @@ const FeedItem: FC<FeedItemProps> = ({
 							username={feed.username}
 							groupName={feed.groupName}
 						></GroupAndMemberProfile>
-						<motion.div
-							className={styles.feed_card_setting_container}
-							initial={false}
-							animate={isOpenSetting ? 'open' : 'closed'}
-							ref={settingModalWrapperRef}
-						>
-							<BsThreeDots size={24} onClick={handleCloseSettingModal} />
 
-							<ToggleModal
-								list={FeedSettingMenu}
-								onClose={handleCloseSettingModal}
-								direction="right"
-								feedId={feed.feedId}
-							/>
-						</motion.div>
+						<div className={styles.feed_right_top_container}>
+							{!feed.isPublic && (
+								<div>
+									<PiLockKeyDuotone size={24} />
+								</div>
+							)}
+							<motion.div
+								className={styles.feed_card_setting_container}
+								initial={false}
+								animate={isOpenSetting ? 'open' : 'closed'}
+								ref={settingModalWrapperRef}
+							>
+								<BsThreeDots size={24} onClick={handleCloseSettingModal} />
+
+								<ToggleModal
+									list={FeedSettingMenu}
+									onClose={handleCloseSettingModal}
+									direction="right"
+									feedId={feed.feedId}
+								/>
+							</motion.div>
+						</div>
 					</div>
 					<div className={styles.feed_description_container}>
 						{

@@ -4,8 +4,12 @@
 	.feed_card_top_container {
 		@apply p-4 flex;
 
-		.feed_card_setting_container {
-			@apply ml-auto cursor-pointer relative;
+		.feed_right_top_container {
+			@apply ml-auto flex gap-10;
+
+			.feed_card_setting_container {
+				@apply cursor-pointer relative;
+			}
 		}
 	}
 
