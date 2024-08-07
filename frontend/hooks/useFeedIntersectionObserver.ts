@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useInfiniteSelect } from './useInfiniteSelect';
-import { FeedService } from '@/services/feed/feed.service';
 import { QueryFunction } from 'react-query';
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 
@@ -24,6 +23,7 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
 			if (!element) return;
+
 			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
 			const observer = new IntersectionObserver(
 				// entries는 IntersectionObserverEntry 인스턴스의 배열

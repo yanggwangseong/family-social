@@ -79,36 +79,6 @@ const Feed: FC = () => {
 								<TabMenu list={feedTabMenus} options={query.options} />
 							</div>
 
-							{/* {query.options === 'MYFEED' ? (
-								<MyFeed handleIsLottie={handleIsLottie} />
-							) : (
-								<div className={styles.feed_container}>
-									{isLoading && <Skeleton />}
-									{data?.pages.map((page, pageIndex) => (
-										<AnimatePresence key={pageIndex}>
-											{page.list.map((feed, index) => (
-												<FeedItem
-													key={feed.feedId}
-													feed={feed}
-													index={index}
-													onLike={handleUpdateLike}
-													page={page.page}
-													onRefetch={handleRefetch}
-													onLikeComment={handleLikeComment}
-												/>
-											))}
-										</AnimatePresence>
-									))}
-
-									{isRefetching && (
-										<React.Fragment>
-											<Skeleton />
-											<Skeleton />
-											<Skeleton />
-										</React.Fragment>
-									)}
-								</div>
-							)} */}
 							<div className={styles.feed_container}>
 								{isLoading && <Skeleton />}
 								{data?.pages.map((page, pageIndex) => (

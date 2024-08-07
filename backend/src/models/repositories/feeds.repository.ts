@@ -107,6 +107,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
 			.orderBy('a.updatedAt', 'DESC')
+			.addOrderBy('a.createdAt', 'DESC')
 			.offset(skip)
 			.limit(take);
 

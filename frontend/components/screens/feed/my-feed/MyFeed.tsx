@@ -47,6 +47,7 @@ const MyFeed: FC<{
 		['my-feeds'],
 		async ({ pageParam = 1 }) =>
 			await FeedService.getFeeds(pageParam, 'MYFEED'),
+		'MYFEED',
 	);
 
 	const handleRefetch = (pageValue: number) => {
