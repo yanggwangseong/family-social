@@ -23,6 +23,7 @@ import { MemberService } from '@/services/member/member.service';
 import axios from 'axios';
 import { MediaService } from '@/services/media/media.service';
 import FeedContainer from '../feed/feed-container/FeedContainer';
+import ScheduleContainer from '../schedule/schedule-container/ScheduleContainer';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -189,7 +190,13 @@ const Account: FC<{ email: string }> = ({ email }) => {
 											></TabMenu>
 										</div>
 										{query.options === 'MYFEED' && (
-											<FeedContainer handleIsLottie={handleIsLottie} />
+											<FeedContainer
+												options={query.options}
+												handleIsLottie={handleIsLottie}
+											/>
+										)}
+										{query.options === 'MYSCHEDULE' && (
+											<ScheduleContainer options={query.options} />
 										)}
 									</div>
 								</div>
