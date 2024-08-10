@@ -30,6 +30,8 @@ import { MediaService } from '@/services/media/media.service';
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
 
+	const query = router.query as { options: 'MYFEED' | 'MYSCHEDULE' };
+
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
@@ -91,8 +93,6 @@ const Account: FC<{ email: string }> = ({ email }) => {
 	const handleClick = () => {
 		hiddenFileInput.current!.click();
 	};
-
-	console.log(router);
 
 	return (
 		<Format title={'account'}>
@@ -178,17 +178,17 @@ const Account: FC<{ email: string }> = ({ email }) => {
 											<TabMenu
 												list={[
 													makeTabMenuItem({
-														link: `/accounts/${email}`,
+														link: `/accounts/${email}?options=MYFEED`,
 														options: 'MYFEED',
-														title: 'MYFEED',
+														title: '작성 피드',
 													}),
 													makeTabMenuItem({
-														link: `/accounts/${email}`,
-														options: 'TOP',
-														title: 'TOP',
+														link: `/accounts/${email}?options=MYSCHEDULE`,
+														options: 'MYSCHEDULE',
+														title: '작성 일정',
 													}),
 												]}
-												options={'MYFEED'}
+												options={query.options}
 											></TabMenu>
 										</div>
 										<MyFeed handleIsLottie={handleIsLottie} />

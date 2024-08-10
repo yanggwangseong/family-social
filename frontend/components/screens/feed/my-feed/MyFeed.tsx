@@ -12,29 +12,6 @@ import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver
 const MyFeed: FC<{
 	handleIsLottie: (status: boolean) => void;
 }> = ({ handleIsLottie }) => {
-	// const {
-	// 	data,
-	// 	fetchNextPage,
-	// 	hasNextPage,
-	// 	isLoading,
-	// 	isError,
-	// 	isRefetching,
-	// 	refetch,
-	// } = useInfiniteQuery(
-	// 	['my-feeds'],
-	// 	async ({ pageParam = 1 }) =>
-	// 		await FeedService.getFeeds(pageParam, 'MYFEED'),
-	// 	{
-	// 		getNextPageParam: (lastPage, allPosts) => {
-	// 			return lastPage.page !== allPosts[0].totalPage
-	// 				? lastPage.page + 1
-	// 				: undefined;
-	// 		},
-	// 	},
-	// );
-
-	// const [observedPost, setObservedPost] = useState('');
-
 	const {
 		data,
 		fetchNextPage,
