@@ -102,3 +102,7 @@ export const groupTabMenus: TabeMenuListType[] = [
 		title: '이벤트',
 	},
 ];
+
+export const makeTabMenuItem = (item: TabeMenuListType) => {
+	return item;
+};

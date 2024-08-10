@@ -6,7 +6,10 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import Image from 'next/image';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
-import { accountTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import {
+	accountTabMenus,
+	makeTabMenuItem,
+} from '@/components/ui/tab-menu/tab-menu.constants';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
@@ -88,6 +91,8 @@ const Account: FC<{ email: string }> = ({ email }) => {
 	const handleClick = () => {
 		hiddenFileInput.current!.click();
 	};
+
+	console.log(router);
 
 	return (
 		<Format title={'account'}>
@@ -171,7 +176,18 @@ const Account: FC<{ email: string }> = ({ email }) => {
 									<div className={styles.tab_menu_container}>
 										<div className={styles.tab_menu_wrap}>
 											<TabMenu
-												list={accountTabMenus}
+												list={[
+													makeTabMenuItem({
+														link: `/accounts/${email}`,
+														options: 'MYFEED',
+														title: 'MYFEED',
+													}),
+													makeTabMenuItem({
+														link: `/accounts/${email}`,
+														options: 'TOP',
+														title: 'TOP',
+													}),
+												]}
 												options={'MYFEED'}
 											></TabMenu>
 										</div>
