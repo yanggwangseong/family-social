@@ -8,13 +8,12 @@ import { useRouter } from 'next/router';
 import { FeedService } from '@/services/feed/feed.service';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
+import { FeedContainerProps } from './feed-container.interface';
 
-const FeedContainer: FC<{ handleIsLottie: (status: boolean) => void }> = ({
+const FeedContainer: FC<FeedContainerProps> = ({
+	options = 'TOP',
 	handleIsLottie,
 }) => {
-	const router = useRouter();
-	const query = router.query as { options: 'TOP' | 'MYFEED' | 'ALL' };
-
 	const {
 		data,
 		fetchNextPage,
@@ -24,10 +23,9 @@ const FeedContainer: FC<{ handleIsLottie: (status: boolean) => void }> = ({
 		isRefetching,
 		refetch,
 	} = useFeedIntersectionObserver(
-		['feeds', query.options ?? 'TOP'],
-		async ({ pageParam = 1 }) =>
-			await FeedService.getFeeds(pageParam, query.options),
-		query.options,
+		['feeds', options],
+		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam, options),
+		options,
 	);
 
 	const handleRefetch = (pageValue: number) => {

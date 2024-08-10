@@ -49,7 +49,10 @@ const Feed: FC = () => {
 								<TabMenu list={feedTabMenus} options={query.options} />
 							</div>
 
-							<FeedContainer handleIsLottie={handleIsLottie} />
+							<FeedContainer
+								handleIsLottie={handleIsLottie}
+								options={query.options}
+							/>
 						</div>
 						<div
 							className={styles.mobile_create_feed_btn_container}

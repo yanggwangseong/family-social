@@ -28,13 +28,6 @@
 					}
 					@apply mx-4 flex;
 				}
-
-				.schedule_container {
-					@screen md {
-						@apply mx-0;
-					}
-					@apply pt-6 pb-8 flex flex-col gap-10 mx-4;
-				}
 			}
 
 			// mobile-create-schedule-btn
