@@ -5,6 +5,7 @@ import { NotificationItemProps } from './notification-item.interface';
 import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
 import { useRouter } from 'next/router';
+import { MENTION_MATCH_PATTERN } from '@/constants/mention-match-pattern.const';
 
 const NotificationItem: FC<NotificationItemProps> = ({
 	notificationItem,
@@ -15,6 +16,21 @@ const NotificationItem: FC<NotificationItemProps> = ({
 
 	const handleFeedDetailPage = (feedId: string) => {
 		router.push(`/feeds/${feedId}`);
+	};
+
+	const existsMentionDescription = (text: string) => {
+		const parts = text.split(MENTION_MATCH_PATTERN);
+		return parts.map((part, index) => {
+			if (index % 3 === 1) {
+				const name = parts[index];
+
+				return <div key={index}>{`@${name}`}</div>;
+			} else if (index % 3 === 2) {
+				return '';
+			} else {
+				return part;
+			}
+		});
 	};
 
 	return (
@@ -45,7 +61,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
 				</div>
 				{isDescription && (
 					<div className={styles.notification_description}>
-						{notificationItem.notificationDescription}
+						{existsMentionDescription(notificationItem.notificationDescription)}
 					</div>
 				)}
 				<div className={styles.notification_date}>

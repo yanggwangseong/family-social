@@ -16,7 +16,7 @@ const NotificationContainer: FC = () => {
 	const query = router.query as { options: Union<typeof isReadOptions> };
 
 	const { data, isLoading } = useQuery(
-		['get-notifications', isReadOptions[0]],
+		['get-notifications', query.options],
 		async () => await NotificationService.getNotifications('ALL'),
 	);
 
