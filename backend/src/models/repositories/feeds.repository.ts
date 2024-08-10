@@ -7,6 +7,7 @@ import { IGetFeedDeatilArgs, IUpdateFeedArgs } from '@/types/args/feed';
 import { OverrideInsertFeild } from '@/types/repository';
 
 import { FeedByIdResDto } from '../dto/feed/res/feed-by-id-res.dto';
+import { CommentEntity } from '../entities/comment.entity';
 import { LikeFeedEntity } from '../entities/like-feed.entity';
 
 @Injectable()
@@ -104,6 +105,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 					.from(LikeFeedEntity, 'lf')
 					.where('lf.feedId = a.id');
 			}, 'sumLike')
+			.addSelect((qb) => {
+				return qb
+					.select('count(cm.feedId)')
+					.from(CommentEntity, 'cm')
+					.where('cm.feedId = a.id');
+			}, 'sumComment')
 			.innerJoin('a.group', 'group')
 			.innerJoin('a.member', 'member')
 			.orderBy('a.updatedAt', 'DESC')
@@ -111,14 +118,28 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.offset(skip)
 			.limit(take);
 
-		if (options === 'MYFEED') {
-			query.where('a.memberId = :memberId', { memberId });
-		} else {
-			query.where('a.isPublic = :isPublic', { isPublic: true });
-		}
+		// 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED'
+		// TOP public 상태 , 좋아요 갯수 순과 댓글 갯수 순 , 최신순 , 생성날짜 순
+		// MYFEED memberId가 자신인지와 최신순, 생성 날짜 순
+		// ALL 자신의 게시글이면 private라도 가져오기, 이외에는 Public글만 가져오기, 최신순, 생성날짜 순
+		// GROUPFEED 그룹 아이디에 해당하는 게시글만 가져오기, 자신의 게시글이면 private라도 가져오기, 이외에는 Public글만 가져오기, 최신순, 생성날짜 순
 
-		if (options === 'GROUPFEED') {
-			query.andWhere('a.groupId = :groupId', { groupId });
+		if (options === 'TOP') {
+			query.where('a.isPublic = :isPublic', { isPublic: true });
+		} else if (options === 'MYFEED') {
+			query.where('a.memberId = :memberId', { memberId });
+		} else if (options === 'ALL') {
+			query.where('a.isPublic = :isPublic', { isPublic: true });
+			query.orWhere('a.memberId = :memberId AND a.isPublic = :isPublic', {
+				memberId,
+				isPublic: false,
+			});
+		} else if (options === 'GROUPFEED') {
+			query.where('a.groupId = :groupId', { groupId });
+			query.orWhere('a.memberId = :memberId AND a.isPublic = :isPublic', {
+				memberId,
+				isPublic: false,
+			});
 		}
 
 		return query;
