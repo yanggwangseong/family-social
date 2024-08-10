@@ -6,16 +6,12 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import Image from 'next/image';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
-import {
-	accountTabMenus,
-	makeTabMenuItem,
-} from '@/components/ui/tab-menu/tab-menu.constants';
+import { makeTabMenuItem } from '@/components/ui/tab-menu/tab-menu.constants';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import MyFeed from '../feed/my-feed/MyFeed';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
@@ -26,6 +22,7 @@ import { PiPencilDuotone } from 'react-icons/pi';
 import { MemberService } from '@/services/member/member.service';
 import axios from 'axios';
 import { MediaService } from '@/services/media/media.service';
+import FeedContainer from '../feed/feed-container/FeedContainer';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -191,7 +188,9 @@ const Account: FC<{ email: string }> = ({ email }) => {
 												options={query.options}
 											></TabMenu>
 										</div>
-										<MyFeed handleIsLottie={handleIsLottie} />
+										{query.options === 'MYFEED' && (
+											<FeedContainer handleIsLottie={handleIsLottie} />
+										)}
 									</div>
 								</div>
 							</>
