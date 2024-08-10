@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { Brackets, QueryRunner, Repository } from 'typeorm';
 
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { IGetFeedDeatilArgs, IUpdateFeedArgs } from '@/types/args/feed';
@@ -130,16 +130,22 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			query.where('a.memberId = :memberId', { memberId });
 		} else if (options === 'ALL') {
 			query.where('a.isPublic = :isPublic', { isPublic: true });
-			query.orWhere('a.memberId = :memberId AND a.isPublic = :isPublic', {
-				memberId,
-				isPublic: false,
-			});
+			query.orWhere(
+				new Brackets((qb2) => {
+					qb2
+						.where('a.memberId = :memberId', { memberId })
+						.andWhere('a.isPublic = :isPrivate', { isPrivate: false });
+				}),
+			);
 		} else if (options === 'GROUPFEED') {
 			query.where('a.groupId = :groupId', { groupId });
-			query.orWhere('a.memberId = :memberId AND a.isPublic = :isPublic', {
-				memberId,
-				isPublic: false,
-			});
+			query.orWhere(
+				new Brackets((qb2) => {
+					qb2
+						.where('a.memberId = :memberId', { memberId })
+						.andWhere('a.isPublic = :isPrivate', { isPrivate: false });
+				}),
+			);
 		}
 
 		return query;
