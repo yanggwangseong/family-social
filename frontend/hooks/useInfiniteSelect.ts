@@ -1,5 +1,6 @@
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 import { GroupEventItemResponse } from '@/shared/interfaces/group-event.interface';
+import { NotificationItem } from '@/shared/interfaces/notification.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
 import { useState } from 'react';
@@ -12,7 +13,8 @@ export const useInfiniteSelect = <
 	T extends
 		| GetScheduleListResponse
 		| FeedsResponse
-		| BasicPaginationResponse<GroupEventItemResponse>,
+		| BasicPaginationResponse<GroupEventItemResponse>
+		| BasicPaginationResponse<NotificationItem>,
 >(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,

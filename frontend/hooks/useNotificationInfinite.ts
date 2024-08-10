@@ -1,12 +1,20 @@
+import { NotificationItem } from '@/shared/interfaces/notification.interface';
+import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import { useEffect, useState } from 'react';
-import { useInfiniteSelect } from './useInfiniteSelect';
 import { QueryFunction } from 'react-query';
-import { FeedsResponse } from '@/shared/interfaces/feed.interface';
+import {
+	InfiniteOverrideOptions,
+	useInfiniteSelect,
+} from './useInfiniteSelect';
+import { isReadOptions, Union } from 'types';
 
-export const useFeedIntersectionObserver = <T extends FeedsResponse>(
+export const useNotificationInfinite = <
+	T extends BasicPaginationResponse<NotificationItem>,
+>(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,
-	options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
+	options: Union<typeof isReadOptions> = 'ALL',
+	overridOptions?: InfiniteOverrideOptions,
 ) => {
 	const [observedPost, setObservedPost] = useState<string | null>(null);
 
@@ -18,11 +26,10 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 		hasNextPage,
 		isError,
 		refetch,
-	} = useInfiniteSelect(queryKey, queryFn);
+	} = useInfiniteSelect(queryKey, queryFn, overridOptions);
 
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
-			console.log('***FEEDelement***=', element);
 			if (!element) return;
 
 			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
@@ -53,7 +60,8 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 		const id =
 			data?.pages[data?.pages.length - 1].list[
 				data?.pages[data?.pages.length - 1].list.length - 1
-			].feedId;
+			].id;
+
 		//posts 배열에 post가 추가되서 마지막 post가 바뀌었다면
 		// 바뀐 post중 마지막post를 observedPost로
 		if (id !== observedPost) {

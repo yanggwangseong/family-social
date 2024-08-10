@@ -9,6 +9,7 @@ import {
 	FeedInfo,
 	FeedsResponse,
 } from '@/shared/interfaces/feed.interface';
+import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 
 import { axiosAPI } from 'api/axios';
 import { OmitStrict } from 'types';
@@ -26,7 +27,9 @@ export const FeedService = {
 		let endPoint = `/feeds?page=${page}&options=${options}`;
 		if (groupId) endPoint += `&groupId=${groupId}`;
 
-		const { data } = await axiosAPI.get<FeedsResponse>(endPoint);
+		const { data } = await axiosAPI.get<BasicPaginationResponse<FeedInfo>>(
+			endPoint,
+		);
 
 		return data;
 	},

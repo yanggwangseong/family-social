@@ -35,37 +35,43 @@ const NotificationItem: FC<NotificationItemProps> = ({
 
 	return (
 		<motion.div
-			className={styles.notification_item_container}
 			{...easeOutAnimation(index)}
 			onClick={() => {
 				notificationItem.notificationFeedId &&
 					handleFeedDetailPage(notificationItem.notificationFeedId);
 			}}
 		>
-			<div>
-				<Image
-					className={styles.profile_img}
-					width={40}
-					height={40}
-					src={
-						notificationItem.sender.profileImage ??
-						'/images/profile/profile.png'
-					}
-					alt="img"
-				></Image>
-			</div>
-
-			<div className={styles.description_container}>
-				<div className={styles.notification_title}>
-					{notificationItem.notificationTitle}
+			<div
+				className={styles.notification_item_container}
+				id={notificationItem.id}
+			>
+				<div>
+					<Image
+						className={styles.profile_img}
+						width={40}
+						height={40}
+						src={
+							notificationItem.sender.profileImage ??
+							'/images/profile/profile.png'
+						}
+						alt="img"
+					></Image>
 				</div>
-				{isDescription && (
-					<div className={styles.notification_description}>
-						{existsMentionDescription(notificationItem.notificationDescription)}
+
+				<div className={styles.description_container}>
+					<div className={styles.notification_title}>
+						{notificationItem.notificationTitle}
 					</div>
-				)}
-				<div className={styles.notification_date}>
-					{notificationItem.createdAt}
+					{isDescription && (
+						<div className={styles.notification_description}>
+							{existsMentionDescription(
+								notificationItem.notificationDescription,
+							)}
+						</div>
+					)}
+					<div className={styles.notification_date}>
+						{notificationItem.createdAt}
+					</div>
 				</div>
 			</div>
 		</motion.div>
