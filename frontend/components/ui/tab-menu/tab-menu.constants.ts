@@ -20,17 +20,17 @@ export const tourismTabMenus: TabeMenuListType[] = [
 
 export const scheduleTabMenus: TabeMenuListType[] = [
 	{
-		link: '/schedules',
+		link: '/schedules?options=SCHEDULEALL',
 		options: 'SCHEDULEALL',
 		title: '전체 일정',
 	},
 	{
-		link: '/schedules',
+		link: '/schedules?options=MYSCHEDULE',
 		options: 'MYSCHEDULE',
 		title: '나의 일정',
 	},
 	{
-		link: '/schedules',
+		link: '/schedules?options=SHAREDSCHEDULE',
 		options: 'SHAREDSCHEDULE',
 		title: '공유된 일정',
 	},

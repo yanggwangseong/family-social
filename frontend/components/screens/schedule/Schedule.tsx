@@ -32,7 +32,7 @@ const Schedule: FC = () => {
 							<div className={styles.tab_menu_wrap}>
 								<TabMenu
 									list={scheduleTabMenus}
-									options={'SCHEDULEALL'}
+									options={query.options}
 								></TabMenu>
 							</div>
 

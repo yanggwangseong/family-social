@@ -22,7 +22,6 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
-			console.log('***FEEDelement***=', element);
 			if (!element) return;
 
 			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
@@ -63,7 +62,6 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 		return () => {};
 	}, [data, fetchNextPage, observedPost]);
 
-	// Reset the observed post when options change
 	useEffect(() => {
 		setObservedPost(null);
 	}, [options]);

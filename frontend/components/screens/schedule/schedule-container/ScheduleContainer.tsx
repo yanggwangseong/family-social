@@ -9,7 +9,8 @@ import { ScheduleContainerProps } from './schedule-container.interface';
 const ScheduleContainer: FC<ScheduleContainerProps> = ({
 	options = 'SCHEDULEALL',
 }) => {
-	const { data, isLoading, isRefetching } = useScheduleIntersectionObserver();
+	const { data, isLoading, isRefetching } =
+		useScheduleIntersectionObserver(options);
 
 	return (
 		<div className={styles.schedule_container}>
