@@ -25,6 +25,7 @@ import { ScheduleRepository } from '@/models/repositories/schedule.repository';
 import { SharedScheduleMemberRepository } from '@/models/repositories/shared-schedule-member.repository';
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
+import { isScheduleOptins, Union } from '@/types';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
 import { OverrideInsertFeild } from '@/types/repository';
@@ -47,42 +48,11 @@ export class SchedulesService {
 		const { page, limit, options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 
-		let whereOverride: FindOptionsWhere<ScheduleEntity> = {};
+		const whereOverride: FindOptionsWhere<ScheduleEntity> =
+			this.getScheduleListWhereOverride(options, memberId);
 
-		/**
-		 * 내가 작성한 스케줄과 나에게 공유된 스케줄
-		 */
-		if (options === 'SCHEDULEALL') {
-			whereOverride = {
-				memberId,
-				sharedMembers: {
-					sharedMember: {
-						memberId,
-					},
-				},
-			};
-			/**
-			 * 내가 작성한 스케줄
-			 */
-		} else if (options === 'MYSCHEDULE') {
-			whereOverride = {
-				memberId,
-			};
-			/**
-			 * 나에게 공유된 스케줄
-			 */
-		} else {
-			whereOverride = {
-				sharedMembers: {
-					sharedMember: {
-						memberId,
-					},
-				},
-			};
-		}
-
-		const [list, count]: [ScheduleGetListResDto[], number] = await pagination
-			.paginate(paginationDto, this.scheduleRepository, {
+		const { list, count }: { list: ScheduleGetListResDto[]; count: number } =
+			await pagination.paginate(paginationDto, this.scheduleRepository, {
 				select: {
 					id: true,
 					groupId: true,
@@ -129,18 +99,23 @@ export class SchedulesService {
 				},
 				take,
 				skip,
-			})
-			.then((data): [ScheduleGetListResDto[], number] => {
-				const { list, count } = data;
-				const newSchedule = list.map((value: ScheduleEntity) => {
-					return this.scheduleRepository.transformSharedMembers(value);
-				});
-
-				return [newSchedule, count];
 			});
 
+		const sheduleIds = list.map((item) => item.id);
+		const sharedMembers =
+			await this.sharedScheduleMemberRepository.findSharedScheduleMembers(
+				sheduleIds,
+			);
+
 		return {
-			list,
+			list: list.map((item) => {
+				return {
+					...item,
+					sharedMembers: sharedMembers.filter(
+						(data) => data.sharedScheduleId === item.id,
+					),
+				};
+			}),
 			page,
 			count,
 			take,
@@ -429,5 +404,19 @@ export class SchedulesService {
 		);
 
 		await this.tourismRepository.createTourism(createTourisms, qr);
+	}
+
+	private getScheduleListWhereOverride(
+		options: Union<typeof isScheduleOptins>,
+		memberId: string,
+	) {
+		switch (options) {
+			case 'SCHEDULEALL':
+				return { sharedMembers: { sharedMember: { memberId } } };
+			case 'MYSCHEDULE':
+				return { memberId };
+			case 'SHAREDSCHEDULE':
+				return { sharedMembers: { sharedMember: { memberId } } };
+		}
 	}
 }
