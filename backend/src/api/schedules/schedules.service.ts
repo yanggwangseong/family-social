@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { QueryRunner } from 'typeorm';
+import { FindOptionsWhere, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityNotFoundException,
 	ForBiddenException,
 } from '@/common/exception/service.exception';
+import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_NO_PERMISSTION_TO_SCHEDULE,
 	ERROR_SCHEDULE_NOT_FOUND,
 } from '@/constants/business-error';
+import { SchedulePaginationReqDto } from '@/models/dto/schedule/req/schedule-pagination-req.dto';
 import { TourismCreateReqDto } from '@/models/dto/schedule/req/tourism-create-req.dto';
 import { TourismPeriodCreateReqDto } from '@/models/dto/schedule/req/tourism-period-create-req.dto';
 import { ScheduleByIdResDto } from '@/models/dto/schedule/res/schedule-by-id-res.dto';
+import { ScheduleGetListResDto } from '@/models/dto/schedule/res/schedule-get-list-res.dto';
 import { ScheduleResDto } from '@/models/dto/schedule/res/schedule-res.dto';
+import { ScheduleEntity } from '@/models/entities/schedule.entity';
 import { SharedScheduleMemberEntity } from '@/models/entities/shared-schedule-member.entity';
 import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
 import { TourismEntity } from '@/models/entities/tourism.entity';
@@ -22,6 +26,7 @@ import { SharedScheduleMemberRepository } from '@/models/repositories/shared-sch
 import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
 import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { ICreateTourArgs, IUpdateTourArgs } from '@/types/args/tour';
+import { BasicPaginationResponse } from '@/types/pagination';
 import { OverrideInsertFeild } from '@/types/repository';
 import { getOffset } from '@/utils/getOffset';
 
@@ -34,30 +39,111 @@ export class SchedulesService {
 		private readonly sharedScheduleMemberRepository: SharedScheduleMemberRepository,
 	) {}
 
-	async getScheduleListOwnMemberId({
-		memberId,
-		page,
-		limit,
-	}: {
-		memberId: string;
-		page: number;
-		limit: number;
-	}): Promise<ScheduleResDto> {
+	async getScheduleListOwnMemberId(
+		memberId: string,
+		paginationDto: SchedulePaginationReqDto,
+		pagination: Pagination<ScheduleEntity>,
+	): Promise<BasicPaginationResponse<ScheduleGetListResDto>> {
+		const { page, limit, options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 
-		const [list, count] =
-			await this.scheduleRepository.getScheduleListOwnMemberId({
-				overrideWhere: {
-					memberId,
+		let whereOverride: FindOptionsWhere<ScheduleEntity> = {};
+
+		/**
+		 * 내가 작성한 스케줄과 나에게 공유된 스케줄
+		 */
+		if (options === 'SCHEDULEALL') {
+			whereOverride = {
+				memberId,
+				sharedMembers: {
+					sharedMember: {
+						memberId,
+					},
+				},
+			};
+			/**
+			 * 내가 작성한 스케줄
+			 */
+		} else if (options === 'MYSCHEDULE') {
+			whereOverride = {
+				memberId,
+			};
+			/**
+			 * 나에게 공유된 스케줄
+			 */
+		} else {
+			whereOverride = {
+				sharedMembers: {
+					sharedMember: {
+						memberId,
+					},
+				},
+			};
+		}
+
+		const [list, count]: [ScheduleGetListResDto[], number] = await pagination
+			.paginate(paginationDto, this.scheduleRepository, {
+				select: {
+					id: true,
+					groupId: true,
+					scheduleImage: true,
+					scheduleName: true,
+					startPeriod: true,
+					endPeriod: true,
+					updatedAt: true,
+					group: {
+						id: true,
+						groupName: true,
+						groupDescription: true,
+						groupCoverImage: true,
+					},
+					sharedMembers: {
+						sharedFamId: true,
+						sharedMember: {
+							id: true,
+							role: true,
+							invitationAccepted: true,
+							memberId: true,
+							member: {
+								id: true,
+								username: true,
+								profileImage: true,
+								email: true,
+							},
+						},
+					},
+				},
+				where: {
+					...whereOverride,
+				},
+				relations: {
+					group: true,
+					sharedMembers: {
+						sharedMember: {
+							member: true,
+						},
+					},
+				},
+				order: {
+					updatedAt: 'desc',
 				},
 				take,
 				skip,
+			})
+			.then((data): [ScheduleGetListResDto[], number] => {
+				const { list, count } = data;
+				const newSchedule = list.map((value: ScheduleEntity) => {
+					return this.scheduleRepository.transformSharedMembers(value);
+				});
+
+				return [newSchedule, count];
 			});
 
 		return {
-			list: list,
-			page: page,
-			totalPage: Math.ceil(count / take),
+			list,
+			page,
+			count,
+			take,
 		};
 	}
 

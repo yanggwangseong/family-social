@@ -273,7 +273,7 @@ export class ScheduleRepository extends Repository<ScheduleEntity> {
 		});
 	}
 
-	private transformSharedMembers(data: ScheduleEntity) {
+	transformSharedMembers(data: ScheduleEntity) {
 		const { sharedMembers, ...rest } = data;
 
 		const newSharedMembers = sharedMembers.map((item) => {

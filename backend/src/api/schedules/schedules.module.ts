@@ -7,6 +7,7 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ScheduleExistsMiddleware } from '@/common/middlewares/schedule-exists.middleware';
+import { Pagination } from '@/common/strategies/context/pagination';
 import { ScheduleEntity } from '@/models/entities/schedule.entity';
 import { SharedScheduleMemberEntity } from '@/models/entities/shared-schedule-member.entity';
 import { TourismPeriodEntity } from '@/models/entities/tourism-period.entity';
@@ -35,6 +36,7 @@ import { SchedulesService } from './schedules.service';
 		TourismPeriodRepository,
 		TourismRepository,
 		SharedScheduleMemberRepository,
+		Pagination,
 	],
 	exports: [SchedulesService],
 })
