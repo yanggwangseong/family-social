@@ -13,7 +13,10 @@ import { FeedContainerProps } from './feed-container.interface';
 const FeedContainer: FC<FeedContainerProps> = ({
 	options = 'TOP',
 	handleIsLottie,
+	groupId,
 }) => {
+	const queryKey = groupId ? [groupId, options] : [options];
+
 	const {
 		data,
 		fetchNextPage,
@@ -23,8 +26,9 @@ const FeedContainer: FC<FeedContainerProps> = ({
 		isRefetching,
 		refetch,
 	} = useFeedIntersectionObserver(
-		['feeds', options],
-		async ({ pageParam = 1 }) => await FeedService.getFeeds(pageParam, options),
+		['feeds', ...queryKey],
+		async ({ pageParam = 1 }) =>
+			await FeedService.getFeeds(pageParam, options, groupId),
 		options,
 	);
 

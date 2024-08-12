@@ -53,6 +53,7 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 			data?.pages[data?.pages.length - 1].list[
 				data?.pages[data?.pages.length - 1].list.length - 1
 			].feedId;
+
 		//posts 배열에 post가 추가되서 마지막 post가 바뀌었다면
 		// 바뀐 post중 마지막post를 observedPost로
 		if (id !== observedPost) {

@@ -4,11 +4,7 @@ import {
 	UpdateFeedRequest,
 } from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
 
-import {
-	FeedByIdResponse,
-	FeedInfo,
-	FeedsResponse,
-} from '@/shared/interfaces/feed.interface';
+import { FeedByIdResponse, FeedInfo } from '@/shared/interfaces/feed.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 
 import { axiosAPI } from 'api/axios';
