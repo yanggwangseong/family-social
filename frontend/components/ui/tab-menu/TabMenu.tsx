@@ -18,6 +18,7 @@ const TabMenu: FC<{
 				<Link
 					key={index}
 					className={cn(styles.tab_menu_item, {
+						[styles.tab_menu_double]: list.length === 2,
 						[styles.active]: options === item.options,
 					})}
 					href={`${item.link}`}

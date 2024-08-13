@@ -12,3 +12,4 @@
 - 모바일 환경에서 왼쪽과 오른쪽 사이드바를 사용자 친화적인 UI구성을 위해 오른쪽 사이드바를 resize 가능한 pannel로 구성
 - [true/false toggle 메뉴 구현시 useReducer로 구현하기](https://threeyears.tistory.com/539)
 - [태그된 유니온과 커스텀 타입가드를 이용한 다른 컴포넌트 랜더링](https://threeyears.tistory.com/570)
+- [팩토리 패턴을 이용하여 동적 탭 메뉴 리스트 만들기](https://threeyears.tistory.com/578)

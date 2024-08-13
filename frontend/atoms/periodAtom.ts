@@ -13,6 +13,7 @@ export interface TourismType {
 	tourismImage: string;
 	title: string;
 	position: number;
+	stayTimeWritable: boolean;
 }
 
 export const periodAtom = atom<PeriodsType[]>({

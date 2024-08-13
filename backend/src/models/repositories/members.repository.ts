@@ -15,6 +15,7 @@ import { MemberEntity } from '@/models/entities/member.entity';
 import { ILoginMemberArgs, IUpdateMemberArgs } from '@/types/args/member';
 import { OverrideInsertFeild } from '@/types/repository';
 
+import { MemberByIdResDto } from '../dto/member/res/member-by-id-res.dto';
 import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
 import { MemberSearchResDto } from '../dto/member/res/member-search-res.dto';
 
@@ -175,7 +176,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 	}: {
 		memberId: string;
 		qr?: QueryRunner;
-	}): Promise<MemberProfileImageResDto | null> {
+	}): Promise<MemberByIdResDto | null> {
 		const membersRepository = this.getMembersRepository(qr);
 
 		const member = await membersRepository.findOne({
@@ -186,6 +187,7 @@ export class MembersRepository extends Repository<MemberEntity> {
 				username: true,
 				id: true,
 				profileImage: true,
+				socialType: true,
 			},
 		});
 

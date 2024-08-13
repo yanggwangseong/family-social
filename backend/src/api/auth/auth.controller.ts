@@ -23,6 +23,8 @@ import {
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GoogleGuard } from '@/common/guards/google.guard';
+import { KakaoGuard } from '@/common/guards/kakao.guard';
+import { NaverGuard } from '@/common/guards/naver.guard';
 import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -32,7 +34,11 @@ import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto'
 import { MemberSocialCreateReqDto } from '@/models/dto/member/req/member-social-create-req.dto';
 import { VerifyEmailReqDto } from '@/models/dto/member/req/verify-email-req.dto';
 import { ICreateSocialMemberArgs } from '@/types/args/member';
-import { GoogleOAuth2Request } from '@/types/request';
+import {
+	GoogleOAuth2Request,
+	KakaoOAuth2Request,
+	NaverOAuth2Request,
+} from '@/types/request';
 import { IRefreshTokenArgs } from '@/types/token';
 
 import { AuthService } from './auth.service';
@@ -112,6 +118,154 @@ export class AuthController {
 				phoneNumber: '00000000000',
 				profileImage: photo,
 				socialType: 'google',
+			};
+
+			const tmpMember = await this.authService.createMemberWithVerifyToken(
+				tmpDto,
+			);
+
+			res.redirect(
+				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+			);
+		}
+	}
+
+	/**
+	 * @summary Naver Oauth2 로그인 요청 들어오는 api
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@Get('/naver/sign-in')
+	@UseGuards(NaverGuard)
+	async naverOauth2Signin() {}
+
+	/**
+	 * @summary Naver Oauth2 검증된 후 콜백 api
+	 *
+	 * @tag auth
+	 * @param {NaverOAuth2Request} req - 검증된 유저 정보를 가지고 있는 객체
+	 * @param {Response} res
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
+	@Get('/naver/callback')
+	@UseGuards(NaverGuard)
+	async naverOauth2CallBack(
+		@Req() req: NaverOAuth2Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const { email, photo, username } = req.user;
+
+		const Exists = await this.membersService.memberExistsByEmail(email);
+
+		if (Exists) {
+			const { id, username, isFirstLogin } = Exists;
+
+			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
+			if (!isFirstLogin) {
+				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+			}
+
+			const [accessToken, refreshToken] =
+				await this.authService.signatureTokens(id, username);
+
+			await this.authService.setCurrentRefreshToken(id, refreshToken);
+
+			this.authService.ResponseTokenInCookie({
+				type: 'accessToken',
+				token: accessToken,
+				res,
+			});
+			this.authService.ResponseTokenInCookie({
+				type: 'refreshToken',
+				token: refreshToken,
+				res,
+			});
+
+			res.redirect(`http://localhost:3000/oauth2/redirect`);
+		} else {
+			const tmpDto: ICreateSocialMemberArgs = {
+				email,
+				username: username,
+				phoneNumber: '00000000000',
+				profileImage: photo,
+				socialType: 'naver',
+			};
+
+			const tmpMember = await this.authService.createMemberWithVerifyToken(
+				tmpDto,
+			);
+
+			res.redirect(
+				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+			);
+		}
+	}
+
+	/**
+	 * @summary Kakao Oauth2 로그인 요청 들어오는 api
+	 *
+	 * @tag auth
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@Get('/kakao/sign-in')
+	@UseGuards(KakaoGuard)
+	async kakaoOauth2Signin() {}
+
+	/**
+	 * @summary Kakao Oauth2 검증된 후 콜백 api
+	 *
+	 * @tag auth
+	 * @param {KakaoOAuth2Request} req - 검증된 유저 정보를 가지고 있는 객체
+	 * @param {Response} res
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 토큰
+	 */
+	@Get('/kakao/callback')
+	@UseGuards(KakaoGuard)
+	async kakaoOauth2CallBack(
+		@Req() req: KakaoOAuth2Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		const { email, photo, username } = req.user;
+
+		const Exists = await this.membersService.memberExistsByEmail(email);
+
+		if (Exists) {
+			const { id, username, isFirstLogin } = Exists;
+
+			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
+			if (!isFirstLogin) {
+				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+			}
+
+			const [accessToken, refreshToken] =
+				await this.authService.signatureTokens(id, username);
+
+			await this.authService.setCurrentRefreshToken(id, refreshToken);
+
+			this.authService.ResponseTokenInCookie({
+				type: 'accessToken',
+				token: accessToken,
+				res,
+			});
+			this.authService.ResponseTokenInCookie({
+				type: 'refreshToken',
+				token: refreshToken,
+				res,
+			});
+
+			res.redirect(`http://localhost:3000/oauth2/redirect`);
+		} else {
+			const tmpDto: ICreateSocialMemberArgs = {
+				email,
+				username: username,
+				phoneNumber: '00000000000',
+				profileImage: photo,
+				socialType: 'kakao',
 			};
 
 			const tmpMember = await this.authService.createMemberWithVerifyToken(

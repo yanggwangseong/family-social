@@ -14,8 +14,10 @@ import { useEffect, useState } from 'react';
  *   lists: T[],
  * }
  */
-export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
-	const [lists, setLists] = useState<T[]>(targetLists);
+export const useSortable = <T, U extends HTMLElement>(
+	lists: T[],
+	handleSetList: (grap: T, target: T, lists: T[]) => void,
+) => {
 	const [grab, setGrab] = useState<U | null>(null);
 
 	const handleDragOver = (e: React.DragEvent) => {
@@ -26,12 +28,10 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		setGrab(e.currentTarget);
 		e.currentTarget.classList.add('grabbing');
 		e.dataTransfer.effectAllowed = 'move';
-		e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
 	};
 
 	const handleDragEnd = (e: React.DragEvent) => {
 		grab?.classList.remove('grabbing');
-		e.dataTransfer.dropEffect = 'move';
 		setGrab(null);
 	};
 
@@ -57,23 +57,20 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		const grabPosition = Number(grab?.dataset.position);
 		const targetPosition = Number(e.currentTarget.dataset.position);
 
-		if (grab && grabPosition !== undefined) {
+		if (grab && grabPosition !== undefined && targetPosition !== undefined) {
 			const updatedList = [...lists];
-			updatedList[grabPosition] = updatedList.splice(
-				targetPosition,
-				1,
+			[updatedList[grabPosition], updatedList[targetPosition]] = [
+				updatedList[targetPosition],
 				updatedList[grabPosition],
-			)[0];
+			];
 
-			setLists(updatedList);
+			handleSetList(
+				updatedList[grabPosition],
+				updatedList[targetPosition],
+				updatedList,
+			);
 		}
 	};
-
-	useEffect(() => {
-		if (targetLists) {
-			setLists(targetLists);
-		}
-	}, [targetLists]);
 
 	return {
 		handleDragOver,
@@ -83,6 +80,5 @@ export const useSortable = <T, U extends HTMLElement>(targetLists: T[]) => {
 		handleDragLeave,
 		handleDrop,
 		lists,
-		setLists,
 	};
 };

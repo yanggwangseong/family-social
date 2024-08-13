@@ -11,6 +11,10 @@ export interface MembersResponse {
 	profileImage: string;
 }
 
+export interface MemberByMemberIdResponse extends MembersResponse {
+	socialType: 'kakao' | 'google' | 'naver';
+}
+
 export interface MemberAccountResponse extends MembersResponse {
 	phoneNumber: string;
 	isMine: boolean;

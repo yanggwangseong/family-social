@@ -76,6 +76,19 @@ export class TourismEntity extends DefaultEntity {
 	)
 	position!: number;
 
+	@Column({
+		type: 'boolean',
+		nullable: false,
+		default: false,
+	})
+	@ApiProperty({
+		nullable: false,
+	})
+	@IsNotEmpty({
+		message: notEmptyValidationMessage,
+	})
+	stayTimeWritable!: boolean;
+
 	@Column({ type: 'uuid', nullable: false })
 	@ApiProperty()
 	@IsNotEmpty({

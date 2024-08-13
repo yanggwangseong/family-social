@@ -6,6 +6,7 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 
 import { ScheduleDateProps } from './schedule-date.interface';
 import Calendar from '@/components/ui/calendar/Calendar';
+import { addDays, isEqual } from 'date-fns';
 
 const ScheduleDate: FC<ScheduleDateProps> = ({
 	handleChangePage,
@@ -17,6 +18,8 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 	endDate,
 	isPeriodTimes,
 }) => {
+	const [isSelectDate, setIsSelectDate] = useState<Date>();
+
 	const handleChangeScheduleName = (name: string) => {
 		onChangeScheduleName(name);
 	};
@@ -26,6 +29,14 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 			onChangePeriods(isPeriodTimes);
 		}
 	}, [isPeriodTimes, onChangePeriods]);
+
+	const handleSelectDate = (date: Date) => {
+		if (!isSelectDate) {
+			setIsSelectDate(date);
+		} else {
+			setIsSelectDate(undefined);
+		}
+	};
 
 	return (
 		<div className={styles.main_container}>
@@ -54,7 +65,9 @@ const ScheduleDate: FC<ScheduleDateProps> = ({
 							datePickerOptions={{
 								selectsRange: true,
 								withPortal: true,
-								minDate: new Date(),
+								minDate: isSelectDate ? isSelectDate : new Date(),
+								maxDate: isSelectDate && addDays(isSelectDate, 9),
+								onSelect: handleSelectDate,
 							}}
 						/>
 					</div>

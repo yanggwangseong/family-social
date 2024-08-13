@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useInfiniteSelect } from './useInfiniteSelect';
-import { FeedService } from '@/services/feed/feed.service';
 import { QueryFunction } from 'react-query';
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 
 export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 	queryKey: string[],
 	queryFn: QueryFunction<T, string[]>,
+	options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
 ) => {
-	const [observedPost, setObservedPost] = useState('');
+	const [observedPost, setObservedPost] = useState<string | null>(null);
 
 	const {
 		data,
@@ -23,6 +23,7 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
 			if (!element) return;
+
 			// 브라우저 viewport와 설정한 요소(Element)와 교차점을 관찰
 			const observer = new IntersectionObserver(
 				// entries는 IntersectionObserverEntry 인스턴스의 배열
@@ -52,6 +53,7 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 			data?.pages[data?.pages.length - 1].list[
 				data?.pages[data?.pages.length - 1].list.length - 1
 			].feedId;
+
 		//posts 배열에 post가 추가되서 마지막 post가 바뀌었다면
 		// 바뀐 post중 마지막post를 observedPost로
 		if (id !== observedPost) {
@@ -60,6 +62,10 @@ export const useFeedIntersectionObserver = <T extends FeedsResponse>(
 		}
 		return () => {};
 	}, [data, fetchNextPage, observedPost]);
+
+	useEffect(() => {
+		setObservedPost(null);
+	}, [options]);
 
 	return {
 		data,

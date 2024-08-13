@@ -9,4 +9,5 @@ export class TourismResDto extends PickType(TourismEntity, [
 	'tourismImage',
 	'title',
 	'position',
+	'stayTimeWritable',
 ] as const) {}

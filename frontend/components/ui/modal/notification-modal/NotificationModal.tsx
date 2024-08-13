@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import styles from './NotificationModal.module.scss';
 import { useQuery } from 'react-query';
 import { NotificationService } from '@/services/notification/notification.service';
@@ -10,13 +10,24 @@ import {
 	toggleWrapperVariant,
 } from '@/utils/animation/toggle-variant';
 import { motion } from 'framer-motion';
+import { useNotificationInfinite } from '@/hooks/useNotificationInfinite';
 
 const NotificationModal: FC<{ isOpenNotification: boolean }> = ({
 	isOpenNotification,
 }) => {
-	const { data, isLoading } = useQuery(
-		['get-notifications'],
-		async () => await NotificationService.getNotifications('NOTREAD'),
+	const {
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isError,
+		isRefetching,
+		refetch,
+	} = useNotificationInfinite(
+		['get-notifications', 'NOTREAD'],
+		async ({ pageParam = 1 }) =>
+			await NotificationService.getNotifications(pageParam, 'NOTREAD'),
+		'NOTREAD',
 	);
 
 	return (
@@ -37,16 +48,20 @@ const NotificationModal: FC<{ isOpenNotification: boolean }> = ({
 
 			{data && (
 				<motion.div className={styles.item_container} variants={toggleVariant}>
-					{data.list.length === 0 ? (
+					{data.pages[0].list.length === 0 ? (
 						<div className={styles.not_found_text}>알람이 없습니다.</div>
 					) : (
-						data.list.map((list, index) => (
-							<NotificationItem
-								key={index}
-								index={index}
-								notificationItem={list}
-								isDescription={false}
-							/>
+						data?.pages.map((page, pageIndex) => (
+							<Fragment key={pageIndex}>
+								{page.list.map((list, index) => (
+									<NotificationItem
+										key={index}
+										index={index}
+										notificationItem={list}
+										isDescription={true}
+									/>
+								))}
+							</Fragment>
 						))
 					)}
 				</motion.div>
