@@ -44,6 +44,10 @@
 						.profile_img_container {
 							@apply w-1/2 border border-solid border-customDark p-8 flex items-center justify-center flex-col gap-2;
 
+							.img_wrapper {
+								@apply relative w-[60px] h-[60px];
+							}
+
 							&.active {
 								@apply border-customOrange border-2;
 

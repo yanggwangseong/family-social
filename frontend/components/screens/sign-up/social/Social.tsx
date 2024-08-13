@@ -117,13 +117,14 @@ const Social: FC = () => {
 												handleSelectedProfileImg('social', data.profileImage)
 											}
 										>
-											<Image
-												className="rounded-full"
-												width={60}
-												height={60}
-												src={data.profileImage}
-												alt="img"
-											></Image>
+											<div className={styles.img_wrapper}>
+												<Image
+													className="rounded-full"
+													fill
+													src={data.profileImage}
+													alt="img"
+												></Image>
+											</div>
 											<div className={styles.username}>{data.username}</div>
 										</div>
 										<div
