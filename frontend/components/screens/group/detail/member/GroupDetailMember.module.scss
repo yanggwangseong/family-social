@@ -1,0 +1,7 @@
+.list_container {
+	@apply flex flex-col gap-4 mx-4;
+
+	.section_title {
+		@apply font-medium text-xl;
+	}
+}
