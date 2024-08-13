@@ -12,6 +12,7 @@ import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
 
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
+import { AllExceptionFilter } from './common/filter/all-exception.filter';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 import {
 	ENV_APPLICATION_PORT,
@@ -81,7 +82,10 @@ async function bootstrap() {
 	);
 
 	// exception
-	app.useGlobalFilters(new ServiceHttpExceptionFilter());
+	app.useGlobalFilters(
+		new AllExceptionFilter(),
+		new ServiceHttpExceptionFilter(),
+	);
 
 	// sucess interceptor
 	app.useGlobalInterceptors(new SuccessInterceptor());
