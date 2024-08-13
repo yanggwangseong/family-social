@@ -2,14 +2,16 @@ import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useEffect, useState } from 'react';
 import { useInfiniteSelect } from './useInfiniteSelect';
 
-export const useScheduleIntersectionObserver = () => {
+export const useScheduleIntersectionObserver = (
+	options: 'SCHEDULEALL' | 'MYSCHEDULE' | 'SHAREDSCHEDULE',
+) => {
 	const { data, isLoading, isRefetching, fetchNextPage } = useInfiniteSelect(
-		['schedules'],
+		['schedules', options],
 		async ({ pageParam = 1 }) =>
-			await ScheduleService.getScheduleList(pageParam, 4),
+			await ScheduleService.getScheduleList(pageParam, 3, options),
 	);
 
-	const [observedPost, setObservedPost] = useState('');
+	const [observedPost, setObservedPost] = useState<string | null>(null);
 
 	useEffect(() => {
 		const observeElement = (element: HTMLElement | null) => {
@@ -50,6 +52,11 @@ export const useScheduleIntersectionObserver = () => {
 		}
 		return () => {};
 	}, [data, fetchNextPage, observedPost]);
+
+	useEffect(() => {
+		setObservedPost(null);
+	}, [options]);
+
 	return {
 		data,
 		isLoading,

@@ -7,6 +7,10 @@
 	.tab_menu_item {
 		@apply w-1/3 flex justify-center items-center text-sm font-semibold;
 
+		&.tab_menu_double {
+			@apply w-1/2;
+		}
+
 		&.active {
 			@apply bg-customDark text-white rounded-full;
 		}

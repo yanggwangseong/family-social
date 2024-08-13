@@ -6,13 +6,12 @@ import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import Image from 'next/image';
 import TabMenu from '@/components/ui/tab-menu/TabMenu';
-import { accountTabMenus } from '@/components/ui/tab-menu/tab-menu.constants';
+import { makeTabMenuItem } from '@/components/ui/tab-menu/tab-menu.constants';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import MyFeed from '../feed/my-feed/MyFeed';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
@@ -23,9 +22,13 @@ import { PiPencilDuotone } from 'react-icons/pi';
 import { MemberService } from '@/services/member/member.service';
 import axios from 'axios';
 import { MediaService } from '@/services/media/media.service';
+import FeedContainer from '../feed/feed-container/FeedContainer';
+import ScheduleContainer from '../schedule/schedule-container/ScheduleContainer';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
+
+	const query = router.query as { options: 'MYFEED' | 'MYSCHEDULE' };
 
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
@@ -171,11 +174,30 @@ const Account: FC<{ email: string }> = ({ email }) => {
 									<div className={styles.tab_menu_container}>
 										<div className={styles.tab_menu_wrap}>
 											<TabMenu
-												list={accountTabMenus}
-												options={'MYFEED'}
+												list={[
+													makeTabMenuItem({
+														link: `/accounts/${email}?options=MYFEED`,
+														options: 'MYFEED',
+														title: '작성 피드',
+													}),
+													makeTabMenuItem({
+														link: `/accounts/${email}?options=MYSCHEDULE`,
+														options: 'MYSCHEDULE',
+														title: '작성 일정',
+													}),
+												]}
+												options={query.options}
 											></TabMenu>
 										</div>
-										<MyFeed handleIsLottie={handleIsLottie} />
+										{query.options === 'MYFEED' && (
+											<FeedContainer
+												options={query.options}
+												handleIsLottie={handleIsLottie}
+											/>
+										)}
+										{query.options === 'MYSCHEDULE' && (
+											<ScheduleContainer options={query.options} />
+										)}
 									</div>
 								</div>
 							</>

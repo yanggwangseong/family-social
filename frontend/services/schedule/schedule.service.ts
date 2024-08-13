@@ -47,9 +47,13 @@ export const ScheduleService = {
 		return data;
 	},
 
-	async getScheduleList(page: number, limit: number) {
+	async getScheduleList(
+		page: number,
+		limit: number,
+		options: 'SCHEDULEALL' | 'MYSCHEDULE' | 'SHAREDSCHEDULE',
+	) {
 		const { data } = await axiosAPI.get<GetScheduleListResponse>(
-			`/schedules?page=${page}&limit=${limit}`,
+			`/schedules?page=${page}&limit=${limit}&options=${options}`,
 		);
 
 		return data;
