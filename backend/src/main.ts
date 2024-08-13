@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+import { winstonLogger } from '@/common/logger/winston';
 
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
@@ -47,6 +48,9 @@ async function bootstrap() {
 		credentials: true,
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	};
+
+	// use log winston
+	app.useLogger(winstonLogger);
 
 	// set global prefix
 	app.setGlobalPrefix(String(process.env[ENV_GLOBAL_PREFIX]));
