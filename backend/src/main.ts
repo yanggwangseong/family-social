@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { ValidationError, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
@@ -85,9 +85,11 @@ async function bootstrap() {
 		}),
 	);
 
+	const httpAdapterHost = app.get(HttpAdapterHost);
+
 	// exception
 	app.useGlobalFilters(
-		new AllExceptionFilter(),
+		new AllExceptionFilter(httpAdapterHost),
 		new ServiceHttpExceptionFilter(),
 	);
 

@@ -3,16 +3,17 @@ import {
 	Catch,
 	ExceptionFilter,
 	HttpException,
+	HttpStatus,
 } from '@nestjs/common';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { HttpAdapterHost } from '@nestjs/core';
 import { Request } from 'express';
 import { QueryFailedError } from 'typeorm';
 
 import { ERROR_INTERNAL_SERVER_ERROR } from '@/constants/business-error';
+import { HttpExceptionResponse } from '@/models/dto/error/error-common-res.dto';
 
-import {
-	InternalServerErrorException,
-	ServiceException,
-} from '../exception/service.exception';
+import { InternalServerErrorException } from '../exception/service.exception';
 import { winstonLogger } from '../logger/winston';
 
 export enum ErrorTypeEnum {
@@ -22,15 +23,8 @@ export enum ErrorTypeEnum {
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
+	constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 	catch(exception: unknown, host: ArgumentsHost) {
-		/**
-		 * 사용자 정의 exception 일때 throw
-		 */
-		if (exception instanceof ServiceException) {
-			// service-http-exception에서 처리
-			throw exception;
-		}
-
 		/**
 		 * validation, guard, serviceException 등 개발자가 정의 하지 않은 에러
 		 * TypeOrm 에러나 예측하지 못한 에러들
@@ -38,23 +32,34 @@ export class AllExceptionFilter implements ExceptionFilter {
 		 * 2. slack 웹훅을 통한 실시간 알림
 		 */
 		const ctx = host.switchToHttp();
+		const { httpAdapter } = this.httpAdapterHost;
 		const request = ctx.getRequest<Request>();
 
 		const { ip, method, originalUrl } = request;
 		const userAgent = request.get('user-agent');
+
+		const statusCode =
+			exception instanceof HttpException
+				? exception.getStatus()
+				: HttpStatus.INTERNAL_SERVER_ERROR;
 
 		if (exception instanceof QueryFailedError) {
 			winstonLogger.error(
 				`[${ErrorTypeEnum.TYPEORM}][${method}]${originalUrl} ${ip} ${userAgent} - ${exception.message}`,
 			);
 
-			throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+			const response = InternalServerErrorException(
+				ERROR_INTERNAL_SERVER_ERROR,
+			);
+
+			const responseBody = response.toHttpExceptionResponse(
+				httpAdapter.getRequestUrl(ctx.getRequest()),
+			);
+
+			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		}
 
-		const statusCode =
-			exception instanceof HttpException ? exception.getStatus() : 500;
-
-		if (statusCode >= 400 && statusCode < 500)
+		if (statusCode >= 400 && statusCode < 500) {
 			winstonLogger.warn(
 				`[${
 					ErrorTypeEnum.OTHER
@@ -62,7 +67,16 @@ export class AllExceptionFilter implements ExceptionFilter {
 					(exception as HttpException).message
 				}`,
 			);
-		else if (statusCode >= 500) {
+			const response = InternalServerErrorException(
+				ERROR_INTERNAL_SERVER_ERROR,
+			);
+
+			const responseBody = response.toHttpExceptionResponse(
+				httpAdapter.getRequestUrl(ctx.getRequest()),
+			);
+
+			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
+		} else if (statusCode >= 500) {
 			winstonLogger.error(
 				`[${
 					ErrorTypeEnum.OTHER
@@ -70,8 +84,25 @@ export class AllExceptionFilter implements ExceptionFilter {
 					(exception as HttpException).message
 				}`,
 			);
-		}
+			const response = InternalServerErrorException(
+				ERROR_INTERNAL_SERVER_ERROR,
+			);
 
-		throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+			const responseBody = response.toHttpExceptionResponse(
+				httpAdapter.getRequestUrl(ctx.getRequest()),
+			);
+
+			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
+		}
+	}
+
+	private HttpExceptionResponse(
+		ctx: HttpArgumentsHost,
+		responseBody: HttpExceptionResponse,
+		statusCode: number,
+	) {
+		const { httpAdapter } = this.httpAdapterHost;
+
+		httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
 	}
 }
