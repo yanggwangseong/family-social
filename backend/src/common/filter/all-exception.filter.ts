@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { HttpAdapterHost } from '@nestjs/core';
+import * as Sentry from '@sentry/nestjs';
 import { Request } from 'express';
 import { QueryFailedError } from 'typeorm';
 
@@ -56,6 +57,8 @@ export class AllExceptionFilter implements ExceptionFilter {
 				httpAdapter.getRequestUrl(ctx.getRequest()),
 			);
 
+			Sentry.captureException(exception);
+
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		}
 
@@ -75,6 +78,8 @@ export class AllExceptionFilter implements ExceptionFilter {
 				httpAdapter.getRequestUrl(ctx.getRequest()),
 			);
 
+			Sentry.captureException(exception);
+
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		} else if (statusCode >= 500) {
 			winstonLogger.error(
@@ -91,6 +96,8 @@ export class AllExceptionFilter implements ExceptionFilter {
 			const responseBody = response.toHttpExceptionResponse(
 				httpAdapter.getRequestUrl(ctx.getRequest()),
 			);
+
+			Sentry.captureException(exception);
 
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		}

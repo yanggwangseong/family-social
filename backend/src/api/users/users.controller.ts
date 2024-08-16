@@ -16,12 +16,17 @@ export class UsersController {
 	@Get()
 	async test() {
 		const user = await this.usersService.test();
-
-		winstonLogger.error('error level');
-		winstonLogger.warn('warn level');
+		throw new Error('My first Sentry error!');
+		// winstonLogger.error('error level');
+		// winstonLogger.warn('warn level');
 
 		return plainToInstance(UsersResDto, {
 			createdAt: user,
 		});
+	}
+
+	@Get('/debug-sentry')
+	getError() {
+		throw new Error('My first Sentry error!');
 	}
 }
