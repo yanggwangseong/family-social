@@ -43,6 +43,7 @@
 		"@nestjs/websockets": "^10.3.3",
 		"@sentry/nestjs": "^8.26.0",
 		"@sentry/profiling-node": "^8.26.0",
+		"@slack/webhook": "^7.0.3",
 		"axios": "^1.6.2",
 		"bcryptjs": "^2.4.3",
 		"class-transformer": "^0.5.1",
