@@ -8,6 +8,7 @@ import {
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { HttpAdapterHost } from '@nestjs/core';
 import * as Sentry from '@sentry/nestjs';
+import { IncomingWebhook } from '@slack/webhook';
 import { Request } from 'express';
 import { QueryFailedError } from 'typeorm';
 
@@ -24,7 +25,10 @@ export enum ErrorTypeEnum {
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-	constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+	constructor(
+		private readonly httpAdapterHost: HttpAdapterHost,
+		private readonly incomingWebhook: IncomingWebhook,
+	) {}
 	catch(exception: unknown, host: ArgumentsHost) {
 		/**
 		 * validation, guard, serviceException 등 개발자가 정의 하지 않은 에러
@@ -45,9 +49,8 @@ export class AllExceptionFilter implements ExceptionFilter {
 				: HttpStatus.INTERNAL_SERVER_ERROR;
 
 		if (exception instanceof QueryFailedError) {
-			winstonLogger.error(
-				`[${ErrorTypeEnum.TYPEORM}][${method}]${originalUrl} ${ip} ${userAgent} - ${exception.message}`,
-			);
+			const errorLog = `[${ErrorTypeEnum.TYPEORM}][${method}]${originalUrl} ${ip} ${userAgent} - ${exception.message}`;
+			winstonLogger.error(errorLog);
 
 			const response = InternalServerErrorException(
 				ERROR_INTERNAL_SERVER_ERROR,
@@ -57,19 +60,26 @@ export class AllExceptionFilter implements ExceptionFilter {
 				httpAdapter.getRequestUrl(ctx.getRequest()),
 			);
 
+			// sentry
 			Sentry.captureException(exception);
+
+			// slack
+			this.sendSlackIncomingWebhook(
+				errorLog,
+				exception.message,
+				exception.stack ?? '',
+			);
 
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		}
 
 		if (statusCode >= 400 && statusCode < 500) {
-			winstonLogger.warn(
-				`[${
-					ErrorTypeEnum.OTHER
-				}][${method}]${originalUrl}(${statusCode}) ${ip} ${userAgent} - ${
-					(exception as HttpException).message
-				}`,
-			);
+			const errorLog = `[${
+				ErrorTypeEnum.OTHER
+			}][${method}]${originalUrl}(${statusCode}) ${ip} ${userAgent} - ${
+				(exception as HttpException).message
+			}`;
+			winstonLogger.warn(errorLog);
 			const response = InternalServerErrorException(
 				ERROR_INTERNAL_SERVER_ERROR,
 			);
@@ -79,16 +89,22 @@ export class AllExceptionFilter implements ExceptionFilter {
 			);
 
 			Sentry.captureException(exception);
+
+			// slack
+			this.sendSlackIncomingWebhook(
+				errorLog,
+				(exception as HttpException).message,
+				(exception as HttpException).stack ?? '',
+			);
 
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		} else if (statusCode >= 500) {
-			winstonLogger.error(
-				`[${
-					ErrorTypeEnum.OTHER
-				}][${method}]${originalUrl}(${statusCode}) ${ip} ${userAgent} - ${
-					(exception as HttpException).message
-				}`,
-			);
+			const errorLog = `[${
+				ErrorTypeEnum.OTHER
+			}][${method}]${originalUrl}(${statusCode}) ${ip} ${userAgent} - ${
+				(exception as HttpException).message
+			}`;
+			winstonLogger.error(errorLog);
 			const response = InternalServerErrorException(
 				ERROR_INTERNAL_SERVER_ERROR,
 			);
@@ -99,8 +115,41 @@ export class AllExceptionFilter implements ExceptionFilter {
 
 			Sentry.captureException(exception);
 
+			// slack
+			this.sendSlackIncomingWebhook(
+				errorLog,
+				(exception as HttpException).message,
+				(exception as HttpException).stack ?? '',
+			);
+
 			return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 		}
+
+		/**
+		 * 그외의 예측 할 수 없는 모든 에러
+		 */
+		const errorLog = `[${
+			ErrorTypeEnum.OTHER
+		}][${method}]${originalUrl}(${statusCode}) ${ip} ${userAgent} - ${
+			(exception as HttpException).message
+		}`;
+		winstonLogger.error(errorLog);
+		const response = InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+
+		const responseBody = response.toHttpExceptionResponse(
+			httpAdapter.getRequestUrl(ctx.getRequest()),
+		);
+
+		Sentry.captureException(exception);
+
+		// slack
+		this.sendSlackIncomingWebhook(
+			errorLog,
+			(exception as HttpException).message,
+			(exception as HttpException).stack ?? '',
+		);
+
+		return this.HttpExceptionResponse(ctx, responseBody, statusCode);
 	}
 
 	private HttpExceptionResponse(
@@ -111,5 +160,24 @@ export class AllExceptionFilter implements ExceptionFilter {
 		const { httpAdapter } = this.httpAdapterHost;
 
 		httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
+	}
+
+	private sendSlackIncomingWebhook(text: string, title: string, value: string) {
+		this.incomingWebhook.send({
+			attachments: [
+				{
+					color: 'danger',
+					text,
+					fields: [
+						{
+							title,
+							value,
+							short: false,
+						},
+					],
+					ts: Math.floor(new Date().getTime() / 1000).toString(),
+				},
+			],
+		});
 	}
 }

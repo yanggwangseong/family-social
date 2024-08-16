@@ -5,6 +5,7 @@ import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { IncomingWebhook } from '@slack/webhook';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 
@@ -20,6 +21,7 @@ import {
 	ENV_APPLICATION_PORT,
 	ENV_GLOBAL_PREFIX,
 	ENV_SECRET_COOKIE_KEY,
+	ENV_SLACK_URL,
 } from './constants/env-keys.const';
 
 dotenv.config({
@@ -86,11 +88,13 @@ async function bootstrap() {
 		}),
 	);
 
+	const webhook = new IncomingWebhook(process.env[ENV_SLACK_URL]!);
+
 	const httpAdapterHost = app.get(HttpAdapterHost);
 
 	// exception
 	app.useGlobalFilters(
-		new AllExceptionFilter(httpAdapterHost),
+		new AllExceptionFilter(httpAdapterHost, webhook),
 		new ServiceHttpExceptionFilter(),
 	);
 
