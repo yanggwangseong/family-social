@@ -30,6 +30,8 @@ jobs:
         run: |
           echo "NEXT_PUBLIC_COOKIE_KEY=${{ secrets.NEXT_PUBLIC_COOKIE_KEY }}" > ./frontend/.env.production
           echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> ./frontend/.env.production
+          echo "NEXT_PUBLIC_SSR_API_URL=${{ secrets.NEXT_PUBLIC_SSR_API_URL }}" >> ./frontend/.env.production
+          echo "NEXT_PUBLIC_SOCKET_URL=${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" >> ./frontend/.env.production
 
       - name: Build and push frontend
         uses: docker/build-push-action@v4
