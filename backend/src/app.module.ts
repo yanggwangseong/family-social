@@ -9,6 +9,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SentryModule } from '@sentry/nestjs/setup';
 
 import { UsersModule } from '@/api/users/users.module';
 import { LoggerMiddleware } from '@/common/middlewares/logger.middleware';
@@ -37,6 +38,7 @@ import {
 
 @Module({
 	imports: [
+		SentryModule.forRoot(), // first import!!!
 		MailerModule.forRootAsync(EmailOptions),
 		ConfigModule.forRoot({
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],

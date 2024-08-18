@@ -1,22 +1,27 @@
+import './common/sentry/instrument';
 import path from 'path';
 
 import { ValidationError, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { IncomingWebhook } from '@slack/webhook';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
+import { winstonLogger } from '@/common/logger/winston';
 
 import { AppModule } from './app.module';
 import { BadRequestServiceException } from './common/exception/service.exception';
+import { AllExceptionFilter } from './common/filter/all-exception.filter';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 import {
 	ENV_APPLICATION_PORT,
 	ENV_GLOBAL_PREFIX,
 	ENV_SECRET_COOKIE_KEY,
+	ENV_SLACK_URL,
 } from './constants/env-keys.const';
 
 dotenv.config({
@@ -46,6 +51,9 @@ async function bootstrap() {
 		credentials: true,
 		allowedHeaders: 'Content-Type, Accept, Authorization',
 	};
+
+	// use log winston
+	app.useLogger(winstonLogger);
 
 	// set global prefix
 	app.setGlobalPrefix(String(process.env[ENV_GLOBAL_PREFIX]));
@@ -80,8 +88,15 @@ async function bootstrap() {
 		}),
 	);
 
+	const webhook = new IncomingWebhook(process.env[ENV_SLACK_URL]!);
+
+	const httpAdapterHost = app.get(HttpAdapterHost);
+
 	// exception
-	app.useGlobalFilters(new ServiceHttpExceptionFilter());
+	app.useGlobalFilters(
+		new AllExceptionFilter(httpAdapterHost, webhook),
+		new ServiceHttpExceptionFilter(),
+	);
 
 	// sucess interceptor
 	app.useGlobalInterceptors(new SuccessInterceptor());

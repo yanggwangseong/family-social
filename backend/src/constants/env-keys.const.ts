@@ -44,3 +44,9 @@ export const ENV_GLOBAL_PREFIX = 'GLOBAL_PREFIX' as const;
 // http protocol host
 export const ENV_PROTOCOL_KEY = 'SERVER_PROTOCOL' as const;
 export const ENV_HOST_KEY = 'SERVER_HOST' as const;
+
+// sentry
+export const ENV_SENTRY_DNS_KEY = 'SENTRY_DNS_KEY' as const;
+
+// slack
+export const ENV_SLACK_URL = 'SLACK_URL' as const;
