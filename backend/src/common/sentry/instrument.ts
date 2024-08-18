@@ -17,7 +17,7 @@ dotenv.config({
 });
 
 Sentry.init({
-	dsn: process.env[ENV_SENTRY_DNS_KEY],
+	dsn: process.env[ENV_SENTRY_DNS_KEY], // develop 환경에서 비워두기
 	integrations: [nodeProfilingIntegration()],
 	// Tracing
 	tracesSampleRate: 1.0, //  Capture 100% of the transactions
