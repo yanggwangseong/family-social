@@ -16,7 +16,7 @@ export class UsersController {
 	@Get()
 	async test() {
 		const user = await this.usersService.test();
-		throw new Error('My first Sentry error!');
+		throw new Error('I`m hungry');
 		// winstonLogger.error('error level');
 		// winstonLogger.warn('warn level');
 
@@ -27,6 +27,6 @@ export class UsersController {
 
 	@Get('/debug-sentry')
 	getError() {
-		throw new Error('My first Sentry error!');
+		throw new Error('I`m hungry');
 	}
 }
