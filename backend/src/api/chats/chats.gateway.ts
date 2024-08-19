@@ -35,6 +35,7 @@ import { MessagesService } from '../messages/messages.service';
 	transports: ['websocket'],
 	namespace: 'chats',
 	cors: {
+		origin: process.env['ENV_CLIENT_SOCKET_URL'],
 		credentials: true,
 	},
 })
