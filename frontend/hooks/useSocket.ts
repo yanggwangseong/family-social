@@ -29,6 +29,7 @@ export const useSocket = () => {
 
 		socket = io(`${SOCKET_URL}/chats`, {
 			transports: ['websocket'],
+			secure: process.env.NODE_ENV === 'production' ? true : false,
 			withCredentials: true,
 			auth: {
 				authorization: accessToken,
