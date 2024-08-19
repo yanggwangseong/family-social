@@ -50,3 +50,6 @@ export const ENV_SENTRY_DNS_KEY = 'SENTRY_DNS_KEY' as const;
 
 // slack
 export const ENV_SLACK_URL = 'SLACK_URL' as const;
+
+// client_socket_url
+export const ENV_CLIENT_SOCKET_URL = 'CLIENT_SOCKET_URL' as const;
