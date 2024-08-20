@@ -28,7 +28,7 @@ export const isScheduleOptins = [
 	'SHAREDSCHEDULE',
 ] as const;
 export const OrderOptions = ['ASC', 'DESC'] as const;
-export const EventType = ['BIRTHDAY'] as const;
+export const EventType = ['BIRTHDAY', 'SIXTIETHBIRTHDAY'] as const;
 export const contentTypeId = [
 	'12',
 	'14',
