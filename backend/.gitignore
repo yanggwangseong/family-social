@@ -40,4 +40,4 @@ lerna-debug.log*
 *.env*
 
 #migration
-/src/database
+/src/database/migrations
