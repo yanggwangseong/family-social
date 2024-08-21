@@ -54,3 +54,9 @@ export const ENV_SLACK_URL = 'SLACK_URL' as const;
 
 // client_socket_url
 export const ENV_CLIENT_SOCKET_URL = 'CLIENT_SOCKET_URL' as const;
+
+// redis
+export const ENV_REDIS_PROTOCOL = 'REDIS_PROTOCOL' as const;
+export const ENV_REDIS_HOST = 'REDIS_HOST' as const;
+export const ENV_REDIS_PORT = 'REDIS_PORT' as const;
+export const ENV_REDIS_TYPE = 'REDIS_TYPE' as const;
