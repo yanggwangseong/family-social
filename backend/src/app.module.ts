@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { SentryModule } from '@sentry/nestjs/setup';
 
@@ -30,6 +31,7 @@ import { SearchModule } from './api/search/search.module';
 import { ServerSentEventsModule } from './api/server-sent-events/server-sent-events.module';
 import { ToursModule } from './api/tours/tours.module';
 import { EmailOptions } from './common/config/emailConfig';
+import { RedisOptions } from './common/config/redis-config';
 import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import {
 	ENV_THROTTLER_LIMIT,
@@ -39,6 +41,7 @@ import {
 @Module({
 	imports: [
 		SentryModule.forRoot(), // first import!!!
+		RedisModule.forRootAsync(RedisOptions),
 		MailerModule.forRootAsync(EmailOptions),
 		ConfigModule.forRoot({
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],
