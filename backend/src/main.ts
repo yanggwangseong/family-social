@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { IncomingWebhook } from '@slack/webhook';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
@@ -108,7 +109,7 @@ async function bootstrap() {
 	app.use(cookieParser(process.env[ENV_SECRET_COOKIE_KEY]));
 
 	// production 나중에 적용
-	//process.env.NODE_ENV === 'production' && app.use(helmet());
+	process.env.NODE_ENV === 'production' && app.use(helmet());
 
 	// swagger
 	const config = new DocumentBuilder()
