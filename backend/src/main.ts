@@ -2,6 +2,7 @@ import './common/sentry/instrument';
 import path from 'path';
 
 import { ValidationError, ValidationPipe } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -20,6 +21,7 @@ import { AllExceptionFilter } from './common/filter/all-exception.filter';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 import {
 	ENV_APPLICATION_PORT,
+	ENV_CLIENT_SOCKET_URL,
 	ENV_GLOBAL_PREFIX,
 	ENV_SECRET_COOKIE_KEY,
 	ENV_SLACK_URL,
@@ -45,8 +47,11 @@ async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 	app.set('trust proxy', true);
 
-	const options = {
-		origin: true,
+	const options: CorsOptions = {
+		origin:
+			process.env.NODE_ENV === 'production'
+				? process.env[ENV_CLIENT_SOCKET_URL]
+				: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		preflightContinue: false,
 		credentials: true,
