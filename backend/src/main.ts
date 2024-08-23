@@ -2,12 +2,14 @@ import './common/sentry/instrument';
 import path from 'path';
 
 import { ValidationError, ValidationPipe } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { IncomingWebhook } from '@slack/webhook';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 import { ServiceHttpExceptionFilter } from '@/common/filter/service-http-exception.filter';
 import { SuccessInterceptor } from '@/common/interceptors/sucess.interceptor';
@@ -19,6 +21,7 @@ import { AllExceptionFilter } from './common/filter/all-exception.filter';
 import { CustomValidationPipe } from './common/pipes/custom-validation.pipe';
 import {
 	ENV_APPLICATION_PORT,
+	ENV_CLIENT_SOCKET_URL,
 	ENV_GLOBAL_PREFIX,
 	ENV_SECRET_COOKIE_KEY,
 	ENV_SLACK_URL,
@@ -44,8 +47,11 @@ async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 	app.set('trust proxy', true);
 
-	const options = {
-		origin: true,
+	const options: CorsOptions = {
+		origin:
+			process.env.NODE_ENV === 'production'
+				? process.env[ENV_CLIENT_SOCKET_URL]
+				: true,
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 		preflightContinue: false,
 		credentials: true,
@@ -108,7 +114,7 @@ async function bootstrap() {
 	app.use(cookieParser(process.env[ENV_SECRET_COOKIE_KEY]));
 
 	// production 나중에 적용
-	//process.env.NODE_ENV === 'production' && app.use(helmet());
+	process.env.NODE_ENV === 'production' && app.use(helmet());
 
 	// swagger
 	const config = new DocumentBuilder()
