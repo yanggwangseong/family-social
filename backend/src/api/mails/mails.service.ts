@@ -20,7 +20,8 @@ export class MailsService {
 		{ invitedEmails }: GroupInvitedEmailsReqDto,
 		group: GroupProfileResDto,
 	) {
-		const inviteLink = 'http://localhost:3000/g/:groupId/:famId';
+		// fam id와 Group id를 이용해서 생성
+		const inviteLink = 'http://localhost:3000/g/:groupId/fams/:famId';
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
 				const subject = `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`;
@@ -45,7 +46,6 @@ export class MailsService {
 							   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);'
 						>
 						<h1>그룹 가입 초대를 받았습니다</h1>
-						<p style='margin-bottom:30px;'>가입해 주셔서 감사합니다! 아래의 인증 코드를 사용하세요:</p>
 						<p
 							style='font-size: 24px;
 								   font-weight: bold;
