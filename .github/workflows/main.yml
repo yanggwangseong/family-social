@@ -1,6 +1,6 @@
 name: deployment from ElasticBeanstalk
 on:
-  push:
+  pull_request:
     branches:
       - main
 
