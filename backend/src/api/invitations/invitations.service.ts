@@ -19,7 +19,7 @@ import {
 import { generateRandomCode } from '@/utils/generate-random-code';
 
 @Injectable()
-export class InvitationService {
+export class InvitationsService {
 	constructor(
 		private readonly configService: ConfigService,
 		@InjectRedis() private readonly redis: Redis,

@@ -9,13 +9,13 @@ import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
 import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
 import { OverrideInsertFeild } from '@/types/repository';
 
-import { InvitationService } from '../invitation/Invitation.service';
+import { InvitationsService } from '../invitations/invitations.service';
 
 @Injectable()
 export class MailsService {
 	constructor(
 		private readonly mailerService: MailerService,
-		private readonly invitationService: InvitationService,
+		private readonly invitationsService: InvitationsService,
 		private readonly mailSendLogRepository: MailSendLogRepository,
 	) {}
 
@@ -27,7 +27,7 @@ export class MailsService {
 		 * email 링크 초대일경우 email 갯수만큼 초대 Limit 설정
 		 *
 		 */
-		const inviteLink = this.invitationService.createGroupInviteLink(
+		const inviteLink = this.invitationsService.createGroupInviteLink(
 			group.id,
 			invitedEmails.length,
 		);
