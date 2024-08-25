@@ -9,10 +9,13 @@ import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
 import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
 import { OverrideInsertFeild } from '@/types/repository';
 
+import { InvitationService } from '../invitation/Invitation.service';
+
 @Injectable()
 export class MailsService {
 	constructor(
 		private readonly mailerService: MailerService,
+		private readonly invitationService: InvitationService,
 		private readonly mailSendLogRepository: MailSendLogRepository,
 	) {}
 
@@ -20,8 +23,14 @@ export class MailsService {
 		{ invitedEmails }: GroupInvitedEmailsReqDto,
 		group: GroupProfileResDto,
 	) {
-		// fam id와 Group id를 이용해서 생성
-		const inviteLink = 'http://localhost:3000/g/:groupId/fams/:famId';
+		/**
+		 * email 링크 초대일경우 email 갯수만큼 초대 Limit 설정
+		 *
+		 */
+		const inviteLink = this.invitationService.createGroupInviteLink(
+			group.id,
+			invitedEmails.length,
+		);
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
 				const subject = `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`;
