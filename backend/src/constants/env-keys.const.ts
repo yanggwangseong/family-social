@@ -60,3 +60,4 @@ export const ENV_REDIS_PROTOCOL = 'REDIS_PROTOCOL' as const;
 export const ENV_REDIS_HOST = 'REDIS_HOST' as const;
 export const ENV_REDIS_PORT = 'REDIS_PORT' as const;
 export const ENV_REDIS_TYPE = 'REDIS_TYPE' as const;
+export const ENV_GROUP_INVITE_TTL = 'GROUP_INVITE_TTL' as const;

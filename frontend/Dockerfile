@@ -43,6 +43,9 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# 생성된 /app/.next/cache 디렉터리에 대한 권한을 nextjs 사용자에게 부여
+RUN mkdir -p /app/.next/cache && chown -R nextjs:nodejs /app/.next
+
 USER nextjs
 
 COPY --from=builder /app/public ./public
