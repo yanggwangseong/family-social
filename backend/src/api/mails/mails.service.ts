@@ -9,10 +9,13 @@ import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
 import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
 import { OverrideInsertFeild } from '@/types/repository';
 
+import { InvitationService } from '../invitation/Invitation.service';
+
 @Injectable()
 export class MailsService {
 	constructor(
 		private readonly mailerService: MailerService,
+		private readonly invitationService: InvitationService,
 		private readonly mailSendLogRepository: MailSendLogRepository,
 	) {}
 
@@ -20,7 +23,14 @@ export class MailsService {
 		{ invitedEmails }: GroupInvitedEmailsReqDto,
 		group: GroupProfileResDto,
 	) {
-		const inviteLink = 'http://localhost:3000/g/:groupId/:famId';
+		/**
+		 * email 링크 초대일경우 email 갯수만큼 초대 Limit 설정
+		 *
+		 */
+		const inviteLink = this.invitationService.createGroupInviteLink(
+			group.id,
+			invitedEmails.length,
+		);
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
 				const subject = `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`;
@@ -45,7 +55,6 @@ export class MailsService {
 							   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);'
 						>
 						<h1>그룹 가입 초대를 받았습니다</h1>
-						<p style='margin-bottom:30px;'>가입해 주셔서 감사합니다! 아래의 인증 코드를 사용하세요:</p>
 						<p
 							style='font-size: 24px;
 								   font-weight: bold;

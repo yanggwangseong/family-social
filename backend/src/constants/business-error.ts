@@ -110,3 +110,8 @@ export const ERROR_DELETE_GROUP_EVENT =
 
 export const ERROR_NO_PERMISSTION_TO_GROUP_EVENT =
 	'해당 그룹 이벤트에 접근 할 권한이 없습니다' as const;
+
+// invite-link
+export const ERROR_INVITE_LINK_EXPIRED = '해당 링크가 만료 되었습니다' as const;
+export const ERROR_INVITE_USES_LIMIT =
+	'해당 링크 초대 횟수를 초과 하였습니다' as const;

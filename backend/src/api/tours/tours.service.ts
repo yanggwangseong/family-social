@@ -420,6 +420,7 @@ export class ToursService {
 			const result = parser.parse(`${data}`);
 
 			// [TODO] slack
+			// all-exception-filter로 인해서 설정 안해줘도 됨.
 			// throw InternalServerErrorException(
 			// 	`code: ${result.OpenAPI_ServiceResponse.cmmMsgHeader.returnReasonCode}`,
 			// );
@@ -427,6 +428,7 @@ export class ToursService {
 		}
 
 		// [TODO] slack throw InternalServerErrorException(ERROR_INTERNAL_SERVER_ERROR);
+		// all-exception-filter로 인해서 설정 안해줘도 됨.
 		if (typeof data.response.body.items === 'string') {
 			const item = {
 				item: [],
