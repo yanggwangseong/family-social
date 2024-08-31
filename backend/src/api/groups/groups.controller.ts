@@ -287,6 +287,7 @@ export class GroupsController {
 		await this.famsService.createFamByMemberOfGroup({
 			memberId,
 			groupId,
+			invitationAccepted: false,
 		});
 	}
 

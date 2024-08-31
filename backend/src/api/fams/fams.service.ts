@@ -24,12 +24,12 @@ export class FamsService {
 	async createFamByMemberOfGroup(createFamArgs: {
 		memberId: string;
 		groupId: string;
+		invitationAccepted: boolean;
 	}): Promise<void> {
 		const newFam = this.famsRepository.create({
 			id: uuidv4(),
 			...createFamArgs,
 			role: 'user',
-			invitationAccepted: false,
 		});
 		await this.famsRepository.createFam(newFam);
 		//[TODO] 그룹 초대 notification

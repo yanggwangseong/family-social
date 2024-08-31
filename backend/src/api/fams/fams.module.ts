@@ -8,7 +8,7 @@ import { FamsController } from './fams.controller';
 import { FamsService } from './fams.service';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([FamEntity])],
+	imports: [TypeOrmModule.forFeature([FamEntity]), FamsModule],
 	controllers: [FamsController],
 	providers: [FamsService, FamsRepository],
 	exports: [FamsService],
