@@ -8,6 +8,7 @@ import {
 import {
 	BadRequestErrorResponse,
 	GroupErrorResponse,
+	InvitationErrorResponse,
 	MemberErrorResponse,
 } from '@/constants/swagger-error-response';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
@@ -142,6 +143,29 @@ export const GetInviteLinkByGroup = () => {
 		ErrorResponse(HttpStatus.NOT_FOUND, [
 			GroupErrorResponse['Group-404-1'],
 			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};
+
+export const PostFamByInvitationCode = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: 'invitationCode를 검증 하고 그룹 fam 멤버를 생성',
+		}),
+
+		ApiCreatedResponse({
+			description: 'invitationCode를 검증 하고 그룹 fam 멤버를 생성',
+		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+		ErrorResponse(HttpStatus.UNAUTHORIZED, [
+			InvitationErrorResponse['invitation-401-1'],
+		]),
+		ErrorResponse(HttpStatus.CONFLICT, [
+			InvitationErrorResponse['invitation-409-1'],
 		]),
 	);
 };

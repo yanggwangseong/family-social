@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -54,7 +55,11 @@ export class InvitationsService {
 		return url.toString();
 	}
 
-	async validateInviteLink(inviteCode: string, memberId: string) {
+	async validateInviteLink(
+		inviteCode: string,
+		memberId: string,
+		qr?: QueryRunner,
+	) {
 		const inviteData = await this.redis.hgetall(inviteCode);
 
 		if (!inviteData) {
@@ -67,11 +72,14 @@ export class InvitationsService {
 			throw EntityConflictException(ERROR_INVITE_USES_LIMIT);
 		}
 
-		await this.famsService.createFamByMemberOfGroup({
-			memberId,
-			groupId: inviteData.groupId,
-			invitationAccepted: true,
-		});
+		await this.famsService.createFamByMemberOfGroup(
+			{
+				memberId,
+				groupId: inviteData.groupId,
+				invitationAccepted: true,
+			},
+			qr,
+		);
 
 		// remainingUses 업데이트
 		await this.redis.hincrby(inviteCode, 'remainingUses', -1);

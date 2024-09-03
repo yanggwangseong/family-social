@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -21,17 +22,20 @@ import {
 export class FamsService {
 	constructor(private readonly famsRepository: FamsRepository) {}
 
-	async createFamByMemberOfGroup(createFamArgs: {
-		memberId: string;
-		groupId: string;
-		invitationAccepted: boolean;
-	}): Promise<void> {
+	async createFamByMemberOfGroup(
+		createFamArgs: {
+			memberId: string;
+			groupId: string;
+			invitationAccepted: boolean;
+		},
+		qr?: QueryRunner,
+	): Promise<void> {
 		const newFam = this.famsRepository.create({
 			id: uuidv4(),
 			...createFamArgs,
 			role: 'user',
 		});
-		await this.famsRepository.createFam(newFam);
+		await this.famsRepository.createFam(newFam, qr);
 		//[TODO] 그룹 초대 notification
 	}
 

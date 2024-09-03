@@ -36,6 +36,7 @@ import {
 	GetInviteLinkByGroup,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
+	PostFamByInvitationCode,
 	PostInvitedEmailsOfGroupSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
@@ -77,6 +78,7 @@ import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
 import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
 import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+import { InvitationValidationCodeReqDto } from '@/models/dto/invitations/req/invitation-validation-code-req.dto';
 import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
@@ -129,8 +131,8 @@ export class GroupsController {
 	 * @summary 유저가 속하는 Group생성
 	 *
 	 * @tag groups
-	 * @param {string} dto.groupName - 그룹 이름
-	 * @param {string} dto.groupDescription - 그룹 설명
+	 * @param {string} dto.groupName 그룹 이름
+	 * @param {string} dto.groupDescription 그룹 설명
 	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
@@ -613,6 +615,26 @@ export class GroupsController {
 			groupId,
 			maxUses,
 		);
+	}
+
+	/**
+	 * @summary invitationCode를 검증 하고 그룹 fam 멤버를 생성
+	 *
+	 * @tag groups
+	 * @param dto inviteCode
+	 * @param sub 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PostFamByInvitationCode()
+	@UseInterceptors(TransactionInterceptor)
+	@Post('/:groupId/invite')
+	async postFamByInvitationCode(
+		@Body() dto: InvitationValidationCodeReqDto,
+		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.invitationsService.validateInviteLink(dto.inviteCode, sub, qr);
 	}
 
 	/**

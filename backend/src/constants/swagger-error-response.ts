@@ -23,6 +23,8 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
 	ERROR_GROUP_NOT_FOUND,
+	ERROR_INVITE_LINK_EXPIRED,
+	ERROR_INVITE_USES_LIMIT,
 	ERROR_INVITED_GROUP_NOT_FOUND,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
@@ -92,6 +94,25 @@ export const ScheduleErrorResponse = {
 			'해당하는 여행일정이 존재하지 않을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_SCHEDULE_NOT_FOUND}`,
 		message: `${ERROR_SCHEDULE_NOT_FOUND}`,
+	},
+};
+
+// 초대코드
+export const InvitationErrorResponse = {
+	// 401
+	'invitation-401-1': {
+		model: UnAuthOrizedException,
+		exampleDescription: '링크가 만료 되었을 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_INVITE_LINK_EXPIRED}`,
+		message: `${ERROR_INVITE_LINK_EXPIRED}`,
+	},
+
+	//409
+	'invitation-409-1': {
+		model: EntityConflictException,
+		exampleDescription: '초대 횟수를 초과 했을 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_INVITE_USES_LIMIT}`,
+		message: `${ERROR_INVITE_USES_LIMIT}`,
 	},
 };
 
