@@ -37,8 +37,9 @@ export class InvitationsService {
 	async createGroupInviteLink(groupId: string, maxUses: number) {
 		const inviteCode = generateRandomCode(10) + uuidv4();
 		const ttl = this.configService.get(ENV_GROUP_INVITE_TTL);
-		const url = new URL(this.configService.get(ENV_CLIENT_SOCKET_URL)!);
-		url.pathname = `${url.pathname}/groups/${groupId}/g/${inviteCode}`;
+		const baseUrl = this.configService.get(ENV_CLIENT_SOCKET_URL)!;
+
+		const url = new URL(`${baseUrl}/groups/${groupId}/g/${inviteCode}`);
 
 		const groupInviteData = {
 			groupId,

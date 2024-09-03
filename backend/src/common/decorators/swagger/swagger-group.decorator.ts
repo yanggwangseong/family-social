@@ -6,6 +6,7 @@ import {
 } from '@nestjs/swagger';
 
 import {
+	BadRequestErrorResponse,
 	GroupErrorResponse,
 	MemberErrorResponse,
 } from '@/constants/swagger-error-response';
@@ -125,6 +126,23 @@ export const PostInvitedEmailsOfGroupSwagger = () => {
 		ApiOkResponse({
 			description: '특정 그룹의 email 초대',
 		}),
+	);
+};
+
+export const GetInviteLinkByGroup = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 그룹 초대 링크를 가져오기',
+		}),
+		ApiOkResponse({
+			description: '특정 그룹 초대 링크를 가져오기',
+			type: String,
+		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
 	);
 };
 

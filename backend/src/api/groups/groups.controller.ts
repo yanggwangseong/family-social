@@ -33,6 +33,7 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
+	GetInviteLinkByGroup,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
 	PostInvitedEmailsOfGroupSwagger,
@@ -88,6 +89,7 @@ import { GroupEventEntity } from '@/models/entities/group-event.entity';
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
 import { GroupEventsService } from '../group-events/group-events.service';
+import { InvitationsService } from '../invitations/invitations.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
@@ -104,6 +106,7 @@ export class GroupsController {
 		private readonly schedulesService: SchedulesService,
 		private readonly mailsService: MailsService,
 		private readonly groupEventsService: GroupEventsService,
+		private readonly invitationsService: InvitationsService,
 	) {}
 
 	/**
@@ -579,6 +582,37 @@ export class GroupsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
+	}
+
+	/**
+	 * @summary 특정 그룹 초대 링크를 가져오기
+	 *
+	 * @tag groups
+	 * @param groupId 그룹 아이디
+	 * @param maxUses 초대코드로 가입 할 수 있는 인원 제한
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹 초대 링크
+	 */
+	@GetInviteLinkByGroup()
+	@Get('/:groupId/invite-link')
+	async getInviteLinkByGroup(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Query(
+			'maxUses',
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('maxUses'),
+			}),
+		)
+		maxUses: number,
+	) {
+		return await this.invitationsService.createGroupInviteLink(
+			groupId,
+			maxUses,
+		);
 	}
 
 	/**
