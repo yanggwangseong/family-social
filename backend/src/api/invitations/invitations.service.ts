@@ -18,6 +18,7 @@ import {
 	ENV_GROUP_INVITE_TTL,
 } from '@/constants/env-keys.const';
 import { generateRandomCode } from '@/utils/generate-random-code';
+import { isEmptyObject } from '@/utils/is';
 
 import { FamsService } from '../fams/fams.service';
 
@@ -62,7 +63,7 @@ export class InvitationsService {
 	) {
 		const inviteData = await this.redis.hgetall(inviteCode);
 
-		if (!inviteData) {
+		if (isEmptyObject(inviteData)) {
 			throw UnAuthOrizedException(ERROR_INVITE_LINK_EXPIRED);
 		}
 
