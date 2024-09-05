@@ -11,25 +11,34 @@ import LoginButton from '@/components/ui/button/main/LoginButton';
 import { API_URL } from '@/constants/index';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
+import { getLocalStorage, setLocalStorage } from '@/utils/local-storage';
+import { getSessionStorage, setSessionStorage } from '@/utils/session-storage';
 
 const style = {
 	height: '100%',
 };
 
 const Home: FC = () => {
-	const [isSplash, setIsSplash] = useState<boolean>(true);
+	const [isSplash, setIsSplash] = useState<boolean>(false);
 
 	useLayoutEffect(() => {
-		// 5초 후에 isSplash를 false로 변경
-		const timer = setTimeout(() => {
-			setIsSplash(false);
-		}, 5000);
+		const init = getSessionStorage('init');
 
-		return () => {
-			// 컴포넌트가 언마운트 될 때 타이머를 클리어
-			clearTimeout(timer);
-		};
+		if (init !== 'on') {
+			setIsSplash(true); // Splash를 보여줌
+
+			const timer = setTimeout(() => {
+				setIsSplash(false);
+				setSessionStorage('init', 'on'); // splash를 보여준 후 'on'으로 설정
+			}, 5000);
+
+			// 컴포넌트가 언마운트 될 때 타이머 클리어
+			return () => {
+				clearTimeout(timer);
+			};
+		}
 	}, []);
+
 	return (
 		<>
 			{isSplash ? (
