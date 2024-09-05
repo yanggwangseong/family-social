@@ -3,25 +3,28 @@ import mainLandingAnimation from '@/assets/lottie/landing.json';
 import splashAnimation from '@/assets/lottie/splash.json';
 import Lottie from 'lottie-react';
 import { FaGoogle, FaSignInAlt } from 'react-icons/fa';
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { FC, useEffect, useState } from 'react';
+
 import styles from './Home.module.scss';
-import Image from 'next/image';
+
 import LoginButton from '@/components/ui/button/main/LoginButton';
 import { API_URL } from '@/constants/index';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
-import { getLocalStorage, setLocalStorage } from '@/utils/local-storage';
+
 import { getSessionStorage, setSessionStorage } from '@/utils/session-storage';
+import { useRedirectUrl } from '@/hooks/useRedirectUrl';
 
 const style = {
 	height: '100%',
 };
 
 const Home: FC = () => {
+	const { redirect_url } = useRedirectUrl();
+
 	const [isSplash, setIsSplash] = useState<boolean>(false);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const init = getSessionStorage('init');
 
 		if (init !== 'on') {
@@ -91,7 +94,11 @@ const Home: FC = () => {
 									variants={itemVariants}
 								>
 									<LoginButton
-										link="signin"
+										link={
+											redirect_url
+												? `signin?redirect_url=${redirect_url}`
+												: 'signin'
+										}
 										text="로그인"
 										Icon={FaSignInAlt}
 										IconColor="DB4437"
