@@ -61,4 +61,12 @@ export const GroupService = {
 	async deleteGroup(groupId: string) {
 		const { data } = await axiosAPI.delete<void>(`/groups/${groupId}`);
 	},
+
+	async inviteCodeVerify(inviteCode: string, groupId: string) {
+		const { data } = await axiosAPI.post(`/groups/${groupId}/invite`, {
+			inviteCode,
+		} satisfies { inviteCode: string });
+
+		return data;
+	},
 };

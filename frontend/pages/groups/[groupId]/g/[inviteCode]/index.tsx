@@ -1,25 +1,42 @@
-import { SOCKET_URL } from '@/constants/index';
+import InviteCode from '@/components/screens/group/invite-code/InviteCode';
+import { SOCKET_URL, SSR_API_URL } from '@/constants/index';
 import { setSessionStorage } from '@/utils/session-storage';
-import { axiosRefreshAPI } from 'api/axios/refresh';
+
+import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
+
 import React, { useEffect } from 'react';
 
 const GroupDetailInviteCodePage: NextPage = () => {
-	const router = useRouter();
-
 	useEffect(() => {
 		setSessionStorage('init', 'on');
 	}, []);
 
-	return <div>dd</div>;
+	return <InviteCode />;
 };
 
 export default GroupDetailInviteCodePage;
 
 export const getServerSideProps = (async context => {
+	const cookie = context.req.headers.cookie || '';
+	// 쿠키 문자열을 개별 쿠키로 분리
+	const cookiesArray = cookie?.split(';');
+
+	// Authentication 쿠키 찾기
+	const authenticationCookie = cookiesArray?.find(cookie =>
+		cookie.trim().startsWith('Authentication='),
+	);
+
+	const axiosInstance = axios.create({
+		baseURL: SSR_API_URL,
+		withCredentials: true,
+		headers: {
+			Cookie: authenticationCookie || '', // Authentication 쿠키만 추가
+		},
+	});
+
 	try {
-		await axiosRefreshAPI();
+		await axiosInstance.post('/auth/refreshtoken');
 	} catch (error) {
 		return {
 			redirect: {
