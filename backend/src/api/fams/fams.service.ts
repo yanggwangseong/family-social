@@ -8,8 +8,10 @@ import {
 } from '@/common/exception/service.exception';
 import {
 	ERROR_DELETE_GROUP_MEMBER,
+	ERROR_GROUP_MEMBER_NOT_FOUND,
 	ERROR_INVITED_GROUP_NOT_FOUND,
 } from '@/constants/business-error';
+import { FamGroupDetailResDto } from '@/models/dto/fam/res/fam-group-detail-res.dto';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
@@ -70,6 +72,24 @@ export class FamsService {
 		return {
 			list,
 			count,
+		};
+	}
+
+	async getGroupByGroupId(
+		groupId: string,
+		memberId: string,
+	): Promise<FamGroupDetailResDto> {
+		const member = await this.famsRepository.getByGroupId(groupId, memberId);
+
+		if (!member) throw EntityNotFoundException(ERROR_GROUP_MEMBER_NOT_FOUND);
+
+		const memberCount = await this.famsRepository.getCountBelongToGroupMember(
+			groupId,
+		);
+
+		return {
+			...member,
+			memberCount,
 		};
 	}
 

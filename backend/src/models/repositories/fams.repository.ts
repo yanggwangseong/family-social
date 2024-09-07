@@ -30,6 +30,34 @@ export class FamsRepository extends Repository<FamEntity> {
 			: this.repository;
 	}
 
+	async getByGroupId(groupId: string, memberId: string) {
+		return await this.repository.findOne({
+			select: {
+				id: true,
+				invitationAccepted: true,
+				group: {
+					id: true,
+					groupName: true,
+					groupCoverImage: true,
+					groupDescription: true,
+				},
+			},
+			where: {
+				groupId,
+				memberId,
+			},
+			relations: {
+				group: true,
+			},
+		});
+	}
+
+	async getCountBelongToGroupMember(groupId: string) {
+		return await this.repository.countBy({
+			groupId,
+		});
+	}
+
 	async getMemberListBelongToGroup({
 		groupId,
 		take,

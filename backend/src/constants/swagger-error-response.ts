@@ -22,6 +22,7 @@ import {
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 	ERROR_GROUP_EVENT_TYPE_NOT_FOUND,
+	ERROR_GROUP_MEMBER_NOT_FOUND,
 	ERROR_GROUP_NOT_FOUND,
 	ERROR_INVITE_LINK_EXPIRED,
 	ERROR_INVITE_USES_LIMIT,
@@ -214,6 +215,13 @@ export const GroupErrorResponse = {
 		exampleDescription: '초대 받은 그룹을 찾을 수 않을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_INVITED_GROUP_NOT_FOUND}`,
 		message: `${ERROR_INVITED_GROUP_NOT_FOUND}`,
+	},
+	'Group-404-3': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'해당 그룹에 존재하지 않은 멤버 일때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_GROUP_MEMBER_NOT_FOUND}`,
+		message: `${ERROR_GROUP_MEMBER_NOT_FOUND}`,
 	},
 
 	// 403

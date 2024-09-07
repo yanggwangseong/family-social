@@ -33,6 +33,7 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
+	GetGroupDetailSwagger,
 	GetInviteLinkByGroup,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
@@ -125,7 +126,27 @@ export class GroupsController {
 		return await this.groupsService.getMemberBelongToGroups(sub);
 	}
 
-	// [TODO]: : [Get] groupId에 해당하는 그룹정보 가져오기
+	/**
+	 * @summary groupId에 해당하는 그룹정보 가져오기
+	 *
+	 * @tag groups
+	 * @param sub 인증된 유저 아이디
+	 * @param groupId 그룹 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 특정 그룹 정보
+	 */
+	@GetGroupDetailSwagger()
+	@Get(':groupId')
+	async getGroupDetail(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.famsService.getGroupByGroupId(groupId, sub);
+	}
 
 	/**
 	 * @summary 유저가 속하는 Group생성

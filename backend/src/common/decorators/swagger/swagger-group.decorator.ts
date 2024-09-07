@@ -11,6 +11,7 @@ import {
 	InvitationErrorResponse,
 	MemberErrorResponse,
 } from '@/constants/swagger-error-response';
+import { FamGroupDetailResDto } from '@/models/dto/fam/res/fam-group-detail-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
@@ -18,6 +19,32 @@ import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
+
+export const GetGroupDetailSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: 'groupId에 해당하는 그룹정보 가져오기',
+		}),
+		ApiOkResponse({
+			description: 'groupId에 해당하는 그룹정보 가져오기',
+			type: FamGroupDetailResDto,
+			isArray: true,
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: FamGroupDetailResDto,
+				exampleTitle: '그룹 생성',
+				exampleDescription: '그룹 생성 성공',
+			},
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			GroupErrorResponse['Group-404-3'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};
 
 export const GetMemberListBelongToGroupSwagger = () => {
 	return applyDecorators(
