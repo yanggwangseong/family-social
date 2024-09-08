@@ -18,6 +18,7 @@ export class FamGroupDetailResDto extends PickType(FamEntity, [
 
 	@ApiProperty({
 		nullable: false,
+		description: '그룹에 속한 멤버 수',
 	})
 	memberCount!: number;
 }
