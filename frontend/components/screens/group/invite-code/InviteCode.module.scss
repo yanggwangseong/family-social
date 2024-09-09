@@ -1,40 +1,37 @@
 .container {
-	@screen md {
-		@apply flex justify-center h-full;
-	}
-	@apply p-4 h-full;
+	@apply p-4 h-full flex justify-center items-center;
 
 	.contents_card {
 		@screen md {
-			@apply border border-solid border-customDark px-4 flex flex-col;
-			width: 768px;
+			@apply border border-solid border-customDark px-8 py-6 flex flex-col items-center;
+			width: 480px;
 		}
-		@apply w-full flex flex-col;
+		@apply w-full flex flex-col items-center;
 
 		.contents_wrap {
-			@apply flex-grow;
+			@apply flex-grow w-full flex flex-col gap-4;
 
-			.signin__header_title {
-				@screen md {
-					@apply text-4xl font-bold mt-10;
+			.group_image {
+				@apply w-full h-[200px] relative;
+			}
+
+			.header_title {
+				@apply text-customDark text-2xl font-bold text-center;
+			}
+
+			.header_subtitle {
+				@apply text-customGray text-base text-center;
+			}
+
+			.group_members {
+				@apply text-customDark flex justify-center items-center flex-row gap-2;
+
+				.group_members_icon {
+					@apply mr-2;
 				}
-				@apply text-customDark text-4xl font-bold mt-10;
-			}
 
-			.signin__header_subtitle {
-				@screen md {
-					@apply text-base mt-4;
-				}
-				@apply text-customGray text-base mt-4;
-			}
-
-			.signin__email_description {
-				@apply mt-10;
-			}
-
-			.form {
-				.form_label {
-					@apply text-customDark mt-4 mb-2;
+				.group_members_count {
+					@apply text-customOrange text-lg text-center;
 				}
 			}
 		}

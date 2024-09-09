@@ -40,4 +40,10 @@ export const FamService = {
 		);
 		return data;
 	},
+
+	async validateInvitationCode(inviteCode: string, groupId: string) {
+		const { data } = await axiosAPI.post<void>(`/groups/${groupId}/invite`, {
+			inviteCode,
+		} satisfies { inviteCode: string });
+	},
 };
