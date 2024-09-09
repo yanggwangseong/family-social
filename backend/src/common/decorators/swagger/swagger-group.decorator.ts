@@ -6,9 +6,12 @@ import {
 } from '@nestjs/swagger';
 
 import {
+	BadRequestErrorResponse,
 	GroupErrorResponse,
+	InvitationErrorResponse,
 	MemberErrorResponse,
 } from '@/constants/swagger-error-response';
+import { FamGroupDetailResDto } from '@/models/dto/fam/res/fam-group-detail-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
@@ -16,6 +19,32 @@ import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
+
+export const GetGroupDetailSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: 'groupId에 해당하는 그룹정보 가져오기',
+		}),
+		ApiOkResponse({
+			description: 'groupId에 해당하는 그룹정보 가져오기',
+			type: FamGroupDetailResDto,
+			isArray: true,
+		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: FamGroupDetailResDto,
+				exampleTitle: '그룹 생성',
+				exampleDescription: '그룹 생성 성공',
+			},
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			GroupErrorResponse['Group-404-3'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};
 
 export const GetMemberListBelongToGroupSwagger = () => {
 	return applyDecorators(
@@ -125,6 +154,46 @@ export const PostInvitedEmailsOfGroupSwagger = () => {
 		ApiOkResponse({
 			description: '특정 그룹의 email 초대',
 		}),
+	);
+};
+
+export const GetInviteLinkByGroup = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 그룹 초대 링크를 가져오기',
+		}),
+		ApiOkResponse({
+			description: '특정 그룹 초대 링크를 가져오기',
+			type: String,
+		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};
+
+export const PostFamByInvitationCode = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: 'invitationCode를 검증 하고 그룹 fam 멤버를 생성',
+		}),
+
+		ApiCreatedResponse({
+			description: 'invitationCode를 검증 하고 그룹 fam 멤버를 생성',
+		}),
+
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+		ErrorResponse(HttpStatus.GONE, [
+			InvitationErrorResponse['invitation-410-1'],
+		]),
+		ErrorResponse(HttpStatus.CONFLICT, [
+			InvitationErrorResponse['invitation-409-1'],
+		]),
 	);
 };
 

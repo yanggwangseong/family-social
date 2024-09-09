@@ -33,8 +33,11 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
+	GetGroupDetailSwagger,
+	GetInviteLinkByGroup,
 	GetMemberBelongToGroupsSwagger,
 	GetMemberListBelongToGroupSwagger,
+	PostFamByInvitationCode,
 	PostInvitedEmailsOfGroupSwagger,
 	UpdateFamInvitationAcceptSwagger,
 	UpdateGroupSwagger,
@@ -76,6 +79,7 @@ import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
 import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
 import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+import { InvitationValidationCodeReqDto } from '@/models/dto/invitations/req/invitation-validation-code-req.dto';
 import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
@@ -88,6 +92,7 @@ import { GroupEventEntity } from '@/models/entities/group-event.entity';
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
 import { GroupEventsService } from '../group-events/group-events.service';
+import { InvitationsService } from '../invitations/invitations.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
 import { SchedulesService } from '../schedules/schedules.service';
@@ -104,6 +109,7 @@ export class GroupsController {
 		private readonly schedulesService: SchedulesService,
 		private readonly mailsService: MailsService,
 		private readonly groupEventsService: GroupEventsService,
+		private readonly invitationsService: InvitationsService,
 	) {}
 
 	/**
@@ -120,14 +126,34 @@ export class GroupsController {
 		return await this.groupsService.getMemberBelongToGroups(sub);
 	}
 
-	// [TODO]: : [Get] groupId에 해당하는 그룹정보 가져오기
+	/**
+	 * @summary groupId에 해당하는 그룹정보 가져오기
+	 *
+	 * @tag groups
+	 * @param sub 인증된 유저 아이디
+	 * @param groupId 그룹 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 특정 그룹 정보
+	 */
+	@GetGroupDetailSwagger()
+	@Get(':groupId')
+	async getGroupDetail(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		return await this.famsService.getGroupByGroupId(groupId, sub);
+	}
 
 	/**
 	 * @summary 유저가 속하는 Group생성
 	 *
 	 * @tag groups
-	 * @param {string} dto.groupName - 그룹 이름
-	 * @param {string} dto.groupDescription - 그룹 설명
+	 * @param {string} dto.groupName 그룹 이름
+	 * @param {string} dto.groupDescription 그룹 설명
 	 * @param {string} sub - 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
 	 * @returns 그룹명
@@ -287,6 +313,7 @@ export class GroupsController {
 		await this.famsService.createFamByMemberOfGroup({
 			memberId,
 			groupId,
+			invitationAccepted: false,
 		});
 	}
 
@@ -578,6 +605,57 @@ export class GroupsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		return await this.schedulesService.deleteToursSchedule(scheduleId, qr);
+	}
+
+	/**
+	 * @summary 특정 그룹 초대 링크를 가져오기
+	 *
+	 * @tag groups
+	 * @param groupId 그룹 아이디
+	 * @param maxUses 초대코드로 가입 할 수 있는 인원 제한
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 그룹 초대 링크
+	 */
+	@GetInviteLinkByGroup()
+	@Get('/:groupId/invite-link')
+	async getInviteLinkByGroup(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@Query(
+			'maxUses',
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('maxUses'),
+			}),
+		)
+		maxUses: number,
+	) {
+		return await this.invitationsService.createGroupInviteLink(
+			groupId,
+			maxUses,
+		);
+	}
+
+	/**
+	 * @summary invitationCode를 검증 하고 그룹 fam 멤버를 생성
+	 *
+	 * @tag groups
+	 * @param dto inviteCode
+	 * @param sub 인증된 사용자 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@PostFamByInvitationCode()
+	@UseInterceptors(TransactionInterceptor)
+	@Post('/:groupId/invite')
+	async postFamByInvitationCode(
+		@Body() dto: InvitationValidationCodeReqDto,
+		@CurrentUser('sub') sub: string,
+		@QueryRunnerDecorator() qr: QueryRunner,
+	) {
+		await this.invitationsService.validateInviteLink(dto.inviteCode, sub, qr);
 	}
 
 	/**

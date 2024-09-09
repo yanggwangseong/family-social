@@ -1,3 +1,4 @@
+import { GroupDetailResponse } from '@/shared/interfaces/fam.interface';
 import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 import {
 	CreateGroupRequest,
@@ -10,6 +11,14 @@ import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface'
 import { axiosAPI } from 'api/axios';
 
 export const GroupService = {
+	async getGroupDetail(groupId: string) {
+		const { data } = await axiosAPI.get<GroupDetailResponse>(
+			`/groups/${groupId}`,
+		);
+
+		return data;
+	},
+
 	async getMemberBelongToGroups(): Promise<MemberBelongToGroupsResponse[]> {
 		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(
 			'/groups',
@@ -60,5 +69,13 @@ export const GroupService = {
 
 	async deleteGroup(groupId: string) {
 		const { data } = await axiosAPI.delete<void>(`/groups/${groupId}`);
+	},
+
+	async inviteCodeVerify(inviteCode: string, groupId: string) {
+		const { data } = await axiosAPI.post(`/groups/${groupId}/invite`, {
+			inviteCode,
+		} satisfies { inviteCode: string });
+
+		return data;
 	},
 };

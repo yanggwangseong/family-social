@@ -19,8 +19,12 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import EmailVerify from './email-verify/EmailVerify';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
+import { useRouter } from 'next/router';
+import { useRedirectUrl } from '@/hooks/useRedirectUrl';
 
 const SignUp: FC = () => {
+	const { redirect_url } = useRedirectUrl();
+
 	const [isEmailVerify, setEmailVerify] = useState<boolean>(false);
 
 	const {
@@ -199,7 +203,14 @@ const SignUp: FC = () => {
 						</motion.div>
 						<div className={styles.footer_wrap}>
 							이미 회원이신가요?
-							<Link href={'/signin'} className={styles.signup}>
+							<Link
+								href={
+									redirect_url
+										? `/signin?redirect_url=${redirect_url}`
+										: '/signin'
+								}
+								className={styles.signup}
+							>
 								로그인
 							</Link>
 						</div>

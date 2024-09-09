@@ -22,6 +22,7 @@ import { CommentsModule } from './api/comments/comments.module';
 import { FamsModule } from './api/fams/fams.module';
 import { FeedsModule } from './api/feeds/feeds.module';
 import { GroupsModule } from './api/groups/groups.module';
+import { InvitationsModule } from './api/invitations/invitations.module';
 import { MailsModule } from './api/mails/mails.module';
 import { MediasModule } from './api/medias/medias.module';
 import { MembersModule } from './api/members/members.module';
@@ -63,6 +64,7 @@ import {
 		NotificationsModule,
 		ServerSentEventsModule,
 		MentionsModule,
+		InvitationsModule,
 		ThrottlerModule.forRootAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],

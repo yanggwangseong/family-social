@@ -39,6 +39,9 @@ export const ERROR_DUPLICATE_GROUP_NAME =
 
 export const ERROR_GROUP_NOT_FOUND = '그룹을 찾을 수 없습니다' as const;
 
+export const ERROR_GROUP_MEMBER_NOT_FOUND =
+	'해당 그룹에 존재하지 않은 멤버 입니다' as const;
+
 export const ERROR_INVITED_MEMBER_NOT_FOUND =
 	'초대받은 멤버와 다른 사용자 입니다' as const;
 

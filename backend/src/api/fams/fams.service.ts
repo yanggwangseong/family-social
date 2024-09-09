@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -7,8 +8,10 @@ import {
 } from '@/common/exception/service.exception';
 import {
 	ERROR_DELETE_GROUP_MEMBER,
+	ERROR_GROUP_MEMBER_NOT_FOUND,
 	ERROR_INVITED_GROUP_NOT_FOUND,
 } from '@/constants/business-error';
+import { FamGroupDetailResDto } from '@/models/dto/fam/res/fam-group-detail-res.dto';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
@@ -21,17 +24,20 @@ import {
 export class FamsService {
 	constructor(private readonly famsRepository: FamsRepository) {}
 
-	async createFamByMemberOfGroup(createFamArgs: {
-		memberId: string;
-		groupId: string;
-	}): Promise<void> {
+	async createFamByMemberOfGroup(
+		createFamArgs: {
+			memberId: string;
+			groupId: string;
+			invitationAccepted: boolean;
+		},
+		qr?: QueryRunner,
+	): Promise<void> {
 		const newFam = this.famsRepository.create({
 			id: uuidv4(),
 			...createFamArgs,
 			role: 'user',
-			invitationAccepted: false,
 		});
-		await this.famsRepository.createFam(newFam);
+		await this.famsRepository.createFam(newFam, qr);
 		//[TODO] 그룹 초대 notification
 	}
 
@@ -66,6 +72,24 @@ export class FamsService {
 		return {
 			list,
 			count,
+		};
+	}
+
+	async getGroupByGroupId(
+		groupId: string,
+		memberId: string,
+	): Promise<FamGroupDetailResDto> {
+		const member = await this.famsRepository.getByGroupId(groupId, memberId);
+
+		if (!member) throw EntityNotFoundException(ERROR_GROUP_MEMBER_NOT_FOUND);
+
+		const memberCount = await this.famsRepository.getCountBelongToGroupMember(
+			groupId,
+		);
+
+		return {
+			...member,
+			memberCount,
 		};
 	}
 
