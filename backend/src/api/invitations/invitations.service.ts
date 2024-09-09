@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
 	EntityConflictException,
-	UnAuthOrizedException,
+	EntityGoneException,
 } from '@/common/exception/service.exception';
 import {
 	ERROR_INVITE_LINK_EXPIRED,
@@ -64,7 +64,7 @@ export class InvitationsService {
 		const inviteData = await this.redis.hgetall(inviteCode);
 
 		if (isEmptyObject(inviteData)) {
-			throw UnAuthOrizedException(ERROR_INVITE_LINK_EXPIRED);
+			throw EntityGoneException(ERROR_INVITE_LINK_EXPIRED);
 		}
 
 		const remainingUses = parseInt(inviteData.remainingUses);

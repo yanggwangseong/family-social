@@ -3,13 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FamEntity } from '@/models/entities/fam.entity';
 
-import { InvitationsController } from './invitations.controller';
 import { InvitationsService } from './invitations.service';
 import { FamsModule } from '../fams/fams.module';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([FamEntity]), FamsModule],
-	controllers: [InvitationsController],
+	controllers: [],
 	providers: [InvitationsService],
 	exports: [InvitationsService],
 })

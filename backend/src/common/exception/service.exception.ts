@@ -7,6 +7,7 @@ import {
 	UNAUTHORIZED,
 	UNPROCESSABLE_ENTITY,
 	INTERNAL_SERVER_ERROR,
+	ENTITY_GONE,
 } from '@/models/dto/error/error-code.dto';
 import { HttpExceptionResponse } from '@/models/dto/error/error-common-res.dto';
 
@@ -35,6 +36,11 @@ export const BadRequestServiceException = (
 // CONFLICT SERVICE EXCEPTION
 export const EntityConflictException = (message?: string): ServiceException => {
 	return new ServiceException(ENTITY_CONFLICT, message);
+};
+
+// GONE SERVICE EXCEPTION
+export const EntityGoneException = (message?: string): ServiceException => {
+	return new ServiceException(ENTITY_GONE, message);
 };
 
 // UNPROCESSABLE SERVICE EXCEPTION

@@ -1,6 +1,7 @@
 import {
 	BadRequestServiceException,
 	EntityConflictException,
+	EntityGoneException,
 	EntityNotFoundException,
 	ForBiddenException,
 	UnAuthOrizedException,
@@ -100,20 +101,20 @@ export const ScheduleErrorResponse = {
 
 // 초대코드
 export const InvitationErrorResponse = {
-	// 401
-	'invitation-401-1': {
-		model: UnAuthOrizedException,
-		exampleDescription: '링크가 만료 되었을 때 발생하는 에러 입니다',
-		exampleTitle: `${ERROR_INVITE_LINK_EXPIRED}`,
-		message: `${ERROR_INVITE_LINK_EXPIRED}`,
-	},
-
 	//409
 	'invitation-409-1': {
 		model: EntityConflictException,
 		exampleDescription: '초대 횟수를 초과 했을 때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_INVITE_USES_LIMIT}`,
 		message: `${ERROR_INVITE_USES_LIMIT}`,
+	},
+
+	// 410
+	'invitation-410-1': {
+		model: EntityGoneException,
+		exampleDescription: '링크가 만료 되었을 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_INVITE_LINK_EXPIRED}`,
+		message: `${ERROR_INVITE_LINK_EXPIRED}`,
 	},
 };
 

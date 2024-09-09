@@ -188,8 +188,8 @@ export const PostFamByInvitationCode = () => {
 			GroupErrorResponse['Group-404-1'],
 			BadRequestErrorResponse['BadRequest-400-1'],
 		]),
-		ErrorResponse(HttpStatus.UNAUTHORIZED, [
-			InvitationErrorResponse['invitation-401-1'],
+		ErrorResponse(HttpStatus.GONE, [
+			InvitationErrorResponse['invitation-410-1'],
 		]),
 		ErrorResponse(HttpStatus.CONFLICT, [
 			InvitationErrorResponse['invitation-409-1'],

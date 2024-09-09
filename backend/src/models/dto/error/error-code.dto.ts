@@ -35,6 +35,9 @@ export const ENTITY_CONFLICT = new ErrorCodeDTO(
 	'Entity is CONFLICT',
 );
 
+// 410
+export const ENTITY_GONE = new ErrorCodeDTO(HttpStatus.GONE, 'Entity Gone');
+
 // 422
 export const UNPROCESSABLE_ENTITY = new ErrorCodeDTO(
 	HttpStatus.UNPROCESSABLE_ENTITY,
