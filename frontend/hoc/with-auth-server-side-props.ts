@@ -1,6 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { SSR_API_URL } from '../constants';
+import { SSR_API_URL, SSR_REFRESH_TOKEN_URL } from '../constants';
 
 export interface WithAuthServerSidePropsContext
 	extends GetServerSidePropsContext {
@@ -37,7 +37,7 @@ export const withAuthServerSideProps = (
 
 		try {
 			const response = await axios.post(
-				`${SSR_API_URL}/auth/refreshtoken`,
+				SSR_REFRESH_TOKEN_URL,
 				{},
 				{
 					headers: {
