@@ -14,7 +14,7 @@ export interface FamInvitation extends FamResponse {
 
 export interface FamResponse {
 	id: string;
-	invitationAccepted: false;
+	invitationAccepted: boolean;
 }
 
 export interface FamSharedMemberResponse extends FamResponse {
