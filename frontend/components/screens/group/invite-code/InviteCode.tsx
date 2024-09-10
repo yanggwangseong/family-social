@@ -14,9 +14,13 @@ import axios from 'axios';
 import { InviteCodeRequest } from './invite-code.interface';
 import { FamService } from '@/services/fam/fam.service';
 import { setSessionStorage } from '@/utils/session-storage';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { LayerMode } from 'types';
 
 const InviteCode: FC = () => {
 	const router = useRouter();
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const { groupId, inviteCode } = router.query as {
 		groupId: string;
@@ -54,7 +58,15 @@ const InviteCode: FC = () => {
 					`${groupData?.group.groupName} 그룹에 초대되었습니다.`,
 					'확인',
 					() => {
-						router.push(`/groups/${groupData?.group.id}`);
+						handleSuccessLayerModal({
+							modalTitle: '그룹 초대 생성 성공',
+							layer: LayerMode.successLayerModal,
+							lottieFile: 'inviteCodeAnimation',
+							message: '그룹에 초대 되었습니다',
+							onConfirm: () => {
+								router.push(`/groups/${groupData?.group.id}`);
+							},
+						});
 					},
 				);
 			},
