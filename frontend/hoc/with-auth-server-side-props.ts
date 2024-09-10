@@ -1,51 +1,99 @@
-import { axiosAPI } from 'api/axios';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { SSR_API_URL } from '../constants';
+
+export interface WithAuthServerSidePropsContext
+	extends GetServerSidePropsContext {
+	axiosInstance: AxiosInstance;
+}
 
 export const withAuthServerSideProps = (
 	getServerSidePropsFunction: GetServerSideProps,
 ) => {
-	return async (context: GetServerSidePropsContext) => {
+	return async (context: WithAuthServerSidePropsContext) => {
 		const cookies = context.req.headers.cookie || '';
-
-		// 쿠키 문자열을 개별 쿠키로 분리
 		const cookiesArray = cookies?.split(';');
 
-		// Authentication 쿠키 찾기
 		const authenticationCookie = cookiesArray?.find(cookie =>
 			cookie.trim().startsWith('Authentication='),
 		);
 
-		// authorizationCookie 쿠키 찾기
 		const authorizationCookie = cookiesArray?.find(cookie =>
 			cookie.trim().startsWith('Authorization='),
 		);
 
-		// accessToken
 		const accessToken = authorizationCookie
-			? authorizationCookie.split('=')[1]
+			? authorizationCookie.split('=')[1].trim()
 			: '';
 
-		// 인증 토큰이 없으면 로그인 페이지로 리다이렉트
-		if (!accessToken) {
+		if (!accessToken || !authenticationCookie) {
 			return {
 				redirect: {
-					destination: '/login', // 로그인 페이지로 이동
+					destination: '/signin',
 					permanent: false,
 				},
 			};
 		}
 
-		// 인증 API 요청에 Authorization 헤더를 추가
-		axiosAPI.defaults.headers.common[
-			'Authorization'
-		] = `Bearer ${accessToken.trim()}`;
+		try {
+			const response = await axios.post(
+				`${SSR_API_URL}/auth/refreshtoken`,
+				{},
+				{
+					headers: {
+						Cookie: `Authentication=${authenticationCookie
+							.split('=')[1]
+							.trim()}`,
+					},
+				},
+			);
 
-		// 원래 getServerSidePropsFunction 호출 (ex: fetchMyPage)
-		const result = await getServerSidePropsFunction(context);
+			const newAuthenticationCookie = response.headers['set-cookie']?.find(
+				cookie => cookie.trim().startsWith('Authentication='),
+			);
 
-		// Authorization 헤더 제거 (보안 강화)
-		authAPI.defaults.headers.common['Authorization'] = '';
+			const newAuthorizationCookie = response.headers['set-cookie']?.find(
+				cookie => cookie.trim().startsWith('Authorization='),
+			);
 
-		return result;
+			const axiosInstance = axios.create({
+				baseURL: SSR_API_URL,
+				headers: {
+					Authorization: newAuthorizationCookie
+						? `Bearer ${newAuthorizationCookie
+								.split('=')[1]
+								.split(';')[0]
+								.trim()}`
+						: '',
+					Cookie: newAuthenticationCookie
+						? `Authentication=${newAuthenticationCookie
+								.split('=')[1]
+								.split(';')[0]
+								.trim()}`
+						: '',
+				},
+			});
+
+			axiosInstance.interceptors.response.use((res: AxiosResponse) => {
+				return {
+					...res,
+					data: res.data.data,
+				};
+			});
+
+			context.axiosInstance = axiosInstance;
+
+			const result = await getServerSidePropsFunction(context);
+
+			// 반환 값이 없을 경우 props: {}를 기본으로 반환
+			return result || { props: {} };
+		} catch (error) {
+			return {
+				redirect: {
+					destination: '/signin',
+					permanent: false,
+				},
+			};
+		}
 	};
 };

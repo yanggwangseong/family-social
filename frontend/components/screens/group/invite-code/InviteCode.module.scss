@@ -12,7 +12,7 @@
 			@apply flex-grow w-full flex flex-col gap-4;
 
 			.group_image {
-				@apply w-full h-[200px] relative;
+				@apply w-full h-[200px] relative border border-solid border-customDark;
 			}
 
 			.header_title {
