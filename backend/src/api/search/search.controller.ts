@@ -1,8 +1,10 @@
 import {
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Query,
+	Body,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -27,6 +29,7 @@ import {
 import { TourKeywordQueryReqDto } from '@/models/dto/tour/req/tour-keyword-query-req.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 
+import { SearchService } from './search.service';
 import { MembersService } from '../members/members.service';
 import { ToursService } from '../tours/tours.service';
 
@@ -38,6 +41,7 @@ export class SearchController {
 	constructor(
 		private readonly membersService: MembersService,
 		private readonly toursService: ToursService,
+		private readonly searchService: SearchService,
 	) {}
 
 	/**
@@ -59,11 +63,16 @@ export class SearchController {
 			sub,
 		);
 
-		return await this.membersService.findMembersByUserName(
+		const members = await this.membersService.findMembersByUserName(
 			username,
 			sub,
 			groupIds,
 		);
+
+		// 검색어 저장을 위해 호출
+		await this.searchService.addSearchTerm(sub, username, 'member');
+
+		return members;
 	}
 
 	/**
@@ -90,10 +99,31 @@ export class SearchController {
 	async getHttpTourApiSearch(
 		@Param('keyword') keyword: string,
 		@Query() queryDto: TourKeywordQueryReqDto,
+		@CurrentUser('sub') sub: string,
 	) {
-		return await this.toursService.getHttpTourApiSearch({
+		const result = await this.toursService.getHttpTourApiSearch({
 			keyword,
 			...queryDto,
 		});
+
+		// 검색어 저장을 위해 호출
+		await this.searchService.addSearchTerm(sub, keyword, 'tour');
+		return result;
+	}
+
+	@Get('/search-history/:searchType')
+	async getSearchHistory(
+		@CurrentUser('sub') sub: string,
+		@Param('searchType') searchType: string,
+	) {
+		return await this.searchService.getRecentSearchTerms(sub, searchType);
+	}
+
+	@Delete('/search-history')
+	async deleteSearchHistory(
+		@CurrentUser('sub') sub: string,
+		@Body('searchType') searchType: string,
+	) {
+		return await this.searchService.clearSearchHistory(sub, searchType);
 	}
 }
