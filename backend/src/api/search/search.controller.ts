@@ -21,6 +21,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { ParseSearchTypePipe } from '@/common/pipes/parse-search-type.pipe';
 import { PaginationEnum } from '@/constants/pagination.const';
 import {
 	ReturnBasicPaginationType,
@@ -28,6 +29,7 @@ import {
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourKeywordQueryReqDto } from '@/models/dto/tour/req/tour-keyword-query-req.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
+import { SearchType } from '@/types';
 
 import { SearchService } from './search.service';
 import { MembersService } from '../members/members.service';
@@ -70,7 +72,7 @@ export class SearchController {
 		);
 
 		// 검색어 저장을 위해 호출
-		await this.searchService.addSearchTerm(sub, username, 'member');
+		await this.searchService.addSearchTerm(sub, username, SearchType[1]);
 
 		return members;
 	}
@@ -107,14 +109,14 @@ export class SearchController {
 		});
 
 		// 검색어 저장을 위해 호출
-		await this.searchService.addSearchTerm(sub, keyword, 'tour');
+		await this.searchService.addSearchTerm(sub, keyword, SearchType[0]);
 		return result;
 	}
 
 	@Get('/search-history/:searchType')
 	async getSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Param('searchType') searchType: string,
+		@Param('searchType', new ParseSearchTypePipe()) searchType: string,
 	) {
 		return await this.searchService.getRecentSearchTerms(sub, searchType);
 	}
@@ -122,7 +124,7 @@ export class SearchController {
 	@Delete('/search-history')
 	async deleteSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Body('searchType') searchType: string,
+		@Body('searchType', new ParseSearchTypePipe()) searchType: string,
 	) {
 		return await this.searchService.clearSearchHistory(sub, searchType);
 	}
