@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 
+import { SearchType, Union } from '@/types';
+
 @Injectable()
 export class SearchService {
 	private readonly SEARCH_HISTORY_KEY = 'search:history';
@@ -15,7 +17,7 @@ export class SearchService {
 	async addSearchTerm(
 		userId: string,
 		term: string,
-		searchType: string,
+		searchType: Union<typeof SearchType>,
 	): Promise<void> {
 		if (term.length < this.MIN_TERM_LENGTH) {
 			return;
@@ -53,13 +55,16 @@ export class SearchService {
 
 	async getRecentSearchTerms(
 		userId: string,
-		searchType: string,
+		searchType: Union<typeof SearchType>,
 	): Promise<string[]> {
 		const key = `${this.SEARCH_HISTORY_KEY}:${searchType}:${userId}`;
 		return await this.redis.zrevrange(key, 0, this.MAX_HISTORY_SIZE - 1);
 	}
 
-	async clearSearchHistory(userId: string, searchType: string): Promise<void> {
+	async clearSearchHistory(
+		userId: string,
+		searchType: Union<typeof SearchType>,
+	): Promise<void> {
 		const key = `${this.SEARCH_HISTORY_KEY}:${searchType}:${userId}`;
 		await this.redis.del(key);
 	}

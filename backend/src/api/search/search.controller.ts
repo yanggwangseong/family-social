@@ -29,7 +29,7 @@ import {
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourKeywordQueryReqDto } from '@/models/dto/tour/req/tour-keyword-query-req.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
-import { SearchType } from '@/types';
+import { SearchType, Union } from '@/types';
 
 import { SearchService } from './search.service';
 import { MembersService } from '../members/members.service';
@@ -113,10 +113,11 @@ export class SearchController {
 		return result;
 	}
 
-	@Get('/search-history/:searchType')
+	@Get('/search-history')
 	async getSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Param('searchType', new ParseSearchTypePipe()) searchType: string,
+		@Query('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
 	) {
 		return await this.searchService.getRecentSearchTerms(sub, searchType);
 	}
@@ -124,7 +125,8 @@ export class SearchController {
 	@Delete('/search-history')
 	async deleteSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Body('searchType', new ParseSearchTypePipe()) searchType: string,
+		@Body('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
 	) {
 		return await this.searchService.clearSearchHistory(sub, searchType);
 	}
