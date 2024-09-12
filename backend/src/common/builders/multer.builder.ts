@@ -36,12 +36,12 @@ export class MulterBuilder {
 		this.s3 = new S3Client({
 			region: process.env.AWS_BUCKET_REGION,
 			credentials: {
-				accessKeyId: String(process.env.AWS_ACCESS_KEY_ID2),
-				secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY2),
+				accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
+				secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
 			},
 		});
 
-		this.bucketName = String(process.env.AWS_BUCKET_NAME2);
+		this.bucketName = String(process.env.AWS_BUCKET_NAME);
 	}
 
 	allowImageMimeTypes() {
