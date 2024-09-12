@@ -1,4 +1,5 @@
-import { Duration, ZonedDateTime, ZoneId } from '@js-joda/core';
+import '@js-joda/timezone';
+import { Duration, Instant, ZonedDateTime, ZoneId } from '@js-joda/core';
 import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
@@ -25,12 +26,15 @@ export class SearchService {
 
 		const key = `${this.SEARCH_HISTORY_KEY}:${searchType}:${userId}`;
 		const now = ZonedDateTime.now(ZoneId.of('Asia/Seoul'));
-		const timestamp = now.toString();
+		const timestamp = now.toEpochSecond();
 
 		const lastSearch = await this.redis.zrange(key, -1, -1, 'WITHSCORES');
 		if (lastSearch.length > 0) {
-			const [lastTerm, lastTimestampISO] = lastSearch;
-			const lastTimestamp = ZonedDateTime.parse(lastTimestampISO);
+			const [lastTerm, lastTimestampEpoch] = lastSearch;
+			const lastTimestamp = ZonedDateTime.ofInstant(
+				Instant.ofEpochSecond(parseInt(lastTimestampEpoch)),
+				ZoneId.of('Asia/Seoul'),
+			);
 
 			const timeDifference = Duration.between(lastTimestamp, now).toMillis();
 
@@ -39,7 +43,7 @@ export class SearchService {
 			}
 		}
 
-		// Redis에 ISO 8601 형식으로 검색어와 시간을 저장
+		// Redis에 Epoch 타임스탬프로 검색어와 시간을 저장
 		await this.redis.zadd(key, timestamp, term);
 
 		// 검색어가 10개를 초과하면 가장 오래된 검색어 삭제
