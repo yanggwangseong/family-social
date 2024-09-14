@@ -72,7 +72,10 @@ export class SearchController {
 		);
 
 		// 검색어 저장을 위해 호출
-		await this.searchService.addSearchTerm(sub, username, SearchType[1]);
+		// 검색어가 없으면 저장하지 않음
+		if (members.length > 0) {
+			await this.searchService.addSearchTerm(sub, username, SearchType[1]);
+		}
 
 		return members;
 	}
@@ -109,7 +112,10 @@ export class SearchController {
 		});
 
 		// 검색어 저장을 위해 호출
-		await this.searchService.addSearchTerm(sub, keyword, SearchType[0]);
+		// 검색어가 없으면 저장하지 않음
+		if (result.list.length > 0) {
+			await this.searchService.addSearchTerm(sub, keyword, SearchType[0]);
+		}
 		return result;
 	}
 
