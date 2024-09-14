@@ -14,6 +14,11 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { GetMembersByUserNameSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import {
+	DeleteSearchHistorySwagger,
+	DeleteSearchTermSwagger,
+	GetSearchHistorySwagger,
+} from '@/common/decorators/swagger/swagger-search.decorator';
 import { GetHttpTourApiSearchSwagger } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
@@ -119,21 +124,61 @@ export class SearchController {
 		return result;
 	}
 
+	/**
+	 * @summary 검색 기록 가져오기
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<string[]>}
+	 */
+	@GetSearchHistorySwagger()
 	@Get('/search-history')
 	async getSearchHistory(
 		@CurrentUser('sub') sub: string,
 		@Query('searchType', new ParseSearchTypePipe())
 		searchType: Union<typeof SearchType>,
-	) {
+	): Promise<string[]> {
 		return await this.searchService.getRecentSearchTerms(sub, searchType);
 	}
 
+	/**
+	 * @summary 검색 전체 기록 삭제
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<void>}
+	 */
+	@DeleteSearchHistorySwagger()
 	@Delete('/search-history')
 	async deleteSearchHistory(
 		@CurrentUser('sub') sub: string,
 		@Body('searchType', new ParseSearchTypePipe())
 		searchType: Union<typeof SearchType>,
-	) {
+	): Promise<void> {
 		return await this.searchService.clearSearchHistory(sub, searchType);
+	}
+
+	/**
+	 * @summary 특정 검색 기록 삭제
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<void>}
+	 */
+	@DeleteSearchTermSwagger()
+	@Delete('/search-history/:term')
+	async deleteSearchTerm(
+		@CurrentUser('sub') sub: string,
+		@Param('term') term: string,
+		@Body('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
+	): Promise<void> {
+		return await this.searchService.deleteSearchTerm(sub, searchType, term);
 	}
 }

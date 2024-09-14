@@ -72,4 +72,13 @@ export class SearchService {
 		const key = `${this.SEARCH_HISTORY_KEY}:${searchType}:${userId}`;
 		await this.redis.del(key);
 	}
+
+	async deleteSearchTerm(
+		userId: string,
+		searchType: Union<typeof SearchType>,
+		term: string,
+	): Promise<void> {
+		const key = `${this.SEARCH_HISTORY_KEY}:${searchType}:${userId}`;
+		await this.redis.zrem(key, term);
+	}
 }
