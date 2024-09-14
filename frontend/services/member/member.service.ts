@@ -2,8 +2,6 @@ import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/Ed
 import {
 	MemberAccountResponse,
 	MemberByMemberIdResponse,
-	MembersBelongToGroupResponse,
-	MembersResponse,
 	SearchMemberResponse,
 	UpdateProfileRequestBodyData,
 } from '@/shared/interfaces/member.interface';
