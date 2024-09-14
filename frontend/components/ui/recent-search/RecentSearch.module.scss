@@ -15,23 +15,30 @@
 	.recent_search_item_container {
 		@apply flex flex-col gap-2;
 
-		.recent_search_item {
-			@apply flex items-center gap-2 p-1 py-2 rounded-md;
+		.recent_search_item_wrap {
+			@apply flex items-center gap-2;
 
-			&:hover {
-				@apply bg-customOrange bg-opacity-10;
+			.recent_search_item {
+				@apply flex items-center gap-2 p-1 py-2 rounded-md w-full;
 
-				> svg {
-					@apply fill-customOrange;
+				&:hover {
+					@apply bg-customOrange bg-opacity-10;
+
+					> svg {
+						@apply fill-customOrange;
+					}
+
+					.recent_search_item_text {
+						@apply text-customOrange;
+					}
 				}
 
 				.recent_search_item_text {
-					@apply text-customOrange;
+					@apply text-sm font-medium text-customGray flex items-center cursor-pointer w-full;
 				}
 			}
-
-			.recent_search_item_text {
-				@apply text-sm font-medium text-customGray flex items-center cursor-pointer;
+			.recent_search_item_delete {
+				@apply cursor-pointer ml-auto fill-customOrange;
 			}
 		}
 	}

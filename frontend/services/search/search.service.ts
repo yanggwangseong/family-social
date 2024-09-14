@@ -5,7 +5,7 @@ import { SearchType, Union } from 'types';
 export const SearchService = {
 	async getRecentSearch(searchType: Union<typeof SearchType>) {
 		const { data } = await axiosAPI.get<string[]>(
-			`/search/search-history?searchType=${searchType}`,
+			`/search/search-histories/${searchType}`,
 		);
 		return data;
 	},
@@ -13,6 +13,23 @@ export const SearchService = {
 	async getMembersByUserName(username: string) {
 		const { data } = await axiosAPI.get<SearchMemberResponse[]>(
 			`/search/members/username/${username}`,
+		);
+		return data;
+	},
+
+	async deleteAllRecentSearch(searchType: Union<typeof SearchType>) {
+		const { data } = await axiosAPI.delete(
+			`/search/search-histories/${searchType}`,
+		);
+		return data;
+	},
+
+	async deleteRecentSearchByTerm(
+		searchType: Union<typeof SearchType>,
+		term: string,
+	) {
+		const { data } = await axiosAPI.delete(
+			`/search/search-histories/${searchType}/${term}`,
 		);
 		return data;
 	},

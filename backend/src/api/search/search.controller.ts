@@ -4,7 +4,6 @@ import {
 	Get,
 	Param,
 	Query,
-	Body,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -134,10 +133,10 @@ export class SearchController {
 	 * @returns {Promise<string[]>}
 	 */
 	@GetSearchHistorySwagger()
-	@Get('/search-history')
+	@Get('/search-histories/:searchType')
 	async getSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Query('searchType', new ParseSearchTypePipe())
+		@Param('searchType', new ParseSearchTypePipe())
 		searchType: Union<typeof SearchType>,
 	): Promise<string[]> {
 		return await this.searchService.getRecentSearchTerms(sub, searchType);
@@ -153,10 +152,10 @@ export class SearchController {
 	 * @returns {Promise<void>}
 	 */
 	@DeleteSearchHistorySwagger()
-	@Delete('/search-history')
+	@Delete('/search-histories/:searchType')
 	async deleteSearchHistory(
 		@CurrentUser('sub') sub: string,
-		@Body('searchType', new ParseSearchTypePipe())
+		@Param('searchType', new ParseSearchTypePipe())
 		searchType: Union<typeof SearchType>,
 	): Promise<void> {
 		return await this.searchService.clearSearchHistory(sub, searchType);
@@ -172,11 +171,11 @@ export class SearchController {
 	 * @returns {Promise<void>}
 	 */
 	@DeleteSearchTermSwagger()
-	@Delete('/search-history/:term')
+	@Delete('/search-histories/:searchType/:term')
 	async deleteSearchTerm(
 		@CurrentUser('sub') sub: string,
 		@Param('term') term: string,
-		@Body('searchType', new ParseSearchTypePipe())
+		@Param('searchType', new ParseSearchTypePipe())
 		searchType: Union<typeof SearchType>,
 	): Promise<void> {
 		return await this.searchService.deleteSearchTerm(sub, searchType, term);
