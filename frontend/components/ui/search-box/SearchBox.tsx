@@ -18,7 +18,7 @@ const SearchBox: FC = () => {
 
 	const [isFocused, setIsFocused] = useState(false);
 
-	const { handleSearch, debounceSearch } = useSearch();
+	const { handleSearch, debounceSearch, handleChangeSearchTerm } = useSearch();
 
 	const { data } = useQuery(
 		['search-chat-members', debounceSearch],
@@ -44,7 +44,7 @@ const SearchBox: FC = () => {
 			/>
 			<motion.div className={styles.search_lst_container} ref={searchBoxScope}>
 				{isFocused && !debounceSearch ? (
-					<RecentSearch />
+					<RecentSearch onSearch={handleChangeSearchTerm} />
 				) : data?.length ? (
 					data.map((item, index) => (
 						<motion.div

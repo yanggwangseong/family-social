@@ -9,9 +9,14 @@ export const useSearch = () => {
 		setSearchTerm(e.target.value);
 	};
 
+	const handleChangeSearchTerm = (term: string) => {
+		setSearchTerm(term);
+	};
+
 	return {
 		handleSearch,
 		searchTerm,
 		debounceSearch,
+		handleChangeSearchTerm,
 	};
 };
