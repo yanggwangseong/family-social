@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './SearchBox.module.scss';
 import { motion } from 'framer-motion';
 import Field from '../field/Field';
@@ -6,15 +6,23 @@ import Profile from '../profile/Profile';
 import { useRouter } from 'next/router';
 import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useSearch } from '@/hooks/useSearch';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSearchBoxAnimation } from '@/hooks/useSearchBoxAnimation';
 import RecentSearch from '../recent-search/RecentSearch';
 import { SearchService } from '@/services/search/search.service';
 import NotFoundSearch from '../not-found/search/NotFoundSearch';
 import { NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { LayerMode } from 'types';
+import axios from 'axios';
+import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { Confirm } from 'notiflix';
 
 const SearchBox: FC = () => {
 	const router = useRouter();
+
+	const queryClient = useQueryClient();
 
 	const [isFocused, setIsFocused] = useState(false);
 
@@ -25,6 +33,10 @@ const SearchBox: FC = () => {
 		async () => await SearchService.getMembersByUserName(debounceSearch),
 		{
 			enabled: !!debounceSearch,
+			onSuccess: () => {
+				// 최근 검색어에 방금 검색한 검색어를 반영
+				queryClient.invalidateQueries(['search-recent-member', 'member']);
+			},
 		},
 	);
 
@@ -32,6 +44,84 @@ const SearchBox: FC = () => {
 
 	const handleFocus = () => setIsFocused(true);
 	const handleBlur = () => setIsFocused(false);
+
+	const { handleSuccessLayerModal } = useSuccessLayerModal();
+
+	const { data: recentSearchData } = useQuery(
+		['search-recent-member', 'member'],
+		async () => await SearchService.getRecentSearch('member'),
+	);
+
+	const { mutate: deleteRecentSearchAllSync } = useMutation(
+		['delete-recent-search-member-all'],
+		async () => await SearchService.deleteAllRecentSearch('member'),
+		{
+			onMutate: variable => {
+				Loading.hourglass();
+			},
+			onSuccess(data) {
+				Loading.remove();
+
+				handleSuccessLayerModal({
+					modalTitle: '모든 검색어 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '모든 검색어를 삭제 하였습니다',
+				});
+				queryClient.invalidateQueries(['search-recent-member', 'member']);
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const { mutate: deleteRecentSearchSync } = useMutation(
+		['delete-recent-search-member'],
+		async (term: string) =>
+			await SearchService.deleteRecentSearchByTerm('member', term),
+		{
+			onMutate: variable => {},
+			onSuccess(data) {
+				queryClient.invalidateQueries(['search-recent-member', 'member']);
+			},
+			onError(error) {
+				if (axios.isAxiosError(error)) {
+					Report.warning(
+						'실패',
+						`${error.response?.data.message}`,
+						'확인',
+						() => Loading.remove(),
+					);
+				}
+			},
+		},
+	);
+
+	const handleDeleteRecentSearchAll = () => {
+		Confirm.show(
+			'최근 검색어 모두 삭제',
+			'최근 검색어를 모두 삭제하시겠습니까?',
+			'모두 삭제',
+			'닫기',
+			() => {
+				deleteRecentSearchAllSync();
+			},
+			() => {},
+			{},
+		);
+	};
+
+	const handleDeleteRecentSearch = (term: string) => {
+		deleteRecentSearchSync(term);
+	};
 
 	return (
 		<div className={styles.search_field_wrap}>
@@ -44,7 +134,12 @@ const SearchBox: FC = () => {
 			/>
 			<motion.div className={styles.search_lst_container} ref={searchBoxScope}>
 				{isFocused && !debounceSearch ? (
-					<RecentSearch onSearch={handleChangeSearchTerm} />
+					<RecentSearch
+						data={recentSearchData}
+						handleDeleteRecentSearchAll={handleDeleteRecentSearchAll}
+						handleDeleteRecentSearch={handleDeleteRecentSearch}
+						handleChangeSearchTerm={handleChangeSearchTerm}
+					/>
 				) : data?.length ? (
 					data.map((item, index) => (
 						<motion.div

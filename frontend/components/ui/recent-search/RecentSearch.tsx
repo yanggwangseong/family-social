@@ -1,105 +1,18 @@
 import React, { FC } from 'react';
 import styles from './RecentSearch.module.scss';
-import { SearchService } from '@/services/search/search.service';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { NOT_FOUND_RECENT_MESSAGE } from '@/constants/index';
 import NotFoundSearch from '../not-found/search/NotFoundSearch';
 import { PiMagnifyingGlassDuotone, PiXBold } from 'react-icons/pi';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { motion } from 'framer-motion';
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
-import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
-import { LayerMode } from 'types';
-import axios from 'axios';
-import { Confirm } from 'notiflix';
+import { RecentSearchProps } from './recent-search.interface';
 
-const RecentSearch: FC<{
-	onSearch: (term: string) => void;
-}> = ({ onSearch }) => {
-	const queryClient = useQueryClient();
-	const { handleSuccessLayerModal } = useSuccessLayerModal();
-
-	const { data } = useQuery(
-		['search-recent-member', 'member'],
-		async () => await SearchService.getRecentSearch('member'),
-	);
-
-	const handleSearch = (term: string) => {
-		onSearch(term);
-	};
-
-	const { mutate: deleteRecentSearchAllSync } = useMutation(
-		['delete-recent-search-member-all'],
-		async () => await SearchService.deleteAllRecentSearch('member'),
-		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
-				Loading.remove();
-
-				handleSuccessLayerModal({
-					modalTitle: '모든 검색어 삭제 성공',
-					layer: LayerMode.successLayerModal,
-					lottieFile: 'deleteAnimation',
-					message: '모든 검색어를 삭제 하였습니다',
-				});
-				queryClient.invalidateQueries(['search-recent-member', 'member']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
-		},
-	);
-
-	const { mutate: deleteRecentSearchSync } = useMutation(
-		['delete-recent-search-member'],
-		async (term: string) =>
-			await SearchService.deleteRecentSearchByTerm('member', term),
-		{
-			onMutate: variable => {},
-			onSuccess(data) {
-				queryClient.invalidateQueries(['search-recent-member', 'member']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
-		},
-	);
-
-	const handleDeleteRecentSearchAll = () => {
-		Confirm.show(
-			'최근 검색어 모두 삭제',
-			'최근 검색어를 모두 삭제하시겠습니까?',
-			'모두 삭제',
-			'닫기',
-			() => {
-				deleteRecentSearchAllSync();
-			},
-			() => {},
-			{},
-		);
-	};
-
-	const handleDeleteRecentSearch = (term: string) => {
-		deleteRecentSearchSync(term);
-	};
-
+const RecentSearch: FC<RecentSearchProps> = ({
+	data,
+	handleDeleteRecentSearchAll,
+	handleDeleteRecentSearch,
+	handleChangeSearchTerm,
+}) => {
 	return (
 		<div className={styles.recent_search_wrap}>
 			<div className={styles.recent_search_title_container}>
@@ -126,7 +39,7 @@ const RecentSearch: FC<{
 								<PiMagnifyingGlassDuotone size={18} />
 								<div
 									className={styles.recent_search_item_text}
-									onClick={() => handleSearch(item)}
+									onClick={() => handleChangeSearchTerm(item)}
 								>
 									{item}
 								</div>
