@@ -32,14 +32,6 @@ services:
     volumes:
       - /app/node_modules
       - ./backend:/app
-    env_file:
-      - ./.env
-    environment:
-      POSTGRESQL_ROOT_PASSWORD: ${POSTGRESQL_ROOT_PASSWORD}
-      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
-      POSTGRESQL_HOST: ${POSTGRESQL_HOST}
-      POSTGRESQL_USER: ${POSTGRESQL_USER}
-      POSTGRESQL_PORT: ${POSTGRESQL_PORT}
     networks:
       - social_network
 

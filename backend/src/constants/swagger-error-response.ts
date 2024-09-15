@@ -36,6 +36,7 @@ import {
 	ERROR_NO_PERMISSTION_TO_SCHEDULE,
 	ERROR_PASSWORD_MISMATCH,
 	ERROR_SCHEDULE_NOT_FOUND,
+	ERROR_SEARCH_TYPE_PIPE_MESSAGE,
 	ERROR_USER_ALREADY_EXISTS,
 	ERROR_USER_NOT_FOUND,
 	ERROR_UUID_PIPE_MESSAGE,
@@ -317,5 +318,16 @@ export const FeedErrorResponse = {
 			'피드와 피드 미디어를 삭제중 에러가 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_DELETE_FEED_OR_MEDIA}`,
 		message: `${ERROR_DELETE_FEED_OR_MEDIA}`,
+	},
+};
+
+// 검색
+export const SearchErrorResponse = {
+	// 400
+	'Search-400-1': {
+		model: BadRequestServiceException,
+		exampleDescription: '검색 타입이 올바르지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_SEARCH_TYPE_PIPE_MESSAGE}`,
+		message: `${ERROR_SEARCH_TYPE_PIPE_MESSAGE}`,
 	},
 };

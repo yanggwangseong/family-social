@@ -1,6 +1,5 @@
 import React, { FC, useRef } from 'react';
 import styles from './Header.module.scss';
-import Field from '../field/Field';
 import Link from 'next/link';
 import {
 	PiBellDuotone,
@@ -16,16 +15,12 @@ import ChatToggleModal from '../modal/chat-toggle-modal/ChatToggleModal';
 import { useRecoilState } from 'recoil';
 import { mainSidebarAtom } from '@/atoms/mainSidebarAtom';
 import NotificationModal from '../modal/notification-modal/NotificationModal';
-import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
+import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { motion } from 'framer-motion';
-import { useSearch } from '@/hooks/useSearch';
-import { useQuery } from 'react-query';
-import { MemberService } from '@/services/member/member.service';
+
 import SearchBox from '../search-box/SearchBox';
-import NotFoundSearchMember from '../not-found/search-member/NotFoundSearchMember';
-import Profile from '../profile/Profile';
+
 import { useRouter } from 'next/router';
-import { useSearchBoxAnimation } from '@/hooks/useSearchBoxAnimation';
 
 const Header: FC = () => {
 	const router = useRouter();
@@ -45,18 +40,6 @@ const Header: FC = () => {
 	const [isLeftSidebarShowing, setIsLeftSidebarShowing] =
 		useRecoilState(mainSidebarAtom);
 
-	const { handleSearch, debounceSearch } = useSearch();
-
-	const { isSuccess, data } = useQuery(
-		['search-chat-members', debounceSearch],
-		async () => await MemberService.getMembersByUserName(debounceSearch),
-		{
-			enabled: !!debounceSearch,
-		},
-	);
-
-	const { searchBoxScope } = useSearchBoxAnimation(debounceSearch);
-
 	return (
 		<div className={styles.header_container}>
 			<div className={styles.header_wrap}>
@@ -68,50 +51,7 @@ const Header: FC = () => {
 					>
 						FAM
 					</motion.div>
-					<div className={styles.search_field_wrap}>
-						<Field
-							style={{ marginLeft: '40px' }}
-							fieldClass={'input'}
-							onChange={handleSearch}
-						></Field>
-						{/* [TODO] 검색 결과 폼 컴포넌트 생성하기 */}
-
-						<motion.div
-							className={styles.search_lst_container}
-							ref={searchBoxScope}
-						>
-							{data?.length ? (
-								data.map((item, index) => (
-									<motion.div
-										className={styles.search_profile_wrap}
-										{...INLINEBUTTONGESTURE}
-										key={index}
-										onClick={() => router.push(`/accounts/${item.email}`)}
-									>
-										<Profile
-											username={item.username}
-											email={item.email}
-										></Profile>
-									</motion.div>
-								))
-							) : (
-								<NotFoundSearchMember />
-							)}
-							{/* {data?.map((item, index) => (
-								<motion.div
-									className={styles.search_profile_wrap}
-									{...INLINEBUTTONGESTURE}
-									key={index}
-									onClick={() => router.push(`/accounts/${item.email}`)}
-								>
-									<Profile
-										username={item.username}
-										email={item.email}
-									></Profile>
-								</motion.div>
-							))} */}
-						</motion.div>
-					</div>
+					<SearchBox />
 				</div>
 				<div className={styles.right_icons_container}>
 					<motion.div {...BUTTONGESTURE} className={styles.mobile_icon_wrap}>

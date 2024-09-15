@@ -118,3 +118,7 @@ export const ERROR_NO_PERMISSTION_TO_GROUP_EVENT =
 export const ERROR_INVITE_LINK_EXPIRED = '해당 링크가 만료 되었습니다' as const;
 export const ERROR_INVITE_USES_LIMIT =
 	'해당 링크 초대 횟수를 초과 하였습니다' as const;
+
+// search
+export const ERROR_SEARCH_TYPE_PIPE_MESSAGE =
+	'searchType값이 올바르지 않습니다' as const;

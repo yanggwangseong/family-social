@@ -1,5 +1,6 @@
 import {
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Query,
@@ -12,6 +13,11 @@ import { ObjectLiteral } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { GetMembersByUserNameSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import {
+	DeleteSearchHistorySwagger,
+	DeleteSearchTermSwagger,
+	GetSearchHistorySwagger,
+} from '@/common/decorators/swagger/swagger-search.decorator';
 import { GetHttpTourApiSearchSwagger } from '@/common/decorators/swagger/swagger-tour.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
@@ -19,6 +25,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { ParseSearchTypePipe } from '@/common/pipes/parse-search-type.pipe';
 import { PaginationEnum } from '@/constants/pagination.const';
 import {
 	ReturnBasicPaginationType,
@@ -26,7 +33,9 @@ import {
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 import { TourKeywordQueryReqDto } from '@/models/dto/tour/req/tour-keyword-query-req.dto';
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
+import { SearchType, Union } from '@/types';
 
+import { SearchService } from './search.service';
 import { MembersService } from '../members/members.service';
 import { ToursService } from '../tours/tours.service';
 
@@ -38,6 +47,7 @@ export class SearchController {
 	constructor(
 		private readonly membersService: MembersService,
 		private readonly toursService: ToursService,
+		private readonly searchService: SearchService,
 	) {}
 
 	/**
@@ -59,11 +69,19 @@ export class SearchController {
 			sub,
 		);
 
-		return await this.membersService.findMembersByUserName(
+		const members = await this.membersService.findMembersByUserName(
 			username,
 			sub,
 			groupIds,
 		);
+
+		// 검색어 저장을 위해 호출
+		// 검색어가 없으면 저장하지 않음
+		if (members.length > 0) {
+			await this.searchService.addSearchTerm(sub, username, SearchType[1]);
+		}
+
+		return members;
 	}
 
 	/**
@@ -90,10 +108,76 @@ export class SearchController {
 	async getHttpTourApiSearch(
 		@Param('keyword') keyword: string,
 		@Query() queryDto: TourKeywordQueryReqDto,
+		@CurrentUser('sub') sub: string,
 	) {
-		return await this.toursService.getHttpTourApiSearch({
+		const result = await this.toursService.getHttpTourApiSearch({
 			keyword,
 			...queryDto,
 		});
+
+		// 검색어 저장을 위해 호출
+		// 검색어가 없으면 저장하지 않음
+		if (result.list.length > 0) {
+			await this.searchService.addSearchTerm(sub, keyword, SearchType[0]);
+		}
+		return result;
+	}
+
+	/**
+	 * @summary 검색 기록 가져오기
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<string[]>}
+	 */
+	@GetSearchHistorySwagger()
+	@Get('/search-histories/:searchType')
+	async getSearchHistory(
+		@CurrentUser('sub') sub: string,
+		@Param('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
+	): Promise<string[]> {
+		return await this.searchService.getRecentSearchTerms(sub, searchType);
+	}
+
+	/**
+	 * @summary 검색 전체 기록 삭제
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<void>}
+	 */
+	@DeleteSearchHistorySwagger()
+	@Delete('/search-histories/:searchType')
+	async deleteSearchHistory(
+		@CurrentUser('sub') sub: string,
+		@Param('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
+	): Promise<void> {
+		return await this.searchService.clearSearchHistory(sub, searchType);
+	}
+
+	/**
+	 * @summary 특정 검색 기록 삭제
+	 *
+	 * @tag search
+	 * @param sub 인증된 사용자 아이디
+	 * @param searchType 검색 타입
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns {Promise<void>}
+	 */
+	@DeleteSearchTermSwagger()
+	@Delete('/search-histories/:searchType/:term')
+	async deleteSearchTerm(
+		@CurrentUser('sub') sub: string,
+		@Param('term') term: string,
+		@Param('searchType', new ParseSearchTypePipe())
+		searchType: Union<typeof SearchType>,
+	): Promise<void> {
+		return await this.searchService.deleteSearchTerm(sub, searchType, term);
 	}
 }

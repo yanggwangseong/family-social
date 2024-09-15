@@ -2,8 +2,6 @@ import { UpdateProfileRequest } from '@/components/ui/modal/layer-modal/layer/Ed
 import {
 	MemberAccountResponse,
 	MemberByMemberIdResponse,
-	MembersBelongToGroupResponse,
-	MembersResponse,
 	SearchMemberResponse,
 	UpdateProfileRequestBodyData,
 } from '@/shared/interfaces/member.interface';
@@ -27,13 +25,6 @@ export const MemberService = {
 
 	async getAllMembers() {
 		const { data } = await axiosAPI.get<SearchMemberResponse[]>(`/members`);
-		return data;
-	},
-
-	async getMembersByUserName(username: string) {
-		const { data } = await axiosAPI.get<SearchMemberResponse[]>(
-			`/search/members/username/${username}`,
-		);
 		return data;
 	},
 

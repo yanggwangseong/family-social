@@ -29,17 +29,15 @@ const FeedDeleteConfirm: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				handleSuccessLayerModal(
-					{
-						modalTitle: '피드 삭제 성공',
-						layer: LayerMode.successLayerModal,
-						lottieFile: 'deleteAnimation',
-						message: '피드를 삭제 하는데 성공 하였습니다',
-					},
-					() => {
+				handleSuccessLayerModal({
+					modalTitle: '피드 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '피드를 삭제 하는데 성공 하였습니다',
+					onConfirm: () => {
 						setIsFeedId('');
 					},
-				);
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {

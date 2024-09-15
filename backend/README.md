@@ -22,3 +22,4 @@
 - [production환경에서 Seed와 Migration 사용하기](https://threeyears.tistory.com/580)
 - [Log와 모니터링](https://threeyears.tistory.com/581)
 - [NestJS와 ioredis를 이용한 초대링크 만료 시간 설정하기](https://threeyears.tistory.com/599)
+- [NestJS에서 Redis를 활용한 최근 검색어 기능 구현](https://threeyears.tistory.com/614)

@@ -40,6 +40,7 @@ export class MulterBuilder {
 				secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
 			},
 		});
+
 		this.bucketName = String(process.env.AWS_BUCKET_NAME);
 	}
 

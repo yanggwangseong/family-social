@@ -4,6 +4,7 @@ import createCommentAnimation from '@/assets/lottie/createComment.json';
 import createScheduleAnimation from '@/assets/lottie/createSchedule.json';
 import createEventAnimation from '@/assets/lottie/eventAnimation.json';
 import deleteAnimation from '@/assets/lottie/deleteAnimation.json';
+import inviteCodeAnimation from '@/assets/lottie/createFam.json';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { successLayerModalAtom } from '@/atoms/successLayerModalAtom';
@@ -16,6 +17,7 @@ export const successLottie = {
 	createScheduleAnimation: createScheduleAnimation,
 	createEventAnimation: createEventAnimation,
 	deleteAnimation: deleteAnimation,
+	inviteCodeAnimation: inviteCodeAnimation,
 } as const;
 
 export const useSuccessLayerModal = () => {
@@ -30,25 +32,21 @@ export const useSuccessLayerModal = () => {
 
 	const handleCloseLayerModal = () => {
 		setIsShowing(false);
-
-		if (isSuccessModal.lottieFile === 'createScheduleAnimation')
-			router.push(`/schedules`);
 	};
 
-	const handleSuccessLayerModal = (
-		{
-			modalTitle,
-			layer,
-			lottieFile,
-			message,
-		}: {
-			modalTitle: string;
-			layer: Union<typeof LayerMode>;
-			lottieFile: keyof typeof successLottie;
-			message: string;
-		},
-		cb?: () => void,
-	) => {
+	const handleSuccessLayerModal = ({
+		modalTitle,
+		layer,
+		lottieFile,
+		message,
+		onConfirm, // onConfirm 콜백 추가
+	}: {
+		modalTitle: string;
+		layer: Union<typeof LayerMode>;
+		lottieFile: keyof typeof successLottie;
+		message: string;
+		onConfirm?: () => void; // 선택적으로 전달될 수 있는 콜백
+	}) => {
 		setIsLayer({
 			modal_title: modalTitle,
 			layer,
@@ -57,11 +55,10 @@ export const useSuccessLayerModal = () => {
 		setIsSuccessModal({
 			lottieFile,
 			message,
+			onConfirm, // onConfirm 저장
 		});
 
 		!isShowing && setIsShowing(true);
-
-		cb && cb();
 	};
 
 	return {

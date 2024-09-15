@@ -58,6 +58,9 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createScheduleAnimation',
 					message: '일정을 생성 하였습니다',
+					onConfirm: () => {
+						router.push(`/schedules`);
+					},
 				});
 			},
 			onError(error) {
