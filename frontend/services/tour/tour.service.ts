@@ -1,6 +1,12 @@
-import { orderSelectOptionsKeys } from '@/components/screens/schedule/create/tourism/tourism.interface';
 import { TourLayerMode } from '@/components/ui/tour/TourIntroductionController';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
+import {
+	AdditionalExplanationArgs,
+	ServiceCategoriesArgs,
+	IntroductionByContentTypeIdArgs,
+	SearchTourFestivalListArgs,
+	TourListsArgs,
+} from '@/shared/interfaces/search.interface';
 import {
 	TourAdditionalUnionType,
 	TourAreaCodeItem,
@@ -9,7 +15,6 @@ import {
 	TourImageItem,
 	TourIntroductionUnionType,
 	TourResponseItem,
-	TourSearchItem,
 	TourServiceCategoriesResponse,
 } from '@/shared/interfaces/tour.interface';
 import { switchCaseMach } from '@/utils/switch-case-mach';
@@ -31,12 +36,7 @@ export const TourService = {
 		secondCategory,
 		thirdCategory,
 		contentTypeId,
-	}: {
-		firstCategory?: string;
-		secondCategory?: string;
-		thirdCategory?: string;
-		contentTypeId?: string;
-	}) {
+	}: ServiceCategoriesArgs) {
 		let url = `tours/service-categories?numOfRows=50&pageNo=1`;
 
 		if (contentTypeId) url += `&contentTypeId=${contentTypeId}`;
@@ -60,17 +60,7 @@ export const TourService = {
 		cat2,
 		cat3,
 		isSelected,
-	}: {
-		numOfRows: number;
-		pageNo: number;
-		contentTypeId: string;
-		areaCode: string;
-		sigunguCode: string;
-		cat1: string;
-		cat2: string;
-		cat3: string;
-		isSelected: orderSelectOptionsKeys;
-	}) {
+	}: TourListsArgs) {
 		let arrange = 'O';
 		if (isSelected === 'orderSubject') {
 			arrange = 'O';
@@ -91,37 +81,6 @@ export const TourService = {
 		return data;
 	},
 
-	async searchTourLists({
-		keyword,
-		isSelected,
-		contentTypeId,
-		pageNo,
-		numOfRows,
-	}: {
-		keyword: string;
-		isSelected: orderSelectOptionsKeys;
-		numOfRows: number;
-		pageNo: number;
-		contentTypeId: string;
-	}) {
-		let arrange = 'O';
-		if (isSelected === 'orderSubject') {
-			arrange = 'O';
-		} else if (isSelected === 'orderCreated') {
-			arrange = 'R';
-		} else if (isSelected === 'orderUpdated') {
-			arrange = 'Q';
-		}
-
-		let url = `search/tours/keyword/${keyword}?arrange=${arrange}&contentTypeId=${contentTypeId}&numOfRows=${numOfRows}&pageNo=${pageNo}`;
-
-		const { data } = await axiosAPI.get<
-			BasicPaginationResponse<TourSearchItem>
-		>(url);
-
-		return data;
-	},
-
 	async searchTourFestivalList({
 		pageNo,
 		numOfRows,
@@ -129,14 +88,7 @@ export const TourService = {
 		sigunguCode,
 		isSelected,
 		eventStartDate,
-	}: {
-		numOfRows: number;
-		pageNo: number;
-		areaCode: string;
-		sigunguCode: string;
-		isSelected: orderSelectOptionsKeys;
-		eventStartDate: string;
-	}) {
+	}: SearchTourFestivalListArgs) {
 		let arrange = 'O';
 
 		if (isSelected === 'orderSubject') {
@@ -202,12 +154,7 @@ export const TourService = {
 		numOfRows,
 		pageNo,
 		contentTypeId,
-	}: {
-		contentId: string;
-		numOfRows: string;
-		pageNo: string;
-		contentTypeId: string;
-	}): Promise<TourIntroductionUnionType> {
+	}: IntroductionByContentTypeIdArgs): Promise<TourIntroductionUnionType> {
 		const url = `tours/${contentId}/introduction?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}`;
 
 		const { data } = await axiosAPI.get<TourIntroductionUnionType>(url);
@@ -269,12 +216,7 @@ export const TourService = {
 		numOfRows,
 		pageNo,
 		contentTypeId,
-	}: {
-		contentId: string;
-		numOfRows: string;
-		pageNo: string;
-		contentTypeId: string;
-	}): Promise<TourAdditionalUnionType> {
+	}: AdditionalExplanationArgs): Promise<TourAdditionalUnionType> {
 		const url = `tours/${contentId}/additional-explanation?numOfRows=${numOfRows}&pageNo=${pageNo}&contentTypeId=${contentTypeId}`;
 
 		const { data } = await axiosAPI.get<TourAdditionalUnionType>(url);

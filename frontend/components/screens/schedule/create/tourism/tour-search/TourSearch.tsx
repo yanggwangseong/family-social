@@ -7,10 +7,10 @@ import { orderSelectOptionsKeys } from '../tourism.interface';
 import { optionsLists } from '../tourism.constants';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useInfiniteQuery } from 'react-query';
-import { TourService } from '@/services/tour/tour.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import { motion } from 'framer-motion';
+import { SearchService } from '@/services/search/search.service';
 
 const TourSearch: FC = () => {
 	const [isKeyword, setIsKeyword] = useState<string>('');
@@ -29,7 +29,7 @@ const TourSearch: FC = () => {
 	} = useInfiniteQuery(
 		['tour-search', isKeyword, isSelected],
 		async ({ pageParam = 1 }) =>
-			await TourService.searchTourLists({
+			await SearchService.searchTourLists({
 				numOfRows: 10,
 				pageNo: pageParam,
 				contentTypeId: '12',
