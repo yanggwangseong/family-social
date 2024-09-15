@@ -14,16 +14,15 @@ import { LayerMode } from 'types';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
+
 import { useRouter } from 'next/router';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { PiPencilDuotone } from 'react-icons/pi';
 import { MemberService } from '@/services/member/member.service';
-import axios from 'axios';
 import { MediaService } from '@/services/media/media.service';
 import FeedContainer from '../feed/feed-container/FeedContainer';
 import ScheduleContainer from '../schedule/schedule-container/ScheduleContainer';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -45,24 +44,37 @@ const Account: FC<{ email: string }> = ({ email }) => {
 		},
 	);
 
-	const { mutateAsync } = useMutation(
-		['member-cover-image-upload'],
+	const { mutateAsync } = useCreateMutation(
 		async (file: File) => await MediaService.uploadMemberCoverImage(file),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
-				Loading.remove();
-				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
+			mutationKey: ['member-cover-image-upload'],
+			successOption: {
+				title: '이미지 업로드',
+				message: '이미지 업로드에 성공 하였습니다.',
+				buttonText: '확인',
 			},
 		},
 	);
+
+	// UseMutateAsyncFunction<string[], unknown, File, void>
+	// const { mutateAsync } = useMutation(
+	// 	['member-cover-image-upload'],
+	// 	async (file: File) => await MediaService.uploadMemberCoverImage(file),
+	// 	{
+	// 		onMutate: variable => {
+	// 			Loading.hourglass();
+	// 		},
+	// 		onSuccess(data) {
+	// 			Loading.remove();
+	// 			Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
+	// 		},
+	// 		onError(error) {
+	// 			if (axios.isAxiosError(error)) {
+	// 				Report.warning('실패', `${error.response?.data.message}`, '확인');
+	// 			}
+	// 		},
+	// 	},
+	// );
 
 	const handleLogOut = () => {
 		setIsShowing(!isShowing);
