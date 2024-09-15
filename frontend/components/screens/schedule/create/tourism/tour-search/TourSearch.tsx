@@ -1,19 +1,23 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './TourSearch.module.scss';
-import Field from '@/components/ui/field/Field';
 import SelectBox from '@/components/ui/select/SelectBox';
 import { useSelect } from '@/hooks/useSelect';
 import { orderSelectOptionsKeys } from '../tourism.interface';
 import { optionsLists } from '../tourism.constants';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { useInfiniteQuery } from 'react-query';
-import { TourService } from '@/services/tour/tour.service';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import TourismItem from '@/components/ui/tourism/TourismItem';
 import { motion } from 'framer-motion';
+import { SearchService } from '@/services/search/search.service';
+import SearchBoxTour from '@/components/ui/search-box/tour/SearchBoxTour';
+import { useSearch } from '@/hooks/useSearch';
+import NotFoundSearch from '@/components/ui/not-found/search/NotFoundSearch';
+import { NOT_FOUND_TOUR_MESSAGE } from '@/constants/index';
 
 const TourSearch: FC = () => {
-	const [isKeyword, setIsKeyword] = useState<string>('');
+	const queryClient = useQueryClient();
+	const { handleSearch, debounceSearch, handleChangeSearchTerm } = useSearch();
 
 	const { handleChangeSelected, handleSelectToggle, isToggle, isSelected } =
 		useSelect<orderSelectOptionsKeys>(optionsLists[0]);
@@ -27,13 +31,13 @@ const TourSearch: FC = () => {
 		isRefetching,
 		refetch,
 	} = useInfiniteQuery(
-		['tour-search', isKeyword, isSelected],
+		['tour-search', debounceSearch, isSelected],
 		async ({ pageParam = 1 }) =>
-			await TourService.searchTourLists({
+			await SearchService.searchTourLists({
 				numOfRows: 10,
 				pageNo: pageParam,
 				contentTypeId: '12',
-				keyword: isKeyword,
+				keyword: debounceSearch,
 				isSelected,
 			}),
 		{
@@ -42,7 +46,10 @@ const TourSearch: FC = () => {
 					? lastPage.page + 1
 					: undefined;
 			},
-			enabled: !!isKeyword,
+			enabled: !!debounceSearch,
+			onSuccess: data => {
+				queryClient.invalidateQueries(['search-recent-tour', 'tour']);
+			},
 		},
 	);
 
@@ -52,13 +59,12 @@ const TourSearch: FC = () => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.search_field_container}>
-				<Field
-					fieldClass={'input'}
-					placeholder="키워드를 입력하세요."
-					onChange={e => setIsKeyword(e.target.value)}
-				></Field>
-			</div>
+			{/* search */}
+			<SearchBoxTour
+				debounceSearch={debounceSearch}
+				onSearch={handleSearch}
+				onChangeSearchTerm={handleChangeSearchTerm}
+			/>
 			<div>
 				<div>
 					<SelectBox
@@ -102,6 +108,9 @@ const TourSearch: FC = () => {
 						))}
 					</motion.div>
 				))}
+				{data?.pages[0].list.length === 0 && (
+					<NotFoundSearch message={NOT_FOUND_TOUR_MESSAGE} />
+				)}
 			</div>
 		</div>
 	);

@@ -1,5 +1,5 @@
 import { AuthResponse } from './auth.interface';
-import { GroupResponse } from './group.interface';
+import { GroupProfileResponse, GroupResponse } from './group.interface';
 import { SearchMemberResponse } from './member.interface';
 
 export interface FamInvitationsResponse {
@@ -14,7 +14,7 @@ export interface FamInvitation extends FamResponse {
 
 export interface FamResponse {
 	id: string;
-	invitationAccepted: false;
+	invitationAccepted: boolean;
 }
 
 export interface FamSharedMemberResponse extends FamResponse {
@@ -34,3 +34,8 @@ export interface FamAcceptInvitationArgs {
 }
 
 export interface FamRejectInvitationArgs extends FamAcceptInvitationArgs {}
+
+export interface GroupDetailResponse extends FamResponse {
+	group: GroupProfileResponse;
+	memberCount: number;
+}

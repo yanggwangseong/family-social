@@ -14,8 +14,11 @@ import { Report } from 'notiflix/build/notiflix-report-aio';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
+import { useRedirectUrl } from '@/hooks/useRedirectUrl';
 
 const SignIn: FC = () => {
+	const { redirect_url, router } = useRedirectUrl();
+
 	const {
 		register,
 		formState: { errors, isValid },
@@ -36,7 +39,9 @@ const SignIn: FC = () => {
 			},
 			onSuccess(data) {
 				Loading.remove();
-				Report.success('성공', `로그인 성공 하였습니다.`, '확인');
+				Report.success('성공', `로그인 성공 하였습니다.`, '확인', () =>
+					redirect_url ? router.push(redirect_url) : router.push('/feeds'),
+				);
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {
@@ -130,7 +135,14 @@ const SignIn: FC = () => {
 								로그인
 							</CustomButton>
 							회원이 아니신가요?
-							<Link href={'/signup'} className={styles.signup}>
+							<Link
+								href={
+									redirect_url
+										? `/signup?redirect_url=${redirect_url}`
+										: '/signup'
+								}
+								className={styles.signup}
+							>
 								회원가입
 							</Link>
 						</div>

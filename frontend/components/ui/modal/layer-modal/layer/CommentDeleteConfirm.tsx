@@ -34,17 +34,15 @@ const CommentDeleteConfirm: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				handleSuccessLayerModal(
-					{
-						modalTitle: '댓글 삭제 성공',
-						layer: LayerMode.successLayerModal,
-						lottieFile: 'deleteAnimation',
-						message: '댓글을 삭제 하였습니다',
-					},
-					() => {
+				handleSuccessLayerModal({
+					modalTitle: '댓글 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '댓글을 삭제 하였습니다',
+					onConfirm: () => {
 						setIsComment({ ...CommentAtomDefaultValue });
 					},
-				);
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {

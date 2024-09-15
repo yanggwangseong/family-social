@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './CreateMessageModal.module.scss';
 import { IoCloseSharp } from 'react-icons/io5';
 import { MdGroups } from 'react-icons/md';
@@ -9,12 +9,13 @@ import Line from '../../line/Line';
 import Profile from '../../profile/Profile';
 import { useQuery } from 'react-query';
 import { useSearch } from '@/hooks/useSearch';
-import { MemberService } from '@/services/member/member.service';
 import {
 	MessageModalAtomType,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
-import NotFoundSearchMember from '../../not-found/search-member/NotFoundSearchMember';
+import { SearchService } from '@/services/search/search.service';
+import NotFoundSearch from '../../not-found/search/NotFoundSearch';
+import { NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
 
 const CreateMessageModal: FC = () => {
 	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
@@ -28,7 +29,7 @@ const CreateMessageModal: FC = () => {
 
 	const { isSuccess, data } = useQuery(
 		['search-chat-members', debounceSearch],
-		async () => await MemberService.getMembersByUserName(debounceSearch),
+		async () => await SearchService.getMembersByUserName(debounceSearch),
 		{
 			enabled: !!debounceSearch,
 		},
@@ -93,7 +94,7 @@ const CreateMessageModal: FC = () => {
 									</div>
 								))
 							) : (
-								<NotFoundSearchMember />
+								<NotFoundSearch message={NOT_FOUND_MEMBER_MESSAGE} />
 							)}
 						</div>
 					)}

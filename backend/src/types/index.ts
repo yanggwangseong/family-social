@@ -41,3 +41,5 @@ export const contentTypeId = [
 ] as const;
 
 export const TourArrange = ['A', 'C', 'D', 'O', 'Q', 'R'] as const;
+
+export const SearchType = ['tour', 'member'] as const;

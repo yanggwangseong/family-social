@@ -3,33 +3,45 @@ import mainLandingAnimation from '@/assets/lottie/landing.json';
 import splashAnimation from '@/assets/lottie/splash.json';
 import Lottie from 'lottie-react';
 import { FaGoogle, FaSignInAlt } from 'react-icons/fa';
-import React, { FC, useEffect, useLayoutEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { FC, useEffect, useState } from 'react';
+
 import styles from './Home.module.scss';
-import Image from 'next/image';
+
 import LoginButton from '@/components/ui/button/main/LoginButton';
 import { API_URL } from '@/constants/index';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
+
+import { getSessionStorage, setSessionStorage } from '@/utils/session-storage';
+import { useRedirectUrl } from '@/hooks/useRedirectUrl';
 
 const style = {
 	height: '100%',
 };
 
 const Home: FC = () => {
-	const [isSplash, setIsSplash] = useState<boolean>(true);
+	const { redirect_url } = useRedirectUrl();
 
-	useLayoutEffect(() => {
-		// 5초 후에 isSplash를 false로 변경
-		const timer = setTimeout(() => {
-			setIsSplash(false);
-		}, 5000);
+	const [isSplash, setIsSplash] = useState<boolean>(false);
 
-		return () => {
-			// 컴포넌트가 언마운트 될 때 타이머를 클리어
-			clearTimeout(timer);
-		};
+	useEffect(() => {
+		const init = getSessionStorage('init');
+
+		if (init !== 'on') {
+			setIsSplash(true); // Splash를 보여줌
+
+			const timer = setTimeout(() => {
+				setIsSplash(false);
+				setSessionStorage('init', 'on'); // splash를 보여준 후 'on'으로 설정
+			}, 5000);
+
+			// 컴포넌트가 언마운트 될 때 타이머 클리어
+			return () => {
+				clearTimeout(timer);
+			};
+		}
 	}, []);
+
 	return (
 		<>
 			{isSplash ? (
@@ -82,7 +94,11 @@ const Home: FC = () => {
 									variants={itemVariants}
 								>
 									<LoginButton
-										link="signin"
+										link={
+											redirect_url
+												? `signin?redirect_url=${redirect_url}`
+												: 'signin'
+										}
 										text="로그인"
 										Icon={FaSignInAlt}
 										IconColor="DB4437"

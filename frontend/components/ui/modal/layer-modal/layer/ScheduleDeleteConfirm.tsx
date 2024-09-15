@@ -36,19 +36,17 @@ const ScheduleDeleteConfirm: FC = () => {
 			onSuccess(data) {
 				Loading.remove();
 
-				handleSuccessLayerModal(
-					{
-						modalTitle: '여행 일정 삭제 성공',
-						layer: LayerMode.successLayerModal,
-						lottieFile: 'deleteAnimation',
-						message: '해당 여행일정을 삭제 하였습니다',
-					},
-					() => {
+				handleSuccessLayerModal({
+					modalTitle: '여행 일정 삭제 성공',
+					layer: LayerMode.successLayerModal,
+					lottieFile: 'deleteAnimation',
+					message: '해당 여행일정을 삭제 하였습니다',
+					onConfirm: () => {
 						setIsScheduleId({
 							...ScheduleIdAtomDefaultValue,
 						});
 					},
-				);
+				});
 			},
 			onError(error) {
 				if (axios.isAxiosError(error)) {

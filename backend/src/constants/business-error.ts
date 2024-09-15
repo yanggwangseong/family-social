@@ -39,6 +39,9 @@ export const ERROR_DUPLICATE_GROUP_NAME =
 
 export const ERROR_GROUP_NOT_FOUND = '그룹을 찾을 수 없습니다' as const;
 
+export const ERROR_GROUP_MEMBER_NOT_FOUND =
+	'해당 그룹에 존재하지 않은 멤버 입니다' as const;
+
 export const ERROR_INVITED_MEMBER_NOT_FOUND =
 	'초대받은 멤버와 다른 사용자 입니다' as const;
 
@@ -115,3 +118,7 @@ export const ERROR_NO_PERMISSTION_TO_GROUP_EVENT =
 export const ERROR_INVITE_LINK_EXPIRED = '해당 링크가 만료 되었습니다' as const;
 export const ERROR_INVITE_USES_LIMIT =
 	'해당 링크 초대 횟수를 초과 하였습니다' as const;
+
+// search
+export const ERROR_SEARCH_TYPE_PIPE_MESSAGE =
+	'searchType값이 올바르지 않습니다' as const;

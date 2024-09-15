@@ -5,12 +5,12 @@ import { MailSendLogEntity } from '@/models/entities/mail-send-log.entity';
 import { MailSendLogRepository } from '@/models/repositories/mail-send-log.repository';
 
 import { MailsService } from './mails.service';
-import { InvitationsService } from '../invitations/invitations.service';
+import { InvitationsModule } from '../invitations/invitations.module';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([MailSendLogEntity])],
+	imports: [TypeOrmModule.forFeature([MailSendLogEntity]), InvitationsModule],
 	controllers: [],
-	providers: [MailsService, MailSendLogRepository, InvitationsService],
+	providers: [MailsService, MailSendLogRepository],
 	exports: [MailsService],
 })
 export class MailsModule {}

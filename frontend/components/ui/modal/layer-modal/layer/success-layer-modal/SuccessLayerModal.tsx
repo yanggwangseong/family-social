@@ -9,6 +9,13 @@ const SuccessLayerModal: FC = () => {
 	const { handleCloseLayerModal, isSuccessModal, lottie } =
 		useSuccessLayerModal();
 
+	const handleConfirm = () => {
+		handleCloseLayerModal();
+		if (isSuccessModal.onConfirm) {
+			isSuccessModal.onConfirm(); // onConfirm 호출
+		}
+	};
+
 	return (
 		<LayerModalVariantWrapper>
 			<div>
@@ -20,7 +27,7 @@ const SuccessLayerModal: FC = () => {
 					className="mt-8 mb-4 bg-customOrange text-customDark 
 					font-bold border border-solid border-customDark 
 					rounded-full p-[10px] w-full hover:opacity-80"
-					onClick={handleCloseLayerModal}
+					onClick={handleConfirm}
 				>
 					{isSuccessModal.message}
 				</CustomButton>

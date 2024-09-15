@@ -4,6 +4,7 @@ import { atom } from 'recoil';
 export interface SuccessModalLayerType {
 	lottieFile: keyof typeof successLottie;
 	message: string;
+	onConfirm?: () => void;
 }
 
 export const successLayerModalAtom = atom<SuccessModalLayerType>({

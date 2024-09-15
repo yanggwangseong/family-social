@@ -1,0 +1,45 @@
+.recent_search_wrap {
+	@apply flex flex-col gap-4;
+
+	.recent_search_title_container {
+		@apply flex;
+		.recent_search_title {
+			@apply text-sm font-medium text-customGray;
+		}
+
+		.recent_search_delete_all {
+			@apply ml-auto text-sm text-customGray cursor-pointer;
+		}
+	}
+
+	.recent_search_item_container {
+		@apply flex flex-col gap-2;
+
+		.recent_search_item_wrap {
+			@apply flex items-center gap-2;
+
+			.recent_search_item {
+				@apply flex items-center gap-2 p-1 py-2 rounded-md w-full;
+
+				&:hover {
+					@apply bg-customOrange bg-opacity-10;
+
+					> svg {
+						@apply fill-customOrange;
+					}
+
+					.recent_search_item_text {
+						@apply text-customOrange;
+					}
+				}
+
+				.recent_search_item_text {
+					@apply text-sm font-medium text-customGray flex items-center cursor-pointer w-full;
+				}
+			}
+			.recent_search_item_delete {
+				@apply cursor-pointer ml-auto fill-customOrange;
+			}
+		}
+	}
+}
