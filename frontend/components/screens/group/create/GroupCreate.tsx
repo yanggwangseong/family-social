@@ -15,6 +15,7 @@ import { CreateGroupFields } from './group-create.interface';
 import { GroupService } from '@/services/group/group.service';
 import { useRouter } from 'next/router';
 import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const GroupCreate: FC = () => {
 	const router = useRouter();
@@ -30,15 +31,12 @@ const GroupCreate: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutate: createGroupSync } = useMutation(
-		['create-group'],
-		(data: CreateGroupFields) =>
-			GroupService.createGroup(data.groupName, data.groupDescription),
+	const { mutateAsync: createGroupSync } = useCreateMutation(
+		async (data: CreateGroupFields) =>
+			await GroupService.createGroup(data.groupName, data.groupDescription),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['create-group'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success(
 					'성공',
@@ -48,16 +46,6 @@ const GroupCreate: FC = () => {
 						router.push(`/groups/${data.id}`);
 					},
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

@@ -8,6 +8,7 @@ import { useQueryClient } from 'react-query';
 import { FamService } from '@/services/fam/fam.service';
 import { InvitationFields } from './invitations.interface';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { Loading, Report } from 'notiflix';
 
 const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 	const queryClient = useQueryClient();
@@ -15,30 +16,26 @@ const Invitations: FC<{ invitations: FamInvitation[] }> = ({ invitations }) => {
 	const { mutate: acceptInvitationSync } = useCreateMutation(
 		async (data: InvitationFields) => FamService.AcceptInvitation(data),
 		{
-			successOption: {
-				title: '성공',
-				message: '그룹가입을 수락 하였습니다.',
-				buttonText: '확인',
-				callbackOrOptions: () => {
-					queryClient.invalidateQueries(['group-requests']);
-				},
-			},
 			mutationKey: ['accept-invitation'],
+			onSuccess: data => {
+				Loading.remove();
+				Report.success('성공', '그룹가입을 수락 하였습니다.', '확인', () => {
+					queryClient.invalidateQueries(['group-requests']);
+				});
+			},
 		},
 	);
 
 	const { mutate: rejectInvitationSync } = useCreateMutation(
 		async (data: InvitationFields) => FamService.RejectInvitation(data),
 		{
-			successOption: {
-				title: '성공',
-				message: '그룹가입을 거절 하였습니다.',
-				buttonText: '확인',
-				callbackOrOptions: () => {
-					queryClient.invalidateQueries(['group-requests']);
-				},
-			},
 			mutationKey: ['reject-invitation'],
+			onSuccess: data => {
+				Loading.remove();
+				Report.success('성공', '그룹가입을 거절 하였습니다.', '확인', () => {
+					queryClient.invalidateQueries(['group-requests']);
+				});
+			},
 		},
 	);
 

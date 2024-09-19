@@ -23,6 +23,7 @@ import { MediaService } from '@/services/media/media.service';
 import FeedContainer from '../feed/feed-container/FeedContainer';
 import ScheduleContainer from '../schedule/schedule-container/ScheduleContainer';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { Loading, Report } from 'notiflix';
 
 const Account: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -48,33 +49,16 @@ const Account: FC<{ email: string }> = ({ email }) => {
 		async (file: File) => await MediaService.uploadMemberCoverImage(file),
 		{
 			mutationKey: ['member-cover-image-upload'],
-			successOption: {
-				title: '이미지 업로드',
-				message: '이미지 업로드에 성공 하였습니다.',
-				buttonText: '확인',
+			onSuccess: data => {
+				Loading.remove();
+				Report.success(
+					'이미지 업로드',
+					'이미지 업로드에 성공 하였습니다.',
+					'확인',
+				);
 			},
 		},
 	);
-
-	// UseMutateAsyncFunction<string[], unknown, File, void>
-	// const { mutateAsync } = useMutation(
-	// 	['member-cover-image-upload'],
-	// 	async (file: File) => await MediaService.uploadMemberCoverImage(file),
-	// 	{
-	// 		onMutate: variable => {
-	// 			Loading.hourglass();
-	// 		},
-	// 		onSuccess(data) {
-	// 			Loading.remove();
-	// 			Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
-	// 		},
-	// 		onError(error) {
-	// 			if (axios.isAxiosError(error)) {
-	// 				Report.warning('실패', `${error.response?.data.message}`, '확인');
-	// 			}
-	// 		},
-	// 	},
-	// );
 
 	const handleLogOut = () => {
 		setIsShowing(!isShowing);

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Format from '@/components/ui/layout/Format';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import Image from 'next/image';
 import { PiUserDuotone } from 'react-icons/pi';
@@ -13,6 +13,7 @@ import { FamService } from '@/services/fam/fam.service';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { Loading, Report } from 'notiflix';
 
 const InviteCode: FC = () => {
 	const router = useRouter();
@@ -44,69 +45,28 @@ const InviteCode: FC = () => {
 		async (data: InviteCodeRequest) =>
 			await FamService.validateInvitationCode(data.inviteCode, data.groupId),
 		{
-			successOption: {
-				title: '성공',
-				message: `${groupData?.group.groupName} 그룹에 초대되었습니다.`,
-				buttonText: '확인',
-				callbackOrOptions: () => {
-					handleSuccessLayerModal({
-						modalTitle: '그룹 초대 생성 성공',
-						layer: LayerMode.successLayerModal,
-						lottieFile: 'inviteCodeAnimation',
-						message: '그룹에 초대 되었습니다',
-						onConfirm: () => {
-							router.push(`/groups/${groupData?.group.id}`);
-						},
-					});
-				},
-			},
 			mutationKey: ['invite-code'],
+			onSuccess: data => {
+				Loading.remove();
+				Report.success(
+					'성공',
+					`${groupData?.group.groupName} 그룹에 초대되었습니다.`,
+					'확인',
+					() => {
+						handleSuccessLayerModal({
+							modalTitle: '그룹 초대 생성 성공',
+							layer: LayerMode.successLayerModal,
+							lottieFile: 'inviteCodeAnimation',
+							message: '그룹에 초대 되었습니다',
+							onConfirm: () => {
+								router.push(`/groups/${groupData?.group.id}`);
+							},
+						});
+					},
+				);
+			},
 		},
 	);
-
-	// const { mutate: validateInviteCode } = useMutation(
-	// 	['invite-code'],
-	// 	(data: InviteCodeRequest) =>
-	// 		FamService.validateInvitationCode(data.inviteCode, data.groupId),
-	// 	{
-	// 		onMutate: variable => {
-	// 			Loading.hourglass();
-	// 		},
-	// 		onSuccess(data) {
-	// 			Loading.remove();
-	// 			Report.success(
-	// 				'성공',
-	// 				`${groupData?.group.groupName} 그룹에 초대되었습니다.`,
-	// 				'확인',
-	// 				() => {
-	// 					handleSuccessLayerModal({
-	// 						modalTitle: '그룹 초대 생성 성공',
-	// 						layer: LayerMode.successLayerModal,
-	// 						lottieFile: 'inviteCodeAnimation',
-	// 						message: '그룹에 초대 되었습니다',
-	// 						onConfirm: () => {
-	// 							router.push(`/groups/${groupData?.group.id}`);
-	// 						},
-	// 					});
-	// 				},
-	// 			);
-	// 		},
-	// 		onError(error) {
-	// 			if (axios.isAxiosError(error)) {
-	// 				Report.warning(
-	// 					'실패',
-	// 					`${error.response?.data.message}`,
-	// 					'확인',
-	// 					() => {
-	// 						Loading.remove();
-	// 						setSessionStorage('init', 'on');
-	// 						router.push('/');
-	// 					},
-	// 				);
-	// 			}
-	// 		},
-	// 	},
-	// );
 
 	const onSubmit: SubmitHandler<InviteCodeRequest> = data => {
 		validateInviteCode({

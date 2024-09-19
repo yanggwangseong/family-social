@@ -1,26 +1,16 @@
 import axios from 'axios';
-import { IReportOptions, Loading, Report } from 'notiflix';
+import { Loading, Report } from 'notiflix';
 import {
 	useMutation,
 	UseMutationOptions,
 	UseMutationResult,
 } from 'react-query';
 
-type SuccessOption = {
-	title: string;
-	message: string;
-	buttonText: string;
-	callbackOrOptions?: () => void;
-	options?: IReportOptions;
-};
-
 interface CreateMutationOptions<TData, TError, TVariables, TContext>
 	extends Omit<
 		UseMutationOptions<TData, TError, TVariables, TContext>,
-		'onMutate' | 'onSuccess' | 'onError'
-	> {
-	successOption: SuccessOption;
-}
+		'onMutate' | 'onError'
+	> {}
 
 export function useCreateMutation<
 	TData = unknown,
@@ -31,19 +21,13 @@ export function useCreateMutation<
 	mutationFn: (variables: TVariables) => Promise<TData>,
 	mutationOptions: CreateMutationOptions<TData, TError, TVariables, TContext>,
 ): UseMutationResult<TData, TError, TVariables, TContext> {
-	const { successOption, ...restOptions } = mutationOptions;
-	const { title, message, buttonText, callbackOrOptions, options } =
-		successOption;
+	const { ...restOptions } = mutationOptions;
 
 	return useMutation<TData, TError, TVariables, TContext>(mutationFn, {
 		...restOptions,
 		onMutate: variables => {
 			Loading.hourglass();
 			return undefined;
-		},
-		onSuccess: (data, variables, context) => {
-			Loading.remove();
-			Report.success(title, message, buttonText, callbackOrOptions, options);
 		},
 		onError: error => {
 			if (axios.isAxiosError(error)) {
