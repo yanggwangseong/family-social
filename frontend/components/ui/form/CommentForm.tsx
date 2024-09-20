@@ -1,26 +1,22 @@
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import React, { FC } from 'react';
 import { FaRegSmile } from 'react-icons/fa';
-import FieldWithTextarea from '../field/field-area/FieldArea';
 import CustomButton from '../button/custom-button/CustomButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import {
 	CreateCommentRequest,
 	UpdateCommentRequest,
 } from '../feed/comment/comments-interface';
 import { CommentService } from '@/services/comment/comment.service';
-import axios from 'axios';
 import { useEmoji } from '@/hooks/useEmoji';
 import styles from './CommentForm.module.scss';
-import MentionFieldArea from '../field/field-area/mention-field-area/MentionFieldArea';
 import MentionField from '../mention/MentionField';
 import { CommentFormProps } from './comment-form.interface';
 import { extractMention } from '@/utils/extract-mention';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const CommentForm: FC<CommentFormProps> = ({
 	onCommentRefetch,
@@ -67,14 +63,12 @@ const CommentForm: FC<CommentFormProps> = ({
 		commentContents: string;
 	}>(getValues, setValue);
 
-	const { mutate: createCommentSync } = useMutation(
-		['create-comment'],
-		(data: CreateCommentRequest) => CommentService.createComment(data),
+	const { mutate: createCommentSync } = useCreateMutation(
+		async (data: CreateCommentRequest) =>
+			await CommentService.createComment(data),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['create-comment'],
+			onSuccess() {
 				Loading.remove();
 
 				handleSuccessLayerModal({
@@ -82,39 +76,27 @@ const CommentForm: FC<CommentFormProps> = ({
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createCommentAnimation',
 					message: '댓글 생성 하였습니다',
+					onConfirm() {
+						reset({ commentContents: '' });
+						onCommentRefetch();
+						handleCloseReply && handleCloseReply();
+					},
 				});
-
-				reset({ commentContents: '' });
-				onCommentRefetch();
-				handleCloseReply && handleCloseReply();
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);
 
-	const { mutate: updateCommentSync } = useMutation(
-		['update-comment'],
-		(data: UpdateCommentRequest) =>
-			CommentService.updateComment({
+	const { mutate: updateCommentSync } = useCreateMutation(
+		async (data: UpdateCommentRequest) =>
+			await CommentService.updateComment({
 				commentId,
 				feedId,
 				commentContents: data.commentContents,
 				mentions: data.mentions,
 			}),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-comment'],
+			onSuccess() {
 				Loading.remove();
 
 				handleSuccessLayerModal({
@@ -122,22 +104,13 @@ const CommentForm: FC<CommentFormProps> = ({
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createCommentAnimation',
 					message: '댓글 수정 하였습니다',
+					onConfirm() {
+						reset({ commentContents: '' });
+						onCommentRefetch();
+						handleCloseReply && handleCloseReply();
+						handleEditComment && handleEditComment();
+					},
 				});
-
-				reset({ commentContents: '' });
-				onCommentRefetch();
-				handleCloseReply && handleCloseReply();
-				handleEditComment && handleEditComment();
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

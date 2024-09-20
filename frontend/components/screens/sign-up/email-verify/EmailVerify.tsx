@@ -3,13 +3,12 @@ import styles from './EmailVerify.module.scss';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EmailVerifyType } from '@/shared/interfaces/auth.interface';
 import Field from '@/components/ui/field/Field';
-import { useMutation } from 'react-query';
 import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const EmailVerify: FC<{ email: string }> = ({ email }) => {
 	const router = useRouter();
@@ -25,14 +24,11 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 		mode: 'onChange',
 	});
 
-	const { mutate: verifySync } = useMutation(
-		['emailverify'],
-		(data: EmailVerifyType) =>
-			AuthService.emailVerify(data.emailVerifyCode, email),
+	const { mutate: verifySync } = useCreateMutation(
+		async (data: EmailVerifyType) =>
+			await AuthService.emailVerify(data.emailVerifyCode, email),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
+			mutationKey: ['emailverify'],
 			onSuccess(data) {
 				Loading.remove();
 				Report.success(
@@ -41,16 +37,6 @@ const EmailVerify: FC<{ email: string }> = ({ email }) => {
 					'확인',
 					() => router.push('/signin'),
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);
