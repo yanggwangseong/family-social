@@ -3,15 +3,13 @@ import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { CommentService } from '@/services/comment/comment.service';
 import React, { FC } from 'react';
-import { useMutation } from 'react-query';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
-import axios from 'axios';
 
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const CommentDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -20,22 +18,18 @@ const CommentDeleteConfirm: FC = () => {
 
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
-	const { mutate: deleteCommentSync } = useMutation(
-		['delete-comment'],
-		() =>
-			CommentService.deleteComment({
+	const { mutate: deleteCommentSync } = useCreateMutation(
+		async () =>
+			await CommentService.deleteComment({
 				feedId: IsComment.feedId,
 				commentId: IsComment.commentId,
 			}),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['delete-comment'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
-					modalTitle: '댓글 삭제 성공',
+					modalTitle: '댓글 삭제',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'deleteAnimation',
 					message: '댓글을 삭제 하였습니다',
@@ -44,22 +38,13 @@ const CommentDeleteConfirm: FC = () => {
 					},
 				});
 			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
-			},
 		},
 	);
 
 	const handleClick = () => {
 		deleteCommentSync();
 	};
+
 	return (
 		<LayerModalVariantWrapper>
 			<div className="my-10 text-sm text-customGray">

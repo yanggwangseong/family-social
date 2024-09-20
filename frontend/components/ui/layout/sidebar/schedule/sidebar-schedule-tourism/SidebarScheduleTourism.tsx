@@ -8,20 +8,18 @@ import { getSumTime } from '@/utils/get-sum-time';
 import ScheduleTourism from '@/components/ui/schedule/tourism/Tourism';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
-import { useMutation } from 'react-query';
 import {
 	CreateScheduleRequest,
 	UpdateScheduleRequest,
 } from '@/shared/interfaces/schedule.interface';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { ScheduleSidebarProps } from '../schedule-sidebar.interface';
 import { sharedFamIdsAtom } from '@/atoms/sharedFamIdsAtom';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,
@@ -42,67 +40,42 @@ const SidebarScheduleTourism: FC<ScheduleSidebarProps> = ({
 
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
-	const { mutate: createScheduleSync } = useMutation(
-		['create-schedule'],
-		(data: CreateScheduleRequest) =>
-			ScheduleService.createSchedules({ ...data }),
+	const { mutate: createScheduleSync } = useCreateMutation(
+		async (data: CreateScheduleRequest) =>
+			await ScheduleService.createSchedules({ ...data }),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['create-schedule'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '일정 생성',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createScheduleAnimation',
 					message: '일정을 생성 하였습니다',
 					onConfirm: () => {
-						router.push(`/schedules`);
+						router.push(`/schedules/${data.id}`);
 					},
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);
 
-	const { mutate: updateScheduleSync } = useMutation(
-		['update-schedule'],
-		(data: UpdateScheduleRequest) =>
-			ScheduleService.updateScheduleByScheduleId({ ...data }),
+	const { mutate: updateScheduleSync } = useCreateMutation(
+		async (data: UpdateScheduleRequest) =>
+			await ScheduleService.updateScheduleByScheduleId({ ...data }),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-schedule'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '일정 수정',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createScheduleAnimation',
 					message: '일정을 수정 하였습니다',
+					onConfirm: () => {
+						router.push(`/schedules/${data.id}`);
+					},
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

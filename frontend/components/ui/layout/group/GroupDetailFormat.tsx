@@ -17,12 +17,11 @@ import { InviteMenu } from '../../modal/toggle-menu.constants';
 import { useModal } from '@/hooks/useModal';
 import CustomButton from '../../button/custom-button/CustomButton';
 import Profile from '../../profile/Profile';
-import { useMutation } from 'react-query';
 import { MediaService } from '@/services/media/media.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import { useCreateEvent } from '@/hooks/useCreateEvent';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
@@ -44,22 +43,14 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 		handleToggleModal: handleCloseInvitationModal,
 	} = useModal(invitationModalWrapperRef);
 
-	const { mutateAsync } = useMutation(
-		['group-cover-image-upload'],
+	const { mutateAsync } = useCreateMutation(
 		async (file: File) =>
 			await MediaService.uploadGroupCoverImage(file, groupId),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['group-cover-image-upload'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);
