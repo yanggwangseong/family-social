@@ -8,15 +8,12 @@ import React, {
 } from 'react';
 import styles from './CreateEvent.module.scss';
 
-import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import Image from 'next/image';
 import { PiPencilDuotone } from 'react-icons/pi';
 import Profile from '@/components/ui/profile/Profile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
-import { useMutation, useQuery } from 'react-query';
 import { MediaService } from '@/services/media/media.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Field from '@/components/ui/field/Field';
@@ -38,6 +35,7 @@ import { TranslateDateFormat } from '@/utils/translate-date-format';
 
 import { CreateEventFields, CreateEventProps } from './create-event.interface';
 import { FormatDateToString } from '@/utils/formatDateToString';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 	const [isEndDateOpen, setIsEndDateOpen] = useReducer(
@@ -97,43 +95,31 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 		},
 	});
 
-	const { mutateAsync } = useMutation(
-		['group-event-image-upload'],
+	const { mutateAsync } = useCreateMutation(
 		async (file: File) =>
 			await MediaService.uploadGroupEventImage(
 				file,
 				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['group-event-image-upload'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success('성공', `이미지 업로드에 성공 하였습니다.`, '확인');
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);
 
-	const { mutateAsync: createGroupEventASync } = useMutation(
-		['create-group-event'],
+	const { mutateAsync: createGroupEventASync } = useCreateMutation(
 		async (data: CreateGroupEventRequest) =>
 			await GroupEventService.createGroupEvent(
 				data,
 				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['create-group-event'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '이벤트 생성 성공',
 					layer: LayerMode.successLayerModal,
@@ -141,40 +127,26 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 					message: '새로운 이벤트가 생성 되었습니다',
 				});
 			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
-			},
 		},
 	);
 
-	const { mutateAsync: updateGroupEventASync } = useMutation(
-		['update-group-event'],
+	const { mutateAsync: updateGroupEventASync } = useCreateMutation(
 		async (data: UpdateGroupEventRequest) =>
 			await GroupEventService.updateGroupEvent(
 				data,
-				'75aca3da-1dac-48ef-84b8-cdf1be8fe37d',
+				event!.eventGroupId,
 				event!.id,
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-group-event'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '이벤트 수정 성공',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createEventAnimation',
 					message: '이벤트가 수정 되었습니다',
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);

@@ -36,7 +36,7 @@ export const CommentService = {
 		return data;
 	},
 
-	async updateLike(feedId: string, commentId: string) {
+	async updateLike(feedId: string, commentId: string): Promise<boolean> {
 		const { data } = await axiosAPI.put(
 			`/feeds/${feedId}/comments/${commentId}/likes`,
 		);

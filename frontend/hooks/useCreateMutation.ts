@@ -7,10 +7,7 @@ import {
 } from 'react-query';
 
 interface CreateMutationOptions<TData, TError, TVariables, TContext>
-	extends Omit<
-		UseMutationOptions<TData, TError, TVariables, TContext>,
-		'onMutate' | 'onError'
-	> {}
+	extends UseMutationOptions<TData, TError, TVariables, TContext> {}
 
 export function useCreateMutation<
 	TData = unknown,
@@ -24,7 +21,6 @@ export function useCreateMutation<
 	const { ...restOptions } = mutationOptions;
 
 	return useMutation<TData, TError, TVariables, TContext>(mutationFn, {
-		...restOptions,
 		onMutate: variables => {
 			Loading.hourglass();
 			return undefined;
@@ -39,5 +35,6 @@ export function useCreateMutation<
 				);
 			}
 		},
+		...restOptions,
 	});
 }

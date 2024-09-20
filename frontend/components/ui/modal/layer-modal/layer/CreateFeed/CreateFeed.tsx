@@ -2,10 +2,9 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './CreateFeed.module.scss';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
 	CreateFeedFields,
@@ -14,7 +13,6 @@ import {
 	UpdateFeedRequest,
 } from './create-feed.interface';
 import { MediaService } from '@/services/media/media.service';
-import axios from 'axios';
 import { FeedService } from '@/services/feed/feed.service';
 import { useRecoilState } from 'recoil';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
@@ -34,6 +32,7 @@ import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import MentionField from '@/components/ui/mention/MentionField';
 import { extractMention } from '@/utils/extract-mention';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -97,30 +96,20 @@ const CreateFeed: FC = () => {
 	const { isEmoji, handleEmojiView, handlesetValueAddEmoji } =
 		useEmoji<CreateFeedFields>(getValues, setValue);
 
-	const { mutateAsync: uploadFilesASync } = useMutation(
-		['upload-file'],
+	const { mutateAsync: uploadFilesASync } = useCreateMutation(
 		async () => await MediaService.uploadfile(isFiles),
 		{
-			onMutate: variable => {},
-			onSuccess(data: string[]) {},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
-			},
+			mutationKey: ['upload-file-feed'],
+			onMutate: () => {},
 		},
 	);
 
-	const { mutateAsync: createFeedASync } = useMutation(
-		['create-feed'],
+	const { mutateAsync: createFeedASync } = useCreateMutation(
 		async (data: CreateFeedRequest) => await FeedService.createFeed(data),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['create-feed'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '피드 생성 성공',
 					layer: LayerMode.successLayerModal,
@@ -128,35 +117,21 @@ const CreateFeed: FC = () => {
 					message: '피드가 생성 되었습니다',
 				});
 			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
-			},
 		},
 	);
 
-	const { mutateAsync: updateFeedASync } = useMutation(
-		['update-feed'],
+	const { mutateAsync: updateFeedASync } = useCreateMutation(
 		async (data: UpdateFeedRequest) => await FeedService.updateFeed(data),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-feed', feed?.feedId],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '피드 수정 성공',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'createFeedAnimation',
 					message: '피드가 수정 되었습니다',
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);
@@ -222,10 +197,6 @@ const CreateFeed: FC = () => {
 		if (!isFeedId) remove();
 		if (feed && !isLoading && isFeedId) handleSelectedGroup(feed.groupId);
 	}, [feed, handleSelectedGroup, isFeedId, isLoading, remove]);
-
-	// [TODO] 1. 그룹을 먼저 선택한다. (O)
-	// [TODO] 2. 이미지 또는 미디어를 올린다.
-	// [TODO] 3. 피드 공개/비공개 선택 셀렉트박스 추가 피드 글 내용 작성.
 
 	const handleChangePage = (page: string) => {
 		setIsFeedPage(page);

@@ -46,7 +46,7 @@ export const FeedService = {
 		return data;
 	},
 
-	async updateLike(feedId: string, feedWriterId: string) {
+	async updateLike(feedId: string, feedWriterId: string): Promise<boolean> {
 		const { data } = await axiosAPI.put(`/feeds/${feedId}/likes`, {
 			feedWriterId,
 		} satisfies FeedLikeUpdateRequest);
