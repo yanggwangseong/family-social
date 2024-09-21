@@ -7,14 +7,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { LoginFields } from './sign-in.interface';
 import { validEmail, validPassword } from '../sign-up/sign-up.constants';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { useMutation } from 'react-query';
 import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
 import { useRedirectUrl } from '@/hooks/useRedirectUrl';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const SignIn: FC = () => {
 	const { redirect_url, router } = useRedirectUrl();
@@ -30,28 +29,16 @@ const SignIn: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutate: loginSync } = useMutation(
-		['login'],
-		(data: LoginFields) => AuthService.signIn(data.email, data.password),
+	const { mutate: loginSync } = useCreateMutation(
+		async (data: LoginFields) =>
+			await AuthService.signIn(data.email, data.password),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
+			mutationKey: ['login'],
 			onSuccess(data) {
 				Loading.remove();
 				Report.success('성공', `로그인 성공 하였습니다.`, '확인', () =>
 					redirect_url ? router.push(redirect_url) : router.push('/feeds'),
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

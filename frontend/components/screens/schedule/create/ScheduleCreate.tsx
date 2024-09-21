@@ -5,7 +5,6 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './ScheduleCreate.module.scss';
 import SchedulePeriod from './schedule-period/SchedulePeriod';
 import SelectGroup from './select-group/SelectGroup';
-import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Union, schdulePages } from 'types';
 import Tourism from './tourism/Tourism';
@@ -21,6 +20,7 @@ import { motion } from 'framer-motion';
 import { BUTTONGESTURE } from '@/utils/animation/gestures';
 import { PiUsersThreeDuotone, PiAirplaneDuotone } from 'react-icons/pi';
 import { FormatDateToString } from '@/utils/formatDateToString';
+import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
 
 const ScheduleCreate: FC<{
 	scheduleItem?: ScheduleItemResponse;

@@ -4,18 +4,16 @@ import { useRouter } from 'next/router';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Format from '@/components/ui/layout/Format';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import Image from 'next/image';
 import { PiUserDuotone } from 'react-icons/pi';
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import { InviteCodeRequest } from './invite-code.interface';
 import { FamService } from '@/services/fam/fam.service';
-import { setSessionStorage } from '@/utils/session-storage';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { Loading, Report } from 'notiflix';
 
 const InviteCode: FC = () => {
 	const router = useRouter();
@@ -43,15 +41,12 @@ const InviteCode: FC = () => {
 		async () => await GroupService.getGroupDetail(groupId),
 	);
 
-	const { mutate: validateInviteCode } = useMutation(
-		['invite-code'],
-		(data: InviteCodeRequest) =>
-			FamService.validateInvitationCode(data.inviteCode, data.groupId),
+	const { mutate: validateInviteCode } = useCreateMutation(
+		async (data: InviteCodeRequest) =>
+			await FamService.validateInvitationCode(data.inviteCode, data.groupId),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['invite-code'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success(
 					'성공',
@@ -69,20 +64,6 @@ const InviteCode: FC = () => {
 						});
 					},
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => {
-							Loading.remove();
-							setSessionStorage('init', 'on');
-							router.push('/');
-						},
-					);
-				}
 			},
 		},
 	);

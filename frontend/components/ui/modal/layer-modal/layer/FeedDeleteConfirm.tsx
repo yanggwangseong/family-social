@@ -1,17 +1,15 @@
 import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import axios from 'axios';
 import React, { FC } from 'react';
 import { useRecoilState } from 'recoil';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
-import { useMutation } from 'react-query';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { FeedService } from '@/services/feed/feed.service';
 
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const FeedDeleteConfirm: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -19,35 +17,22 @@ const FeedDeleteConfirm: FC = () => {
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
-	const { mutate: deleteFeedSync } = useMutation(
-		['delete-group'],
-		() => FeedService.deleteFeed(isFeedId),
-		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
-				Loading.remove();
 
+	const { mutate: deleteFeedSync } = useCreateMutation(
+		async () => await FeedService.deleteFeed(isFeedId),
+		{
+			mutationKey: ['delete-feed'],
+			onSuccess: data => {
+				Loading.remove();
 				handleSuccessLayerModal({
-					modalTitle: '피드 삭제 성공',
+					modalTitle: '피드 삭제',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'deleteAnimation',
-					message: '피드를 삭제 하는데 성공 하였습니다',
+					message: '피드를 삭제 하였습니다',
 					onConfirm: () => {
 						setIsFeedId('');
 					},
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

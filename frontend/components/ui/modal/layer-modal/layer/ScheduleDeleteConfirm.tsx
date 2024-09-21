@@ -2,10 +2,7 @@ import { modalAtom } from '@/atoms/modalAtom';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import React, { FC } from 'react';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
-import axios from 'axios';
-import { useMutation } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
 import {
 	ScheduleIdAtomDefaultValue,
@@ -15,6 +12,7 @@ import {
 import LayerModalVariantWrapper from './LayerModalVariantWrapper';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const ScheduleDeleteConfirm: FC = () => {
 	const [, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -22,20 +20,16 @@ const ScheduleDeleteConfirm: FC = () => {
 
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
 
-	const { mutate: deleteScheduleSync } = useMutation(
-		['delete-schedule'],
-		() =>
-			ScheduleService.deleteSchedule(
+	const { mutate: deleteScheduleSync } = useCreateMutation(
+		async () =>
+			await ScheduleService.deleteSchedule(
 				IsScheduleId.scheduleId,
 				IsScheduleId.groupId,
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['delete-schedule'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '여행 일정 삭제 성공',
 					layer: LayerMode.successLayerModal,
@@ -47,16 +41,6 @@ const ScheduleDeleteConfirm: FC = () => {
 						});
 					},
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

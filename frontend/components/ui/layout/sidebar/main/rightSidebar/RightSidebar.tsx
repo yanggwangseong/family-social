@@ -5,9 +5,9 @@ import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import Profile from '@/components/ui/profile/Profile';
 import { Union, rightSideTabMenus } from 'types';
 import { useQuery } from 'react-query';
-import { MemberService } from '@/services/member/member.service';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { GroupService } from '@/services/group/group.service';
+import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
 
 const RightSidebar: FC = () => {
 	const groupId = '75aca3da-1dac-48ef-84b8-cdf1be8fe37d';
@@ -24,10 +24,13 @@ const RightSidebar: FC = () => {
 		async () => await GroupService.getMembersBelongToGroup(groupId),
 	);
 
-	const { data: groupList, isLoading: groupLoading } = useQuery(
-		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
-	);
+	// const { data: groupList, isLoading: groupLoading } = useQuery(
+	// 	['member-belong-to-groups'],
+	// 	async () => await GroupService.getMemberBelongToGroups(),
+	// );
+
+	const { data: groupList, isLoading: groupLoading } =
+		useMemberBelongToGroups(groupId);
 
 	return (
 		<div className={styles.right_sidebar_container}>

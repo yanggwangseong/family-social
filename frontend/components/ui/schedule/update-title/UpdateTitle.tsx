@@ -6,9 +6,8 @@ import { ScheduleUpdateTitleProps } from './update-title.interface';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
-import { useMutation } from 'react-query';
 import { ScheduleService } from '@/services/schedule/schedule.service';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 	handleUpdateTitle,
@@ -25,29 +24,21 @@ const ScheduleUpdateTitle: FC<ScheduleUpdateTitleProps> = ({
 		mode: 'onChange',
 	});
 
-	const { mutate: updateScheduleNameSync } = useMutation(
-		['create-group'],
-		(data: { scheduleName: string }) =>
-			ScheduleService.updateScheduleName(scheduleId, data.scheduleName),
+	const { mutate: updateScheduleNameSync } = useCreateMutation(
+		async (data: { scheduleName: string }) =>
+			await ScheduleService.updateScheduleName(scheduleId, data.scheduleName),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-schedule-name'],
+			onSuccess: data => {
 				Loading.remove();
-				Report.success('성공', `일정 제목 수정 하였습니다.`, '확인', () => {
-					handleUpdateTitle();
-				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
+				Report.success(
+					'성공',
+					`여행일정 제목 수정이 성공 하였습니다`,
+					'확인',
+					() => {
+						handleUpdateTitle();
+					},
+				);
 			},
 		},
 	);

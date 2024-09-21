@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './SearchBox.module.scss';
 import { motion } from 'framer-motion';
 import Field from '../field/Field';
@@ -6,18 +6,17 @@ import Profile from '../profile/Profile';
 import { useRouter } from 'next/router';
 import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useSearch } from '@/hooks/useSearch';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSearchBoxAnimation } from '@/hooks/useSearchBoxAnimation';
 import RecentSearch from '../recent-search/RecentSearch';
 import { SearchService } from '@/services/search/search.service';
 import NotFoundSearch from '../not-found/search/NotFoundSearch';
 import { NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { LayerMode } from 'types';
-import axios from 'axios';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { Confirm } from 'notiflix';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const SearchBox: FC = () => {
 	const router = useRouter();
@@ -52,55 +51,33 @@ const SearchBox: FC = () => {
 		async () => await SearchService.getRecentSearch('member'),
 	);
 
-	const { mutate: deleteRecentSearchAllSync } = useMutation(
-		['delete-recent-search-member-all'],
+	const { mutate: deleteRecentSearchAllSync } = useCreateMutation(
 		async () => await SearchService.deleteAllRecentSearch('member'),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['delete-recent-search-member-all'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '모든 검색어 삭제 성공',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'deleteAnimation',
 					message: '모든 검색어를 삭제 하였습니다',
+					onConfirm: () => {
+						queryClient.invalidateQueries(['search-recent-member', 'member']);
+					},
 				});
-				queryClient.invalidateQueries(['search-recent-member', 'member']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);
 
-	const { mutate: deleteRecentSearchSync } = useMutation(
-		['delete-recent-search-member'],
+	const { mutate: deleteRecentSearchSync } = useCreateMutation(
 		async (term: string) =>
 			await SearchService.deleteRecentSearchByTerm('member', term),
 		{
-			onMutate: variable => {},
-			onSuccess(data) {
+			mutationKey: ['delete-recent-search-member'],
+			onMutate: () => {},
+			onSuccess: data => {
 				queryClient.invalidateQueries(['search-recent-member', 'member']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

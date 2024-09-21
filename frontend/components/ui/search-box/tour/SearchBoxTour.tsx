@@ -5,14 +5,13 @@ import Field from '../../field/Field';
 import { SearchBoxTourProps } from './search-box-tour.interface';
 import { motion } from 'framer-motion';
 import RecentSearch from '../../recent-search/RecentSearch';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { SearchService } from '@/services/search/search.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import { Confirm } from 'notiflix';
 import { LayerMode } from 'types';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const SearchBoxTour: FC<SearchBoxTourProps> = ({
 	debounceSearch,
@@ -38,55 +37,33 @@ const SearchBoxTour: FC<SearchBoxTourProps> = ({
 		onChangeSearchTerm(term);
 	};
 
-	const { mutate: deleteRecentSearchAllSync } = useMutation(
-		['delete-recent-search-tour-all'],
+	const { mutate: deleteRecentSearchAllSync } = useCreateMutation(
 		async () => await SearchService.deleteAllRecentSearch('tour'),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['delete-recent-search-tour-all'],
+			onSuccess: data => {
 				Loading.remove();
-
 				handleSuccessLayerModal({
 					modalTitle: '모든 검색어 삭제 성공',
 					layer: LayerMode.successLayerModal,
 					lottieFile: 'deleteAnimation',
 					message: '모든 검색어를 삭제 하였습니다',
+					onConfirm: () => {
+						queryClient.invalidateQueries(['search-recent-tour', 'tour']);
+					},
 				});
-				queryClient.invalidateQueries(['search-recent-tour', 'tour']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);
 
-	const { mutate: deleteRecentSearchSync } = useMutation(
-		['delete-recent-search-tour'],
+	const { mutate: deleteRecentSearchSync } = useCreateMutation(
 		async (term: string) =>
 			await SearchService.deleteRecentSearchByTerm('tour', term),
 		{
-			onMutate: variable => {},
-			onSuccess(data) {
+			mutationKey: ['delete-recent-search-tour'],
+			onMutate: () => {},
+			onSuccess: data => {
 				queryClient.invalidateQueries(['search-recent-tour', 'tour']);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

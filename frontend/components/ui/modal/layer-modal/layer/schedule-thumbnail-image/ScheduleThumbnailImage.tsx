@@ -5,15 +5,14 @@ import { GoPencil } from 'react-icons/go';
 import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
 import { useUploadImage } from '@/hooks/useUploadImage';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { ScheduleService } from '@/services/schedule/schedule.service';
-import { useMutation } from 'react-query';
 import { modalAtom } from '@/atoms/modalAtom';
 import { useRecoilState } from 'recoil';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const ScheduleThumbnailImage: FC = () => {
 	const { isFiles, handleUploadImage, uploadImage } = useUploadImage();
@@ -30,18 +29,15 @@ const ScheduleThumbnailImage: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutateAsync: scheduleUploadThumbnailASync } = useMutation(
-		['schedule-thumbnail-image-upload'],
+	const { mutateAsync: scheduleUploadThumbnailASync } = useCreateMutation(
 		async (file: File) =>
 			await ScheduleService.uploadScheduleThumbnailImage(
 				file,
 				'510c756b-c73e-4242-8e98-9535fb35b52a',
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['schedule-thumbnail-image-upload'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success(
 					'성공',
@@ -51,11 +47,6 @@ const ScheduleThumbnailImage: FC = () => {
 						setIsShowing(false);
 					},
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);

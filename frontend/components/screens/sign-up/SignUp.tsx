@@ -4,7 +4,6 @@ import styles from './SignUp.module.scss';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthFields } from './sign-up.interface';
-import { useMutation } from 'react-query';
 import Field from '@/components/ui/field/Field';
 import {
 	validEmail,
@@ -14,13 +13,12 @@ import {
 import { AuthService } from '@/services/auth/auth.service';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import axios from 'axios';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import EmailVerify from './email-verify/EmailVerify';
 import { motion } from 'framer-motion';
 import { itemVariants, visible } from '@/constants/animation.constant';
-import { useRouter } from 'next/router';
 import { useRedirectUrl } from '@/hooks/useRedirectUrl';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const SignUp: FC = () => {
 	const { redirect_url } = useRedirectUrl();
@@ -38,35 +36,21 @@ const SignUp: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutate: registerSync } = useMutation(
-		['register'],
-		(data: AuthFields) =>
-			AuthService.register(
+	const { mutate: registerSync } = useCreateMutation(
+		async (data: AuthFields) =>
+			await AuthService.register(
 				data.email,
 				data.password,
 				data.username,
 				data.phoneNumber,
 			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
+			mutationKey: ['register'],
 			onSuccess(data) {
 				Loading.remove();
 				Report.success('성공', `${data.username}님 환영합니다.`, '확인', () =>
 					setEmailVerify(true),
 				);
-				//reset();
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

@@ -5,6 +5,7 @@
 ## (이런 고민을 했어요)
 
 - [NextJS getServerSideProps SSR에서 HOF를 이용한 auth 검증](https://threeyears.tistory.com/607)
+- [react-query useMutation 커스텀훅으로 재사용하기](https://threeyears.tistory.com/618)
 - InterSection observer 재사용 가능한 커스텀 훅 만들기 (useInfiniteSelect 훅과 useFeedIntersectionObserver훅을 이용하여 상황에 따라 다른 queryFn을 호출하여 재사용 하기)
 - lottie requestAnimationFrame handler took 문제 해결 [해당이슈](https://github.com/YangGwangSeong/family-social/issues/59)
 - axios를 사용하여 rest-api를 호출할때 request data를 type-safe하게 사용하기 위해 axios.method 제네릭보다 `satisfies` 사용하기

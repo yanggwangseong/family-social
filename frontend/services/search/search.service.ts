@@ -20,7 +20,9 @@ export const SearchService = {
 		return data;
 	},
 
-	async deleteAllRecentSearch(searchType: Union<typeof SearchType>) {
+	async deleteAllRecentSearch(
+		searchType: Union<typeof SearchType>,
+	): Promise<void> {
 		const { data } = await axiosAPI.delete(
 			`/search/search-histories/${searchType}`,
 		);
@@ -30,7 +32,7 @@ export const SearchService = {
 	async deleteRecentSearchByTerm(
 		searchType: Union<typeof SearchType>,
 		term: string,
-	) {
+	): Promise<void> {
 		const { data } = await axiosAPI.delete(
 			`/search/search-histories/${searchType}/${term}`,
 		);

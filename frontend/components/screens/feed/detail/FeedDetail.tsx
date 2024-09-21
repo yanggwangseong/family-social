@@ -5,8 +5,6 @@ import Header from '@/components/ui/header/Header';
 import MainSidebar from '@/components/ui/layout/sidebar/main/MainSidebar';
 import RightSidebar from '@/components/ui/layout/sidebar/main/rightSidebar/RightSidebar';
 import BackSpace from '@/components/ui/back-space/BackSpace';
-import { useQuery } from 'react-query';
-import { FeedService } from '@/services/feed/feed.service';
 import { useRouter } from 'next/router';
 import { AnimatePresence } from 'framer-motion';
 import FeedItem from '@/components/ui/feed/FeedItem';
@@ -14,6 +12,7 @@ import { useFeedLike } from '@/hooks/useFeedLike';
 import { useLottieLike } from '@/hooks/useLottieLike';
 import LottieLike from '@/components/ui/lottie/LottieLike';
 import { useCommentLike } from '@/hooks/useCommentLike';
+import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
 
 const FeedDetail: FC = () => {
 	const router = useRouter();
@@ -21,13 +20,9 @@ const FeedDetail: FC = () => {
 
 	const { handleIsLottie, lottieRef, handleLottieComplete } = useLottieLike();
 
-	const { data, isLoading, refetch } = useQuery(
-		['get-feed-by-id', feedId],
-		async () => await FeedService.getFeedById(feedId),
-		{
-			enabled: !!feedId,
-		},
-	);
+	const { feed, refetch } = useFeedByIdQuery(feedId, {
+		enabled: !!feedId,
+	});
 
 	const handleRefetch = (pageValue: number) => {
 		refetch();
@@ -60,9 +55,9 @@ const FeedDetail: FC = () => {
 							</div>
 							<div className={styles.feed_container}>
 								<AnimatePresence>
-									{data && (
+									{feed && (
 										<FeedItem
-											feed={data}
+											feed={feed}
 											index={0}
 											onLike={handleUpdateLike}
 											page={1}
