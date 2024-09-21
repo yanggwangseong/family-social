@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
+import { MAIN_ROLE } from '@/constants/string-constants';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { GroupEntity } from '@/models/entities/group.entity';
 import { OverrideInsertFeild } from '@/types/repository';
@@ -35,7 +36,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 				groupName,
 				groupByMemberGroups: {
 					memberId,
-					role: 'main',
+					role: MAIN_ROLE,
 				},
 			},
 			relations: {

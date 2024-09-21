@@ -172,7 +172,7 @@ export class FeedsService {
 
 		await this.mentionsService.createMentions(
 			{
-				mentionType: 'mention_on_feed',
+				mentionType: MENTION_ON_FEED,
 				mentions: mentions,
 				mentionSenderId: rest.memberId,
 				mentionFeedId: feed.id,
@@ -195,7 +195,7 @@ export class FeedsService {
 
 		// mentions
 		await this.mentionsService.updateMentions({
-			mentionType: 'mention_on_feed',
+			mentionType: MENTION_ON_FEED,
 			mentions: rest.mentions,
 			mentionSenderId: rest.memberId,
 			mentionFeedId: feed.id,
