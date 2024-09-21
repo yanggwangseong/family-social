@@ -10,7 +10,9 @@ import {
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
 } from '@/constants/business-error';
+import { MENTION_ON_COMMENT } from '@/constants/string-constants';
 import { CommentGetListsResDto } from '@/models/dto/comments/res/comment-get-lists-res.dto';
+import { CommentEntity } from '@/models/entities/comment.entity';
 import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
 import { LikesCommentRepository } from '@/models/repositories/likes-comment.repository';
@@ -34,77 +36,121 @@ export class CommentsService {
 		const comment = await this.commentsRepository.getCommentsByFeedId(feedId);
 
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_comment',
+			MENTION_ON_COMMENT,
 		);
 
-		const newComments = await Promise.all(
-			comment.map(async (comment): Promise<CommentGetListsResDto> => {
-				const newChildComments = comment.childrenComments
-					? await Promise.all(
-							comment.childrenComments.map(
-								async (child): Promise<CommentGetListsResDto> => {
-									const { id, username } =
-										await this.commentsRepository.getUserIdAndNameByCommentId(
-											child.id,
-										);
-									const likedByComments =
-										await this.likesCommentRepository.getLikedByComments(
-											child.id,
-										);
+		// const newComments = await Promise.all(
+		// 	comment.map(async (comment): Promise<CommentGetListsResDto> => {
+		// 		const newChildComments = comment.childrenComments
+		// 			? await Promise.all(
+		// 					comment.childrenComments.map(
+		// 						async (child): Promise<CommentGetListsResDto> => {
+		// 							const { id, username } =
+		// 								await this.commentsRepository.getUserIdAndNameByCommentId(
+		// 									child.id,
+		// 								);
+		// 							const likedByComments =
+		// 								await this.likesCommentRepository.getLikedByComments(
+		// 									child.id,
+		// 								);
 
-									return {
-										id: child.id,
-										commentContents: child.commentContents,
-										updatedAt: child.updatedAt,
-										replyId: child.replyId,
-										parentId: child.parentId,
-										feedId: child.feedId,
-										myLikeByComment: this.findMyLikeByComment(
-											likedByComments,
-											memberId,
-										),
-										sumLikeByComment: this.sumLikesOfComment(likedByComments),
-										member: {
-											id: id,
-											username: username,
-										},
-										mentions: await this.mentionsService.findMentionsByFeedId(
-											feedId,
-											mentionTypeId,
-											child.id,
-										),
-									};
-								},
-							),
-					  )
-					: [];
+		// 							return {
+		// 								id: child.id,
+		// 								commentContents: child.commentContents,
+		// 								updatedAt: child.updatedAt,
+		// 								replyId: child.replyId,
+		// 								parentId: child.parentId,
+		// 								feedId: child.feedId,
+		// 								myLikeByComment: this.findMyLikeByComment(
+		// 									likedByComments,
+		// 									memberId,
+		// 								),
+		// 								sumLikeByComment: this.sumLikesOfComment(likedByComments),
+		// 								member: {
+		// 									id: id,
+		// 									username: username,
+		// 								},
+		// 								mentions: await this.mentionsService.findMentionsByFeedId(
+		// 									feedId,
+		// 									mentionTypeId,
+		// 									child.id,
+		// 								),
+		// 							};
+		// 						},
+		// 					),
+		// 			  )
+		// 			: [];
 
-				return {
-					id: comment.id,
-					commentContents: comment.commentContents,
-					updatedAt: comment.updatedAt,
-					replyId: comment.replyId,
-					parentId: comment.parentId,
-					feedId: comment.feedId,
-					myLikeByComment: this.findMyLikeByComment(
-						comment.LikedByComments,
-						memberId,
-					),
-					sumLikeByComment: this.sumLikesOfComment(comment.LikedByComments),
-					member: {
-						id: comment.member.id,
-						username: comment.member.username,
-					},
-					childrenComments: newChildComments,
-					mentions: await this.mentionsService.findMentionsByFeedId(
-						feedId,
-						mentionTypeId,
-						comment.id,
-					),
-				};
-			}),
+		// 		return {
+		// 			id: comment.id,
+		// 			commentContents: comment.commentContents,
+		// 			updatedAt: comment.updatedAt,
+		// 			replyId: comment.replyId,
+		// 			parentId: comment.parentId,
+		// 			feedId: comment.feedId,
+		// 			myLikeByComment: this.findMyLikeByComment(
+		// 				comment.LikedByComments,
+		// 				memberId,
+		// 			),
+		// 			sumLikeByComment: this.sumLikesOfComment(comment.LikedByComments),
+		// 			member: {
+		// 				id: comment.member.id,
+		// 				username: comment.member.username,
+		// 			},
+		// 			childrenComments: newChildComments,
+		// 			mentions: await this.mentionsService.findMentionsByFeedId(
+		// 				feedId,
+		// 				mentionTypeId,
+		// 				comment.id,
+		// 			),
+		// 		};
+		// 	}),
+		// );
+		// return newComments;
+
+		return await Promise.all(
+			comment.map((comment) =>
+				this.mapCommentToDto(comment, memberId, feedId, mentionTypeId),
+			),
 		);
-		return newComments;
+	}
+
+	private async mapCommentToDto(
+		comment: CommentEntity,
+		memberId: string,
+		feedId: string,
+		mentionTypeId: string,
+	): Promise<CommentGetListsResDto> {
+		const { id, username } =
+			await this.commentsRepository.getUserIdAndNameByCommentId(comment.id);
+		const likedByComments =
+			await this.likesCommentRepository.getLikedByComments(comment.id);
+
+		const childComments = comment.childrenComments
+			? await Promise.all(
+					comment.childrenComments.map((child) =>
+						this.mapCommentToDto(child, memberId, feedId, mentionTypeId),
+					),
+			  )
+			: [];
+
+		return {
+			id: comment.id,
+			commentContents: comment.commentContents,
+			updatedAt: comment.updatedAt,
+			replyId: comment.replyId,
+			parentId: comment.parentId,
+			feedId: comment.feedId,
+			myLikeByComment: this.findMyLikeByComment(likedByComments, memberId),
+			sumLikeByComment: this.sumLikesOfComment(likedByComments),
+			member: { id, username },
+			childrenComments: childComments,
+			mentions: await this.mentionsService.findMentionsByFeedId(
+				feedId,
+				mentionTypeId,
+				comment.id,
+			),
+		};
 	}
 
 	private findMyLikeByComment(
