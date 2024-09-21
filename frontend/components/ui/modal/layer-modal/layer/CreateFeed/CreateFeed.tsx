@@ -22,7 +22,6 @@ import Line from '@/components/ui/line/Line';
 
 import { LayerMode, Union, feedPublicSelectOptions } from 'types';
 
-import { useMemberBelongToGroups } from '@/hooks/useMemberBelongToGroups';
 import FeedPublicSelect from '@/components/ui/select/FeedPublicSelect';
 import GroupAndMemberProfile from '@/components/ui/profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '@/components/ui/swiper/SwiperContainer';
@@ -33,6 +32,7 @@ import { extractMention } from '@/utils/extract-mention';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
+import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
