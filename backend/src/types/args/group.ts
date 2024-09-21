@@ -15,3 +15,7 @@ export interface ICreateGroupArgs {
 	groupName: string;
 	groupDescription?: string;
 }
+
+export interface IUpdateGroupArgs extends ICreateGroupArgs {
+	groupId: string;
+}

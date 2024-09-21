@@ -15,6 +15,7 @@ import {
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 	ERROR_NO_PERMISSTION_TO_GROUP,
 } from '@/constants/business-error';
+import { MAIN_ROLE } from '@/constants/string-constants';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
@@ -25,6 +26,7 @@ import {
 	ICreateGroupArgs,
 	IDeleteGroupArgs,
 	IMembersBelongToGroupArgs,
+	IUpdateGroupArgs,
 } from '@/types/args/group';
 import { getOffset } from '@/utils/getOffset';
 
@@ -77,7 +79,7 @@ export class GroupsService {
 			id: uuidv4(),
 			memberId,
 			groupId: group.id,
-			role: 'main',
+			role: MAIN_ROLE,
 			invitationAccepted: true,
 		});
 
@@ -86,16 +88,9 @@ export class GroupsService {
 		return group;
 	}
 
-	async updateGroup({
-		...rest
-	}: {
-		memberId: string;
-		groupId: string;
-		groupName: string;
-		groupDescription?: string;
-	}): Promise<GroupResDto> {
+	async updateGroup(updateGroupArgs: IUpdateGroupArgs): Promise<GroupResDto> {
 		return await this.groupsRepository.updateGroup({
-			...rest,
+			...updateGroupArgs,
 		});
 	}
 
@@ -111,7 +106,7 @@ export class GroupsService {
 
 		const role = await this.checkRoleOfGroupExists(groupId, memberId);
 		// 해당 그룹의 권한이 main인지 체크
-		if (role.role !== 'main') {
+		if (role.role !== MAIN_ROLE) {
 			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
 		}
 
@@ -146,12 +141,10 @@ export class GroupsService {
 	}
 
 	async checkDuplicateGroupName(memberId: string, groupName: string) {
-		const count = await this.groupsRepository.findGroupByGroupName({
+		return this.groupsRepository.findGroupByGroupName({
 			memberId,
 			groupName,
 		});
-
-		return count;
 	}
 
 	async checkRoleOfGroupExists(groupId: string, memberId: string) {
