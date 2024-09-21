@@ -2,7 +2,6 @@ import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import styles from './CreateFeed.module.scss';
-import { useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -33,6 +32,7 @@ import MentionField from '@/components/ui/mention/MentionField';
 import { extractMention } from '@/utils/extract-mention';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
 
 const CreateFeed: FC = () => {
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
@@ -49,17 +49,9 @@ const CreateFeed: FC = () => {
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
 		useMemberBelongToGroups();
 
-	const {
-		data: feed,
-		isLoading: feddLoading,
-		remove,
-	} = useQuery(
-		['get-feed-by-id'],
-		async () => await FeedService.getFeedById(isFeedId),
-		{
-			enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
-		},
-	);
+	const { feed, remove } = useFeedByIdQuery(isFeedId, {
+		enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
+	});
 
 	const [isPublic, setIsPublic] = useState<
 		Union<typeof feedPublicSelectOptions>
