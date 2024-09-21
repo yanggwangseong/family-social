@@ -48,6 +48,12 @@ import {
 	LIKE_ON_MY_POST_TITLE,
 } from '@/constants/notification.const';
 import { PaginationEnum } from '@/constants/pagination.const';
+import {
+	COMMENT_ON_MY_POST,
+	LIKE_ON_MY_POST,
+	MENTION_ON_COMMENT,
+	MENTION_ON_FEED,
+} from '@/constants/string-constants';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -99,7 +105,7 @@ export class FeedsController {
 		@CurrentUser('sub') sub: string,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_feed',
+			MENTION_ON_FEED,
 		);
 
 		const result = await this.feedsService.findFeedInfoById(
@@ -260,7 +266,7 @@ export class FeedsController {
 		if (isUpdateLike) {
 			await this.notificationsService.createNotification(
 				{
-					notificationType: 'like_on_my_post',
+					notificationType: LIKE_ON_MY_POST,
 					recipientId: dto.feedWriterId,
 					senderId: sub,
 					notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
@@ -295,7 +301,7 @@ export class FeedsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_feed',
+			MENTION_ON_FEED,
 		);
 
 		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
@@ -340,7 +346,7 @@ export class FeedsController {
 
 		await this.mentionsService.createMentions(
 			{
-				mentionType: 'mention_on_comment',
+				mentionType: MENTION_ON_COMMENT,
 				mentions: dto.mentions,
 				mentionSenderId: sub,
 				mentionFeedId: feedId,
@@ -351,7 +357,7 @@ export class FeedsController {
 
 		await this.notificationsService.createNotification(
 			{
-				notificationType: 'comment_on_my_post',
+				notificationType: COMMENT_ON_MY_POST,
 				recipientId: dto.feedWriterId,
 				senderId: sub,
 				notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
@@ -399,7 +405,7 @@ export class FeedsController {
 
 		await this.mentionsService.updateMentions(
 			{
-				mentionType: 'mention_on_comment',
+				mentionType: MENTION_ON_COMMENT,
 				mentions: dto.mentions,
 				mentionSenderId: sub,
 				mentionFeedId: feedId,
@@ -438,7 +444,7 @@ export class FeedsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_comment',
+			MENTION_ON_COMMENT,
 		);
 
 		await this.mentionsService.deleteMentionsByFeedId(

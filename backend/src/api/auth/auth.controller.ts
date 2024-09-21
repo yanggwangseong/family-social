@@ -9,6 +9,7 @@ import {
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { QueryRunner } from 'typeorm';
@@ -29,6 +30,7 @@ import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { ENV_CLIENT_SOCKET_URL } from '@/constants/env-keys.const';
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
 import { MemberSocialCreateReqDto } from '@/models/dto/member/req/member-social-create-req.dto';
@@ -53,6 +55,7 @@ export class AuthController {
 		private readonly authService: AuthService,
 		private readonly mailsService: MailsService,
 		private readonly membersService: MembersService,
+		private readonly configService: ConfigService,
 	) {}
 
 	/**
@@ -91,7 +94,11 @@ export class AuthController {
 
 			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
 			if (!isFirstLogin) {
-				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+				res.redirect(
+					`${this.configService.get(
+						ENV_CLIENT_SOCKET_URL,
+					)}/signup/social?id=${id}`,
+				);
 			}
 
 			const [accessToken, refreshToken] =
@@ -110,7 +117,9 @@ export class AuthController {
 				res,
 			});
 
-			res.redirect(`http://localhost:3000/oauth2/redirect`);
+			res.redirect(
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/oauth2/redirect`,
+			);
 		} else {
 			const tmpDto: ICreateSocialMemberArgs = {
 				email,
@@ -125,7 +134,9 @@ export class AuthController {
 			);
 
 			res.redirect(
-				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/signup/social?id=${
+					tmpMember.newMember.id
+				}`,
 			);
 		}
 	}
@@ -165,7 +176,11 @@ export class AuthController {
 
 			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
 			if (!isFirstLogin) {
-				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+				res.redirect(
+					`${this.configService.get(
+						ENV_CLIENT_SOCKET_URL,
+					)}/signup/social?id=${id}`,
+				);
 			}
 
 			const [accessToken, refreshToken] =
@@ -184,7 +199,9 @@ export class AuthController {
 				res,
 			});
 
-			res.redirect(`http://localhost:3000/oauth2/redirect`);
+			res.redirect(
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/oauth2/redirect`,
+			);
 		} else {
 			const tmpDto: ICreateSocialMemberArgs = {
 				email,
@@ -199,7 +216,9 @@ export class AuthController {
 			);
 
 			res.redirect(
-				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/signup/social?id=${
+					tmpMember.newMember.id
+				}`,
 			);
 		}
 	}
@@ -239,7 +258,11 @@ export class AuthController {
 
 			// 만약 생성 이력이 있는데 isFirstLogin이 비어있다면 추가정보를 입력하여 회원가입 과정을 완료 한게 아닌 상태
 			if (!isFirstLogin) {
-				res.redirect(`http://localhost:3000/signup/social?id=${id}`);
+				res.redirect(
+					`${this.configService.get(
+						ENV_CLIENT_SOCKET_URL,
+					)}/signup/social?id=${id}`,
+				);
 			}
 
 			const [accessToken, refreshToken] =
@@ -258,7 +281,9 @@ export class AuthController {
 				res,
 			});
 
-			res.redirect(`http://localhost:3000/oauth2/redirect`);
+			res.redirect(
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/oauth2/redirect`,
+			);
 		} else {
 			const tmpDto: ICreateSocialMemberArgs = {
 				email,
@@ -273,7 +298,9 @@ export class AuthController {
 			);
 
 			res.redirect(
-				`http://localhost:3000/signup/social?id=${tmpMember.newMember.id}`,
+				`${this.configService.get(ENV_CLIENT_SOCKET_URL)}/signup/social?id=${
+					tmpMember.newMember.id
+				}`,
 			);
 		}
 	}

@@ -12,6 +12,7 @@ import {
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
+import { MENTION_ON_FEED } from '@/constants/string-constants';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
@@ -39,19 +40,28 @@ export class FeedsService {
 		private dataSource: DataSource,
 	) {}
 
+	private async fetchFeedDetails(
+		feedId: string,
+		memberId: string,
+		mentionTypeId: string,
+	) {
+		return Promise.all([
+			await this.feedsRepository.findFeedInfoById(feedId),
+			await this.getMediaUrlAndCommentsByFeedId(feedId, memberId),
+			await this.mentionsService.findMentionsByFeedId(feedId, mentionTypeId),
+		]);
+	}
+
 	async findFeedInfoById(
 		feedIdArgs: string,
 		mentionTypeId: string,
 		memberIdArgs: string,
 	): Promise<FeedResDto> {
-		const [feed, [medias, comments], mentions] = await Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedIdArgs),
-			await this.getMediaUrlAndCommentsByFeedId(feedIdArgs, memberIdArgs),
-			await this.mentionsService.findMentionsByFeedId(
-				feedIdArgs,
-				mentionTypeId,
-			),
-		]);
+		const [feed, [medias, comments], mentions] = await this.fetchFeedDetails(
+			feedIdArgs,
+			memberIdArgs,
+			mentionTypeId,
+		);
 
 		const { id: feedId, group, member, ...feedRest } = feed;
 		const { id: groupId, ...groupRest } = group;
@@ -78,7 +88,7 @@ export class FeedsService {
 		const { page, limit, groupId, options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_feed',
+			MENTION_ON_FEED,
 		);
 
 		const query = await this.feedsRepository.findAllFeed({
@@ -162,7 +172,7 @@ export class FeedsService {
 
 		await this.mentionsService.createMentions(
 			{
-				mentionType: 'mention_on_feed',
+				mentionType: MENTION_ON_FEED,
 				mentions: mentions,
 				mentionSenderId: rest.memberId,
 				mentionFeedId: feed.id,
@@ -185,7 +195,7 @@ export class FeedsService {
 
 		// mentions
 		await this.mentionsService.updateMentions({
-			mentionType: 'mention_on_feed',
+			mentionType: MENTION_ON_FEED,
 			mentions: rest.mentions,
 			mentionSenderId: rest.memberId,
 			mentionFeedId: feed.id,
