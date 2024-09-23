@@ -203,4 +203,10 @@ export class FeedsRepository extends Repository<FeedEntity> {
 
 		return !!affected;
 	}
+
+	async findAllFeedIds(): Promise<string[]> {
+		return await this.repository
+			.find({ select: { id: true } })
+			.then((feeds) => feeds.map((feed) => feed.id));
+	}
 }

@@ -30,4 +30,26 @@ export class LikesFeedRepository extends Repository<LikeFeedEntity> {
 			feedId: feedId,
 		});
 	}
+
+	async addLike(
+		memberId: string,
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<void> {
+		const repository = this.getLikesFeedRepository(qr);
+		await repository.save({ memberId, feedId });
+	}
+
+	async removeLike(
+		memberId: string,
+		feedId: string,
+		qr?: QueryRunner,
+	): Promise<void> {
+		const repository = this.getLikesFeedRepository(qr);
+		await repository.delete({ memberId, feedId });
+	}
+
+	async getLikesByFeedId(feedId: string): Promise<LikeFeedEntity[]> {
+		return await this.repository.find({ where: { feedId } });
+	}
 }

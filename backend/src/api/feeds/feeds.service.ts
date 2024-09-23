@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,6 +13,7 @@ import {
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
 import { MENTION_ON_FEED } from '@/constants/string-constants';
+import { LikesFeedCache } from '@/models/cache/likes-feed.cache';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
@@ -30,15 +31,37 @@ import { MediasService } from '../medias/medias.service';
 import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
-export class FeedsService {
+export class FeedsService implements OnModuleInit {
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
+		private readonly likesFeedCache: LikesFeedCache,
 		private dataSource: DataSource,
 	) {}
+
+	/**
+	 * 서버 시작 시 모든 피드의 좋아요를 Redis와 동기화 (Cache Warming)
+	 */
+	async onModuleInit() {
+		const feedIds = await this.getAllFeedIds();
+		for (const feedId of feedIds) {
+			const likes = await this.likesFeedRepository.getLikesByFeedId(feedId);
+			const memberIds = likes.map((like) => like.memberId);
+			await this.likesFeedCache.syncLikes(feedId, memberIds);
+		}
+	}
+
+	/**
+	 * 모든 피드의 ID를 가져온다.
+	 * @returns 모든 피드의 ID
+	 */
+	private async getAllFeedIds(): Promise<string[]> {
+		// 모든 피드의 ID를 가져온다.
+		return await this.feedsRepository.findAllFeedIds();
+	}
 
 	private async fetchFeedDetails(
 		feedId: string,
@@ -141,22 +164,17 @@ export class FeedsService {
 		feedId: string,
 		qr?: QueryRunner,
 	): Promise<boolean> {
-		const likeFeedRepository =
-			this.likesFeedRepository.getLikesFeedRepository(qr);
+		const hasLiked = await this.likesFeedCache.hasLiked(memberId, feedId);
 
-		const like = await this.likesFeedRepository.findMemberLikesFeed(
-			memberId,
-			feedId,
-			qr,
-		);
-
-		if (like) {
-			await likeFeedRepository.remove(like);
+		if (hasLiked) {
+			await this.likesFeedCache.removeLike(memberId, feedId);
+			await this.likesFeedRepository.removeLike(memberId, feedId, qr);
 		} else {
-			await likeFeedRepository.save({ memberId, feedId });
+			await this.likesFeedCache.addLike(memberId, feedId);
+			await this.likesFeedRepository.addLike(memberId, feedId, qr);
 		}
 
-		return !like;
+		return !hasLiked;
 	}
 
 	async createFeed(
