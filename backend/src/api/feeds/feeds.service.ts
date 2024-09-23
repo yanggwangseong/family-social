@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { QueryRunnerWithRedis } from '@/common/decorators/query-runner-with-redis.decorator';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -162,16 +163,17 @@ export class FeedsService implements OnModuleInit {
 	async updateLikesFeedId(
 		memberId: string,
 		feedId: string,
-		qr?: QueryRunner,
+		qrAndRedis: QueryRunnerWithRedis,
 	): Promise<boolean> {
+		const { queryRunner, redisMulti } = qrAndRedis;
 		const hasLiked = await this.likesFeedCache.hasLiked(memberId, feedId);
 
 		if (hasLiked) {
-			await this.likesFeedCache.removeLike(memberId, feedId);
-			await this.likesFeedRepository.removeLike(memberId, feedId, qr);
+			await this.likesFeedCache.removeLike(memberId, feedId, redisMulti);
+			await this.likesFeedRepository.removeLike(memberId, feedId, queryRunner);
 		} else {
-			await this.likesFeedCache.addLike(memberId, feedId);
-			await this.likesFeedRepository.addLike(memberId, feedId, qr);
+			await this.likesFeedCache.addLike(memberId, feedId, redisMulti);
+			await this.likesFeedRepository.addLike(memberId, feedId, queryRunner);
 		}
 
 		return !hasLiked;

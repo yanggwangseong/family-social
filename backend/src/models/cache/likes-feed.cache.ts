@@ -1,19 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
-import Redis from 'ioredis';
+import Redis, { ChainableCommander } from 'ioredis';
 
 @Injectable()
 export class LikesFeedCache {
 	constructor(@InjectRedis() private readonly redis: Redis) {}
 
-	async addLike(memberId: string, feedId: string): Promise<void> {
+	async addLike(
+		memberId: string,
+		feedId: string,
+		redisMulti: ChainableCommander,
+	): Promise<void> {
 		const key = `feed:likes:${feedId}`;
-		await this.redis.sadd(key, memberId);
+		redisMulti.sadd(key, memberId);
 	}
 
-	async removeLike(memberId: string, feedId: string): Promise<void> {
+	async removeLike(
+		memberId: string,
+		feedId: string,
+		redisMulti: ChainableCommander,
+	): Promise<void> {
 		const key = `feed:likes:${feedId}`;
-		await this.redis.srem(key, memberId);
+		redisMulti.srem(key, memberId);
 	}
 
 	async hasLiked(memberId: string, feedId: string): Promise<boolean> {
