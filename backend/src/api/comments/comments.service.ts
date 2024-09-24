@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { QueryRunnerWithRedis } from '@/common/decorators/query-runner-with-redis.decorator';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -16,6 +17,7 @@ import {
 	LIKE_CACHE_TYPE_COMMENT,
 	MENTION_ON_COMMENT,
 } from '@/constants/string-constants';
+import { LikesCache } from '@/models/cache/likes-cache';
 import { CommentGetListsResDto } from '@/models/dto/comments/res/comment-get-lists-res.dto';
 import { CommentEntity } from '@/models/entities/comment.entity';
 import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
@@ -26,18 +28,46 @@ import { ICreateCommentsArgs } from '@/types/args/comment';
 import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
-export class CommentsService {
+export class CommentsService implements OnModuleInit {
 	private readonly _likeCacheType;
 
 	constructor(
 		private readonly commentsRepository: CommentsRepository,
 		private readonly likesCommentRepository: LikesCommentRepository,
 		private readonly mentionsService: MentionsService,
+		private readonly likesCache: LikesCache,
 		private readonly configService: ConfigService,
 	) {
 		this._likeCacheType = this.configService.get<
 			typeof LIKE_CACHE_TYPE_COMMENT
 		>(ENV_LIKE_CACHE_TYPE_COMMENT)!;
+	}
+
+	/**
+	 * 서버 시작 시 모든 피드의 좋아요를 Redis와 동기화 (Cache Warming)
+	 */
+	async onModuleInit() {
+		const commentIds = await this.getAllCommentIds();
+		for (const commentId of commentIds) {
+			const likes = await this.likesCommentRepository.getLikesByCommentId(
+				commentId,
+			);
+			const memberIds = likes.map((like) => like.memberId);
+			await this.likesCache.syncLikes(
+				this._likeCacheType,
+				commentId,
+				memberIds,
+			);
+		}
+	}
+
+	/**
+	 * 모든 댓글의 ID를 가져온다.
+	 * @returns 모든 댓글의 ID
+	 */
+	private async getAllCommentIds(): Promise<string[]> {
+		// 모든 댓글의 ID를 가져온다.
+		return await this.commentsRepository.findAllCommentIds();
 	}
 
 	async getCommentsByFeedId(
@@ -245,18 +275,42 @@ export class CommentsService {
 	async updateLikesCommentId(
 		memberId: string,
 		commentId: string,
+		qrAndRedis: QueryRunnerWithRedis,
 	): Promise<boolean> {
-		const like = await this.likesCommentRepository.findMemberLikesComment(
+		const { queryRunner, redisMulti } = qrAndRedis;
+
+		const hasLiked = await this.likesCache.hasLiked(
+			this._likeCacheType,
 			memberId,
 			commentId,
 		);
 
-		if (like) {
-			await this.likesCommentRepository.remove(like);
+		if (hasLiked) {
+			await this.likesCache.removeLike(
+				this._likeCacheType,
+				memberId,
+				commentId,
+				redisMulti,
+			);
+			await this.likesCommentRepository.removeLike(
+				memberId,
+				commentId,
+				queryRunner,
+			);
 		} else {
-			await this.likesCommentRepository.save({ memberId, commentId });
+			await this.likesCache.addLike(
+				this._likeCacheType,
+				memberId,
+				commentId,
+				redisMulti,
+			);
+			await this.likesCommentRepository.addLike(
+				memberId,
+				commentId,
+				queryRunner,
+			);
 		}
 
-		return !like;
+		return !hasLiked;
 	}
 }

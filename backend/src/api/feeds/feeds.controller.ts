@@ -470,6 +470,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesCommentSwagger()
+	@UseInterceptors(TransactionWithRedisInterceptor)
 	@Put(':feedId/comments/:commentId/likes')
 	async updateLikesCommentId(
 		@CurrentUser('sub') sub: string,
@@ -478,7 +479,12 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
 	) {
-		return await this.commentsService.updateLikesCommentId(sub, commentId);
+		return await this.commentsService.updateLikesCommentId(
+			sub,
+			commentId,
+			qrAndRedis,
+		);
 	}
 }

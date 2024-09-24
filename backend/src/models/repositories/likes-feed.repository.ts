@@ -19,18 +19,6 @@ export class LikesFeedRepository extends Repository<LikeFeedEntity> {
 			: this.repository;
 	}
 
-	async findMemberLikesFeed(
-		memberId: string,
-		feedId: string,
-		qr?: QueryRunner,
-	) {
-		const repository = this.getLikesFeedRepository(qr);
-		return await repository.findOneBy({
-			memberId: memberId,
-			feedId: feedId,
-		});
-	}
-
 	async addLike(
 		memberId: string,
 		feedId: string,
