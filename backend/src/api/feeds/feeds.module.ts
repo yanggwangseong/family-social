@@ -13,7 +13,7 @@ import { NotificationsModule } from '@/api/notifications/notifications.module';
 import { CommentExistsMiddleware } from '@/common/middlewares/comment-exists.middleware';
 import { FeedExistsMiddleware } from '@/common/middlewares/feed-exists.middleware';
 import { Pagination } from '@/common/strategies/context/pagination';
-import { LikesFeedCache } from '@/models/cache/likes-feed.cache';
+import { LikesCache } from '@/models/cache/likes-cache';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { LikeFeedEntity } from '@/models/entities/like-feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
@@ -35,7 +35,7 @@ import { FeedsService } from './feeds.service';
 		FeedsService,
 		FeedsRepository,
 		LikesFeedRepository,
-		LikesFeedCache,
+		LikesCache,
 		Pagination,
 	],
 	exports: [FeedsService],

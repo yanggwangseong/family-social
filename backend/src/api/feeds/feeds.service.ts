@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { QueryRunnerWithRedis } from '@/common/decorators/query-runner-with-redis.decorator';
@@ -13,8 +14,12 @@ import {
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
-import { MENTION_ON_FEED } from '@/constants/string-constants';
-import { LikesFeedCache } from '@/models/cache/likes-feed.cache';
+import { ENV_LIKE_CACHE_TYPE_FEED } from '@/constants/env-keys.const';
+import {
+	LIKE_CACHE_TYPE_FEED,
+	MENTION_ON_FEED,
+} from '@/constants/string-constants';
+import { LikesCache } from '@/models/cache/likes-cache';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
@@ -33,15 +38,21 @@ import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
 export class FeedsService implements OnModuleInit {
+	private readonly _likeCacheType;
+
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
-		private readonly likesFeedCache: LikesFeedCache,
-		private dataSource: DataSource,
-	) {}
+		private readonly likesCache: LikesCache,
+		private readonly configService: ConfigService,
+	) {
+		this._likeCacheType = this.configService.get<typeof LIKE_CACHE_TYPE_FEED>(
+			ENV_LIKE_CACHE_TYPE_FEED,
+		)!;
+	}
 
 	/**
 	 * 서버 시작 시 모든 피드의 좋아요를 Redis와 동기화 (Cache Warming)
@@ -51,7 +62,7 @@ export class FeedsService implements OnModuleInit {
 		for (const feedId of feedIds) {
 			const likes = await this.likesFeedRepository.getLikesByFeedId(feedId);
 			const memberIds = likes.map((like) => like.memberId);
-			await this.likesFeedCache.syncLikes(feedId, memberIds);
+			await this.likesCache.syncLikes(this._likeCacheType, feedId, memberIds);
 		}
 	}
 
@@ -166,13 +177,27 @@ export class FeedsService implements OnModuleInit {
 		qrAndRedis: QueryRunnerWithRedis,
 	): Promise<boolean> {
 		const { queryRunner, redisMulti } = qrAndRedis;
-		const hasLiked = await this.likesFeedCache.hasLiked(memberId, feedId);
+		const hasLiked = await this.likesCache.hasLiked(
+			this._likeCacheType,
+			memberId,
+			feedId,
+		);
 
 		if (hasLiked) {
-			await this.likesFeedCache.removeLike(memberId, feedId, redisMulti);
+			await this.likesCache.removeLike(
+				this._likeCacheType,
+				memberId,
+				feedId,
+				redisMulti,
+			);
 			await this.likesFeedRepository.removeLike(memberId, feedId, queryRunner);
 		} else {
-			await this.likesFeedCache.addLike(memberId, feedId, redisMulti);
+			await this.likesCache.addLike(
+				this._likeCacheType,
+				memberId,
+				feedId,
+				redisMulti,
+			);
 			await this.likesFeedRepository.addLike(memberId, feedId, queryRunner);
 		}
 

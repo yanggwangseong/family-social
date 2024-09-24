@@ -52,3 +52,5 @@ export const contentTypeId = [
 export const TourArrange = ['A', 'C', 'D', 'O', 'Q', 'R'] as const;
 
 export const SearchType = ['tour', 'member'] as const;
+
+export const LikeCacheType = ['feed', 'comment'] as const;

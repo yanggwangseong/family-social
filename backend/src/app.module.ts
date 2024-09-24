@@ -38,6 +38,10 @@ import {
 	ENV_THROTTLER_LIMIT,
 	ENV_THROTTLER_TTL,
 } from './constants/env-keys.const';
+import {
+	LIKE_CACHE_TYPE_COMMENT,
+	LIKE_CACHE_TYPE_FEED,
+} from './constants/string-constants';
 
 @Module({
 	imports: [
@@ -47,6 +51,12 @@ import {
 		ConfigModule.forRoot({
 			envFilePath: [`${__dirname}/../.${process.env.NODE_ENV}.env`],
 			isGlobal: true,
+			load: [
+				() => ({
+					LIKE_CACHE_TYPE_FEED: LIKE_CACHE_TYPE_FEED,
+					LIKE_CACHE_TYPE_COMMENT: LIKE_CACHE_TYPE_COMMENT,
+				}),
+			],
 		}),
 		TypeOrmModule.forRootAsync(TypeOrmModuleOptions),
 		UsersModule,

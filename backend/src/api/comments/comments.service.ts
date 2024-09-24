@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -10,7 +11,11 @@ import {
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
 } from '@/constants/business-error';
-import { MENTION_ON_COMMENT } from '@/constants/string-constants';
+import { ENV_LIKE_CACHE_TYPE_COMMENT } from '@/constants/env-keys.const';
+import {
+	LIKE_CACHE_TYPE_COMMENT,
+	MENTION_ON_COMMENT,
+} from '@/constants/string-constants';
 import { CommentGetListsResDto } from '@/models/dto/comments/res/comment-get-lists-res.dto';
 import { CommentEntity } from '@/models/entities/comment.entity';
 import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
@@ -22,12 +27,18 @@ import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
 export class CommentsService {
+	private readonly _likeCacheType;
+
 	constructor(
 		private readonly commentsRepository: CommentsRepository,
 		private readonly likesCommentRepository: LikesCommentRepository,
 		private readonly mentionsService: MentionsService,
-		private dataSource: DataSource,
-	) {}
+		private readonly configService: ConfigService,
+	) {
+		this._likeCacheType = this.configService.get<
+			typeof LIKE_CACHE_TYPE_COMMENT
+		>(ENV_LIKE_CACHE_TYPE_COMMENT)!;
+	}
 
 	async getCommentsByFeedId(
 		feedId: string,
