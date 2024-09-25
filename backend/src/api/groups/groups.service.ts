@@ -119,20 +119,19 @@ export class GroupsService {
 			throw ForBiddenException(ERROR_DELETE_GROUP_SELF_ONLY_ADMIN);
 		}
 
-		const [GroupMemberStatus, GroupStatus] = await Promise.all([
-			await this.famsRepository.deleteGroupAllMember(
-				{
-					groupId,
-				},
-				qr,
-			),
-			await this.groupsRepository.deleteGroup(
-				{
-					groupId,
-				},
-				qr,
-			),
-		]);
+		const GroupMemberStatus = await this.famsRepository.deleteGroupAllMember(
+			{
+				groupId,
+			},
+			qr,
+		);
+
+		const GroupStatus = await this.groupsRepository.deleteGroup(
+			{
+				groupId,
+			},
+			qr,
+		);
 
 		if (!GroupMemberStatus)
 			throw EntityConflictException(ERROR_DELETE_GROUP_MEMBER);

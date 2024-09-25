@@ -81,9 +81,9 @@ export class FeedsService implements OnModuleInit {
 		mentionTypeId: string,
 	) {
 		return Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedId),
-			await this.getMediaUrlAndCommentsByFeedId(feedId, memberId),
-			await this.mentionsService.findMentionsByFeedId(feedId, mentionTypeId),
+			this.feedsRepository.findFeedInfoById(feedId),
+			this.getMediaUrlAndCommentsByFeedId(feedId, memberId),
+			this.mentionsService.findMentionsByFeedId(feedId, mentionTypeId),
 		]);
 	}
 
@@ -209,7 +209,7 @@ export class FeedsService implements OnModuleInit {
 			count: number;
 		} = await pagination.paginateQueryBuilder(paginationDto, query);
 
-		const mappedList = await Promise.all(
+		const mappedList = Promise.all(
 			list.map(async (feed) => {
 				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
 					feed.feedId,
@@ -231,7 +231,7 @@ export class FeedsService implements OnModuleInit {
 		);
 
 		return {
-			list: mappedList,
+			list: await mappedList,
 			page,
 			count,
 			take,
@@ -367,8 +367,8 @@ export class FeedsService implements OnModuleInit {
 		memberId: string,
 	) {
 		return await Promise.all([
-			await this.mediasService.findMediaUrlByFeedId(feedId),
-			await this.commentsService.getCommentsByFeedId(feedId, memberId),
+			this.mediasService.findMediaUrlByFeedId(feedId),
+			this.commentsService.getCommentsByFeedId(feedId, memberId),
 		]);
 	}
 }
