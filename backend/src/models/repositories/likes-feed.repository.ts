@@ -40,4 +40,13 @@ export class LikesFeedRepository extends Repository<LikeFeedEntity> {
 	async getLikesByFeedId(feedId: string): Promise<LikeFeedEntity[]> {
 		return await this.repository.find({ where: { feedId } });
 	}
+
+	async countLikesByFeedId(feedId: string): Promise<number> {
+		return this.count({ where: { feedId } });
+	}
+
+	async hasUserLiked(memberId: string, feedId: string): Promise<boolean> {
+		const like = await this.findOne({ where: { memberId, feedId } });
+		return !!like;
+	}
 }

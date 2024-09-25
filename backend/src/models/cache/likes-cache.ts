@@ -60,4 +60,21 @@ export class LikesCache {
 		const key = this.getKey(likeCacheType, id);
 		if (memberIds.length > 0) await this.redis.sadd(key, ...memberIds);
 	}
+
+	async setLikeCount(type: string, id: string, count: number): Promise<void> {
+		await this.redis.set(`${type}:count:${id}`, count.toString());
+	}
+
+	async setUserLike(
+		type: string,
+		userId: string,
+		id: string,
+		hasLiked: boolean,
+	): Promise<void> {
+		if (hasLiked) {
+			await this.redis.sadd(`${type}:${id}`, userId);
+		} else {
+			await this.redis.srem(`${type}:${id}`, userId);
+		}
+	}
 }

@@ -102,9 +102,19 @@ export class FeedsService implements OnModuleInit {
 		const { id: groupId, ...groupRest } = group;
 		const { id: memberId, ...memberRest } = member;
 
+		const start = Date.now();
+		const [sumLike, myLike] = await Promise.all([
+			this.getLikeCount(feedId),
+			this.hasUserLiked(memberId, feedId),
+		]);
+		const end = Date.now();
+		console.log(`Total time taken: ${end - start}ms`);
+
 		return {
 			feedId,
 			...feedRest,
+			sumLike,
+			myLike,
 			groupId,
 			...groupRest,
 			memberId,
@@ -113,6 +123,62 @@ export class FeedsService implements OnModuleInit {
 			comments,
 			mentions,
 		};
+	}
+
+	/**
+	 * Look-aside
+	 * 좋아요 수를 조회할 때는 Redis에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param feedId 피드 ID
+	 * @returns 좋아요 수
+	 */
+	private async getLikeCount(feedId: string): Promise<number> {
+		const cachedCount = await this.likesCache.getLikeCount(
+			this._likeCacheType,
+			feedId,
+		);
+
+		if (cachedCount > 0) {
+			return cachedCount;
+		}
+
+		// Cache miss 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const count = await this.likesFeedRepository.countLikesByFeedId(feedId);
+		await this.likesCache.setLikeCount(this._likeCacheType, feedId, count);
+		return count;
+	}
+
+	/**
+	 * Look-aside
+	 * 사용자가 피드에 좋아요를 눌렀는지 여부를 가져온다.
+	 * 캐시에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param memberId 사용자 ID
+	 * @param feedId 피드 ID
+	 * @returns 사용자가 피드에 좋아요를 눌렀는지 여부
+	 */
+	private async hasUserLiked(
+		memberId: string,
+		feedId: string,
+	): Promise<boolean> {
+		const cachedLike = await this.likesCache.hasLiked(
+			this._likeCacheType,
+			memberId,
+			feedId,
+		);
+
+		if (cachedLike) return cachedLike;
+
+		// 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const hasLiked = await this.likesFeedRepository.hasUserLiked(
+			memberId,
+			feedId,
+		);
+		await this.likesCache.setUserLike(
+			this._likeCacheType,
+			memberId,
+			feedId,
+			hasLiked,
+		);
+		return hasLiked;
 	}
 
 	async findAllFeed(
@@ -125,6 +191,7 @@ export class FeedsService implements OnModuleInit {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			MENTION_ON_FEED,
 		);
+		//
 
 		const query = await this.feedsRepository.findAllFeed({
 			take,
