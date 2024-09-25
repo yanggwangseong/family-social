@@ -88,6 +88,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'a.isPublic AS "isPublic"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
+				'group.groupDescription AS "groupDescription"',
 				'member.id AS "memberId"',
 				'member.username AS "username"',
 			])
