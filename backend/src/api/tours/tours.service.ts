@@ -18,9 +18,6 @@ import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
-import { ScheduleRepository } from '@/models/repositories/schedule.repository';
-import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
-import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse, TourListArgs } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
 import {
@@ -33,9 +30,6 @@ export class ToursService {
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly configService: ConfigService,
-		private readonly scheduleRepository: ScheduleRepository,
-		private readonly tourismPeriodRepository: TourismPeriodRepository,
-		private readonly tourismRepository: TourismRepository,
 	) {}
 
 	private readonly serviceKey: string =
@@ -96,7 +90,7 @@ export class ToursService {
 	}: {
 		numOfRows: string;
 		pageNo: string;
-		areaCode: string;
+		areaCode?: string;
 	}): Promise<BasicPaginationResponse<TourHttpAreaCodeResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaCode1`,

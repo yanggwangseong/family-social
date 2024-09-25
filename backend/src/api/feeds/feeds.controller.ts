@@ -228,11 +228,7 @@ export class FeedsController {
 	) {
 		await this.feedsService.updateFeed(
 			{
-				contents: dto.contents,
-				isPublic: dto.isPublic,
-				groupId: dto.groupId,
-				medias: dto.medias,
-				mentions: dto.mentions,
+				...dto,
 				feedId: feedId,
 				memberId: sub,
 			},
