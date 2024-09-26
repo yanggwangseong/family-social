@@ -11,6 +11,7 @@ import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
+import { ToursCache } from '@/models/cache/tours-cache';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
@@ -30,6 +31,7 @@ export class ToursService {
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly configService: ConfigService,
+		private readonly toursCache: ToursCache,
 	) {}
 
 	private readonly serviceKey: string =
@@ -39,18 +41,6 @@ export class ToursService {
 	private listYN = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
 	private MobileOS = 'ETC';
 	private _type = 'json';
-
-	// private readonly config: {
-	// 	serviceKey?: string;
-	// 	MobileOS: string;
-	// 	MobileApp: string;
-	// 	_type: string;
-	// } = {
-	// 	serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
-	// 	MobileOS: 'ETC',
-	// 	MobileApp: 'FAM',
-	// 	_type: 'json',
-	// };
 
 	async findAll(
 		findQueryArgs: TourListArgs,
@@ -92,6 +82,15 @@ export class ToursService {
 		pageNo: string;
 		areaCode?: string;
 	}): Promise<BasicPaginationResponse<TourHttpAreaCodeResDto>> {
+		const cacheKey = `areaCode1:${numOfRows}:${pageNo}${
+			areaCode ? `:${areaCode}` : ''
+		}`;
+		const cachedData = await this.toursCache.getAreaCodesCache(cacheKey);
+
+		if (cachedData) {
+			return cachedData;
+		}
+
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaCode1`,
 		);
@@ -105,12 +104,17 @@ export class ToursService {
 			newUrl.toString(),
 		);
 
-		return {
+		const result = {
 			list: data.items.item,
 			page: data.pageNo,
 			take: data.numOfRows,
 			count: data.totalCount,
 		};
+
+		// 캐시에 데이터 저장
+		await this.toursCache.setAreaCodesCache(cacheKey, result);
+
+		return result;
 	}
 
 	async getHttpTourApiServiceCategories({
@@ -124,9 +128,9 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-		cat1: string;
-		cat2: string;
-		cat3: string;
+		cat1?: string;
+		cat2?: string;
+		cat3?: string;
 	}): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto>> {
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/categoryCode1`,
@@ -146,12 +150,14 @@ export class ToursService {
 			newUrl.toString(),
 		);
 
-		return {
+		const result = {
 			list: data.items.item,
 			page: data.pageNo,
 			take: data.numOfRows,
 			count: data.totalCount,
 		};
+
+		return result;
 	}
 
 	async getHttpTourApiIntroduction({

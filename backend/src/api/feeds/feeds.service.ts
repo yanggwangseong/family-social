@@ -87,6 +87,13 @@ export class FeedsService implements OnModuleInit {
 		]);
 	}
 
+	/**
+	 * 피드 상세 정보를 조회
+	 * @param feedIdArgs 피드 ID
+	 * @param mentionTypeId 멘션 타입 ID
+	 * @param memberIdArgs 사용자 ID
+	 * @returns 피드 상세 정보
+	 */
 	async findFeedInfoById(
 		feedIdArgs: string,
 		mentionTypeId: string,
