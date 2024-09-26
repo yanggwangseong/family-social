@@ -53,7 +53,7 @@ export class TourCategoryQueryReqDto {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	cat1!: string;
+	cat1?: string;
 
 	@ApiProperty({
 		nullable: false,
@@ -66,7 +66,7 @@ export class TourCategoryQueryReqDto {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	cat2!: string;
+	cat2?: string;
 
 	@ApiProperty({
 		nullable: false,
@@ -79,5 +79,5 @@ export class TourCategoryQueryReqDto {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	cat3!: string;
+	cat3?: string;
 }

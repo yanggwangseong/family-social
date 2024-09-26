@@ -17,6 +17,10 @@ import { QueryRunner } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
+import {
+	QueryRunnerWithRedis,
+	QueryRunnerWithRedisDecorator,
+} from '@/common/decorators/query-runner-with-redis.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
@@ -40,6 +44,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionWithRedisInterceptor } from '@/common/interceptors/transaction-with-redis.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { Pagination } from '@/common/strategies/context/pagination';
@@ -48,6 +53,12 @@ import {
 	LIKE_ON_MY_POST_TITLE,
 } from '@/constants/notification.const';
 import { PaginationEnum } from '@/constants/pagination.const';
+import {
+	COMMENT_ON_MY_POST,
+	LIKE_ON_MY_POST,
+	MENTION_ON_COMMENT,
+	MENTION_ON_FEED,
+} from '@/constants/string-constants';
 import { CommentCreateReqDto } from '@/models/dto/comments/req/comment-create-req.dto';
 import { CommentUpdateReqDto } from '@/models/dto/comments/req/comment-update-req.dto';
 import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
@@ -99,7 +110,7 @@ export class FeedsController {
 		@CurrentUser('sub') sub: string,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_feed',
+			MENTION_ON_FEED,
 		);
 
 		const result = await this.feedsService.findFeedInfoById(
@@ -217,11 +228,7 @@ export class FeedsController {
 	) {
 		await this.feedsService.updateFeed(
 			{
-				contents: dto.contents,
-				isPublic: dto.isPublic,
-				groupId: dto.groupId,
-				medias: dto.medias,
-				mentions: dto.mentions,
+				...dto,
 				feedId: feedId,
 				memberId: sub,
 			},
@@ -239,7 +246,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesFeedSwagger()
-	@UseInterceptors(TransactionInterceptor)
+	@UseInterceptors(TransactionWithRedisInterceptor)
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -249,25 +256,25 @@ export class FeedsController {
 		)
 		feedId: string,
 		@Body() dto: FeedLikeUpdateReqDto,
-		@QueryRunnerDecorator() qr: QueryRunner,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
 	) {
 		const isUpdateLike = await this.feedsService.updateLikesFeedId(
 			sub,
 			feedId,
-			qr,
+			qrAndRedis,
 		);
 
 		if (isUpdateLike) {
 			await this.notificationsService.createNotification(
 				{
-					notificationType: 'like_on_my_post',
+					notificationType: LIKE_ON_MY_POST,
 					recipientId: dto.feedWriterId,
 					senderId: sub,
 					notificationTitle: `${username} ${LIKE_ON_MY_POST_TITLE}`,
 					notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
 					notificationFeedId: feedId,
 				},
-				qr,
+				qrAndRedis.queryRunner,
 			);
 		}
 
@@ -295,7 +302,7 @@ export class FeedsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_feed',
+			MENTION_ON_FEED,
 		);
 
 		await this.feedsService.deleteFeed(feedId, mentionTypeId, qr);
@@ -340,7 +347,7 @@ export class FeedsController {
 
 		await this.mentionsService.createMentions(
 			{
-				mentionType: 'mention_on_comment',
+				mentionType: MENTION_ON_COMMENT,
 				mentions: dto.mentions,
 				mentionSenderId: sub,
 				mentionFeedId: feedId,
@@ -351,7 +358,7 @@ export class FeedsController {
 
 		await this.notificationsService.createNotification(
 			{
-				notificationType: 'comment_on_my_post',
+				notificationType: COMMENT_ON_MY_POST,
 				recipientId: dto.feedWriterId,
 				senderId: sub,
 				notificationTitle: `${username} ${COMMENT_ON_MY_POST_TITLE}`,
@@ -399,7 +406,7 @@ export class FeedsController {
 
 		await this.mentionsService.updateMentions(
 			{
-				mentionType: 'mention_on_comment',
+				mentionType: MENTION_ON_COMMENT,
 				mentions: dto.mentions,
 				mentionSenderId: sub,
 				mentionFeedId: feedId,
@@ -438,7 +445,7 @@ export class FeedsController {
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			'mention_on_comment',
+			MENTION_ON_COMMENT,
 		);
 
 		await this.mentionsService.deleteMentionsByFeedId(
@@ -459,6 +466,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesCommentSwagger()
+	@UseInterceptors(TransactionWithRedisInterceptor)
 	@Put(':feedId/comments/:commentId/likes')
 	async updateLikesCommentId(
 		@CurrentUser('sub') sub: string,
@@ -467,7 +475,12 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
 	) {
-		return await this.commentsService.updateLikesCommentId(sub, commentId);
+		return await this.commentsService.updateLikesCommentId(
+			sub,
+			commentId,
+			qrAndRedis,
+		);
 	}
 }

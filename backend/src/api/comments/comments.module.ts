@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { LikesCache } from '@/models/cache/likes-cache';
 import { CommentEntity } from '@/models/entities/comment.entity';
 import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
 import { CommentsRepository } from '@/models/repositories/comments.repository';
@@ -16,7 +17,12 @@ import { MentionsModule } from '../mentions/mentions.module';
 		MentionsModule,
 	],
 	controllers: [CommentsController],
-	providers: [CommentsService, CommentsRepository, LikesCommentRepository],
+	providers: [
+		CommentsService,
+		CommentsRepository,
+		LikesCommentRepository,
+		LikesCache,
+	],
 	exports: [CommentsService],
 })
 export class CommentsModule {}

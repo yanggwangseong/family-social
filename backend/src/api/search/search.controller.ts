@@ -28,6 +28,10 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ParseSearchTypePipe } from '@/common/pipes/parse-search-type.pipe';
 import { PaginationEnum } from '@/constants/pagination.const';
 import {
+	SEARCH_TYPE_MEMBER,
+	SEARCH_TYPE_TOUR,
+} from '@/constants/string-constants';
+import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
 } from '@/models/dto/pagination/res/basic-pagination-res.dto';
@@ -78,7 +82,7 @@ export class SearchController {
 		// 검색어 저장을 위해 호출
 		// 검색어가 없으면 저장하지 않음
 		if (members.length > 0) {
-			await this.searchService.addSearchTerm(sub, username, SearchType[1]);
+			await this.searchService.addSearchTerm(sub, username, SEARCH_TYPE_MEMBER);
 		}
 
 		return members;
@@ -118,7 +122,7 @@ export class SearchController {
 		// 검색어 저장을 위해 호출
 		// 검색어가 없으면 저장하지 않음
 		if (result.list.length > 0) {
-			await this.searchService.addSearchTerm(sub, keyword, SearchType[0]);
+			await this.searchService.addSearchTerm(sub, keyword, SEARCH_TYPE_TOUR);
 		}
 		return result;
 	}

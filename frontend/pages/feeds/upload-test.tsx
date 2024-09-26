@@ -6,9 +6,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { AuthService } from '@/services/auth/auth.service';
-import { useMutation } from 'react-query';
-import axios from 'axios';
 import Image from 'next/image';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 type FormData = {
 	image: File[]; // 이미지 파일을 File 타입으로 정의
@@ -27,31 +26,17 @@ const FeedsPage: NextPage = () => {
 		mode: 'onChange',
 	});
 
-	const { mutate: verifySync } = useMutation(
-		['emailverify'],
-		(data: FormData) => AuthService.uploadfile(data.image),
+	const { mutate: verifySync } = useCreateMutation(
+		async (data: FormData) => await AuthService.uploadfile(data.image),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data: any) {
+			mutationKey: ['emailverify'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success(
 					'성공',
 					`${data.username}님 로그인 페이지에서 로그인 해주세요.`,
 					'확인',
-					() => setIsImage(data[0]),
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

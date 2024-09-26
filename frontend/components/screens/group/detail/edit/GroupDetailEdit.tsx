@@ -1,20 +1,18 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './GroupDetailEdit.module.scss';
 import Format from '@/components/ui/layout/Format';
 import { useRouter } from 'next/router';
 import Header from '@/components/ui/header/Header';
 import GroupDetailSidebar from '@/components/ui/layout/sidebar/group/detail/GroupDetailSidebar';
 import Line from '@/components/ui/line/Line';
-import { PiNotePencilLight, PiNotePencilDuotone } from 'react-icons/pi';
+import { PiNotePencilDuotone } from 'react-icons/pi';
 import cn from 'classnames';
 import Field from '@/components/ui/field/Field';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
-import { useMutation } from 'react-query';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { GroupService } from '@/services/group/group.service';
-import axios from 'axios';
 import {
 	GroupDetailEditModeType,
 	UpdateGroupFields,
@@ -23,6 +21,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEditMode } from '@/hooks/useEditMode';
 import { motion } from 'framer-motion';
 import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const GroupDetailEdit: FC = () => {
 	const router = useRouter();
@@ -41,34 +40,25 @@ const GroupDetailEdit: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutate: updateGroupSync } = useMutation(
-		['update-group'],
-		(data: UpdateGroupFields) =>
-			GroupService.updateGroup(groupId, data.groupName, data.groupDescription),
+	const { mutate: updateGroupSync } = useCreateMutation(
+		async (data: UpdateGroupFields) =>
+			await GroupService.updateGroup(
+				groupId,
+				data.groupName,
+				data.groupDescription,
+			),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-group'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success(
 					'성공',
-					`${data.groupName} 그룹을 수정에 성공 하였습니다.`,
+					`${data.groupName} 그룹을 수정 하였습니다.`,
 					'확인',
 					() => {
 						handleEdit('reset');
 					},
 				);
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning(
-						'실패',
-						`${error.response?.data.message}`,
-						'확인',
-						() => Loading.remove(),
-					);
-				}
 			},
 		},
 	);

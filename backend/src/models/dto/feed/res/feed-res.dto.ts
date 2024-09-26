@@ -38,6 +38,12 @@ export class FeedResDto {
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드의 그룹 설명',
+	})
+	groupDescription?: string;
+
+	@ApiProperty({
+		nullable: false,
 		description: '피드 작성 멤버 아이디',
 	})
 	memberId!: string;

@@ -88,6 +88,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'a.isPublic AS "isPublic"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
+				'group.groupDescription AS "groupDescription"',
 				'member.id AS "memberId"',
 				'member.username AS "username"',
 			])
@@ -202,5 +203,11 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		});
 
 		return !!affected;
+	}
+
+	async findAllFeedIds(): Promise<string[]> {
+		return await this.repository
+			.find({ select: { id: true } })
+			.then((feeds) => feeds.map((feed) => feed.id));
 	}
 }

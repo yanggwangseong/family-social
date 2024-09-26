@@ -11,11 +11,13 @@ import {
 	ERROR_GROUP_MEMBER_NOT_FOUND,
 	ERROR_INVITED_GROUP_NOT_FOUND,
 } from '@/constants/business-error';
+import { FAM_ROLE_USER } from '@/constants/string-constants';
 import { FamGroupDetailResDto } from '@/models/dto/fam/res/fam-group-detail-res.dto';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import {
+	createFamByMemberOfGroupArgs,
 	IFindInvitationByFamArgs,
 	IUpdateFamInvitationAcceptArgs,
 } from '@/types/args/fam';
@@ -24,20 +26,25 @@ import {
 export class FamsService {
 	constructor(private readonly famsRepository: FamsRepository) {}
 
-	async createFamByMemberOfGroup(
-		createFamArgs: {
-			memberId: string;
-			groupId: string;
-			invitationAccepted: boolean;
-		},
+	private async createFam(
+		createFamArgs: createFamByMemberOfGroupArgs,
 		qr?: QueryRunner,
-	): Promise<void> {
+	) {
+		const { role, ...rest } = createFamArgs;
+		const insertFieldRole = role || FAM_ROLE_USER;
 		const newFam = this.famsRepository.create({
 			id: uuidv4(),
-			...createFamArgs,
-			role: 'user',
+			...rest,
+			role: insertFieldRole,
 		});
 		await this.famsRepository.createFam(newFam, qr);
+	}
+
+	async createFamByMemberOfGroup(
+		createFamArgs: createFamByMemberOfGroupArgs,
+		qr?: QueryRunner,
+	): Promise<void> {
+		await this.createFam(createFamArgs, qr);
 		//[TODO] 그룹 초대 notification
 	}
 

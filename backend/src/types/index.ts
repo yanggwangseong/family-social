@@ -18,6 +18,15 @@ export type Union<
 
 type ValueType = string | number | boolean;
 
+/**
+ * 특정 프로퍼티만 옵셔널로 지정해서 다 가져온다.
+ */
+export type PartialPick<T, K extends keyof T> = {
+	[P in Exclude<keyof T, K>]: T[P];
+} & {
+	[P in K]?: T[P];
+};
+
 export const AlarmType = ['comment_on_my_post', 'like_on_my_post'] as const;
 export const MentionType = ['mention_on_feed', 'mention_on_comment'] as const;
 export const isReadOptions = ['ALL', 'READ', 'NOTREAD'] as const;
@@ -43,3 +52,5 @@ export const contentTypeId = [
 export const TourArrange = ['A', 'C', 'D', 'O', 'Q', 'R'] as const;
 
 export const SearchType = ['tour', 'member'] as const;
+
+export const LikeCacheType = ['feed', 'comment'] as const;

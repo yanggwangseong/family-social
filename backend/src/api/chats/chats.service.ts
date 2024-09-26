@@ -38,11 +38,11 @@ export class ChatsService {
 
 		const result = await Promise.all(
 			chat.map(async (item): Promise<MemberBelongToChatsResDto> => {
-				const [chatMembers, joinMemberCount] =
-					await this.memberChatRepository.getMembersAndCountByChat(item.chatId);
-
-				const recentMessage =
-					await this.messagesRepository.getRecentMessageByChat(item.chatId);
+				const [[chatMembers, joinMemberCount], recentMessage] =
+					await Promise.all([
+						this.memberChatRepository.getMembersAndCountByChat(item.chatId),
+						this.messagesRepository.getRecentMessageByChat(item.chatId),
+					]);
 
 				return {
 					targetMemberId: item.targetMemberId,

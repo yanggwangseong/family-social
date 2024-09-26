@@ -11,9 +11,7 @@ import {
 } from './edit-profile.interface';
 import { validPhoneNumber } from '@/components/screens/sign-up/sign-up.constants';
 import ImageCropper from '@/components/ui/image-cropper/ImageCropper';
-import { useMutation } from 'react-query';
 import { MediaService } from '@/services/media/media.service';
-import axios from 'axios';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useRecoilState } from 'recoil';
@@ -21,6 +19,7 @@ import { modalAtom } from '@/atoms/modalAtom';
 import { MemberService } from '@/services/member/member.service';
 import { useUploadImage } from '@/hooks/useUploadImage';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
+import { useCreateMutation } from '@/hooks/useCreateMutation';
 
 const EditProfile: FC = () => {
 	const { isFiles, handleUploadImage, uploadImage } = useUploadImage();
@@ -37,38 +36,24 @@ const EditProfile: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { mutateAsync: profileImageUploadASync } = useMutation(
-		['profile-image-upload'],
+	const { mutateAsync: profileImageUploadASync } = useCreateMutation(
 		async (file: File) => await MediaService.uploadProfileImage(file),
 		{
-			onMutate: variable => {},
-			onSuccess(data: string[]) {},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
-			},
+			mutationKey: ['profile-image-upload'],
+			onMutate: () => {},
 		},
 	);
 
-	const { mutateAsync: updateProfileASync } = useMutation(
-		['update-profile'],
+	const { mutateAsync: updateProfileASync } = useCreateMutation(
 		async (data: UpdateProfileRequest) =>
 			await MemberService.updateProfile(data),
 		{
-			onMutate: variable => {
-				Loading.hourglass();
-			},
-			onSuccess(data) {
+			mutationKey: ['update-profile'],
+			onSuccess: data => {
 				Loading.remove();
 				Report.success('성공', `프로필 수정이 성공 하였습니다`, '확인', () => {
 					setIsShowing(false);
 				});
-			},
-			onError(error) {
-				if (axios.isAxiosError(error)) {
-					Report.warning('실패', `${error.response?.data.message}`, '확인');
-				}
 			},
 		},
 	);
