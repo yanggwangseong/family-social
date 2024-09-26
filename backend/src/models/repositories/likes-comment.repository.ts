@@ -52,4 +52,15 @@ export class LikesCommentRepository extends Repository<LikeCommentEntity> {
 	async getLikesByCommentId(commentId: string): Promise<LikeCommentEntity[]> {
 		return await this.repository.find({ where: { commentId } });
 	}
+
+	async hasUserLiked(memberId: string, commentId: string): Promise<boolean> {
+		const count = await this.repository.count({
+			where: { memberId, commentId },
+		});
+		return count > 0;
+	}
+
+	async countLikesByCommentId(commentId: string): Promise<number> {
+		return this.count({ where: { commentId } });
+	}
 }

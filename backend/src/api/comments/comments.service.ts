@@ -52,6 +52,7 @@ export class CommentsService implements OnModuleInit {
 			const likes = await this.likesCommentRepository.getLikesByCommentId(
 				commentId,
 			);
+
 			const memberIds = likes.map((like) => like.memberId);
 			await this.likesCache.syncLikes(
 				this._likeCacheType,
@@ -74,11 +75,10 @@ export class CommentsService implements OnModuleInit {
 		feedId: string,
 		memberId: string,
 	): Promise<CommentGetListsResDto[]> {
-		const comment = await this.commentsRepository.getCommentsByFeedId(feedId);
-
-		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			MENTION_ON_COMMENT,
-		);
+		const [comment, mentionTypeId] = await Promise.all([
+			this.commentsRepository.getCommentsByFeedId(feedId),
+			this.mentionsService.findMentionIdByMentionType(MENTION_ON_COMMENT),
+		]);
 
 		// const newComments = await Promise.all(
 		// 	comment.map(async (comment): Promise<CommentGetListsResDto> => {
@@ -164,8 +164,9 @@ export class CommentsService implements OnModuleInit {
 	): Promise<CommentGetListsResDto> {
 		const { id, username } =
 			await this.commentsRepository.getUserIdAndNameByCommentId(comment.id);
-		const likedByComments =
-			await this.likesCommentRepository.getLikedByComments(comment.id);
+		// 해당 부분을 redis cache로 개선
+		// const likedByComments =
+		// 	await this.likesCommentRepository.getLikedByComments(comment.id);
 
 		const childComments = comment.childrenComments
 			? await Promise.all(
@@ -175,6 +176,16 @@ export class CommentsService implements OnModuleInit {
 			  )
 			: [];
 
+		const [myLikeByComment, sumLikeByComment, mentions] = await Promise.all([
+			this.hasUserLiked(comment.id, memberId),
+			this.getLikeCount(comment.id),
+			this.mentionsService.findMentionsByFeedId(
+				feedId,
+				mentionTypeId,
+				comment.id,
+			),
+		]);
+
 		return {
 			id: comment.id,
 			commentContents: comment.commentContents,
@@ -182,16 +193,70 @@ export class CommentsService implements OnModuleInit {
 			replyId: comment.replyId,
 			parentId: comment.parentId,
 			feedId: comment.feedId,
-			myLikeByComment: this.findMyLikeByComment(likedByComments, memberId),
-			sumLikeByComment: this.sumLikesOfComment(likedByComments),
+			myLikeByComment,
+			sumLikeByComment,
 			member: { id, username },
 			childrenComments: childComments,
-			mentions: await this.mentionsService.findMentionsByFeedId(
-				feedId,
-				mentionTypeId,
-				comment.id,
-			),
+			mentions,
 		};
+	}
+
+	/**
+	 * Look-aside
+	 * 좋아요 수를 조회할 때는 Redis에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param commentId 피드 ID
+	 * @returns 좋아요 수
+	 */
+	private async getLikeCount(commentId: string): Promise<number> {
+		const cachedCount = await this.likesCache.getLikeCount(
+			this._likeCacheType,
+			commentId,
+		);
+
+		if (cachedCount > 0) return cachedCount;
+
+		// Cache miss 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const count = await this.likesCommentRepository.countLikesByCommentId(
+			commentId,
+		);
+		await this.likesCache.setLikeCount(this._likeCacheType, commentId, count);
+		return count;
+	}
+
+	/**
+	 * Look-aside
+	 * 사용자가 피드에 좋아요를 눌렀는지 여부를 가져온다.
+	 * 캐시에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param memberId 사용자 ID
+	 * @param commentId 댓글 ID
+	 * @returns 사용자가 댓글에 좋아요를 눌렀는지 여부
+	 */
+	private async hasUserLiked(
+		memberId: string,
+		commentId: string,
+	): Promise<boolean> {
+		const cachedLike = await this.likesCache.hasLiked(
+			this._likeCacheType,
+			memberId,
+			commentId,
+		);
+
+		if (cachedLike) return cachedLike;
+
+		// 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const hasLiked = await this.likesCommentRepository.hasUserLiked(
+			memberId,
+			commentId,
+		);
+
+		await this.likesCache.setUserLike(
+			this._likeCacheType,
+			memberId,
+			commentId,
+			hasLiked,
+		);
+
+		return hasLiked;
 	}
 
 	private findMyLikeByComment(

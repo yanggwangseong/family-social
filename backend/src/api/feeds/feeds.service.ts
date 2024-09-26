@@ -102,13 +102,10 @@ export class FeedsService implements OnModuleInit {
 		const { id: groupId, ...groupRest } = group;
 		const { id: memberId, ...memberRest } = member;
 
-		const start = Date.now();
 		const [sumLike, myLike] = await Promise.all([
 			this.getLikeCount(feedId),
 			this.hasUserLiked(memberId, feedId),
 		]);
-		const end = Date.now();
-		console.log(`Total time taken: ${end - start}ms`);
 
 		return {
 			feedId,
