@@ -26,4 +26,18 @@ export class ToursCache {
 	): Promise<void> {
 		await this.redis.set(key, JSON.stringify(data), 'EX', this.CACHE_TTL);
 	}
+
+	async getServiceCategoriesCache(
+		key: string,
+	): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto> | null> {
+		const cachedData = await this.redis.get(key);
+		return cachedData ? JSON.parse(cachedData) : null;
+	}
+
+	async setServiceCategoriesCache(
+		key: string,
+		data: BasicPaginationResponse<TourHttpServiceCategoryResDto>,
+	): Promise<void> {
+		await this.redis.set(key, JSON.stringify(data), 'EX', this.CACHE_TTL);
+	}
 }

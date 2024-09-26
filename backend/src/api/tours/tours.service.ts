@@ -132,6 +132,23 @@ export class ToursService {
 		cat2?: string;
 		cat3?: string;
 	}): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto>> {
+		const cacheKey = this.getServiceCategoriesCacheKey({
+			numOfRows,
+			pageNo,
+			contentTypeId,
+			cat1,
+			cat2,
+			cat3,
+		});
+
+		const cachedData = await this.toursCache.getServiceCategoriesCache(
+			cacheKey,
+		);
+
+		if (cachedData) {
+			return cachedData;
+		}
+
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/categoryCode1`,
 		);
@@ -157,7 +174,31 @@ export class ToursService {
 			count: data.totalCount,
 		};
 
+		await this.toursCache.setServiceCategoriesCache(cacheKey, result);
+
 		return result;
+	}
+
+	private getServiceCategoriesCacheKey({
+		numOfRows,
+		pageNo,
+		contentTypeId,
+		cat1,
+		cat2,
+		cat3,
+	}: {
+		numOfRows: string;
+		pageNo: string;
+		contentTypeId: string;
+		cat1?: string;
+		cat2?: string;
+		cat3?: string;
+	}): string {
+		let cacheKey = `serviceCategories:${numOfRows}:${pageNo}:${contentTypeId}`;
+		if (cat1) cacheKey += `:${cat1}`;
+		if (cat2) cacheKey += `:${cat2}`;
+		if (cat3) cacheKey += `:${cat3}`;
+		return cacheKey;
 	}
 
 	async getHttpTourApiIntroduction({
