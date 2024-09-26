@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { QueryRunnerWithRedis } from '@/common/decorators/query-runner-with-redis.decorator';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -12,7 +14,12 @@ import {
 	ERROR_FEED_NOT_FOUND,
 	ERROR_FILE_DIR_NOT_FOUND,
 } from '@/constants/business-error';
-import { MENTION_ON_FEED } from '@/constants/string-constants';
+import { ENV_LIKE_CACHE_TYPE_FEED } from '@/constants/env-keys.const';
+import {
+	LIKE_CACHE_TYPE_FEED,
+	MENTION_ON_FEED,
+} from '@/constants/string-constants';
+import { LikesCache } from '@/models/cache/likes-cache';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
@@ -30,15 +37,43 @@ import { MediasService } from '../medias/medias.service';
 import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
-export class FeedsService {
+export class FeedsService implements OnModuleInit {
+	private readonly _likeCacheType;
+
 	constructor(
 		private readonly feedsRepository: FeedsRepository,
 		private readonly mediasService: MediasService,
 		private readonly commentsService: CommentsService,
 		private readonly mentionsService: MentionsService,
 		private readonly likesFeedRepository: LikesFeedRepository,
-		private dataSource: DataSource,
-	) {}
+		private readonly likesCache: LikesCache,
+		private readonly configService: ConfigService,
+	) {
+		this._likeCacheType = this.configService.get<typeof LIKE_CACHE_TYPE_FEED>(
+			ENV_LIKE_CACHE_TYPE_FEED,
+		)!;
+	}
+
+	/**
+	 * 서버 시작 시 모든 피드의 좋아요를 Redis와 동기화 (Cache Warming)
+	 */
+	async onModuleInit() {
+		const feedIds = await this.getAllFeedIds();
+		for (const feedId of feedIds) {
+			const likes = await this.likesFeedRepository.getLikesByFeedId(feedId);
+			const memberIds = likes.map((like) => like.memberId);
+			await this.likesCache.syncLikes(this._likeCacheType, feedId, memberIds);
+		}
+	}
+
+	/**
+	 * 모든 피드의 ID를 가져온다.
+	 * @returns 모든 피드의 ID
+	 */
+	private async getAllFeedIds(): Promise<string[]> {
+		// 모든 피드의 ID를 가져온다.
+		return await this.feedsRepository.findAllFeedIds();
+	}
 
 	private async fetchFeedDetails(
 		feedId: string,
@@ -46,12 +81,19 @@ export class FeedsService {
 		mentionTypeId: string,
 	) {
 		return Promise.all([
-			await this.feedsRepository.findFeedInfoById(feedId),
-			await this.getMediaUrlAndCommentsByFeedId(feedId, memberId),
-			await this.mentionsService.findMentionsByFeedId(feedId, mentionTypeId),
+			this.feedsRepository.findFeedInfoById(feedId),
+			this.getMediaUrlAndCommentsByFeedId(feedId, memberId),
+			this.mentionsService.findMentionsByFeedId(feedId, mentionTypeId),
 		]);
 	}
 
+	/**
+	 * 피드 상세 정보를 조회
+	 * @param feedIdArgs 피드 ID
+	 * @param mentionTypeId 멘션 타입 ID
+	 * @param memberIdArgs 사용자 ID
+	 * @returns 피드 상세 정보
+	 */
 	async findFeedInfoById(
 		feedIdArgs: string,
 		mentionTypeId: string,
@@ -67,9 +109,16 @@ export class FeedsService {
 		const { id: groupId, ...groupRest } = group;
 		const { id: memberId, ...memberRest } = member;
 
+		const [sumLike, myLike] = await Promise.all([
+			this.getLikeCount(feedId),
+			this.hasUserLiked(memberId, feedId),
+		]);
+
 		return {
 			feedId,
 			...feedRest,
+			sumLike,
+			myLike,
 			groupId,
 			...groupRest,
 			memberId,
@@ -78,6 +127,62 @@ export class FeedsService {
 			comments,
 			mentions,
 		};
+	}
+
+	/**
+	 * Look-aside
+	 * 좋아요 수를 조회할 때는 Redis에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param feedId 피드 ID
+	 * @returns 좋아요 수
+	 */
+	private async getLikeCount(feedId: string): Promise<number> {
+		const cachedCount = await this.likesCache.getLikeCount(
+			this._likeCacheType,
+			feedId,
+		);
+
+		if (cachedCount > 0) {
+			return cachedCount;
+		}
+
+		// Cache miss 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const count = await this.likesFeedRepository.countLikesByFeedId(feedId);
+		await this.likesCache.setLikeCount(this._likeCacheType, feedId, count);
+		return count;
+	}
+
+	/**
+	 * Look-aside
+	 * 사용자가 피드에 좋아요를 눌렀는지 여부를 가져온다.
+	 * 캐시에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param memberId 사용자 ID
+	 * @param feedId 피드 ID
+	 * @returns 사용자가 피드에 좋아요를 눌렀는지 여부
+	 */
+	private async hasUserLiked(
+		memberId: string,
+		feedId: string,
+	): Promise<boolean> {
+		const cachedLike = await this.likesCache.hasLiked(
+			this._likeCacheType,
+			memberId,
+			feedId,
+		);
+
+		if (cachedLike) return cachedLike;
+
+		// 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const hasLiked = await this.likesFeedRepository.hasUserLiked(
+			memberId,
+			feedId,
+		);
+		await this.likesCache.setUserLike(
+			this._likeCacheType,
+			memberId,
+			feedId,
+			hasLiked,
+		);
+		return hasLiked;
 	}
 
 	async findAllFeed(
@@ -90,6 +195,7 @@ export class FeedsService {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			MENTION_ON_FEED,
 		);
+		//
 
 		const query = await this.feedsRepository.findAllFeed({
 			take,
@@ -107,7 +213,7 @@ export class FeedsService {
 			count: number;
 		} = await pagination.paginateQueryBuilder(paginationDto, query);
 
-		const mappedList = await Promise.all(
+		const mappedList = Promise.all(
 			list.map(async (feed) => {
 				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
 					feed.feedId,
@@ -129,7 +235,7 @@ export class FeedsService {
 		);
 
 		return {
-			list: mappedList,
+			list: await mappedList,
 			page,
 			count,
 			take,
@@ -139,24 +245,34 @@ export class FeedsService {
 	async updateLikesFeedId(
 		memberId: string,
 		feedId: string,
-		qr?: QueryRunner,
+		qrAndRedis: QueryRunnerWithRedis,
 	): Promise<boolean> {
-		const likeFeedRepository =
-			this.likesFeedRepository.getLikesFeedRepository(qr);
-
-		const like = await this.likesFeedRepository.findMemberLikesFeed(
+		const { queryRunner, redisMulti } = qrAndRedis;
+		const hasLiked = await this.likesCache.hasLiked(
+			this._likeCacheType,
 			memberId,
 			feedId,
-			qr,
 		);
 
-		if (like) {
-			await likeFeedRepository.remove(like);
+		if (hasLiked) {
+			await this.likesCache.removeLike(
+				this._likeCacheType,
+				memberId,
+				feedId,
+				redisMulti,
+			);
+			await this.likesFeedRepository.removeLike(memberId, feedId, queryRunner);
 		} else {
-			await likeFeedRepository.save({ memberId, feedId });
+			await this.likesCache.addLike(
+				this._likeCacheType,
+				memberId,
+				feedId,
+				redisMulti,
+			);
+			await this.likesFeedRepository.addLike(memberId, feedId, queryRunner);
 		}
 
-		return !like;
+		return !hasLiked;
 	}
 
 	async createFeed(
@@ -255,8 +371,8 @@ export class FeedsService {
 		memberId: string,
 	) {
 		return await Promise.all([
-			await this.mediasService.findMediaUrlByFeedId(feedId),
-			await this.commentsService.getCommentsByFeedId(feedId, memberId),
+			this.mediasService.findMediaUrlByFeedId(feedId),
+			this.commentsService.getCommentsByFeedId(feedId, memberId),
 		]);
 	}
 }

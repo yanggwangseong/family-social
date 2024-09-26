@@ -61,3 +61,7 @@ export const ENV_REDIS_HOST = 'REDIS_HOST' as const;
 export const ENV_REDIS_PORT = 'REDIS_PORT' as const;
 export const ENV_REDIS_TYPE = 'REDIS_TYPE' as const;
 export const ENV_GROUP_INVITE_TTL = 'GROUP_INVITE_TTL' as const;
+
+// like cache type
+export const ENV_LIKE_CACHE_TYPE_FEED = 'LIKE_CACHE_TYPE_FEED' as const;
+export const ENV_LIKE_CACHE_TYPE_COMMENT = 'LIKE_CACHE_TYPE_COMMENT' as const;

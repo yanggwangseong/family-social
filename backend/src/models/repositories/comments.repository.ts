@@ -111,4 +111,10 @@ export class CommentsRepository extends Repository<CommentEntity> {
 
 		return !!affected;
 	}
+
+	async findAllCommentIds(): Promise<string[]> {
+		return await this.repository
+			.find({ select: { id: true } })
+			.then((comments) => comments.map((comment) => comment.id));
+	}
 }

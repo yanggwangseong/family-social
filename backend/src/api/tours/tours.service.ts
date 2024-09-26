@@ -11,6 +11,7 @@ import {
 	ENV_TOUR_API_END_POINT,
 	ENV_TOUR_API_SERVICE_KEY,
 } from '@/constants/env-keys.const';
+import { ToursCache } from '@/models/cache/tours-cache';
 import { TourHttpAreaCodeResDto } from '@/models/dto/tour/res/tour-http-area-code-res.dto';
 import { TourHttpCommonResDto } from '@/models/dto/tour/res/tour-http-common-res.dto';
 import { TourHttpFestivalScheduleResDto } from '@/models/dto/tour/res/tour-http-festival-schedule-res.dto';
@@ -18,9 +19,6 @@ import { TourHttpImagesResDto } from '@/models/dto/tour/res/tour-http-images-res
 import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-search-tourism-res.dto';
 import { TourHttpServiceCategoryResDto } from '@/models/dto/tour/res/tour-http-service-category-res.dto';
 import { TourHttpTourismListResDto } from '@/models/dto/tour/res/tour-http-tourism-list-res.dto';
-import { ScheduleRepository } from '@/models/repositories/schedule.repository';
-import { TourismPeriodRepository } from '@/models/repositories/tourism-period.repository';
-import { TourismRepository } from '@/models/repositories/tourism.repository';
 import { TourHttpResponse, TourListArgs } from '@/types/args/tour';
 import { BasicPaginationResponse } from '@/types/pagination';
 import {
@@ -33,9 +31,7 @@ export class ToursService {
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly configService: ConfigService,
-		private readonly scheduleRepository: ScheduleRepository,
-		private readonly tourismPeriodRepository: TourismPeriodRepository,
-		private readonly tourismRepository: TourismRepository,
+		private readonly toursCache: ToursCache,
 	) {}
 
 	private readonly serviceKey: string =
@@ -45,18 +41,6 @@ export class ToursService {
 	private listYN = 'Y'; // 목록구분(Y=목록, N=개수) N은 총 갯수
 	private MobileOS = 'ETC';
 	private _type = 'json';
-
-	// private readonly config: {
-	// 	serviceKey?: string;
-	// 	MobileOS: string;
-	// 	MobileApp: string;
-	// 	_type: string;
-	// } = {
-	// 	serviceKey: this.configService.get<string>('TOUR_API_SERVICE_KEY'),
-	// 	MobileOS: 'ETC',
-	// 	MobileApp: 'FAM',
-	// 	_type: 'json',
-	// };
 
 	async findAll(
 		findQueryArgs: TourListArgs,
@@ -96,8 +80,17 @@ export class ToursService {
 	}: {
 		numOfRows: string;
 		pageNo: string;
-		areaCode: string;
+		areaCode?: string;
 	}): Promise<BasicPaginationResponse<TourHttpAreaCodeResDto>> {
+		const cacheKey = `areaCode1:${numOfRows}:${pageNo}${
+			areaCode ? `:${areaCode}` : ''
+		}`;
+		const cachedData = await this.toursCache.getAreaCodesCache(cacheKey);
+
+		if (cachedData) {
+			return cachedData;
+		}
+
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/areaCode1`,
 		);
@@ -111,12 +104,17 @@ export class ToursService {
 			newUrl.toString(),
 		);
 
-		return {
+		const result = {
 			list: data.items.item,
 			page: data.pageNo,
 			take: data.numOfRows,
 			count: data.totalCount,
 		};
+
+		// 캐시에 데이터 저장
+		await this.toursCache.setAreaCodesCache(cacheKey, result);
+
+		return result;
 	}
 
 	async getHttpTourApiServiceCategories({
@@ -130,10 +128,27 @@ export class ToursService {
 		numOfRows: string;
 		pageNo: string;
 		contentTypeId: string;
-		cat1: string;
-		cat2: string;
-		cat3: string;
+		cat1?: string;
+		cat2?: string;
+		cat3?: string;
 	}): Promise<BasicPaginationResponse<TourHttpServiceCategoryResDto>> {
+		const cacheKey = this.getServiceCategoriesCacheKey({
+			numOfRows,
+			pageNo,
+			contentTypeId,
+			cat1,
+			cat2,
+			cat3,
+		});
+
+		const cachedData = await this.toursCache.getServiceCategoriesCache(
+			cacheKey,
+		);
+
+		if (cachedData) {
+			return cachedData;
+		}
+
 		const newUrl = this.CreateTourHttpUrl(
 			`${this.endPoint}/KorService1/categoryCode1`,
 		);
@@ -152,12 +167,38 @@ export class ToursService {
 			newUrl.toString(),
 		);
 
-		return {
+		const result = {
 			list: data.items.item,
 			page: data.pageNo,
 			take: data.numOfRows,
 			count: data.totalCount,
 		};
+
+		await this.toursCache.setServiceCategoriesCache(cacheKey, result);
+
+		return result;
+	}
+
+	private getServiceCategoriesCacheKey({
+		numOfRows,
+		pageNo,
+		contentTypeId,
+		cat1,
+		cat2,
+		cat3,
+	}: {
+		numOfRows: string;
+		pageNo: string;
+		contentTypeId: string;
+		cat1?: string;
+		cat2?: string;
+		cat3?: string;
+	}): string {
+		let cacheKey = `serviceCategories:${numOfRows}:${pageNo}:${contentTypeId}`;
+		if (cat1) cacheKey += `:${cat1}`;
+		if (cat2) cacheKey += `:${cat2}`;
+		if (cat3) cacheKey += `:${cat3}`;
+		return cacheKey;
 	}
 
 	async getHttpTourApiIntroduction({

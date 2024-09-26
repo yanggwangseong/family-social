@@ -17,6 +17,10 @@ import { QueryRunner } from 'typeorm';
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
+import {
+	QueryRunnerWithRedis,
+	QueryRunnerWithRedisDecorator,
+} from '@/common/decorators/query-runner-with-redis.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	CreateCommentSwagger,
@@ -40,6 +44,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionWithRedisInterceptor } from '@/common/interceptors/transaction-with-redis.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { Pagination } from '@/common/strategies/context/pagination';
@@ -223,11 +228,7 @@ export class FeedsController {
 	) {
 		await this.feedsService.updateFeed(
 			{
-				contents: dto.contents,
-				isPublic: dto.isPublic,
-				groupId: dto.groupId,
-				medias: dto.medias,
-				mentions: dto.mentions,
+				...dto,
 				feedId: feedId,
 				memberId: sub,
 			},
@@ -245,7 +246,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesFeedSwagger()
-	@UseInterceptors(TransactionInterceptor)
+	@UseInterceptors(TransactionWithRedisInterceptor)
 	@Put(':feedId/likes')
 	async updateLikesFeedId(
 		@CurrentUser() { sub, username }: { sub: string; username: string },
@@ -255,12 +256,12 @@ export class FeedsController {
 		)
 		feedId: string,
 		@Body() dto: FeedLikeUpdateReqDto,
-		@QueryRunnerDecorator() qr: QueryRunner,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
 	) {
 		const isUpdateLike = await this.feedsService.updateLikesFeedId(
 			sub,
 			feedId,
-			qr,
+			qrAndRedis,
 		);
 
 		if (isUpdateLike) {
@@ -273,7 +274,7 @@ export class FeedsController {
 					notificationDescription: `${username} ${LIKE_ON_MY_POST_TITLE}`,
 					notificationFeedId: feedId,
 				},
-				qr,
+				qrAndRedis.queryRunner,
 			);
 		}
 
@@ -465,6 +466,7 @@ export class FeedsController {
 	 * @returns boolean
 	 */
 	@LikesCommentSwagger()
+	@UseInterceptors(TransactionWithRedisInterceptor)
 	@Put(':feedId/comments/:commentId/likes')
 	async updateLikesCommentId(
 		@CurrentUser('sub') sub: string,
@@ -473,7 +475,12 @@ export class FeedsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		commentId: string,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
 	) {
-		return await this.commentsService.updateLikesCommentId(sub, commentId);
+		return await this.commentsService.updateLikesCommentId(
+			sub,
+			commentId,
+			qrAndRedis,
+		);
 	}
 }

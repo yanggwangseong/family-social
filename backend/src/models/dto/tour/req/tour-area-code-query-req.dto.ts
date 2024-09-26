@@ -40,5 +40,5 @@ export class TourAreaCodeQueryReqDto {
 	@IsNotEmpty({
 		message: notEmptyValidationMessage,
 	})
-	areaCode!: string;
+	areaCode?: string;
 }

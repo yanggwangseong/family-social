@@ -118,7 +118,7 @@ export class MailsService {
 		</html>
 		`;
 		const sendResult = await Promise.allSettled([
-			await this.sendEmail(email, subject, subject, htmlContent),
+			this.sendEmail(email, subject, subject, htmlContent),
 		]);
 
 		const newMailLog = this.createMailSendLogs(sendResult);

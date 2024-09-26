@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { QueryRunnerWithRedis } from '@/common/decorators/query-runner-with-redis.decorator';
 import {
 	EntityConflictException,
 	EntityNotFoundException,
@@ -10,7 +12,12 @@ import {
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
 } from '@/constants/business-error';
-import { MENTION_ON_COMMENT } from '@/constants/string-constants';
+import { ENV_LIKE_CACHE_TYPE_COMMENT } from '@/constants/env-keys.const';
+import {
+	LIKE_CACHE_TYPE_COMMENT,
+	MENTION_ON_COMMENT,
+} from '@/constants/string-constants';
+import { LikesCache } from '@/models/cache/likes-cache';
 import { CommentGetListsResDto } from '@/models/dto/comments/res/comment-get-lists-res.dto';
 import { CommentEntity } from '@/models/entities/comment.entity';
 import { LikeCommentEntity } from '@/models/entities/like-comment.entity';
@@ -21,23 +28,57 @@ import { ICreateCommentsArgs } from '@/types/args/comment';
 import { MentionsService } from '../mentions/mentions.service';
 
 @Injectable()
-export class CommentsService {
+export class CommentsService implements OnModuleInit {
+	private readonly _likeCacheType;
+
 	constructor(
 		private readonly commentsRepository: CommentsRepository,
 		private readonly likesCommentRepository: LikesCommentRepository,
 		private readonly mentionsService: MentionsService,
-		private dataSource: DataSource,
-	) {}
+		private readonly likesCache: LikesCache,
+		private readonly configService: ConfigService,
+	) {
+		this._likeCacheType = this.configService.get<
+			typeof LIKE_CACHE_TYPE_COMMENT
+		>(ENV_LIKE_CACHE_TYPE_COMMENT)!;
+	}
+
+	/**
+	 * 서버 시작 시 모든 피드의 좋아요를 Redis와 동기화 (Cache Warming)
+	 */
+	async onModuleInit() {
+		const commentIds = await this.getAllCommentIds();
+		for (const commentId of commentIds) {
+			const likes = await this.likesCommentRepository.getLikesByCommentId(
+				commentId,
+			);
+
+			const memberIds = likes.map((like) => like.memberId);
+			await this.likesCache.syncLikes(
+				this._likeCacheType,
+				commentId,
+				memberIds,
+			);
+		}
+	}
+
+	/**
+	 * 모든 댓글의 ID를 가져온다.
+	 * @returns 모든 댓글의 ID
+	 */
+	private async getAllCommentIds(): Promise<string[]> {
+		// 모든 댓글의 ID를 가져온다.
+		return await this.commentsRepository.findAllCommentIds();
+	}
 
 	async getCommentsByFeedId(
 		feedId: string,
 		memberId: string,
 	): Promise<CommentGetListsResDto[]> {
-		const comment = await this.commentsRepository.getCommentsByFeedId(feedId);
-
-		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
-			MENTION_ON_COMMENT,
-		);
+		const [comment, mentionTypeId] = await Promise.all([
+			this.commentsRepository.getCommentsByFeedId(feedId),
+			this.mentionsService.findMentionIdByMentionType(MENTION_ON_COMMENT),
+		]);
 
 		// const newComments = await Promise.all(
 		// 	comment.map(async (comment): Promise<CommentGetListsResDto> => {
@@ -123,8 +164,9 @@ export class CommentsService {
 	): Promise<CommentGetListsResDto> {
 		const { id, username } =
 			await this.commentsRepository.getUserIdAndNameByCommentId(comment.id);
-		const likedByComments =
-			await this.likesCommentRepository.getLikedByComments(comment.id);
+		// 해당 부분을 redis cache로 개선
+		// const likedByComments =
+		// 	await this.likesCommentRepository.getLikedByComments(comment.id);
 
 		const childComments = comment.childrenComments
 			? await Promise.all(
@@ -134,6 +176,16 @@ export class CommentsService {
 			  )
 			: [];
 
+		const [myLikeByComment, sumLikeByComment, mentions] = await Promise.all([
+			this.hasUserLiked(comment.id, memberId),
+			this.getLikeCount(comment.id),
+			this.mentionsService.findMentionsByFeedId(
+				feedId,
+				mentionTypeId,
+				comment.id,
+			),
+		]);
+
 		return {
 			id: comment.id,
 			commentContents: comment.commentContents,
@@ -141,16 +193,70 @@ export class CommentsService {
 			replyId: comment.replyId,
 			parentId: comment.parentId,
 			feedId: comment.feedId,
-			myLikeByComment: this.findMyLikeByComment(likedByComments, memberId),
-			sumLikeByComment: this.sumLikesOfComment(likedByComments),
+			myLikeByComment,
+			sumLikeByComment,
 			member: { id, username },
 			childrenComments: childComments,
-			mentions: await this.mentionsService.findMentionsByFeedId(
-				feedId,
-				mentionTypeId,
-				comment.id,
-			),
+			mentions,
 		};
+	}
+
+	/**
+	 * Look-aside
+	 * 좋아요 수를 조회할 때는 Redis에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param commentId 피드 ID
+	 * @returns 좋아요 수
+	 */
+	private async getLikeCount(commentId: string): Promise<number> {
+		const cachedCount = await this.likesCache.getLikeCount(
+			this._likeCacheType,
+			commentId,
+		);
+
+		if (cachedCount > 0) return cachedCount;
+
+		// Cache miss 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const count = await this.likesCommentRepository.countLikesByCommentId(
+			commentId,
+		);
+		await this.likesCache.setLikeCount(this._likeCacheType, commentId, count);
+		return count;
+	}
+
+	/**
+	 * Look-aside
+	 * 사용자가 피드에 좋아요를 눌렀는지 여부를 가져온다.
+	 * 캐시에서 바로 가져오고, 캐시 미스 시 데이터베이스에서 읽어온 뒤 캐시에 저장
+	 * @param memberId 사용자 ID
+	 * @param commentId 댓글 ID
+	 * @returns 사용자가 댓글에 좋아요를 눌렀는지 여부
+	 */
+	private async hasUserLiked(
+		memberId: string,
+		commentId: string,
+	): Promise<boolean> {
+		const cachedLike = await this.likesCache.hasLiked(
+			this._likeCacheType,
+			memberId,
+			commentId,
+		);
+
+		if (cachedLike) return cachedLike;
+
+		// 데이터베이스에서 읽어온 뒤 캐시에 저장
+		const hasLiked = await this.likesCommentRepository.hasUserLiked(
+			memberId,
+			commentId,
+		);
+
+		await this.likesCache.setUserLike(
+			this._likeCacheType,
+			memberId,
+			commentId,
+			hasLiked,
+		);
+
+		return hasLiked;
 	}
 
 	private findMyLikeByComment(
@@ -234,18 +340,42 @@ export class CommentsService {
 	async updateLikesCommentId(
 		memberId: string,
 		commentId: string,
+		qrAndRedis: QueryRunnerWithRedis,
 	): Promise<boolean> {
-		const like = await this.likesCommentRepository.findMemberLikesComment(
+		const { queryRunner, redisMulti } = qrAndRedis;
+
+		const hasLiked = await this.likesCache.hasLiked(
+			this._likeCacheType,
 			memberId,
 			commentId,
 		);
 
-		if (like) {
-			await this.likesCommentRepository.remove(like);
+		if (hasLiked) {
+			await this.likesCache.removeLike(
+				this._likeCacheType,
+				memberId,
+				commentId,
+				redisMulti,
+			);
+			await this.likesCommentRepository.removeLike(
+				memberId,
+				commentId,
+				queryRunner,
+			);
 		} else {
-			await this.likesCommentRepository.save({ memberId, commentId });
+			await this.likesCache.addLike(
+				this._likeCacheType,
+				memberId,
+				commentId,
+				redisMulti,
+			);
+			await this.likesCommentRepository.addLike(
+				memberId,
+				commentId,
+				queryRunner,
+			);
 		}
 
-		return !like;
+		return !hasLiked;
 	}
 }
