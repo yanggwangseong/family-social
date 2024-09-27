@@ -13,6 +13,7 @@ import { maxLengthValidationMessage } from '@/common/validation-message/max-leng
 import { notEmptyValidationMessage } from '@/common/validation-message/not-empty-validation-message';
 import { stringValidationMessage } from '@/common/validation-message/string-validation-message';
 
+import { ChatEntity } from './chat.entity';
 import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
@@ -83,4 +84,8 @@ export class GroupEntity extends DefaultEntity {
 	// group event
 	@OneToMany(() => GroupEventEntity, (ev) => ev.eventGroup)
 	eventByGroups?: GroupEventEntity[];
+
+	// chat
+	@OneToMany(() => ChatEntity, (chat) => chat.group)
+	chats?: ChatEntity[];
 }
