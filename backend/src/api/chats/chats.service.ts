@@ -61,7 +61,7 @@ export class ChatsService {
 	}
 
 	async createChat(dto: ChatCreateReqDto, qr?: QueryRunner) {
-		const chatId = await this.chatsRepository.createChat(qr);
+		const chatId = await this.chatsRepository.createChat(dto.chatType, qr);
 
 		await this.memberChatRepository.createMembersEnteredByChat(
 			chatId.id,

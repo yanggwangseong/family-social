@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ChatType, Union } from '@/types';
+
 import { ChatEntity } from '../entities/chat.entity';
 
 @Injectable()
@@ -20,10 +22,15 @@ export class ChatsRepository extends Repository<ChatEntity> {
 			: this.repository;
 	}
 
-	async createChat(qr?: QueryRunner): Promise<{ id: string }> {
+	async createChat(
+		chatType: Union<typeof ChatType>,
+		qr?: QueryRunner,
+	): Promise<{ id: string }> {
 		const chatsRepository = this.getChatsRepository(qr);
-
 		const chat = await chatsRepository.insert({
+			chatType: {
+				chatType,
+			},
 			id: uuidv4(),
 		});
 
