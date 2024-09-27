@@ -7,6 +7,7 @@ import {
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ChatExistsMiddleware } from '@/common/middlewares/chat-exists.middleware';
+import { ChatTypeEntity } from '@/models/entities/chat-type.entity';
 import { ChatEntity } from '@/models/entities/chat.entity';
 import { MemberChatEntity } from '@/models/entities/member-chat.entity';
 import { MessageEntity } from '@/models/entities/message.entity';
@@ -22,7 +23,12 @@ import { MessagesService } from '../messages/messages.service';
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([ChatEntity, MemberChatEntity, MessageEntity]),
+		TypeOrmModule.forFeature([
+			ChatEntity,
+			MemberChatEntity,
+			MessageEntity,
+			ChatTypeEntity,
+		]),
 		AuthModule,
 	],
 	controllers: [ChatsController],

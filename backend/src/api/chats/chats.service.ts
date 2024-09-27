@@ -32,12 +32,10 @@ export class ChatsService {
 	}
 
 	async getMemberBelongToChats(memberId: string): Promise<GetChatListResDto> {
-		const chat = await this.memberChatRepository.getMemberBelongToChats(
-			memberId,
-		);
+		const chats = await this.chatsRepository.getMemberBelongToChats(memberId);
 
 		const result = await Promise.all(
-			chat.map(async (item): Promise<MemberBelongToChatsResDto> => {
+			chats.map(async (item): Promise<MemberBelongToChatsResDto> => {
 				const [[chatMembers, joinMemberCount], recentMessage] =
 					await Promise.all([
 						this.memberChatRepository.getMembersAndCountByChat(item.chatId),
@@ -45,9 +43,7 @@ export class ChatsService {
 					]);
 
 				return {
-					targetMemberId: item.targetMemberId,
-					chatId: item.chatId,
-					chatCreateAt: item.chatCreateAt,
+					...item,
 					chatMembers,
 					joinMemberCount,
 					recentMessage,

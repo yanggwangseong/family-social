@@ -1,9 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 import { CreatedAtResDecorator } from '@/common/decorators/entity/created-at-res.decorator';
+import { ChatType, Union } from '@/types';
 
 import { ChatMembersResDto } from './chat-members-res.dto';
+import { GroupProfileResDto } from '../../group/res/group-profile.rest.dto';
 import { RecentMessageResDto } from '../../message/res/recent-message-res.dto';
 
 export class MemberBelongToChatsResDto {
@@ -40,4 +42,20 @@ export class MemberBelongToChatsResDto {
 	})
 	@Type(() => RecentMessageResDto)
 	recentMessage!: RecentMessageResDto;
+
+	@ApiProperty({
+		nullable: false,
+		description: '채팅 타입',
+	})
+	chatType!: Union<typeof ChatType>;
+
+	/**
+	 * 해당 그룹에 대한 정보
+	 */
+	@ApiPropertyOptional({
+		nullable: true,
+		description: '해당 그룹에 대한 정보',
+	})
+	@Type(() => GroupProfileResDto)
+	group?: GroupProfileResDto;
 }
