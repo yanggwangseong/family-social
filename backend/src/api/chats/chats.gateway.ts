@@ -91,7 +91,7 @@ export class ChatsGateway
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
 		/**
-		 * chatType과 memberIds가 같아서 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
+		 * 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
 		 */
 		const existingChat = await this.chatsService.getExistingChat(
 			dto.chatType,
@@ -108,9 +108,9 @@ export class ChatsGateway
 
 		/**
 		 * 아니라면 채팅방 생성
+		 *
 		 */
 		const chatId = await this.chatsService.createChat(dto, qr);
-
 		socket.emit('chat-created', chatId);
 	}
 

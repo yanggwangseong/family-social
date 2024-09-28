@@ -58,13 +58,18 @@ export class ChatsService {
 	}
 
 	async createChat(dto: ChatCreateReqDto, qr?: QueryRunner) {
-		const chatId = await this.chatsRepository.createChat(dto.chatType, qr);
+		const chatId = await this.chatsRepository.createChat(
+			dto.chatType,
+			dto.groupId,
+			qr,
+		);
 
 		await this.memberChatRepository.createMembersEnteredByChat(
-			chatId.id,
+			chatId,
 			dto.memberIds,
 			qr,
 		);
+
 		return chatId;
 	}
 
@@ -87,9 +92,20 @@ export class ChatsService {
 	 * @summary 채팅방 중복 생성 확인
 	 * @param chatType 채팅방 타입
 	 * @param memberIds 채팅방 멤버 id 배열
+	 * @param groupId 그룹 id
 	 * @returns 채팅방 존재 여부
 	 */
-	async getExistingChat(chatType: Union<typeof ChatType>, memberIds: string[]) {
+	async getExistingChat(
+		chatType: Union<typeof ChatType>,
+		memberIds: string[],
+		groupId?: string,
+	) {
+		if (groupId)
+			return await this.chatsRepository.findExistingGroupChat(
+				groupId,
+				chatType,
+			);
+
 		return await this.chatsRepository.findExistingChat(memberIds, chatType);
 	}
 }

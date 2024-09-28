@@ -25,24 +25,22 @@ export class ChatsRepository extends Repository<ChatEntity> {
 
 	async createChat(
 		chatType: Union<typeof ChatType>,
+		groupId?: string,
 		qr?: QueryRunner,
-	): Promise<{ id: string }> {
+	): Promise<string> {
 		const chatsRepository = this.getChatsRepository(qr);
-		const chat = await chatsRepository.insert({
-			chatType: {
-				chatType,
-			},
-			id: uuidv4(),
-		});
 
-		return await chatsRepository.findOneOrFail({
-			select: {
-				id: true,
-			},
-			where: {
-				id: chat.identifiers[0].id,
-			},
-		});
+		const chatId = uuidv4();
+
+		const insertChat = {
+			id: chatId,
+			group: groupId ? { id: groupId } : undefined,
+			chatType: { chatType },
+		};
+
+		await chatsRepository.insert(insertChat);
+
+		return chatId;
 	}
 
 	async getMemberBelongToChats(
@@ -79,21 +77,44 @@ export class ChatsRepository extends Repository<ChatEntity> {
 				: null,
 		}));
 	}
-
+	/**
+	 * @summary 채팅방 중복 생성 확인
+	 * @param memberIds 채팅방 멤버 id 배열
+	 * @param chatType 채팅방 타입
+	 * @returns 채팅방 존재 여부
+	 */
 	async findExistingChat(
 		memberIds: string[],
 		chatType: Union<typeof ChatType>,
 	): Promise<ChatEntity | null> {
-		const queryBuilder = this.createQueryBuilder('chat')
+		return await this.createQueryBuilder('chat')
 			.innerJoin('chat.enteredByChats', 'memberChat')
 			.where('chat.chatType = :chatType', { chatType })
 			.andWhere('memberChat.memberId IN (:...memberIds)', { memberIds })
 			.groupBy('chat.id')
 			.having('COUNT(DISTINCT memberChat.memberId) = :memberCount', {
 				memberCount: memberIds.length,
-			});
+			})
+			.getOne();
+	}
 
-		const chat = await queryBuilder.getOne();
-		return chat;
+	/**
+	 * @summary 그룹 채팅방 중복 생성 확인
+	 * @description 그룹 채팅방은 그룹 id와 채팅방 타입으로 중복 생성 확인
+	 * @param groupId 그룹 id
+	 * @param chatType 채팅방 타입
+	 * @returns 채팅방 존재 여부
+	 */
+	async findExistingGroupChat(
+		groupId: string,
+		chatType: Union<typeof ChatType>,
+	): Promise<ChatEntity | null> {
+		return await this.createQueryBuilder('chat')
+			.select('chat.id, chatType.chatType, group.id')
+			.innerJoin('chat.group', 'group')
+			.innerJoin('chat.chatType', 'chatType')
+			.where('chatType.chatType = :chatType', { chatType })
+			.andWhere('group.id = :groupId', { groupId })
+			.getOne();
 	}
 }
