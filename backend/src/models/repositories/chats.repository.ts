@@ -36,6 +36,9 @@ export class ChatsRepository extends Repository<ChatEntity> {
 		});
 
 		return await chatsRepository.findOneOrFail({
+			select: {
+				id: true,
+			},
 			where: {
 				id: chat.identifiers[0].id,
 			},
@@ -75,5 +78,22 @@ export class ChatsRepository extends Repository<ChatEntity> {
 				  }
 				: null,
 		}));
+	}
+
+	async findExistingChat(
+		memberIds: string[],
+		chatType: Union<typeof ChatType>,
+	): Promise<ChatEntity | null> {
+		const queryBuilder = this.createQueryBuilder('chat')
+			.innerJoin('chat.enteredByChats', 'memberChat')
+			.where('chat.chatType = :chatType', { chatType })
+			.andWhere('memberChat.memberId IN (:...memberIds)', { memberIds })
+			.groupBy('chat.id')
+			.having('COUNT(DISTINCT memberChat.memberId) = :memberCount', {
+				memberCount: memberIds.length,
+			});
+
+		const chat = await queryBuilder.getOne();
+		return chat;
 	}
 }

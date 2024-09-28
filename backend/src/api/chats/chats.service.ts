@@ -8,6 +8,7 @@ import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-lis
 import { ChatsRepository } from '@/models/repositories/chats.repository';
 import { MemberChatRepository } from '@/models/repositories/member-chat.repository';
 import { MessagesRepository } from '@/models/repositories/messages.repository';
+import { ChatType, Union } from '@/types';
 
 @Injectable()
 export class ChatsService {
@@ -67,6 +68,11 @@ export class ChatsService {
 		return chatId;
 	}
 
+	/**
+	 * @summary 채팅방 존재 여부 확인
+	 * @param chatId 채팅방 id
+	 * @returns 채팅방 존재 여부
+	 */
 	async checkIfChatExists(chatId: string) {
 		const exists = await this.chatsRepository.exist({
 			where: {
@@ -75,5 +81,15 @@ export class ChatsService {
 		});
 
 		return exists;
+	}
+
+	/**
+	 * @summary 채팅방 중복 생성 확인
+	 * @param chatType 채팅방 타입
+	 * @param memberIds 채팅방 멤버 id 배열
+	 * @returns 채팅방 존재 여부
+	 */
+	async getExistingChat(chatType: Union<typeof ChatType>, memberIds: string[]) {
+		return await this.chatsRepository.findExistingChat(memberIds, chatType);
 	}
 }
