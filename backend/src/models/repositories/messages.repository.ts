@@ -43,9 +43,11 @@ export class MessagesRepository extends Repository<MessageEntity> {
 			});
 	}
 
-	async getRecentMessageByChat(chatId: string): Promise<RecentMessageResDto> {
+	async getRecentMessageByChat(
+		chatId: string,
+	): Promise<RecentMessageResDto | null> {
 		return await this.repository
-			.findOneOrFail({
+			.findOne({
 				select: {
 					id: true,
 					createdAt: true,
@@ -67,6 +69,10 @@ export class MessagesRepository extends Repository<MessageEntity> {
 				},
 			})
 			.then((data) => {
+				if (!data) {
+					return null;
+				}
+
 				return {
 					id: data.id,
 					createdAt: data.createdAt,

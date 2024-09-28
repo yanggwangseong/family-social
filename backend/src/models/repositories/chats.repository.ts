@@ -65,17 +65,21 @@ export class ChatsRepository extends Repository<ChatEntity> {
 
 		const results = await query.getRawMany();
 
-		return results.map((result) => ({
-			...result,
-			group: result.groupId
-				? {
-						id: result.groupId,
-						groupName: result.groupName,
-						groupDescription: result.groupDescription,
-						groupCoverImage: result.groupCoverImage,
-				  }
-				: null,
-		}));
+		return results.map((result) => {
+			const { groupId, groupName, groupDescription, groupCoverImage, ...rest } =
+				result;
+			return {
+				...rest,
+				group: groupId
+					? {
+							id: groupId,
+							groupName,
+							groupDescription,
+							groupCoverImage,
+					  }
+					: null,
+			};
+		});
 	}
 	/**
 	 * @summary 채팅방 중복 생성 확인

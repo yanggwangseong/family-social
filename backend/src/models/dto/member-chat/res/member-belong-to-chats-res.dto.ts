@@ -37,11 +37,12 @@ export class MemberBelongToChatsResDto {
 	})
 	joinMemberCount!: number;
 
-	@ApiProperty({
+	@ApiPropertyOptional({
 		nullable: false,
+		type: RecentMessageResDto,
 	})
 	@Type(() => RecentMessageResDto)
-	recentMessage!: RecentMessageResDto;
+	recentMessage: RecentMessageResDto | null = null;
 
 	@ApiProperty({
 		nullable: false,
@@ -55,6 +56,7 @@ export class MemberBelongToChatsResDto {
 	@ApiPropertyOptional({
 		nullable: true,
 		description: '해당 그룹에 대한 정보',
+		type: GroupProfileResDto,
 	})
 	@Type(() => GroupProfileResDto)
 	group?: GroupProfileResDto;
