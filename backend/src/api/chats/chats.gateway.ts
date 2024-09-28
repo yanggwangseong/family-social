@@ -1,5 +1,6 @@
 import {
 	UseFilters,
+	UseGuards,
 	UseInterceptors,
 	UsePipes,
 	ValidationPipe,
@@ -19,6 +20,7 @@ import { QueryRunner } from 'typeorm';
 
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import { SocketCatchHttpExceptionFilter } from '@/common/filter/socket-catch-http.exception-filter';
+import { ChatGroupMembershipGuard } from '@/common/guards/socket/chat-group-membership.guard';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
@@ -84,6 +86,7 @@ export class ChatsGateway
 	}
 
 	@UseInterceptors(TransactionInterceptor)
+	@UseGuards(ChatGroupMembershipGuard)
 	@SubscribeMessage('create-chat')
 	async createChat(
 		@ConnectedSocket() socket: Socket,
