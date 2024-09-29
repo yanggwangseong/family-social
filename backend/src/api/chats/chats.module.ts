@@ -19,6 +19,7 @@ import { ChatsController } from './chats.controller';
 import { ChatsGateway } from './chats.gateway';
 import { ChatsService } from './chats.service';
 import { AuthModule } from '../auth/auth.module';
+import { GroupsModule } from '../groups/groups.module';
 import { MessagesService } from '../messages/messages.service';
 
 @Module({
@@ -30,6 +31,7 @@ import { MessagesService } from '../messages/messages.service';
 			ChatTypeEntity,
 		]),
 		AuthModule,
+		GroupsModule,
 	],
 	controllers: [ChatsController],
 	providers: [
@@ -44,9 +46,15 @@ import { MessagesService } from '../messages/messages.service';
 })
 export class ChatsModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(ChatExistsMiddleware).forRoutes({
-			path: 'chats/:chatId/messages',
-			method: RequestMethod.GET,
-		});
+		consumer.apply(ChatExistsMiddleware).forRoutes(
+			{
+				path: 'chats/:chatId/messages',
+				method: RequestMethod.GET,
+			},
+			{
+				path: 'chats/:chatId',
+				method: RequestMethod.GET,
+			},
+		);
 	}
 }

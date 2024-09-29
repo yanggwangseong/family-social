@@ -43,15 +43,12 @@ export class ChatsRepository extends Repository<ChatEntity> {
 		return chatId;
 	}
 
-	async getMemberBelongToChats(
-		memberId: string,
-	): Promise<MemberBelongToChatsResDto[]> {
-		const query = this.repository
+	private createChatQuery() {
+		return this.repository
 			.createQueryBuilder('c')
 			.leftJoinAndSelect('c.enteredByChats', 'mc')
 			.leftJoinAndSelect('c.chatType', 'ct')
 			.leftJoinAndSelect('c.group', 'g')
-			.where('mc.memberId = :memberId', { memberId })
 			.select([
 				'c.id as "chatId"',
 				'c.createdAt as "chatCreateAt"',
@@ -62,25 +59,42 @@ export class ChatsRepository extends Repository<ChatEntity> {
 				'g.groupDescription as "groupDescription"',
 				'g.groupCoverImage as "groupCoverImage"',
 			]);
+	}
+
+	private formatChatResult(result: any): MemberBelongToChatsResDto {
+		const { groupId, groupName, groupDescription, groupCoverImage, ...rest } =
+			result;
+		return {
+			...rest,
+			group: groupId
+				? {
+						id: groupId,
+						groupName,
+						groupDescription,
+						groupCoverImage,
+				  }
+				: null,
+		};
+	}
+
+	async getMemberBelongToChats(
+		memberId: string,
+	): Promise<MemberBelongToChatsResDto[]> {
+		const query = this.createChatQuery().where('mc.memberId = :memberId', {
+			memberId,
+		});
 
 		const results = await query.getRawMany();
-
-		return results.map((result) => {
-			const { groupId, groupName, groupDescription, groupCoverImage, ...rest } =
-				result;
-			return {
-				...rest,
-				group: groupId
-					? {
-							id: groupId,
-							groupName,
-							groupDescription,
-							groupCoverImage,
-					  }
-					: null,
-			};
-		});
+		return results.map(this.formatChatResult);
 	}
+
+	async getChatById(chatId: string): Promise<MemberBelongToChatsResDto> {
+		const query = this.createChatQuery().where('c.id = :chatId', { chatId });
+
+		const result = await query.getRawOne();
+		return this.formatChatResult(result);
+	}
+
 	/**
 	 * @summary 채팅방 중복 생성 확인
 	 * @param memberIds 채팅방 멤버 id 배열

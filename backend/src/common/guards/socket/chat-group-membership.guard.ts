@@ -1,10 +1,11 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 
 import { GroupsService } from '@/api/groups/groups.service';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 
+@Injectable()
 export class ChatGroupMembershipGuard implements CanActivate {
 	constructor(private readonly groupsService: GroupsService) {}
 

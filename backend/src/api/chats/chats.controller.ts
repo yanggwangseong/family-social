@@ -14,6 +14,7 @@ import { QueryRunner } from 'typeorm';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
+	GetChatByIdSwagger,
 	GetMemberChatsSwagger,
 	GetMessagesByChatIdSwagger,
 	PostChatSwagger,
@@ -52,6 +53,29 @@ export class ChatsController {
 	@Get()
 	async getMemberChats(@CurrentUser('sub') sub: string) {
 		return await this.chatsService.getMemberBelongToChats(sub);
+	}
+
+	/**
+	 * @summary 채팅방 아이디로 채팅방 가져오기
+	 *
+	 * @tag chats
+	 * @param sub - 인증된 유저 아이디
+	 * @param chatId - 채팅방 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 채팅방 리스트
+	 */
+	@GetChatByIdSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GetChatListResDto>)
+	@IsResponseDtoDecorator<GetChatListResDto>(GetChatListResDto)
+	@Get('/:chatId')
+	async getChatById(
+		@Param(
+			'chatId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		chatId: string,
+	) {
+		return await this.chatsService.getChatById(chatId);
 	}
 
 	/**

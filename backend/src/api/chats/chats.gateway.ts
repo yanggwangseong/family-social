@@ -63,20 +63,20 @@ export class ChatsGateway
 	handleDisconnect() {}
 
 	handleConnection(socket: Socket & { sub: string }) {
-		const headers = socket.handshake.headers;
+		//const headers = socket.handshake.headers;
 
-		const rawToken = headers['authorization']!;
+		//const rawToken = headers['authorization']!;
 
-		// const rawToken = socket.handshake.auth['authorization'];
+		const rawToken = socket.handshake.auth['authorization'];
 
-		// if (!rawToken) {
-		// 	socket.disconnect();
-		// }
+		if (!rawToken) {
+			socket.disconnect();
+		}
 
 		try {
-			const token = this.authService.extractTokenFromHeader(rawToken, true);
+			//const token = this.authService.extractTokenFromHeader(rawToken, true);
 
-			const payload = this.authService.verifyToken(token);
+			const payload = this.authService.verifyToken(rawToken);
 			socket.sub = payload.sub;
 
 			return true;

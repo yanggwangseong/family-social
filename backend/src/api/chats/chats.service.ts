@@ -32,28 +32,32 @@ export class ChatsService {
 		};
 	}
 
+	async getChatById(chatId: string): Promise<MemberBelongToChatsResDto> {
+		const chat = await this.chatsRepository.getChatById(chatId);
+		return this.enrichChatWithDetails(chat);
+	}
+
 	async getMemberBelongToChats(memberId: string): Promise<GetChatListResDto> {
 		const chats = await this.chatsRepository.getMemberBelongToChats(memberId);
-
-		const result = await Promise.all(
-			chats.map(async (item): Promise<MemberBelongToChatsResDto> => {
-				const [[chatMembers, joinMemberCount], recentMessage] =
-					await Promise.all([
-						this.memberChatRepository.getMembersAndCountByChat(item.chatId),
-						this.messagesRepository.getRecentMessageByChat(item.chatId),
-					]);
-
-				return {
-					...item,
-					chatMembers,
-					joinMemberCount,
-					recentMessage,
-				};
-			}),
+		const enrichedChats = await Promise.all(
+			chats.map((chat) => this.enrichChatWithDetails(chat)),
 		);
+		return { list: enrichedChats };
+	}
+
+	private async enrichChatWithDetails(
+		chat: MemberBelongToChatsResDto,
+	): Promise<MemberBelongToChatsResDto> {
+		const [[chatMembers, joinMemberCount], recentMessage] = await Promise.all([
+			this.memberChatRepository.getMembersAndCountByChat(chat.chatId),
+			this.messagesRepository.getRecentMessageByChat(chat.chatId),
+		]);
 
 		return {
-			list: result,
+			...chat,
+			chatMembers,
+			joinMemberCount,
+			recentMessage,
 		};
 	}
 
