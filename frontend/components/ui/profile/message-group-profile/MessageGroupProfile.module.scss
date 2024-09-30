@@ -1,0 +1,29 @@
+.container {
+	@apply flex gap-4;
+	.group_profile_container {
+		@apply w-[48px] h-[48px] relative border border-solid border-customDark;
+
+		.profile_container {
+			@apply w-[34px] h-[34px] absolute -bottom-1 -right-2 border border-solid border-customDark rounded-full;
+		}
+	}
+
+	.group_profile_description_container {
+		@apply flex flex-col gap-1;
+
+		.group_profile_description_top_container {
+			@apply flex gap-2;
+
+			.group_name {
+				@apply font-bold;
+			}
+			.join_member_count {
+				@apply text-customGray font-medium text-sm;
+			}
+		}
+
+		.group_description {
+			@apply text-customGray font-medium text-sm flex items-center;
+		}
+	}
+}

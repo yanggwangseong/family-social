@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
 import styles from './MessageToggleModal.module.scss';
-import Profile from '../../profile/Profile';
 import { IoCloseSharp, IoSend } from 'react-icons/io5';
 import { FaRegSmile } from 'react-icons/fa';
 import { useEmoji } from '@/hooks/useEmoji';
@@ -19,6 +18,8 @@ import { useQuery } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
 import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
+import MessageGroupProfile from '../../profile/message-group-profile/MessageGroupProfile';
+import Profile from '../../profile/Profile';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
@@ -120,16 +121,25 @@ const MessageToggleModal: FC = () => {
 				<div className={styles.container}>
 					<div className={styles.top_container}>
 						<div className={styles.top_wrap}>
-							<div>
-								<Profile />
-							</div>
-							<div>양우성</div>
-							<div
-								className={styles.close_btn}
-								onClick={handleCloseMessageModal}
-							>
-								<IoCloseSharp size={24} />
-							</div>
+							{chatData && chatData.chatType === 'GROUP' && chatData.group ? (
+								<MessageGroupProfile
+									chatGroup={chatData.group}
+									joinMemberCount={chatData.joinMemberCount}
+								/>
+							) : (
+								<>
+									<div>
+										<Profile />
+									</div>
+									<div>양우성</div>
+									<div
+										className={styles.close_btn}
+										onClick={handleCloseMessageModal}
+									>
+										<IoCloseSharp size={24} />
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 					<div className={styles.body_container}>
