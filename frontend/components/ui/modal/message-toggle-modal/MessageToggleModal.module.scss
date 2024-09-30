@@ -6,7 +6,7 @@
 		@apply z-20;
 
 		.top_wrap {
-			@apply h-16 px-4 py-3 flex shadow-md;
+			@apply h-16 px-4 py-3 flex shadow-md gap-4;
 
 			.close_btn {
 				@apply ml-auto cursor-pointer text-customDark;

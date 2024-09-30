@@ -58,6 +58,8 @@ export const TourAdditionalType = [
 	'additionalAccomodation',
 ] as const;
 
+export const ChatType = ['GROUP', 'DIRECT'] as const;
+
 /**
  * 보다 정확한 type추론을 위한 OmitStrict
  * @name OmitStrict
