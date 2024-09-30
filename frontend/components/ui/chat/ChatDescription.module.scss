@@ -15,10 +15,6 @@
 			.chat_join_member_count {
 				@apply flex ml-2 items-center text-xs text-customOrange;
 			}
-
-			.chat_date {
-				@apply ml-auto text-xs text-customGray;
-			}
 		}
 
 		.chat_message {
