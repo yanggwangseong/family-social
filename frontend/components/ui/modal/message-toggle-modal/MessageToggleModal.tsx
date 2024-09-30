@@ -87,6 +87,14 @@ const MessageToggleModal: FC = () => {
 		},
 	);
 
+	const { data: chatData } = useQuery(
+		['get-chat', layer.chatId],
+		async () => await ChatService.getChat(layer.chatId),
+		{
+			enabled: !!layer.chatId,
+		},
+	);
+
 	useEffect(() => {
 		if (isConnected && layer.chatId) {
 			socket.emit('enter-chat', {

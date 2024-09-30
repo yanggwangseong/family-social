@@ -1,4 +1,5 @@
 import {
+	ChatListResponse,
 	CreateChatRequest,
 	GetChatsResponse,
 } from '@/shared/interfaces/chat.interface';
@@ -15,6 +16,12 @@ export const ChatService = {
 		const { data } = await axiosAPI.post(`/chats`, {
 			memberIds,
 		} satisfies CreateChatRequest);
+
+		return data;
+	},
+
+	async getChat(chatId: string) {
+		const { data } = await axiosAPI.get<ChatListResponse>(`/chats/${chatId}`);
 
 		return data;
 	},

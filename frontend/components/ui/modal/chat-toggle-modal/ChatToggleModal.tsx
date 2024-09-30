@@ -30,6 +30,9 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 		async () => await ChatService.getChatList(),
 	);
 
+	if (isLoading) return <div>Loading</div>;
+	if (!data) return null;
+
 	const handleMessageModal = (chatId: string) => {
 		setLayer({
 			...MessageModalDefaultValue,
@@ -41,9 +44,6 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 	const handleCreateMessageModal = () => {
 		setCreateLayer(true);
 	};
-
-	if (isLoading) return <div>Loading</div>;
-	if (!data) return null;
 
 	return (
 		<motion.div
@@ -62,15 +62,17 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 			</motion.div>
 
 			<motion.div className={styles.item_container} variants={toggleVariant}>
-				{data.list.map((item, index) => (
-					<div
-						key={index}
-						className={styles.profile_container}
-						onClick={() => handleMessageModal(item.chatId)}
-					>
-						<Profile chat={item}></Profile>
-					</div>
-				))}
+				{data.list
+					.filter(item => item.recentMessage)
+					.map((item, index) => (
+						<div
+							key={index}
+							className={styles.profile_container}
+							onClick={() => handleMessageModal(item.chatId)}
+						>
+							<Profile chat={item}></Profile>
+						</div>
+					))}
 			</motion.div>
 		</motion.div>
 	);

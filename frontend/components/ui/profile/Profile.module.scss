@@ -1,10 +1,28 @@
 .profile_container {
 	@apply flex;
 
-	.profile_img_container {
-		@apply border border-solid border-customDark rounded-full mr-3 relative;
-		height: 40px;
+	.profile_img_parent_container {
+		@apply relative;
 		width: 40px;
+		height: 40px;
+
+		.profile_img_container {
+			@apply border border-solid border-customDark rounded-full mr-3 relative;
+			height: 40px;
+			width: 40px;
+		}
+
+		.chat_members_container {
+			@apply absolute;
+			bottom: -10px;
+			right: -10px;
+
+			.chat_member_profile {
+				@apply border border-solid border-customDark rounded-full absolute;
+				height: 20px;
+				width: 20px;
+			}
+		}
 	}
 
 	.profile_username {
@@ -28,7 +46,7 @@
 
 	// chat_container
 	.chat_container {
-		@apply flex-1;
+		@apply flex-1 ml-4;
 
 		.chat_card_container {
 			@apply flex flex-col justify-between relative;
@@ -38,6 +56,10 @@
 
 				.chat_username {
 					@apply text-base font-medium;
+				}
+
+				.chat_join_member_count {
+					@apply flex ml-2 items-center text-xs text-customOrange;
 				}
 
 				.chat_date {
