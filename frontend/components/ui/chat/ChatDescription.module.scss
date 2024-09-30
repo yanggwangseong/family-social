@@ -1,0 +1,28 @@
+// chat_container
+.chat_container {
+	@apply flex-1 ml-4;
+
+	.chat_card_container {
+		@apply flex flex-col justify-between relative;
+
+		.chat_top_container {
+			@apply flex;
+
+			.chat_username {
+				@apply text-base font-medium;
+			}
+
+			.chat_join_member_count {
+				@apply flex ml-2 items-center text-xs text-customOrange;
+			}
+
+			.chat_date {
+				@apply ml-auto text-xs text-customGray;
+			}
+		}
+
+		.chat_message {
+			@apply text-sm text-customGray;
+		}
+	}
+}
