@@ -6,8 +6,8 @@ import { Union, feedPublicSelectOptions } from 'types';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
 import MentionView from '../mention/mention-view/MentionView';
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
-import { format, parseISO } from 'date-fns';
-import { ko } from 'date-fns/locale';
+
+import ChatDescription from '../chat/ChatDescription';
 
 const Profile: FC<{
 	chat?: ChatListResponse;
@@ -28,6 +28,7 @@ const Profile: FC<{
 	isPublic,
 	onChageIsPublic,
 }) => {
+	// GroupAndMemberProfile
 	// 채팅 멤버 렌더링 함수
 	const renderChatMembers = () => {
 		if (!chat || chat.chatMembers.length < 1) {
@@ -136,6 +137,7 @@ const Profile: FC<{
 			</div>
 		);
 	};
+
 	return (
 		<div className={styles.profile_container}>
 			<div className={styles.profile_img_parent_container}>
@@ -168,28 +170,7 @@ const Profile: FC<{
 				)}
 				{role && <div className={styles.profile_role}>관리자</div>}
 			</div>
-			{chat && (
-				<div className={styles.chat_container}>
-					<div className={styles.chat_card_container}>
-						<div className={styles.chat_top_container}>
-							<div className={styles.chat_username}>
-								{chat.recentMessage.memberName}
-							</div>
-							<div className={styles.chat_join_member_count}>
-								{chat.joinMemberCount > 2 && chat.joinMemberCount}
-							</div>
-							<div className={styles.chat_date}>
-								{format(parseISO(chat.recentMessage.createdAt), 'a h:mm', {
-									locale: ko,
-								})}
-							</div>
-						</div>
-						<div className={styles.chat_message}>
-							{chat.recentMessage.message}
-						</div>
-					</div>
-				</div>
-			)}
+			{chat && <ChatDescription chat={chat} />}
 		</div>
 	);
 };

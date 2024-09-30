@@ -2,10 +2,12 @@ import React, { FC } from 'react';
 import styles from './GroupAndMemberProfile.module.scss';
 import Image from 'next/image';
 import { GroupAndMemberProfileProps } from './group-and-member-profile.interface';
+import ChatDescription from '../../chat/ChatDescription';
 
 const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 	groupName,
 	username,
+	chat,
 }) => {
 	return (
 		<div className={styles.container}>
@@ -26,10 +28,14 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 					</div>
 				</div>
 			</div>
-			<div className={styles.description_container}>
-				<div className={styles.group_name}>{groupName}</div>
-				<div className={styles.member_name}>{username}</div>
-			</div>
+			{chat ? (
+				<ChatDescription chat={chat} />
+			) : (
+				<div className={styles.description_container}>
+					<div className={styles.group_name}>{groupName}</div>
+					<div className={styles.member_name}>{username}</div>
+				</div>
+			)}
 		</div>
 	);
 };
