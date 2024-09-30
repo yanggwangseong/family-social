@@ -19,7 +19,7 @@ import { MessageService } from '@/services/message/message.service';
 import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
 import MessageGroupProfile from '../../profile/message-group-profile/MessageGroupProfile';
-import Profile from '../../profile/Profile';
+import DirectChatMembers from '../../chat/direct-chat-members/DirectChatMembers';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
@@ -128,18 +128,20 @@ const MessageToggleModal: FC = () => {
 								/>
 							) : (
 								<>
-									<div>
-										<Profile />
-									</div>
-									<div>양우성</div>
-									<div
-										className={styles.close_btn}
-										onClick={handleCloseMessageModal}
-									>
-										<IoCloseSharp size={24} />
-									</div>
+									<DirectChatMembers chat={chatData} />
+									{chatData?.chatMembers
+										.slice(0, 4)
+										.map(member => member.member.username)
+										.join(', ')}
+									{chatData && chatData.chatMembers.length > 4 && '...'}
 								</>
 							)}
+							<div
+								className={styles.close_btn}
+								onClick={handleCloseMessageModal}
+							>
+								<IoCloseSharp size={24} />
+							</div>
 						</div>
 					</div>
 					<div className={styles.body_container}>

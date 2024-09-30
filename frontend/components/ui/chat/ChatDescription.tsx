@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styles from './ChatDescription.module.scss';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
 import ChatCreateDate from './chat-create-date/ChatCreateDate';
+import ChatJoinMemberCount from './chat-join-member-count/ChatJoinMemberCount';
 
 const ChatDescription: FC<{ chat: ChatListResponse }> = ({ chat }) => {
 	return (
@@ -11,9 +12,11 @@ const ChatDescription: FC<{ chat: ChatListResponse }> = ({ chat }) => {
 					<div className={styles.chat_username}>
 						{chat.recentMessage.memberName}
 					</div>
-					<div className={styles.chat_join_member_count}>
-						{chat.joinMemberCount > 2 && chat.joinMemberCount}
-					</div>
+					{/* membercount */}
+					{chat.joinMemberCount > 2 && (
+						<ChatJoinMemberCount joinMemberCount={chat.joinMemberCount} />
+					)}
+
 					<ChatCreateDate createdAt={chat.recentMessage.createdAt} />
 				</div>
 				<div className={styles.chat_message}>{chat.recentMessage.message}</div>

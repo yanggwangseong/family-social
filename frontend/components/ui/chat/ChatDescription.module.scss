@@ -6,14 +6,10 @@
 		@apply flex flex-col justify-between relative;
 
 		.chat_top_container {
-			@apply flex;
+			@apply flex gap-2;
 
 			.chat_username {
 				@apply text-base font-medium;
-			}
-
-			.chat_join_member_count {
-				@apply flex ml-2 items-center text-xs text-customOrange;
 			}
 		}
 

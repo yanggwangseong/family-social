@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styles from './MessageGroupProfile.module.scss';
 import Image from 'next/image';
 import { GroupProfileResponse } from '@/shared/interfaces/group.interface';
+import ChatJoinMemberCount from '../../chat/chat-join-member-count/ChatJoinMemberCount';
 
 const MessageGroupProfile: FC<{
 	chatGroup: GroupProfileResponse;
@@ -19,7 +20,8 @@ const MessageGroupProfile: FC<{
 			<div className={styles.group_profile_description_container}>
 				<div className={styles.group_profile_description_top_container}>
 					<div className={styles.group_name}>{chatGroup.groupName}</div>
-					<div className={styles.join_member_count}>{joinMemberCount}</div>
+
+					<ChatJoinMemberCount joinMemberCount={joinMemberCount} />
 				</div>
 				<div className={styles.group_description}>
 					{chatGroup.groupDescription}
