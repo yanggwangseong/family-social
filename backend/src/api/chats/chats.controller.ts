@@ -21,6 +21,7 @@ import {
 } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { CreateChatGroupMembershipGuard } from '@/common/guards/create-chat-group-membership.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -87,12 +88,25 @@ export class ChatsController {
 	 * @returns 생성된 채팅방 아이디
 	 */
 	@PostChatSwagger()
+	@UseGuards(CreateChatGroupMembershipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async postChat(
 		@Body() dto: ChatCreateReqDto,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
+		/**
+		 * 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
+		 */
+		const existingChat = await this.chatsService.getExistingChat(
+			dto.chatType,
+			dto.memberIds,
+		);
+
+		if (existingChat) {
+			return existingChat.id;
+		}
+
 		return await this.chatsService.createChat(dto, qr);
 	}
 
