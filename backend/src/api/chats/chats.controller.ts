@@ -93,8 +93,11 @@ export class ChatsController {
 	@Post()
 	async postChat(
 		@Body() dto: ChatCreateReqDto,
+		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
+		dto.memberIds = this.mergeMemberIds(dto.memberIds, sub);
+
 		/**
 		 * 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
 		 */
@@ -132,5 +135,9 @@ export class ChatsController {
 		@CurrentUser('sub') sub: string,
 	) {
 		return await this.chatsService.getMessagesByChat(chatId, sub);
+	}
+
+	private mergeMemberIds(memberIds: string[], sub: string) {
+		return [...memberIds, sub];
 	}
 }

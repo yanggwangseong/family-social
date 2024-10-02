@@ -63,9 +63,9 @@ export class ChatsGateway
 	handleDisconnect() {}
 
 	handleConnection(socket: Socket & { sub: string }) {
-		//const headers = socket.handshake.headers;
-
-		//const rawToken = headers['authorization']!;
+		// postman 테스트 시 사용
+		// const headers = socket.handshake.headers;
+		// const rawToken = headers['authorization']!;
 
 		const rawToken = socket.handshake.auth['authorization'];
 
@@ -74,9 +74,12 @@ export class ChatsGateway
 		}
 
 		try {
-			//const token = this.authService.extractTokenFromHeader(rawToken, true);
+			// postman 테스트 시 사용
+			// const token = this.authService.extractTokenFromHeader(rawToken, true);
+			// const payload = this.authService.verifyToken(token);
 
 			const payload = this.authService.verifyToken(rawToken);
+
 			socket.sub = payload.sub;
 
 			return true;

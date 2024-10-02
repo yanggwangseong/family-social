@@ -19,7 +19,7 @@ export class ChatCreateReqDto {
 		example: ['123e4567-e89b-12d3-a456-426614174000'],
 	})
 	@IsUUID(4, { each: true, message: uuidValidationMessage })
-	@ArrayMinSize(2, { message: arrayMinSizeValidationMessage })
+	@ArrayMinSize(1, { message: arrayMinSizeValidationMessage })
 	@ArrayMaxSize(20, { message: arrayMaxSizeValidationMessage })
 	memberIds!: string[];
 
