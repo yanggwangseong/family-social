@@ -54,6 +54,7 @@ const CreateMessageModal: FC = () => {
 			chatId: '',
 			isMessageModal: true,
 			isNewMessage: true,
+			memberIds: invitedMembers.map(item => item.id),
 		});
 	};
 

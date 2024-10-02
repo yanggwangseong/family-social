@@ -14,7 +14,7 @@ import {
 	MessageModalDefaultValue,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
 import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
@@ -23,6 +23,8 @@ import DirectChatMembers from '../../chat/direct-chat-members/DirectChatMembers'
 import { DEFAULT_CHAT_TYPE } from '@/constants/index';
 
 const MessageToggleModal: FC = () => {
+	const queryClient = useQueryClient();
+
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
@@ -61,23 +63,27 @@ const MessageToggleModal: FC = () => {
 			 * 여기서는 무조건 다이렉트 채팅 생성
 			 */
 			const chat = await ChatService.postChat(
-				[
-					'410b7202-660a-4423-a6c3-6377857241cc',
-					'83491506-9047-4cfc-9dec-9f1e2016ae13',
-				],
+				layer.memberIds,
 				DEFAULT_CHAT_TYPE,
 			);
 
+			/**
+			 * 새로운 채팅방 생성이기 때문에 isNewMessage를 false로 변경
+			 */
 			setLayer({
 				isMessageModal: true,
 				isNewMessage: false,
-				chatId: chat.id,
+				chatId: chat,
+				memberIds: layer.memberIds,
 			});
 
 			socket.emit('send-message', {
 				message: data.message,
-				chatId: chat.id,
+				chatId: chat,
 			});
+
+			/** get-chat-list 캐시 무효화  */
+			await queryClient.invalidateQueries('get-chat-list');
 		} else {
 			socket.emit('send-message', {
 				message: data.message,
