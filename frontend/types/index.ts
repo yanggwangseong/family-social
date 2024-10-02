@@ -18,6 +18,7 @@ export const LayerMode = {
 	successLayerModal: 'successLayerModal',
 	createEvent: 'createEvent',
 	groupEventDeleteConfirm: 'groupEventDeleteConfirm',
+	selectGroupForChat: 'selectGroupForChat',
 } as const;
 
 export const ToggleModalDerection = ['left', 'right'] as const;

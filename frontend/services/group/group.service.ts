@@ -20,6 +20,8 @@ export const GroupService = {
 	},
 
 	async getMemberBelongToGroups(): Promise<MemberBelongToGroupsResponse[]> {
+		// 그룹 채팅방 만들때 그룹 채팅방 생성 권한인 main인지 확인하고 main일때만 생성 가능
+		// 그리고 이미 만든 그룹 채팅방은 제외해야 할까?
 		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(
 			'/groups',
 		);

@@ -107,6 +107,9 @@ export class MessagesRepository extends Repository<MessageEntity> {
 				relations: {
 					member: true,
 				},
+				order: {
+					createdAt: 'ASC',
+				},
 			})
 			.then((data) => {
 				return data.map((value) => {

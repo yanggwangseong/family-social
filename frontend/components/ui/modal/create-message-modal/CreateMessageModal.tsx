@@ -17,6 +17,8 @@ import { SearchService } from '@/services/search/search.service';
 import NotFoundSearch from '../../not-found/search/NotFoundSearch';
 import { NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
 import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { LayerMode } from 'types';
 
 const CreateMessageModal: FC = () => {
 	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
@@ -26,6 +28,9 @@ const CreateMessageModal: FC = () => {
 	const [invitedMembers, setInvitedMembers] = useState<SearchMemberResponse[]>(
 		[],
 	);
+
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const handleAddMember = (member: SearchMemberResponse) => {
 		setInvitedMembers(prev => [...prev, member]);
@@ -62,6 +67,14 @@ const CreateMessageModal: FC = () => {
 		setInvitedMembers(prev => prev.filter(item => item.id !== member.id));
 	};
 
+	const handleCreateGroupChat = () => {
+		setCreateLayer(false);
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '그룹 채팅방 생성',
+			layer: LayerMode.selectGroupForChat,
+		});
+	};
 	return (
 		<>
 			{createLayer && (
@@ -108,7 +121,10 @@ const CreateMessageModal: FC = () => {
 
 						{!isSuccess && (
 							<>
-								<div className={styles.group_chat_container}>
+								<div
+									className={styles.group_chat_container}
+									onClick={handleCreateGroupChat}
+								>
 									<div className={styles.group_chat_icon_container}>
 										<MdGroups size={22} />
 									</div>
