@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsUUID, ValidateIf } from 'class-validator';
+import {
+	ArrayMaxSize,
+	ArrayMinSize,
+	IsIn,
+	IsUUID,
+	ValidateIf,
+} from 'class-validator';
 
+import { arrayMaxSizeValidationMessage } from '@/common/validation-message/array-max-size-validation';
+import { arrayMinSizeValidationMessage } from '@/common/validation-message/array-min-size-validation-message';
 import { isInValidationMessage } from '@/common/validation-message/is-in-validation-message';
 import { uuidValidationMessage } from '@/common/validation-message/uuid-validation-message';
 import { ChatType, Union } from '@/types';
@@ -11,6 +19,8 @@ export class ChatCreateReqDto {
 		example: ['123e4567-e89b-12d3-a456-426614174000'],
 	})
 	@IsUUID(4, { each: true, message: uuidValidationMessage })
+	@ArrayMinSize(2, { message: arrayMinSizeValidationMessage })
+	@ArrayMaxSize(20, { message: arrayMaxSizeValidationMessage })
 	memberIds!: string[];
 
 	@ApiProperty({

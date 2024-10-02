@@ -108,11 +108,14 @@ export class ChatsRepository extends Repository<ChatEntity> {
 		return await this.createQueryBuilder('chat')
 			.innerJoin('chat.enteredByChats', 'memberChat')
 			.where('chat.chatType = :chatType', { chatType })
-			.andWhere('memberChat.memberId IN (:...memberIds)', { memberIds })
 			.groupBy('chat.id')
 			.having('COUNT(DISTINCT memberChat.memberId) = :memberCount', {
 				memberCount: memberIds.length,
 			})
+			.andHaving(
+				'COUNT(DISTINCT CASE WHEN memberChat.memberId IN (:...memberIds) THEN 1 END) = :memberCount',
+				{ memberIds, memberCount: memberIds.length },
+			)
 			.getOne();
 	}
 
