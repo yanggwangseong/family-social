@@ -4,13 +4,49 @@ import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
+import {
+	messageModalAtom,
+	MessageModalAtomType,
+} from '@/atoms/messageModalAtom';
+import { useRecoilState } from 'recoil';
+import { createMessageModalAtom } from '@/atoms/createMessageModalAtom';
+import { DEFAULT_GROUP_CHAT_TYPE } from '@/constants/index';
+import { useQuery } from 'react-query';
+import { GroupService } from '@/services/group/group.service';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const SelectGroupForChat: FC = () => {
-	// const [layer, setLayer] =
-	// 	useRecoilState<MessageModalAtomType>(messageModalAtom);
+	const [isShowing, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
+	const [createLayer, setCreateLayer] = useRecoilState<boolean>(
+		createMessageModalAtom,
+	);
+
+	const [layer, setLayer] =
+		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
-		useMemberBelongToGroups();
+		useMemberBelongToGroups({ forChatCreation: true });
+
+	const { data: member, isLoading: memberLoading } = useQuery(
+		['get-members', isSelecteGroup],
+		async () => await GroupService.getMembersBelongToGroup(isSelecteGroup),
+		{
+			enabled: !!isSelecteGroup,
+		},
+	);
+
+	const handleCreateGroupChat = () => {
+		setLayer({
+			chatId: '',
+			isMessageModal: true,
+			isNewMessage: true,
+			memberIds: member ? member.map(item => item.member.id) : [],
+			groupId: isSelecteGroup,
+			chatType: DEFAULT_GROUP_CHAT_TYPE,
+		});
+		setIsShowing(false);
+	};
 
 	return (
 		<LayerModalVariantWrapper>
@@ -23,11 +59,7 @@ const SelectGroupForChat: FC = () => {
 					data.map(group => (
 						<div className={styles.group_card_wrap} key={group.id}>
 							<GroupProfile
-								group={{
-									id: group.group.id,
-									groupDescription: group.group.groupDescription,
-									groupName: group.group.groupName,
-								}}
+								group={group.group}
 								onSelectedGroup={handleSelectedGroup}
 								isSelecteGroup={isSelecteGroup}
 							/>
@@ -43,6 +75,7 @@ const SelectGroupForChat: FC = () => {
                     rounded-full p-[10px]
                     w-full hover:bg-orange-500
                     "
+					onClick={handleCreateGroupChat}
 				>
 					채팅방 만들기
 				</CustomButton>

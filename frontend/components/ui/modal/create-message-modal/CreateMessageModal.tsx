@@ -15,7 +15,7 @@ import {
 } from '@/atoms/messageModalAtom';
 import { SearchService } from '@/services/search/search.service';
 import NotFoundSearch from '../../not-found/search/NotFoundSearch';
-import { NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
+import { DEFAULT_CHAT_TYPE, NOT_FOUND_MEMBER_MESSAGE } from '@/constants/index';
 import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
@@ -60,6 +60,7 @@ const CreateMessageModal: FC = () => {
 			isMessageModal: true,
 			isNewMessage: true,
 			memberIds: invitedMembers.map(item => item.id),
+			chatType: DEFAULT_CHAT_TYPE,
 		});
 	};
 

@@ -60,11 +60,12 @@ const MessageToggleModal: FC = () => {
 			/**
 			 * 새로운 채팅방 생성시
 			 * 이미 존재하는 채팅방이라면 chatId를 반환 받는다.
-			 * 여기서는 무조건 다이렉트 채팅 생성
+			 * GROUP인지 DIRECT인지에 따라 요청
 			 */
 			const chat = await ChatService.postChat(
 				layer.memberIds,
-				DEFAULT_CHAT_TYPE,
+				layer.chatType,
+				layer.groupId,
 			);
 
 			/**
@@ -75,6 +76,7 @@ const MessageToggleModal: FC = () => {
 				isNewMessage: false,
 				chatId: chat,
 				memberIds: layer.memberIds,
+				chatType: layer.chatType,
 			});
 
 			socket.emit('send-message', {
