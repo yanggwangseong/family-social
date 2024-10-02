@@ -1,7 +1,7 @@
-import { GroupResponse } from '@/shared/interfaces/group.interface';
+import { GroupProfileResponse } from '@/shared/interfaces/group.interface';
 
 export interface GroupProfileProps {
-	group: GroupResponse;
+	group: GroupProfileResponse;
 	onSelectedGroup?: (groupId: string) => void;
 	isSelecteGroup?: string;
 }

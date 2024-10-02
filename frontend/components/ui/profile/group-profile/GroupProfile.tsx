@@ -22,7 +22,7 @@ const GroupProfile: FC<GroupProfileProps> = ({
 					<Image
 						width={40}
 						height={40}
-						src={'/images/banner/sm/group-base-sm.png'}
+						src={group.groupCoverImage ?? '/images/banner/sm/group-base-sm.png'}
 						alt="img"
 					></Image>
 				</div>
