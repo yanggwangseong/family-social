@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 
 import { MAIN_ROLE } from '@/constants/string-constants';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
@@ -60,13 +60,13 @@ export class FamsRepository extends Repository<FamEntity> {
 	}
 
 	async getMemberListBelongToGroup({
-		groupId,
 		take,
 		skip,
+		overrideWhere,
 	}: {
-		groupId: string;
 		take: number;
 		skip: number;
+		overrideWhere: FindOptionsWhere<FamEntity>;
 	}): Promise<GroupMembersResDto[]> {
 		return await this.repository.find({
 			select: {
@@ -81,8 +81,7 @@ export class FamsRepository extends Repository<FamEntity> {
 				},
 			},
 			where: {
-				groupId,
-				invitationAccepted: true,
+				...overrideWhere,
 			},
 			relations: {
 				member: true,

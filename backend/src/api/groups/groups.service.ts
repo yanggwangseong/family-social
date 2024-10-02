@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { QueryRunner } from 'typeorm';
+import { Not, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -42,16 +42,32 @@ export class GroupsService {
 		memberId,
 		page,
 		limit,
+		excludeSelf,
 	}: IMembersBelongToGroupArgs): Promise<GroupMembersResDto[]> {
 		// 해당 그룹에 속한지 체크
 		await this.checkRoleOfGroupExists(groupId, memberId);
 
 		const { take, skip } = getOffset({ page, limit });
 
+		if (excludeSelf) {
+			return await this.famsRepository.getMemberListBelongToGroup({
+				take,
+				skip,
+				overrideWhere: {
+					groupId,
+					member: {
+						id: Not(memberId),
+					},
+				},
+			});
+		}
+
 		return await this.famsRepository.getMemberListBelongToGroup({
-			groupId,
 			take,
 			skip,
+			overrideWhere: {
+				groupId,
+			},
 		});
 	}
 

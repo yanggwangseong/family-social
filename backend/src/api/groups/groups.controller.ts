@@ -279,14 +279,28 @@ export class GroupsController {
 			new ParseIntPipe({ exceptionFactory: () => parseIntPipeMessage('page') }),
 		)
 		page: number,
+		@Query(
+			'limit',
+			new DefaultValuePipe(10),
+			new ParseIntPipe({
+				exceptionFactory: () => parseIntPipeMessage('limit'),
+			}),
+		)
+		limit: number,
+		@Query(
+			'excludeSelf',
+			new DefaultValuePipe(false),
+			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
+		)
+		excludeSelf: boolean,
 		@CurrentUser('sub') sub: string,
 	) {
-		const limit = 10;
 		return await this.groupsService.getMemberListBelongToGroup({
 			groupId,
 			memberId: sub,
 			page,
 			limit,
+			excludeSelf,
 		});
 	}
 
