@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
+import { MAIN_ROLE } from '@/constants/string-constants';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamEntity, roleType } from '@/models/entities/fam.entity';
@@ -91,6 +92,39 @@ export class FamsRepository extends Repository<FamEntity> {
 		});
 	}
 
+	async getMemberBelongToGroupsForChatCreation(
+		memberId: string,
+	): Promise<BelongToGroupResDto[]> {
+		const groups = await this.createQueryBuilder('fam')
+			.select([
+				'fam.id as id',
+				'fam.invitationAccepted as invitationAccepted',
+				'group.id as "groupId"',
+				'group.groupName as "groupName"',
+				'group.groupDescription as "groupDescription"',
+				'group.groupCoverImage as "groupCoverImage"',
+			])
+			.innerJoin('fam.group', 'group')
+			.leftJoin('group.chats', 'chat')
+			.where('fam.memberId = :memberId', { memberId })
+			.andWhere('fam.role = :role', { role: MAIN_ROLE })
+			.andWhere('chat.id IS NULL')
+			.getRawMany();
+
+		return groups.map((item) => {
+			return {
+				id: item.id,
+				invitationAccepted: item.invitationAccepted,
+				group: {
+					id: item.groupId,
+					groupName: item.groupName,
+					groupDescription: item.groupDescription,
+					groupCoverImage: item.groupCoverImage,
+				},
+			};
+		});
+	}
+
 	async getMemberBelongToGroups(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {
@@ -102,6 +136,7 @@ export class FamsRepository extends Repository<FamEntity> {
 					id: true,
 					groupName: true,
 					groupDescription: true,
+					groupCoverImage: true,
 				},
 			},
 			where: {

@@ -57,7 +57,14 @@ export class GroupsService {
 
 	async getMemberBelongToGroups(
 		memberId: string,
+		forChatCreation: boolean,
 	): Promise<BelongToGroupResDto[]> {
+		if (forChatCreation) {
+			return await this.famsRepository.getMemberBelongToGroupsForChatCreation(
+				memberId,
+			);
+		}
+
 		return await this.famsRepository.getMemberBelongToGroups(memberId);
 	}
 

@@ -5,6 +5,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseBoolPipe,
 	ParseIntPipe,
 	ParseUUIDPipe,
 	Post,
@@ -62,6 +63,7 @@ import { PaginationInterceptor } from '@/common/interceptors/pagination.intercep
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { parseBooleanPipeMessage } from '@/common/pipe-message/parse-boolean-pipe-message';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
 import { Pagination } from '@/common/strategies/context/pagination';
@@ -122,8 +124,19 @@ export class GroupsController {
 	 */
 	@GetMemberBelongToGroupsSwagger()
 	@Get()
-	async getMemberBelongToGroups(@CurrentUser('sub') sub: string) {
-		return await this.groupsService.getMemberBelongToGroups(sub);
+	async getMemberBelongToGroups(
+		@CurrentUser('sub') sub: string,
+		@Query(
+			'forChatCreation',
+			new DefaultValuePipe(false),
+			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
+		)
+		forChatCreation: boolean,
+	) {
+		return await this.groupsService.getMemberBelongToGroups(
+			sub,
+			forChatCreation,
+		);
 	}
 
 	/**
