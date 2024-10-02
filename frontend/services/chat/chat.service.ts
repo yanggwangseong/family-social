@@ -4,6 +4,7 @@ import {
 	GetChatsResponse,
 } from '@/shared/interfaces/chat.interface';
 import { axiosAPI } from 'api/axios';
+import { ChatType, Union } from 'types';
 
 export const ChatService = {
 	async getChatList() {
@@ -12,9 +13,15 @@ export const ChatService = {
 		return data;
 	},
 
-	async postChat(memberIds: string[]) {
+	async postChat(
+		memberIds: string[],
+		chatType: Union<typeof ChatType>,
+		groupId?: string,
+	) {
 		const { data } = await axiosAPI.post(`/chats`, {
 			memberIds,
+			chatType,
+			groupId,
 		} satisfies CreateChatRequest);
 
 		return data;

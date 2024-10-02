@@ -33,4 +33,6 @@ export interface RecentMessageResponse {
 
 export interface CreateChatRequest {
 	memberIds: string[];
+	chatType: Union<typeof ChatType>;
+	groupId?: string;
 }

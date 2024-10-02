@@ -2,7 +2,11 @@
 	@apply flex;
 
 	.profile_username {
-		@apply font-bold;
+		@apply font-bold ml-4;
+	}
+
+	.direct_chat {
+		@apply ml-auto flex items-center justify-center;
 	}
 
 	.profile_email {
@@ -16,6 +20,7 @@
 	.profile_comment_username {
 		@apply text-sm font-medium ml-4;
 	}
+
 	.profile_comment_contents {
 		@apply text-sm mt-3 ml-4 whitespace-pre-wrap break-words break-all;
 	}

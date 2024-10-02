@@ -20,6 +20,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
 import MessageGroupProfile from '../../profile/message-group-profile/MessageGroupProfile';
 import DirectChatMembers from '../../chat/direct-chat-members/DirectChatMembers';
+import { DEFAULT_CHAT_TYPE } from '@/constants/index';
 
 const MessageToggleModal: FC = () => {
 	const [layer, setLayer] =
@@ -54,10 +55,18 @@ const MessageToggleModal: FC = () => {
 
 	const onSubmit: SubmitHandler<{ message: string }> = async data => {
 		if (layer.isNewMessage) {
-			const chat = await ChatService.postChat([
-				'410b7202-660a-4423-a6c3-6377857241cc',
-				'83491506-9047-4cfc-9dec-9f1e2016ae13',
-			]);
+			/**
+			 * 새로운 채팅방 생성시
+			 * 이미 존재하는 채팅방이라면 chatId를 반환 받는다.
+			 * 여기서는 무조건 다이렉트 채팅 생성
+			 */
+			const chat = await ChatService.postChat(
+				[
+					'410b7202-660a-4423-a6c3-6377857241cc',
+					'83491506-9047-4cfc-9dec-9f1e2016ae13',
+				],
+				DEFAULT_CHAT_TYPE,
+			);
 
 			setLayer({
 				isMessageModal: true,
