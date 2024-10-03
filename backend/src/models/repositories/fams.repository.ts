@@ -102,12 +102,23 @@ export class FamsRepository extends Repository<FamEntity> {
 				'group.groupName as "groupName"',
 				'group.groupDescription as "groupDescription"',
 				'group.groupCoverImage as "groupCoverImage"',
+				'COUNT(DISTINCT otherFam.id) as memberCount',
 			])
 			.innerJoin('fam.group', 'group')
 			.leftJoin('group.chats', 'chat')
+			.leftJoin(
+				'group.fams',
+				'otherFam',
+				'otherFam.invitationAccepted = :accepted',
+				{ accepted: true },
+			)
 			.where('fam.memberId = :memberId', { memberId })
 			.andWhere('fam.role = :role', { role: MAIN_ROLE })
+			.andWhere('fam.invitationAccepted = :accepted', { accepted: true })
 			.andWhere('chat.id IS NULL')
+			.groupBy('fam.id')
+			.addGroupBy('group.id')
+			.having('COUNT(DISTINCT otherFam.id) > 1')
 			.getRawMany();
 
 		return groups.map((item) => {
