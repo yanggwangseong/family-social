@@ -96,8 +96,9 @@ export class FamsRepository extends Repository<FamEntity> {
 	): Promise<BelongToGroupResDto[]> {
 		const groups = await this.createQueryBuilder('fam')
 			.select([
-				'fam.id as id',
-				'fam.invitationAccepted as invitationAccepted',
+				'fam.id as "id"',
+				'fam.invitationAccepted as "invitationAccepted"',
+				'fam.role as "role"',
 				'group.id as "groupId"',
 				'group.groupName as "groupName"',
 				'group.groupDescription as "groupDescription"',
@@ -107,18 +108,17 @@ export class FamsRepository extends Repository<FamEntity> {
 			.innerJoin('fam.group', 'group')
 			.leftJoin('group.chats', 'chat')
 			.leftJoin(
-				'group.fams',
+				'group.groupByMemberGroups',
 				'otherFam',
 				'otherFam.invitationAccepted = :accepted',
 				{ accepted: true },
 			)
 			.where('fam.memberId = :memberId', { memberId })
-			.andWhere('fam.role = :role', { role: MAIN_ROLE })
-			.andWhere('fam.invitationAccepted = :accepted', { accepted: true })
 			.andWhere('chat.id IS NULL')
 			.groupBy('fam.id')
 			.addGroupBy('group.id')
 			.having('COUNT(DISTINCT otherFam.id) > 1')
+			.andHaving('fam.role = :role', { role: MAIN_ROLE })
 			.getRawMany();
 
 		return groups.map((item) => {
