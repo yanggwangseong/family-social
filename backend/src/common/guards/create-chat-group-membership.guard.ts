@@ -20,12 +20,14 @@ export class CreateChatGroupMembershipGuard implements CanActivate {
 		 */
 		if (chatType === 'DIRECT') return true;
 
-		const memberIdsSet = new Set(memberIds);
-		const isMember = memberIdsSet.has(sub);
+		const isMember = await this.groupsService.memberShipOfGroupExists(
+			groupId,
+			sub,
+		);
 
 		this.checkGroupMembership(isMember, sub);
 
-		for (const memberId of memberIdsSet) {
+		for (const memberId of memberIds) {
 			const isMember = await this.groupsService.memberShipOfGroupExists(
 				groupId,
 				memberId,

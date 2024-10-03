@@ -30,7 +30,8 @@ const SelectGroupForChat: FC = () => {
 
 	const { data: member, isLoading: memberLoading } = useQuery(
 		['get-members', isSelecteGroup],
-		async () => await GroupService.getMembersBelongToGroup(isSelecteGroup),
+		async () =>
+			await GroupService.getMembersBelongToGroup(isSelecteGroup, true),
 		{
 			enabled: !!isSelecteGroup,
 		},

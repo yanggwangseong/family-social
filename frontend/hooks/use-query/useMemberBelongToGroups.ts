@@ -22,9 +22,7 @@ export const useMemberBelongToGroups = (
 ) => {
 	const { updateGroupId, forChatCreation } = options || {};
 
-	const [isSelecteGroup, setIsSelectGroup] = useState(
-		updateGroupId ? updateGroupId : '',
-	);
+	const [isSelecteGroup, setIsSelectGroup] = useState(updateGroupId || '');
 
 	const handleSelectedGroup = (groupId: string) => {
 		setIsSelectGroup(groupId);

@@ -20,7 +20,6 @@ import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
 import MessageGroupProfile from '../../profile/message-group-profile/MessageGroupProfile';
 import DirectChatMembers from '../../chat/direct-chat-members/DirectChatMembers';
-import { DEFAULT_CHAT_TYPE } from '@/constants/index';
 
 const MessageToggleModal: FC = () => {
 	const queryClient = useQueryClient();
@@ -61,6 +60,8 @@ const MessageToggleModal: FC = () => {
 			 * 새로운 채팅방 생성시
 			 * 이미 존재하는 채팅방이라면 chatId를 반환 받는다.
 			 * GROUP인지 DIRECT인지에 따라 요청
+			 * 그룹 채팅방 생성 또는 다이렉트 채팅방 생성시에 본인의 memberIds는 제외하고
+			 * 서버에서 authentication된 사용자의 memberIds를 받아온다.
 			 */
 			const chat = await ChatService.postChat(
 				layer.memberIds,

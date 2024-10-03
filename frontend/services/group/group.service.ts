@@ -30,10 +30,12 @@ export const GroupService = {
 		return data;
 	},
 
-	async getMembersBelongToGroup(groupId: string) {
-		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(
-			`groups/${groupId}/members`,
-		);
+	async getMembersBelongToGroup(groupId: string, excludeSelf?: boolean) {
+		let url = `/groups/${groupId}/members`;
+		if (excludeSelf) {
+			url += '?excludeSelf=true';
+		}
+		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(url);
 		return data;
 	},
 

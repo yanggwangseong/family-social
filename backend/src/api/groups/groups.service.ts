@@ -58,6 +58,7 @@ export class GroupsService {
 					member: {
 						id: Not(memberId),
 					},
+					invitationAccepted: true,
 				},
 			});
 		}
@@ -67,6 +68,7 @@ export class GroupsService {
 			skip,
 			overrideWhere: {
 				groupId,
+				invitationAccepted: true,
 			},
 		});
 	}
