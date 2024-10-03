@@ -76,6 +76,7 @@ const CreateMessageModal: FC = () => {
 			layer: LayerMode.selectGroupForChat,
 		});
 	};
+
 	return (
 		<>
 			{createLayer && (

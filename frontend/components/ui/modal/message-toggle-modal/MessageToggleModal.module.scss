@@ -19,6 +19,10 @@
 
 		.message_container {
 			@apply flex-grow overflow-y-auto p-4 flex flex-col gap-8 h-[283px];
+
+			.title {
+				@apply text-center text-customDark text-sm;
+			}
 		}
 	}
 

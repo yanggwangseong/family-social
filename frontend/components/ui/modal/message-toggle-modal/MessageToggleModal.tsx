@@ -171,6 +171,15 @@ const MessageToggleModal: FC = () => {
 									message={item}
 								></MessageBox>
 							))}
+							{layer.isNewMessage && (
+								<>
+									<div className={styles.title}>
+										{layer.chatType === 'GROUP'
+											? '그룹 채팅 새메지를 입력하면 방이 생성됩니다'
+											: '개인 채팅 새메지를 입력하면 방이 생성됩니다'}
+									</div>
+								</>
+							)}
 						</div>
 
 						<div className={styles.bottom_container}>
