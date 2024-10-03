@@ -123,17 +123,24 @@ export class GroupsService {
 		return await this.groupsRepository.updateGroupCoverImage(groupId, imageUrl);
 	}
 
+	async checkMainRole(groupId: string, memberId: string): Promise<void> {
+		const role = await this.checkRoleOfGroupExists(groupId, memberId);
+		// 해당 그룹의 권한이 main인지 체크
+		if (role.role !== MAIN_ROLE) {
+			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
+		}
+	}
+
 	async deleteGroup(
 		deleteGroupArgs: IDeleteGroupArgs,
 		qr?: QueryRunner,
 	): Promise<void> {
 		const { groupId, memberId } = deleteGroupArgs;
 
-		const role = await this.checkRoleOfGroupExists(groupId, memberId);
-		// 해당 그룹의 권한이 main인지 체크
-		if (role.role !== MAIN_ROLE) {
-			throw ForBiddenException(ERROR_NO_PERMISSION_TO_DELETE_GROUP);
-		}
+		/**
+		 *  그룹 권한 main인지 체크
+		 */
+		await this.checkMainRole(groupId, memberId);
 
 		const count = await this.famsRepository.getMemberGroupCountByGroupId({
 			groupId,

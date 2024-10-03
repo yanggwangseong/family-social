@@ -27,6 +27,12 @@ export class CreateChatGroupMembershipGuard implements CanActivate {
 
 		this.checkGroupMembership(isMember, sub);
 
+		/**
+		 * 그룹 권한 main인지 체크
+		 * main인 권한을 가진 사람만 생성 가능
+		 */
+		await this.groupsService.checkMainRole(groupId, sub);
+
 		for (const memberId of memberIds) {
 			const isMember = await this.groupsService.memberShipOfGroupExists(
 				groupId,
