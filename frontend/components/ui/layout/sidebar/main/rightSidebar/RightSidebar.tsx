@@ -29,8 +29,9 @@ const RightSidebar: FC = () => {
 	// 	async () => await GroupService.getMemberBelongToGroups(),
 	// );
 
-	const { data: groupList, isLoading: groupLoading } =
-		useMemberBelongToGroups(groupId);
+	const { data: groupList, isLoading: groupLoading } = useMemberBelongToGroups({
+		updateGroupId: groupId,
+	});
 
 	return (
 		<div className={styles.right_sidebar_container}>
@@ -78,6 +79,7 @@ const RightSidebar: FC = () => {
 									id: 'sdfsdf',
 									groupDescription: '양씨네 가족입니다',
 									groupName: '양씨네가족',
+									groupCoverImage: '/images/banner/sm/group-base-sm.png',
 								}}
 							></GroupProfile>
 						</div>
@@ -99,14 +101,7 @@ const RightSidebar: FC = () => {
 				) : (
 					<div className={styles.list_container}>
 						{groupList.map((item, index) => (
-							<GroupProfile
-								key={index}
-								group={{
-									id: item.group.id,
-									groupDescription: '양씨네 가족입니다',
-									groupName: '양씨네가족',
-								}}
-							></GroupProfile>
+							<GroupProfile key={index} group={item.group}></GroupProfile>
 						))}
 					</div>
 				))}

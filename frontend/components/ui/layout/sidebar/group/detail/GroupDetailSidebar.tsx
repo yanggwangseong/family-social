@@ -66,6 +66,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 						id: 'sdfsdf',
 						groupDescription: '한국을 좋아하는 그룹입니다',
 						groupName: 'korea',
+						groupCoverImage: '/images/banner/sm/group-base-sm.png',
 					}}
 				/>
 

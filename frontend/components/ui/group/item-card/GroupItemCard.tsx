@@ -14,6 +14,7 @@ const GroupItemCard: FC = () => {
 					group={{
 						id: 'sdfsdf',
 						groupDescription: '양테스트를위한 그룹',
+						groupCoverImage: '/images/banner/sm/group-base-sm.png',
 						groupName: '양테스트',
 					}}
 				/>

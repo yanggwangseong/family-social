@@ -6,7 +6,7 @@
 		@apply z-20;
 
 		.top_wrap {
-			@apply h-16 px-4 py-3 flex shadow-md;
+			@apply h-16 px-4 py-3 flex shadow-md gap-4;
 
 			.close_btn {
 				@apply ml-auto cursor-pointer text-customDark;
@@ -19,6 +19,10 @@
 
 		.message_container {
 			@apply flex-grow overflow-y-auto p-4 flex flex-col gap-8 h-[283px];
+
+			.title {
+				@apply text-center text-customDark text-sm;
+			}
 		}
 	}
 

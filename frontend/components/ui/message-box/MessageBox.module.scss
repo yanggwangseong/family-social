@@ -1,5 +1,5 @@
 .message_card_container {
-	@apply flex;
+	@apply flex gap-4;
 
 	&.mine_message_card_container {
 		@apply flex-row-reverse;

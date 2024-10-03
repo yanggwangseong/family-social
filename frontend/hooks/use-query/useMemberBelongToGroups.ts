@@ -12,15 +12,17 @@ export interface UseMemberBelongToGroupsQueryOptions
 			string[]
 		>,
 		'queryKey' | 'queryFn'
-	> {}
+	> {
+	forChatCreation?: boolean;
+	updateGroupId?: string;
+}
 
 export const useMemberBelongToGroups = (
-	updateGroupId?: string,
 	options?: UseMemberBelongToGroupsQueryOptions,
 ) => {
-	const [isSelecteGroup, setIsSelectGroup] = useState(
-		updateGroupId ? updateGroupId : '',
-	);
+	const { updateGroupId, forChatCreation } = options || {};
+
+	const [isSelecteGroup, setIsSelectGroup] = useState(updateGroupId || '');
 
 	const handleSelectedGroup = (groupId: string) => {
 		setIsSelectGroup(groupId);
@@ -28,7 +30,7 @@ export const useMemberBelongToGroups = (
 
 	const { data, isLoading, ...rest } = useQuery(
 		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(),
+		async () => await GroupService.getMemberBelongToGroups(forChatCreation),
 		{
 			...options,
 		},

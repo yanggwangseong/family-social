@@ -2,15 +2,14 @@ import React, { FC, useState } from 'react';
 import styles from './EmailInvite.module.scss';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Field from '@/components/ui/field/Field';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { validEmail } from '@/components/screens/sign-up/sign-up.constants';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import Line from '@/components/ui/line/Line';
+
 import InviteItem from './invite-item/InviteItem';
 import { useRecoilState } from 'recoil';
 import { modalAtom } from '@/atoms/modalAtom';
-import { motion } from 'framer-motion';
-import { toggleVariant } from '@/utils/animation/toggle-variant';
+
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 
 const EmailInvite: FC = () => {

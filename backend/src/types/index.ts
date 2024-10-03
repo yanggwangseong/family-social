@@ -38,6 +38,7 @@ export const isScheduleOptins = [
 ] as const;
 export const OrderOptions = ['ASC', 'DESC'] as const;
 export const EventType = ['BIRTHDAY', 'SIXTIETHBIRTHDAY'] as const;
+export const ChatType = ['GROUP', 'DIRECT'] as const;
 export const contentTypeId = [
 	'12',
 	'14',

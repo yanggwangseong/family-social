@@ -16,7 +16,6 @@ import { MediaInfo } from '@/shared/interfaces/media.interface';
 import {
 	PiArrowSquareOutDuotone,
 	PiChatDuotone,
-	PiChatTextDuotone,
 	PiHeartDuotone,
 	PiLockKeyDuotone,
 } from 'react-icons/pi';

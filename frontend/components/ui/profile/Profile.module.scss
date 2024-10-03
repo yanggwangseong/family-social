@@ -1,14 +1,12 @@
 .profile_container {
 	@apply flex;
 
-	.profile_img_container {
-		@apply border border-solid border-customDark rounded-full mr-3 relative;
-		height: 40px;
-		width: 40px;
+	.profile_username {
+		@apply font-bold ml-4;
 	}
 
-	.profile_username {
-		@apply font-bold;
+	.direct_chat {
+		@apply ml-auto flex items-center justify-center;
 	}
 
 	.profile_email {
@@ -22,32 +20,8 @@
 	.profile_comment_username {
 		@apply text-sm font-medium ml-4;
 	}
+
 	.profile_comment_contents {
 		@apply text-sm mt-3 ml-4 whitespace-pre-wrap break-words break-all;
-	}
-
-	// chat_container
-	.chat_container {
-		@apply flex-1;
-
-		.chat_card_container {
-			@apply flex flex-col justify-between relative;
-
-			.chat_top_container {
-				@apply flex;
-
-				.chat_username {
-					@apply text-base font-medium;
-				}
-
-				.chat_date {
-					@apply ml-auto text-xs text-customGray;
-				}
-			}
-
-			.chat_message {
-				@apply text-sm text-customGray;
-			}
-		}
 	}
 }

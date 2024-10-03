@@ -1,4 +1,10 @@
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+	UseFilters,
+	UseGuards,
+	UseInterceptors,
+	UsePipes,
+	ValidationPipe,
+} from '@nestjs/common';
 import {
 	ConnectedSocket,
 	MessageBody,
@@ -10,8 +16,12 @@ import {
 	WsException,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { QueryRunner } from 'typeorm';
 
+import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import { SocketCatchHttpExceptionFilter } from '@/common/filter/socket-catch-http.exception-filter';
+import { ChatGroupMembershipGuard } from '@/common/guards/socket/chat-group-membership.guard';
+import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { ChatCreateReqDto } from '@/models/dto/chat/req/chat-create-req.dto';
 import { ChatEnterReqDto } from '@/models/dto/chat/req/chat-enter-req.dto';
 import { MessageCreateReqDto } from '@/models/dto/message/req/message-create-req.dto';
@@ -53,9 +63,9 @@ export class ChatsGateway
 	handleDisconnect() {}
 
 	handleConnection(socket: Socket & { sub: string }) {
-		//const headers = socket.handshake.headers;
-
-		//const rawToken = headers['authorization']!;
+		// postman 테스트 시 사용
+		// const headers = socket.handshake.headers;
+		// const rawToken = headers['authorization']!;
 
 		const rawToken = socket.handshake.auth['authorization'];
 
@@ -64,9 +74,12 @@ export class ChatsGateway
 		}
 
 		try {
-			//const token = this.authService.extractTokenFromHeader(rawToken, true);
+			// postman 테스트 시 사용
+			// const token = this.authService.extractTokenFromHeader(rawToken, true);
+			// const payload = this.authService.verifyToken(token);
 
 			const payload = this.authService.verifyToken(rawToken);
+
 			socket.sub = payload.sub;
 
 			return true;
@@ -75,13 +88,35 @@ export class ChatsGateway
 		}
 	}
 
+	@UseInterceptors(TransactionInterceptor)
+	@UseGuards(ChatGroupMembershipGuard)
 	@SubscribeMessage('create-chat')
 	async createChat(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() dto: ChatCreateReqDto,
+		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
-		const chatId = await this.chatsService.createChat(dto);
+		/**
+		 * 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
+		 */
+		const existingChat = await this.chatsService.getExistingChat(
+			dto.chatType,
+			dto.memberIds,
+		);
 
+		/**
+		 * 존재하는 채팅방이 있다면 해당 채팅방 id를 return
+		 */
+		if (existingChat) {
+			socket.emit('chat-created', existingChat.id);
+			return;
+		}
+
+		/**
+		 * 아니라면 채팅방 생성
+		 *
+		 */
+		const chatId = await this.chatsService.createChat(dto, qr);
 		socket.emit('chat-created', chatId);
 	}
 

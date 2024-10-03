@@ -14,12 +14,14 @@ import { QueryRunner } from 'typeorm';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
+	GetChatByIdSwagger,
 	GetMemberChatsSwagger,
 	GetMessagesByChatIdSwagger,
 	PostChatSwagger,
 } from '@/common/decorators/swagger/swagger-chat.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
+import { CreateChatGroupMembershipGuard } from '@/common/guards/create-chat-group-membership.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
@@ -55,6 +57,29 @@ export class ChatsController {
 	}
 
 	/**
+	 * @summary 채팅방 아이디로 채팅방 가져오기
+	 *
+	 * @tag chats
+	 * @param sub - 인증된 유저 아이디
+	 * @param chatId - 채팅방 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 채팅방 리스트
+	 */
+	@GetChatByIdSwagger()
+	@UseInterceptors(ResponseDtoInterceptor<GetChatListResDto>)
+	@IsResponseDtoDecorator<GetChatListResDto>(GetChatListResDto)
+	@Get('/:chatId')
+	async getChatById(
+		@Param(
+			'chatId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		chatId: string,
+	) {
+		return await this.chatsService.getChatById(chatId);
+	}
+
+	/**
 	 * @summary 채팅방 생성하기
 	 *
 	 * @tag chats
@@ -63,12 +88,28 @@ export class ChatsController {
 	 * @returns 생성된 채팅방 아이디
 	 */
 	@PostChatSwagger()
+	@UseGuards(CreateChatGroupMembershipGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async postChat(
 		@Body() dto: ChatCreateReqDto,
+		@CurrentUser('sub') sub: string,
 		@QueryRunnerDecorator() qr: QueryRunner,
 	) {
+		dto.memberIds = this.mergeMemberIds(dto.memberIds, sub);
+
+		/**
+		 * 이미 존재하는 채팅방일 경우 해당 채티방 id를 return
+		 */
+		const existingChat = await this.chatsService.getExistingChat(
+			dto.chatType,
+			dto.memberIds,
+		);
+
+		if (existingChat) {
+			return existingChat.id;
+		}
+
 		return await this.chatsService.createChat(dto, qr);
 	}
 
@@ -94,5 +135,9 @@ export class ChatsController {
 		@CurrentUser('sub') sub: string,
 	) {
 		return await this.chatsService.getMessagesByChat(chatId, sub);
+	}
+
+	private mergeMemberIds(memberIds: string[], sub: string) {
+		return [...memberIds, sub];
 	}
 }

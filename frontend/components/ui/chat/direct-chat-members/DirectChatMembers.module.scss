@@ -1,0 +1,22 @@
+.profile_img_parent_container {
+	@apply relative;
+	width: 40px;
+	height: 40px;
+
+	.profile_img_container {
+		@apply border border-solid border-customDark rounded-full mr-3 relative;
+		height: 40px;
+		width: 40px;
+	}
+	.chat_members_container {
+		@apply absolute;
+		bottom: -10px;
+		right: -10px;
+
+		.chat_member_profile {
+			@apply border border-solid border-customDark rounded-full absolute;
+			height: 20px;
+			width: 20px;
+		}
+	}
+}

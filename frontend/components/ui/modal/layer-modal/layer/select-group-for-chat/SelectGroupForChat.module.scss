@@ -1,0 +1,19 @@
+.container {
+	@apply flex flex-col gap-4 my-4;
+
+	.section_title {
+		@apply font-medium text-base;
+	}
+
+	.section_sub_title {
+		@apply text-customGray text-sm;
+	}
+}
+
+.selectedGroup_groups_container {
+	@apply flex flex-wrap overflow-y-auto h-72 my-5;
+
+	.group_card_wrap {
+		@apply w-full;
+	}
+}

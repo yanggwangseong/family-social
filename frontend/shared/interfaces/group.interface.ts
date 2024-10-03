@@ -7,7 +7,7 @@ export interface GroupResponse {
 }
 
 export interface MemberBelongToGroupsResponse extends FamResponse {
-	group: GroupResponse;
+	group: GroupProfileResponse;
 }
 
 export interface GroupProfileResponse extends GroupResponse {

@@ -92,7 +92,9 @@ const ScheduleCreate: FC<{
 		useState<Union<typeof schdulePages>>('selectGroupPage');
 
 	const { data, isLoading, handleSelectedGroup, isSelecteGroup } =
-		useMemberBelongToGroups(scheduleItem ? scheduleItem.groupId : '');
+		useMemberBelongToGroups(
+			scheduleItem ? { updateGroupId: scheduleItem.groupId } : {},
+		);
 
 	const handleChangePage = (page: Union<typeof schdulePages>) => {
 		setIsPage(page);

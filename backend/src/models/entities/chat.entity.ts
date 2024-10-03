@@ -1,6 +1,8 @@
-import { Entity, Index, OneToMany } from 'typeorm';
+import { Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 
+import { ChatTypeEntity } from './chat-type.entity';
 import { DefaultEntity } from './common/default.entity';
+import { GroupEntity } from './group.entity';
 import { MemberChatEntity } from './member-chat.entity';
 import { MessageEntity } from './message.entity';
 
@@ -13,4 +15,10 @@ export class ChatEntity extends DefaultEntity {
 
 	@OneToMany(() => MemberChatEntity, (fmc) => fmc.chat)
 	enteredByChats!: MemberChatEntity[];
+
+	@ManyToOne(() => GroupEntity, (group) => group.chats, { nullable: true })
+	group?: GroupEntity;
+
+	@ManyToOne(() => ChatTypeEntity, (ct) => ct.chats)
+	chatType!: ChatTypeEntity;
 }

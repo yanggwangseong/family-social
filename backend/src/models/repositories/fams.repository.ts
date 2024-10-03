@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 
+import { MAIN_ROLE } from '@/constants/string-constants';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamEntity, roleType } from '@/models/entities/fam.entity';
@@ -59,13 +60,13 @@ export class FamsRepository extends Repository<FamEntity> {
 	}
 
 	async getMemberListBelongToGroup({
-		groupId,
 		take,
 		skip,
+		overrideWhere,
 	}: {
-		groupId: string;
 		take: number;
 		skip: number;
+		overrideWhere: FindOptionsWhere<FamEntity>;
 	}): Promise<GroupMembersResDto[]> {
 		return await this.repository.find({
 			select: {
@@ -80,14 +81,57 @@ export class FamsRepository extends Repository<FamEntity> {
 				},
 			},
 			where: {
-				groupId,
-				invitationAccepted: true,
+				...overrideWhere,
 			},
 			relations: {
 				member: true,
 			},
 			take,
 			skip,
+		});
+	}
+
+	async getMemberBelongToGroupsForChatCreation(
+		memberId: string,
+	): Promise<BelongToGroupResDto[]> {
+		const groups = await this.createQueryBuilder('fam')
+			.select([
+				'fam.id as "id"',
+				'fam.invitationAccepted as "invitationAccepted"',
+				'fam.role as "role"',
+				'group.id as "groupId"',
+				'group.groupName as "groupName"',
+				'group.groupDescription as "groupDescription"',
+				'group.groupCoverImage as "groupCoverImage"',
+				'COUNT(DISTINCT otherFam.id) as memberCount',
+			])
+			.innerJoin('fam.group', 'group')
+			.leftJoin('group.chats', 'chat')
+			.leftJoin(
+				'group.groupByMemberGroups',
+				'otherFam',
+				'otherFam.invitationAccepted = :accepted',
+				{ accepted: true },
+			)
+			.where('fam.memberId = :memberId', { memberId })
+			.andWhere('chat.id IS NULL')
+			.groupBy('fam.id')
+			.addGroupBy('group.id')
+			.having('COUNT(DISTINCT otherFam.id) > 1')
+			.andHaving('fam.role = :role', { role: MAIN_ROLE })
+			.getRawMany();
+
+		return groups.map((item) => {
+			return {
+				id: item.id,
+				invitationAccepted: item.invitationAccepted,
+				group: {
+					id: item.groupId,
+					groupName: item.groupName,
+					groupDescription: item.groupDescription,
+					groupCoverImage: item.groupCoverImage,
+				},
+			};
 		});
 	}
 
@@ -102,6 +146,7 @@ export class FamsRepository extends Repository<FamEntity> {
 					id: true,
 					groupName: true,
 					groupDescription: true,
+					groupCoverImage: true,
 				},
 			},
 			where: {

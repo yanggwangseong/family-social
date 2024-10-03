@@ -8,6 +8,7 @@ export interface IMembersBelongToGroupArgs {
 	memberId: string;
 	page: number;
 	limit: number;
+	excludeSelf: boolean;
 }
 
 export interface ICreateGroupArgs {

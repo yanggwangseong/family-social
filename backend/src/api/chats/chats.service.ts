@@ -8,6 +8,7 @@ import { GetMessagesListResDto } from '@/models/dto/message/res/get-messages-lis
 import { ChatsRepository } from '@/models/repositories/chats.repository';
 import { MemberChatRepository } from '@/models/repositories/member-chat.repository';
 import { MessagesRepository } from '@/models/repositories/messages.repository';
+import { ChatType, Union } from '@/types';
 
 @Injectable()
 export class ChatsService {
@@ -31,46 +32,56 @@ export class ChatsService {
 		};
 	}
 
+	async getChatById(chatId: string): Promise<MemberBelongToChatsResDto> {
+		const chat = await this.chatsRepository.getChatById(chatId);
+		return this.enrichChatWithDetails(chat);
+	}
+
 	async getMemberBelongToChats(memberId: string): Promise<GetChatListResDto> {
-		const chat = await this.memberChatRepository.getMemberBelongToChats(
-			memberId,
+		const chats = await this.chatsRepository.getMemberBelongToChats(memberId);
+		const enrichedChats = await Promise.all(
+			chats.map((chat) => this.enrichChatWithDetails(chat)),
 		);
+		return { list: enrichedChats };
+	}
 
-		const result = await Promise.all(
-			chat.map(async (item): Promise<MemberBelongToChatsResDto> => {
-				const [[chatMembers, joinMemberCount], recentMessage] =
-					await Promise.all([
-						this.memberChatRepository.getMembersAndCountByChat(item.chatId),
-						this.messagesRepository.getRecentMessageByChat(item.chatId),
-					]);
-
-				return {
-					targetMemberId: item.targetMemberId,
-					chatId: item.chatId,
-					chatCreateAt: item.chatCreateAt,
-					chatMembers,
-					joinMemberCount,
-					recentMessage,
-				};
-			}),
-		);
+	private async enrichChatWithDetails(
+		chat: MemberBelongToChatsResDto,
+	): Promise<MemberBelongToChatsResDto> {
+		const [[chatMembers, joinMemberCount], recentMessage] = await Promise.all([
+			this.memberChatRepository.getMembersAndCountByChat(chat.chatId),
+			this.messagesRepository.getRecentMessageByChat(chat.chatId),
+		]);
 
 		return {
-			list: result,
+			...chat,
+			chatMembers,
+			joinMemberCount,
+			recentMessage,
 		};
 	}
 
 	async createChat(dto: ChatCreateReqDto, qr?: QueryRunner) {
-		const chatId = await this.chatsRepository.createChat(qr);
+		const chatId = await this.chatsRepository.createChat(
+			dto.chatType,
+			dto.groupId,
+			qr,
+		);
 
 		await this.memberChatRepository.createMembersEnteredByChat(
-			chatId.id,
+			chatId,
 			dto.memberIds,
 			qr,
 		);
+
 		return chatId;
 	}
 
+	/**
+	 * @summary 채팅방 존재 여부 확인
+	 * @param chatId 채팅방 id
+	 * @returns 채팅방 존재 여부
+	 */
 	async checkIfChatExists(chatId: string) {
 		const exists = await this.chatsRepository.exist({
 			where: {
@@ -79,5 +90,26 @@ export class ChatsService {
 		});
 
 		return exists;
+	}
+
+	/**
+	 * @summary 채팅방 중복 생성 확인
+	 * @param chatType 채팅방 타입
+	 * @param memberIds 채팅방 멤버 id 배열
+	 * @param groupId 그룹 id
+	 * @returns 채팅방 존재 여부
+	 */
+	async getExistingChat(
+		chatType: Union<typeof ChatType>,
+		memberIds: string[],
+		groupId?: string,
+	) {
+		if (groupId)
+			return await this.chatsRepository.findExistingGroupChat(
+				groupId,
+				chatType,
+			);
+
+		return await this.chatsRepository.findExistingChat(memberIds, chatType);
 	}
 }

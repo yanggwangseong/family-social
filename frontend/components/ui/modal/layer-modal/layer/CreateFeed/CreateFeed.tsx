@@ -244,11 +244,7 @@ const CreateFeed: FC = () => {
 							data.map(group => (
 								<div className={styles.group_card_wrap} key={group.id}>
 									<GroupProfile
-										group={{
-											id: group.group.id,
-											groupDescription: group.group.groupDescription,
-											groupName: group.group.groupName,
-										}}
+										group={group.group}
 										onSelectedGroup={handleSelectedGroup}
 										isSelecteGroup={isSelecteGroup}
 									/>

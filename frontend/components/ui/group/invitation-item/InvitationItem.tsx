@@ -21,7 +21,14 @@ const InvitationItem: FC<InvitationItemProps> = ({
 					<div className={styles.group_profile_subject}>그룹</div>
 				</div>
 				{/* 그룹 프로필 */}
-				<GroupProfile group={invitation.group}></GroupProfile>
+				<GroupProfile
+					group={{
+						id: invitation.group.id,
+						groupCoverImage: '/images/banner/sm/group-base-sm.png',
+						groupName: invitation.group.groupName,
+						groupDescription: invitation.group.groupDescription,
+					}}
+				></GroupProfile>
 			</div>
 
 			<div className={styles.message_container}>
