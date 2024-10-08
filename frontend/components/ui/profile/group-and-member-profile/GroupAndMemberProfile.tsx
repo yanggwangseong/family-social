@@ -6,11 +6,11 @@ import ChatDescription from '../../chat/ChatDescription';
 import { useHover } from '@/hooks/useHover';
 import { AnimatePresence, motion } from 'framer-motion';
 import GroupHoverModal from '../../modal/group-hover-modal/GroupHoverModal';
+import MemberHoverModal from '../../modal/member-hover-modal/MemberHoverModal';
 
 const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
-	groupName,
-	username,
 	group,
+	member,
 	chat,
 }) => {
 	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
@@ -55,13 +55,43 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 							</AnimatePresence>
 						)}
 					</div>
-					<div className={styles.profile_container}>
+					<div
+						className={styles.profile_container}
+						onMouseOver={e => {
+							e.stopPropagation(); // 이벤트 버블링 중지
+							handleMouseOver(1);
+						}}
+						onMouseOut={e => {
+							e.stopPropagation(); // 이벤트 버블링 중지
+							handleMouseOut(1);
+						}}
+					>
 						<Image
 							className="rounded-full"
 							fill
-							src={'/images/profile/profile.png'}
-							alt="img"
+							src={member.profileImage ?? '/images/profile/profile.png'}
+							alt="profile-img"
 						></Image>
+
+						{isHovering === 1 && (
+							<AnimatePresence key={1}>
+								<motion.div
+									key={1}
+									className={styles.mention_view_modal}
+									initial={{ opacity: 0 }}
+									animate={{
+										opacity: 1,
+										y: 0,
+										transition: { duration: 0.5 },
+									}}
+									exit={{ opacity: 0, transition: { duration: 1 } }}
+								>
+									<MemberHoverModal
+										mentionRecipient={member}
+									></MemberHoverModal>
+								</motion.div>
+							</AnimatePresence>
+						)}
 					</div>
 				</div>
 			</div>
@@ -69,8 +99,8 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 				<ChatDescription chat={chat} />
 			) : (
 				<div className={styles.description_container}>
-					<div className={styles.group_name}>{groupName}</div>
-					<div className={styles.member_name}>{username}</div>
+					<div className={styles.group_name}>{group.groupName}</div>
+					<div className={styles.member_name}>{member.username}</div>
 				</div>
 			)}
 		</div>

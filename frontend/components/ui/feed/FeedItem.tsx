@@ -87,8 +87,12 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_card_top_container}>
 						{/* <Profile username="양광성"></Profile> */}
 						<GroupAndMemberProfile
-							username={feed.username}
-							groupName={feed.groupName}
+							member={{
+								username: feed.username,
+								profileImage: feed.profileImage,
+								email: feed.email,
+								id: feed.memberId,
+							}}
 							group={{
 								groupCoverImage: feed.groupCoverImage,
 								id: feed.groupId,

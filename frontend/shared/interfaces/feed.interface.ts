@@ -19,6 +19,7 @@ export interface FeedInfo {
 	memberId: string;
 	username: string;
 	profileImage: string;
+	email: string;
 	myLike?: boolean;
 	sumLike?: number;
 	sumComment?: number;

@@ -356,8 +356,12 @@ const CreateFeed: FC = () => {
 									groupName: '양씨네가족',
 									groupCoverImage: '/images/banner/sm/group-base-sm.png',
 								}}
-								username="양광성"
-								groupName="양씨네가족"
+								member={{
+									username: '양광성',
+									email: 'yang@gmail.com',
+									profileImage: '/images/profile/profile.png',
+									id: 'sdfsdf',
+								}}
 							/>
 
 							<FeedPublicSelect
