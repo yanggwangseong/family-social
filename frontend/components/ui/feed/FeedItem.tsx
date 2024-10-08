@@ -89,6 +89,12 @@ const FeedItem: FC<FeedItemProps> = ({
 						<GroupAndMemberProfile
 							username={feed.username}
 							groupName={feed.groupName}
+							group={{
+								groupCoverImage: feed.groupCoverImage,
+								id: feed.groupId,
+								groupName: feed.groupName,
+								groupDescription: feed.groupDescription,
+							}}
 						></GroupAndMemberProfile>
 
 						<div className={styles.feed_right_top_container}>

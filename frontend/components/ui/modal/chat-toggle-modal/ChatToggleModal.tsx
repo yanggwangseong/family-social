@@ -111,6 +111,7 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 											<GroupAndMemberProfile
 												username={item.chatMembers[0].member.username}
 												groupName={item.group.groupName}
+												group={item.group}
 												chat={item}
 											></GroupAndMemberProfile>
 										</div>

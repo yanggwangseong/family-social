@@ -2,7 +2,21 @@
 	@apply flex gap-4;
 
 	.group_profile_container {
-		@apply w-[48px] h-[48px] relative border border-solid border-customDark;
+		@apply relative w-[48px] h-[48px] border border-solid border-customDark;
+
+		.group_image_container {
+			@apply w-full h-full relative;
+
+			&:hover {
+				.group_hover_modal {
+					@apply block z-[200];
+				}
+			}
+
+			.group_hover_modal {
+				@apply hidden absolute w-[400px] bg-white bottom-4 z-[200];
+			}
+		}
 
 		.profile_container {
 			@apply w-[34px] h-[34px] absolute -bottom-1 -right-2 border border-solid border-customDark rounded-full;
