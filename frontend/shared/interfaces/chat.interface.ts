@@ -29,6 +29,8 @@ export interface RecentMessageResponse {
 	memberId: string;
 	message: string;
 	memberName: string;
+	memberEmail: string;
+	memberProfileImage: string;
 }
 
 export interface CreateChatRequest {
