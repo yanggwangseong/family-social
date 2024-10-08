@@ -6,6 +6,7 @@ import { useHover } from '@/hooks/useHover';
 import { AnimatePresence, motion } from 'framer-motion';
 import MemberHoverModal from '../modal/member-hover-modal/MemberHoverModal';
 import SharedMembersHoverModal from '../modal/shared-members-hover-modal/SharedMembersHoverModal';
+import GroupHoverModal from '../modal/group-hover-modal/GroupHoverModal';
 
 const SharedMembers: FC<SharedMembersProps> = ({
 	sharedMembers,
@@ -13,16 +14,45 @@ const SharedMembers: FC<SharedMembersProps> = ({
 }) => {
 	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
 
+	const { groupCoverImage } = sharedGroup;
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.shared_members_img_container}>
-				<Image
-					fill
-					src={
-						sharedGroup.groupCoverImage ?? '/images/banner/sm/group-base-sm.png'
-					}
-					alt="img"
-				></Image>
+				<div
+					className={styles.group_image_container}
+					onMouseOver={e => {
+						e.stopPropagation();
+						handleMouseOver(0);
+					}}
+					onMouseOut={e => {
+						e.stopPropagation();
+						handleMouseOut(0);
+					}}
+				>
+					<Image
+						fill
+						src={
+							groupCoverImage
+								? groupCoverImage
+								: '/images/banner/sm/group-base-sm.png'
+						}
+						alt="group-img"
+					/>
+					{isHovering === 0 && (
+						<AnimatePresence key={0}>
+							<motion.div
+								key={0}
+								className={styles.group_hover_modal}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
+								exit={{ opacity: 0, transition: { duration: 1 } }}
+							>
+								<GroupHoverModal sharedGroup={sharedGroup} />
+							</motion.div>
+						</AnimatePresence>
+					)}
+				</div>
 				<div
 					className={styles.img_conatiner}
 					onMouseOver={e => {

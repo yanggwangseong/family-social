@@ -1,19 +1,20 @@
-import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 import React, { FC } from 'react';
-import styles from './MemberHoverModal.module.scss';
-import { PiAtDuotone } from 'react-icons/pi';
 import Image from 'next/image';
+import styles from './GroupHover.module.scss';
+import { GroupProfileResponse } from '@/shared/interfaces/group.interface';
 import CustomButton from '../../button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
 
-const MemberHoverModal: FC<{ mentionRecipient: SearchMemberResponse }> = ({
-	mentionRecipient,
+const GroupHoverModal: FC<{ sharedGroup: GroupProfileResponse }> = ({
+	sharedGroup,
 }) => {
 	const router = useRouter();
 
-	const handleProfilePage = () => {
-		router.push(`/accounts/${mentionRecipient.email}`);
+	const handleGroupPage = () => {
+		router.push(`/groups/${sharedGroup.id}`);
 	};
+
+	const { groupCoverImage, groupName, groupDescription } = sharedGroup;
 
 	return (
 		<div className={styles.container}>
@@ -22,21 +23,17 @@ const MemberHoverModal: FC<{ mentionRecipient: SearchMemberResponse }> = ({
 					<Image
 						className="rounded-full"
 						fill
-						src={mentionRecipient.profileImage ?? '/images/profile/profile.png'}
+						src={
+							groupCoverImage
+								? groupCoverImage
+								: '/images/banner/sm/group-base-sm.png'
+						}
 						alt="img"
 					></Image>
 				</div>
 				<div className={styles.right_container}>
-					<div className={styles.profile_username}>
-						{mentionRecipient.username}
-					</div>
-					<div className={styles.mention}>
-						{`@${mentionRecipient.username}`}
-					</div>
-					<div className={styles.profile_email}>
-						<PiAtDuotone size={24} />
-						{mentionRecipient.email}
-					</div>
+					<div className={styles.profile_username}>{groupName}</div>
+					<div className={styles.mention}>{groupDescription}</div>
 				</div>
 			</div>
 
@@ -48,13 +45,13 @@ const MemberHoverModal: FC<{ mentionRecipient: SearchMemberResponse }> = ({
 				type="button"
 				onClick={e => {
 					e.stopPropagation(); // 이벤트 버블링 중지
-					handleProfilePage();
+					handleGroupPage();
 				}}
 			>
-				프로필 바로가기
+				그룹 바로가기
 			</CustomButton>
 		</div>
 	);
 };
 
-export default MemberHoverModal;
+export default GroupHoverModal;
