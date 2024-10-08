@@ -21,7 +21,6 @@ const GroupHoverModal: FC<{ sharedGroup: GroupProfileResponse }> = ({
 			<div className={styles.profile_container}>
 				<div className={styles.profile_img_container}>
 					<Image
-						className="rounded-full"
 						fill
 						src={
 							groupCoverImage
