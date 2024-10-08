@@ -56,6 +56,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 					id: true,
 					username: true,
 					profileImage: true,
+					email: true,
 				},
 			},
 
@@ -95,6 +96,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'member.id AS "memberId"',
 				'member.username AS "username"',
 				'member.profileImage AS "profileImage"',
+				'member.email AS "email"',
 			])
 			.addSelect((qb) => {
 				return qb

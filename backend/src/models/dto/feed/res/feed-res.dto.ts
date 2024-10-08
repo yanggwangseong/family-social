@@ -60,6 +60,12 @@ export class FeedResDto {
 	})
 	username!: string;
 
+	@ApiProperty({
+		nullable: false,
+		description: '피드 작성 멤버 이메일',
+	})
+	email!: string;
+
 	@ApiPropertyOptional({
 		nullable: true,
 		description: '피드 작성 멤버 프로필 이미지',
