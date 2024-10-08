@@ -1,6 +1,6 @@
-import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
+import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { MediaCreateReqDto } from '@/models/dto/media/req/media-create-req.dto';
-import { MemberResDto } from '@/models/dto/member/res/member-res.dto';
+import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
 import { MentionCreateReqDto } from '@/models/dto/mention/req/mention-create-req.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
 
@@ -19,6 +19,6 @@ export interface IUpdateFeedArgs extends ICreateFeedArgs {
 
 export interface IGetFeedDeatilArgs
 	extends Pick<FeedEntity, 'id' | 'contents' | 'isPublic'> {
-	group: GroupResDto;
-	member: MemberResDto;
+	group: GroupProfileResDto;
+	member: MemberProfileImageResDto;
 }

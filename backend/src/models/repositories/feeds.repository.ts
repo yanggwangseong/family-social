@@ -50,10 +50,12 @@ export class FeedsRepository extends Repository<FeedEntity> {
 					id: true,
 					groupName: true,
 					groupDescription: true,
+					groupCoverImage: true,
 				},
 				member: {
 					id: true,
 					username: true,
+					profileImage: true,
 				},
 			},
 
@@ -89,8 +91,10 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
 				'group.groupDescription AS "groupDescription"',
+				'group.groupCoverImage AS "groupCoverImage"',
 				'member.id AS "memberId"',
 				'member.username AS "username"',
+				'member.profileImage AS "profileImage"',
 			])
 			.addSelect((qb) => {
 				return qb
