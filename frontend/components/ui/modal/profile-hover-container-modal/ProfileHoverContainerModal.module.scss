@@ -2,6 +2,10 @@
 .container {
 	@apply relative w-[48px] h-[48px] border border-solid border-customDark;
 
+	&.once_member_profile_container {
+		@apply relative w-[40px] h-[40px] border-0;
+	}
+
 	// group image container
 	.group_image_container {
 		@apply w-full h-full relative;
@@ -19,6 +23,10 @@
 
 	// profile container
 	.profile_container {
+		&.once_profile_container {
+			@apply absolute w-[40px] h-[40px] bottom-0 right-0;
+		}
+
 		@apply w-[34px] h-[34px] absolute -bottom-1 -right-2 border border-solid border-customDark rounded-full;
 
 		&:hover {

@@ -6,12 +6,16 @@ import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
 import { useRouter } from 'next/router';
 import { MENTION_MATCH_PATTERN } from '@/constants/mention-match-pattern.const';
+import ProfileHoverContainerModal from '../../profile-hover-container-modal/ProfileHoverContainerModal';
+import { useHover } from '@/hooks/useHover';
 
 const NotificationItem: FC<NotificationItemProps> = ({
 	notificationItem,
 	isDescription = false,
 	index,
 }) => {
+	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
+
 	const router = useRouter();
 
 	const handleFeedDetailPage = (feedId: string) => {
@@ -45,18 +49,12 @@ const NotificationItem: FC<NotificationItemProps> = ({
 				className={styles.notification_item_container}
 				id={notificationItem.id}
 			>
-				<div>
-					<Image
-						className={styles.profile_img}
-						width={40}
-						height={40}
-						src={
-							notificationItem.sender.profileImage ??
-							'/images/profile/profile.png'
-						}
-						alt="img"
-					></Image>
-				</div>
+				<ProfileHoverContainerModal
+					member={notificationItem.sender}
+					handleMouseOver={handleMouseOver}
+					handleMouseOut={handleMouseOut}
+					isHovering={isHovering}
+				/>
 
 				<div className={styles.description_container}>
 					<div className={styles.notification_title}>

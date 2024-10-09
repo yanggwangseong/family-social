@@ -5,6 +5,7 @@ import { ProfileHoverContainerModalProps } from './profile-hover-container-modal
 import { AnimatePresence, motion } from 'framer-motion';
 import GroupHoverModal from '../group-hover-modal/GroupHoverModal';
 import MemberHoverModal from '../member-hover-modal/MemberHoverModal';
+import cn from 'classnames';
 
 const ProfileHoverContainerModal: FC<ProfileHoverContainerModalProps> = ({
 	group,
@@ -14,7 +15,11 @@ const ProfileHoverContainerModal: FC<ProfileHoverContainerModalProps> = ({
 	isHovering,
 }) => {
 	return (
-		<div className={styles.container}>
+		<div
+			className={cn(styles.container, {
+				[styles.once_member_profile_container]: !group && !!member,
+			})}
+		>
 			{group && (
 				<div
 					className={styles.group_image_container}
@@ -49,7 +54,9 @@ const ProfileHoverContainerModal: FC<ProfileHoverContainerModalProps> = ({
 			)}
 			{member && (
 				<div
-					className={styles.profile_container}
+					className={cn(styles.profile_container, {
+						[styles.once_profile_container]: !group && !!member,
+					})}
 					onMouseOver={e => {
 						e.stopPropagation();
 						handleMouseOver(1);
