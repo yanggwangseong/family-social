@@ -1,12 +1,10 @@
 import React, { FC } from 'react';
-import Image from 'next/image';
 import styles from './SharedMembers.module.scss';
 import { SharedMembersProps } from './shared-members.interface';
 import { useHover } from '@/hooks/useHover';
 import { AnimatePresence, motion } from 'framer-motion';
-import MemberHoverModal from '../modal/member-hover-modal/MemberHoverModal';
 import SharedMembersHoverModal from '../modal/shared-members-hover-modal/SharedMembersHoverModal';
-import GroupHoverModal from '../modal/group-hover-modal/GroupHoverModal';
+import ProfileHoverContainerModal from '../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 const SharedMembers: FC<SharedMembersProps> = ({
 	sharedMembers,
@@ -14,11 +12,16 @@ const SharedMembers: FC<SharedMembersProps> = ({
 }) => {
 	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
 
-	const { groupCoverImage } = sharedGroup;
-
 	return (
 		<div className={styles.container}>
-			<div className={styles.shared_members_img_container}>
+			<ProfileHoverContainerModal
+				group={sharedGroup}
+				member={sharedMembers[0].member}
+				handleMouseOver={handleMouseOver}
+				handleMouseOut={handleMouseOut}
+				isHovering={isHovering}
+			/>
+			{/* <div className={styles.shared_members_img_container}>
 				<div
 					className={styles.group_image_container}
 					onMouseOver={e => {
@@ -27,7 +30,7 @@ const SharedMembers: FC<SharedMembersProps> = ({
 					}}
 					onMouseOut={e => {
 						e.stopPropagation();
-						handleMouseOut(0);
+						handleMouseOut();
 					}}
 				>
 					<Image
@@ -61,7 +64,7 @@ const SharedMembers: FC<SharedMembersProps> = ({
 					}}
 					onMouseOut={e => {
 						e.stopPropagation(); // 이벤트 버블링 중지
-						handleMouseOut(1);
+						handleMouseOut();
 					}}
 				>
 					<Image
@@ -90,14 +93,14 @@ const SharedMembers: FC<SharedMembersProps> = ({
 						</AnimatePresence>
 					)}
 				</div>
-			</div>
+			</div> */}
 			<div
 				className={styles.shared_text}
 				onMouseOver={e => {
 					handleMouseOver(2);
 				}}
 				onMouseOut={e => {
-					handleMouseOut(2);
+					handleMouseOut();
 				}}
 			>
 				{`${sharedMembers.length}명에게 공유됨`}

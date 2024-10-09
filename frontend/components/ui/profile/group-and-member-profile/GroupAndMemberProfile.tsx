@@ -1,12 +1,9 @@
 import React, { FC } from 'react';
 import styles from './GroupAndMemberProfile.module.scss';
-import Image from 'next/image';
 import { GroupAndMemberProfileProps } from './group-and-member-profile.interface';
 import ChatDescription from '../../chat/ChatDescription';
 import { useHover } from '@/hooks/useHover';
-import { AnimatePresence, motion } from 'framer-motion';
-import GroupHoverModal from '../../modal/group-hover-modal/GroupHoverModal';
-import MemberHoverModal from '../../modal/member-hover-modal/MemberHoverModal';
+import ProfileHoverContainerModal from '../../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 	group,
@@ -15,12 +12,17 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 }) => {
 	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
 
-	const { groupCoverImage } = group;
-
 	return (
 		<div className={styles.container}>
 			<div>
-				<div className={styles.group_profile_container}>
+				<ProfileHoverContainerModal
+					group={group}
+					member={member}
+					handleMouseOver={handleMouseOver}
+					handleMouseOut={handleMouseOut}
+					isHovering={isHovering}
+				/>
+				{/* <div className={styles.group_profile_container}>
 					<div
 						className={styles.group_image_container}
 						onMouseOver={e => {
@@ -29,7 +31,7 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 						}}
 						onMouseOut={e => {
 							e.stopPropagation();
-							handleMouseOut(0);
+							handleMouseOut();
 						}}
 					>
 						<Image
@@ -63,7 +65,7 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 						}}
 						onMouseOut={e => {
 							e.stopPropagation(); // 이벤트 버블링 중지
-							handleMouseOut(1);
+							handleMouseOut();
 						}}
 					>
 						<Image
@@ -93,7 +95,7 @@ const GroupAndMemberProfile: FC<GroupAndMemberProfileProps> = ({
 							</AnimatePresence>
 						)}
 					</div>
-				</div>
+				</div> */}
 			</div>
 			{chat ? (
 				<ChatDescription chat={chat} />
