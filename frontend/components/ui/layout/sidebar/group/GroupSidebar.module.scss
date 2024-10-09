@@ -1,11 +1,11 @@
 .sidebar_container {
-	@screen 2xl {
-		@apply sticky top-0;
+	@screen xl {
+		@apply sticky top-20;
 		width: 300px;
 	}
 
 	@screen md {
-		@apply top-20;
+		@apply top-0;
 		width: 300px;
 	}
 

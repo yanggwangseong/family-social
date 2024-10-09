@@ -29,9 +29,9 @@ const GroupDetailMember: FC = () => {
 									<Fragment key={index}>
 										<div className={styles.section_title}>관리자</div>
 										<Profile
-											key={index}
 											username={data.member.username}
 											role={data.role}
+											searchMember={data.member}
 										/>
 										<Line />
 									</Fragment>
@@ -46,6 +46,7 @@ const GroupDetailMember: FC = () => {
 												key={index}
 												username={data.member.username}
 												role={data.role}
+												searchMember={data.member}
 											/>
 										))}
 								</>

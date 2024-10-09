@@ -2,7 +2,7 @@ import { FamResponse } from './fam.interface';
 
 export interface MembersBelongToGroupResponse extends FamResponse {
 	role: string;
-	member: MembersResponse;
+	member: SearchMemberResponse;
 }
 
 export interface MembersResponse {
