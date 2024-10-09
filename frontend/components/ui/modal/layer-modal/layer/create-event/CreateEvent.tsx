@@ -249,8 +249,16 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 						</div>
 					</div>
 
-					{/* 프로필 */}
-					<Profile username="양광성" />
+					{/* 프로필 [TODO] */}
+					<Profile
+						username="양광성"
+						searchMember={{
+							id: '410b7202-660a-4423-a6c3-6377857241cc',
+							username: '양광성',
+							email: 'rhkdtjd_12@naver.com',
+							profileImage: '/images/profile/profile.png',
+						}}
+					/>
 
 					<div className={styles.field_container}>
 						<Field
