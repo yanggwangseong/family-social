@@ -2,28 +2,39 @@ import React, { FC } from 'react';
 import styles from './DirectChatMembers.module.scss';
 import Image from 'next/image';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
+import { useHover } from '@/hooks/useHover';
+import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
+import ProfileHoverContainerModal from '../../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 interface DirectChatMembersProps {
 	chat?: ChatListResponse;
-	profileImage?: string;
+	searchMember?: SearchMemberResponse;
 }
 
 const DirectChatMembers: FC<DirectChatMembersProps> = ({
 	chat,
-	profileImage,
+	searchMember,
 }) => {
+	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
+
 	if (!chat || chat.chatMembers.length < 1) {
 		return (
-			<div className={styles.profile_img_parent_container}>
-				<div className={styles.profile_img_container}>
-					<Image
-						className="rounded-full"
-						fill
-						src={profileImage ?? '/images/profile/profile.png'}
-						alt="img"
-					/>
-				</div>
-			</div>
+			// <div className={styles.profile_img_parent_container}>
+			// 	<div className={styles.profile_img_container}>
+			// 		<Image
+			// 			className="rounded-full"
+			// 			fill
+			// 			src={profileImage ?? '/images/profile/profile.png'}
+			// 			alt="img"
+			// 		/>
+			// 	</div>
+			// </div>
+			<ProfileHoverContainerModal
+				member={searchMember}
+				handleMouseOver={handleMouseOver}
+				handleMouseOut={handleMouseOut}
+				isHovering={isHovering}
+			/>
 		);
 	}
 

@@ -150,7 +150,7 @@ const CreateMessageModal: FC = () => {
 													username={item.username}
 													isDirectChat={true}
 													handleAddMember={handleAddMember}
-													chatSearchMember={item}
+													searchMember={item}
 												></Profile>
 											</div>
 										))

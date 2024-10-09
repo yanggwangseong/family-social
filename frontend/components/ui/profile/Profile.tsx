@@ -22,7 +22,7 @@ const Profile: FC<{
 	onChageIsPublic?: (status: Union<typeof feedPublicSelectOptions>) => void;
 	isDirectChat?: boolean;
 	handleAddMember?: (member: SearchMemberResponse) => void;
-	chatSearchMember?: SearchMemberResponse;
+	searchMember?: SearchMemberResponse;
 }> = ({
 	chat,
 	comment,
@@ -34,11 +34,11 @@ const Profile: FC<{
 	onChageIsPublic,
 	isDirectChat,
 	handleAddMember,
-	chatSearchMember,
+	searchMember,
 }) => {
 	return (
 		<div className={styles.profile_container}>
-			<DirectChatMembers chat={chat} profileImage={profileImage} />
+			<DirectChatMembers chat={chat} searchMember={searchMember} />
 
 			<div>
 				{comment && (
@@ -66,14 +66,14 @@ const Profile: FC<{
 				)}
 				{role && <div className={styles.profile_role}>관리자</div>}
 			</div>
-			{isDirectChat && chatSearchMember && handleAddMember && (
+			{isDirectChat && searchMember && handleAddMember && (
 				<div className={styles.direct_chat}>
 					<CustomButton
 						type="button"
 						className="bg-customOrange text-customDark text-sm
                             font-bold border border-solid border-customDark w-full 
                             rounded hover:opacity-80 py-2 px-4"
-						onClick={() => handleAddMember(chatSearchMember)}
+						onClick={() => handleAddMember(searchMember)}
 					>
 						추가
 					</CustomButton>

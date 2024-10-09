@@ -70,7 +70,17 @@ const GroupCreate: FC = () => {
 
 							{/* 프로필 */}
 							<div className={styles.form_container}>
-								<Profile username="양광성" role="관리자" />
+								{/* 프로필 [TODO] */}
+								<Profile
+									username="양광성"
+									role="관리자"
+									searchMember={{
+										id: '410b7202-660a-4423-a6c3-6377857241cc',
+										username: '양광성',
+										email: 'rhkdtjd_12@naver.com',
+										profileImage: '/images/profile/profile.png',
+									}}
+								/>
 							</div>
 
 							{/* 작성폼 */}

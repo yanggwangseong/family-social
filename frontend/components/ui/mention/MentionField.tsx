@@ -22,6 +22,7 @@ const MentionField = <T extends Record<string, any>>(
 						id: item.id,
 						display: item.username,
 						profileImg: item.profileImage,
+						email: item.email,
 					};
 				});
 			},
@@ -42,7 +43,12 @@ const MentionField = <T extends Record<string, any>>(
 		return (
 			<Profile
 				username={suggestion.display}
-				profileImage={data[index].profileImg}
+				searchMember={{
+					id: data[index].id,
+					username: data[index].display,
+					email: data[index].email,
+					profileImage: data[index].profileImg,
+				}}
 			></Profile>
 		);
 	};
