@@ -15,6 +15,22 @@ import { VerifyEmailResDto } from '@/models/dto/member/res/verify-email-res.dto'
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
 
+export const AuthMeSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '인증된 유저 정보 조회',
+		}),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: MemberSearchResDto,
+				exampleTitle: '인증된 유저 정보 조회',
+				exampleDescription: '인증된 유저 정보 조회 성공',
+			},
+		]),
+		ErrorResponse(HttpStatus.NOT_FOUND, [MemberErrorResponse['Member-404-1']]),
+	);
+};
+
 export const LoginMemberSwagger = () => {
 	return applyDecorators(
 		ApiOperation({

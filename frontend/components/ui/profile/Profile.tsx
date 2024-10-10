@@ -1,11 +1,15 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './Profile.module.scss';
-import Image from 'next/image';
 import FeedPublicSelect from '../select/FeedPublicSelect';
 import { Union, feedPublicSelectOptions } from 'types';
 import { ChatListResponse } from '@/shared/interfaces/chat.interface';
 import MentionView from '../mention/mention-view/MentionView';
+import DirectChatMembers from '../chat/direct-chat-members/DirectChatMembers';
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
+
+import ChatDescription from '../chat/ChatDescription';
+import CustomButton from '../button/custom-button/CustomButton';
+import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 
 const Profile: FC<{
 	chat?: ChatListResponse;
@@ -16,6 +20,9 @@ const Profile: FC<{
 	role?: string;
 	isPublic?: Union<typeof feedPublicSelectOptions>;
 	onChageIsPublic?: (status: Union<typeof feedPublicSelectOptions>) => void;
+	isDirectChat?: boolean;
+	handleAddMember?: (member: SearchMemberResponse) => void;
+	searchMember?: SearchMemberResponse;
 }> = ({
 	chat,
 	comment,
@@ -25,19 +32,14 @@ const Profile: FC<{
 	role,
 	isPublic,
 	onChageIsPublic,
+	isDirectChat,
+	handleAddMember,
+	searchMember,
 }) => {
 	return (
 		<div className={styles.profile_container}>
-			<div>
-				<div className={styles.profile_img_container}>
-					<Image
-						className="rounded-full"
-						fill
-						src={profileImage ?? '/images/profile/profile.png'}
-						alt="img"
-					></Image>
-				</div>
-			</div>
+			<DirectChatMembers chat={chat} searchMember={searchMember} />
+
 			<div>
 				{comment && (
 					<>
@@ -54,6 +56,7 @@ const Profile: FC<{
 				)}
 
 				{username && <div className={styles.profile_username}>{username}</div>}
+
 				{email && <div className={styles.profile_email}>{email}</div>}
 				{isPublic && (
 					<FeedPublicSelect
@@ -63,21 +66,20 @@ const Profile: FC<{
 				)}
 				{role && <div className={styles.profile_role}>관리자</div>}
 			</div>
-			{chat && (
-				<div className={styles.chat_container}>
-					<div className={styles.chat_card_container}>
-						<div className={styles.chat_top_container}>
-							<div className={styles.chat_username}>
-								{chat.recentMessage.memberName}
-							</div>
-							<div className={styles.chat_date}>오후 2:50</div>
-						</div>
-						<div className={styles.chat_message}>
-							{chat.recentMessage.message}
-						</div>
-					</div>
+			{isDirectChat && searchMember && handleAddMember && (
+				<div className={styles.direct_chat}>
+					<CustomButton
+						type="button"
+						className="bg-customOrange text-customDark text-sm
+                            font-bold border border-solid border-customDark w-full 
+                            rounded hover:opacity-80 py-2 px-4"
+						onClick={() => handleAddMember(searchMember)}
+					>
+						추가
+					</CustomButton>
 				</div>
 			)}
+			{chat && <ChatDescription chat={chat} />}
 		</div>
 	);
 };

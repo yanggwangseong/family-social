@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './ScheduleSidebar.module.scss';
 
 import { ScheduleSidebarProps } from './schedule-sidebar.interface';
@@ -6,7 +6,6 @@ import cn from 'classnames';
 import { PiEqualsBold, PiMinusBold } from 'react-icons/pi';
 import ScheduleSidebarController from './ScheduleSidebarController';
 import { useResizeVertical } from '@/hooks/useResizeVertical';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 const ScheduleSidebar: FC<ScheduleSidebarProps> = ({
 	isSelecteGroup,

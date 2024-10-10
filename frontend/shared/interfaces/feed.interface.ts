@@ -14,10 +14,15 @@ export interface FeedInfo {
 	isPublic: boolean;
 	groupId: string;
 	groupName: string;
+	groupDescription: string;
+	groupCoverImage: string;
 	memberId: string;
 	username: string;
+	profileImage: string;
+	email: string;
 	myLike?: boolean;
 	sumLike?: number;
+	sumComment?: number;
 	medias: MediaInfo[];
 	comments: CommentsResponse[];
 	mentions: MentionsResponse[];

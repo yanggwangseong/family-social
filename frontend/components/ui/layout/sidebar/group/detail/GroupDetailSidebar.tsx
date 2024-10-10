@@ -1,20 +1,13 @@
 import React, { FC, useRef, useState } from 'react';
 import styles from './GroupDetailSidebar.module.scss';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
-import {
-	BsLink45Deg,
-	BsPersonFill,
-	BsTelephonePlus,
-	BsThreeDots,
-	BsHouseDoor,
-} from 'react-icons/bs';
+import { BsThreeDots } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import {
 	PiUserDuotone,
 	PiHouseDuotone,
 	PiGearSixDuotone,
 } from 'react-icons/pi';
-import { FiSettings } from 'react-icons/fi';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import Link from 'next/link';
@@ -66,6 +59,7 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 						id: 'sdfsdf',
 						groupDescription: '한국을 좋아하는 그룹입니다',
 						groupName: 'korea',
+						groupCoverImage: '/images/banner/sm/group-base-sm.png',
 					}}
 				/>
 

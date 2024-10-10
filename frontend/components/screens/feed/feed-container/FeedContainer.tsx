@@ -4,7 +4,6 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { AnimatePresence } from 'framer-motion';
 import FeedItem from '@/components/ui/feed/FeedItem';
 import { useFeedIntersectionObserver } from '@/hooks/useFeedIntersectionObserver';
-import { useRouter } from 'next/router';
 import { FeedService } from '@/services/feed/feed.service';
 import { useFeedLike } from '@/hooks/useFeedLike';
 import { useCommentLike } from '@/hooks/useCommentLike';

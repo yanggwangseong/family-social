@@ -16,12 +16,14 @@ import { QueryRunner } from 'typeorm';
 
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
+	AuthMeSwagger,
 	CreateMemberSwagger,
 	LoginMemberSwagger,
 	PatchSocialSignUpMemberSwagger,
 	VerifyEmailSwagger,
 } from '@/common/decorators/swagger/swagger-member.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
+import { EntityNotFoundException } from '@/common/exception/service.exception';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
 import { GoogleGuard } from '@/common/guards/google.guard';
 import { KakaoGuard } from '@/common/guards/kakao.guard';
@@ -30,6 +32,7 @@ import { RefreshTokenGuard } from '@/common/guards/refreshToken.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
+import { ERROR_USER_NOT_FOUND } from '@/constants/business-error';
 import { ENV_CLIENT_SOCKET_URL } from '@/constants/env-keys.const';
 import { MemberCreateReqDto } from '@/models/dto/member/req/member-create-req.dto';
 import { MemberLoginReqDto } from '@/models/dto/member/req/member-login-req.dto';
@@ -57,6 +60,26 @@ export class AuthController {
 		private readonly membersService: MembersService,
 		private readonly configService: ConfigService,
 	) {}
+
+	/**
+	 * @summary 인증된 유저 정보 조회
+	 *
+	 * @tag auth
+	 * @param sub - 인증된 유저Id
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 유저 정보
+	 */
+	@AuthMeSwagger()
+	@UseGuards(AccessTokenGuard)
+	@Get('me')
+	async AuthMe(@CurrentUser('sub') sub: string) {
+		const member = await this.membersService.findMemberById(sub);
+		if (!member) {
+			throw EntityNotFoundException(ERROR_USER_NOT_FOUND);
+		}
+
+		return member;
+	}
 
 	/**
 	 * @summary Google Oauth2 로그인 요청 들어오는 api

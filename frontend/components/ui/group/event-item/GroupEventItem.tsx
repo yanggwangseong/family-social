@@ -52,7 +52,7 @@ const GroupEventItem: FC<GroupItemProps> = ({ index, page, data }) => {
 
 						<Profile
 							username={data.eventOrganizer.username}
-							profileImage={data.eventOrganizer.profileImage}
+							searchMember={data.eventOrganizer}
 						/>
 
 						<motion.div

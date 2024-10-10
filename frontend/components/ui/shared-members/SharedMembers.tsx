@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
-import Image from 'next/image';
 import styles from './SharedMembers.module.scss';
 import { SharedMembersProps } from './shared-members.interface';
 import { useHover } from '@/hooks/useHover';
 import { AnimatePresence, motion } from 'framer-motion';
-import MemberHoverModal from '../modal/member-hover-modal/MemberHoverModal';
 import SharedMembersHoverModal from '../modal/shared-members-hover-modal/SharedMembersHoverModal';
+import ProfileHoverContainerModal from '../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 const SharedMembers: FC<SharedMembersProps> = ({
 	sharedMembers,
@@ -15,59 +14,21 @@ const SharedMembers: FC<SharedMembersProps> = ({
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.shared_members_img_container}>
-				<Image
-					fill
-					src={
-						sharedGroup.groupCoverImage ?? '/images/banner/sm/group-base-sm.png'
-					}
-					alt="img"
-				></Image>
-				<div
-					className={styles.img_conatiner}
-					onMouseOver={e => {
-						e.stopPropagation(); // 이벤트 버블링 중지
-						handleMouseOver(1);
-					}}
-					onMouseOut={e => {
-						e.stopPropagation(); // 이벤트 버블링 중지
-						handleMouseOut(1);
-					}}
-				>
-					<Image
-						className={styles.profile_img}
-						fill
-						src={
-							sharedMembers[0].member.profileImage ??
-							'/images/profile/profile.png'
-						}
-						alt="profile-img"
-					></Image>
+			<ProfileHoverContainerModal
+				group={sharedGroup}
+				member={sharedMembers[0].member}
+				handleMouseOver={handleMouseOver}
+				handleMouseOut={handleMouseOut}
+				isHovering={isHovering}
+			/>
 
-					{isHovering === 1 && (
-						<AnimatePresence key={1}>
-							<motion.div
-								key={1}
-								className={styles.mention_view_modal}
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
-								exit={{ opacity: 0, transition: { duration: 1 } }}
-							>
-								<MemberHoverModal
-									mentionRecipient={sharedMembers[0].member}
-								></MemberHoverModal>
-							</motion.div>
-						</AnimatePresence>
-					)}
-				</div>
-			</div>
 			<div
 				className={styles.shared_text}
 				onMouseOver={e => {
 					handleMouseOver(2);
 				}}
 				onMouseOut={e => {
-					handleMouseOut(2);
+					handleMouseOut();
 				}}
 			>
 				{`${sharedMembers.length}명에게 공유됨`}

@@ -4,7 +4,11 @@ import Profile from '../../profile/Profile';
 import { useQuery } from 'react-query';
 import { ChatService } from '@/services/chat/chat.service';
 import { useRecoilState } from 'recoil';
-import { PiNotePencilDuotone } from 'react-icons/pi';
+import {
+	PiChatCenteredDotsDuotone,
+	PiNotePencilDuotone,
+	PiUsersThreeDuotone,
+} from 'react-icons/pi';
 import {
 	MessageModalAtomType,
 	MessageModalDefaultValue,
@@ -16,6 +20,9 @@ import {
 	toggleVariant,
 	toggleWrapperVariant,
 } from '@/utils/animation/toggle-variant';
+import NotFoundSearch from '../../not-found/search/NotFoundSearch';
+import { NOT_FOUND_CHAT } from '@/constants/index';
+import GroupAndMemberProfile from '../../profile/group-and-member-profile/GroupAndMemberProfile';
 
 const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 	const [layer, setLayer] =
@@ -42,9 +49,6 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 		setCreateLayer(true);
 	};
 
-	if (isLoading) return <div>Loading</div>;
-	if (!data) return null;
-
 	return (
 		<motion.div
 			className={styles.container}
@@ -62,15 +66,61 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 			</motion.div>
 
 			<motion.div className={styles.item_container} variants={toggleVariant}>
-				{data.list.map((item, index) => (
-					<div
-						key={index}
-						className={styles.profile_container}
-						onClick={() => handleMessageModal(item.chatId)}
-					>
-						<Profile chat={item}></Profile>
-					</div>
-				))}
+				{!data ? (
+					<NotFoundSearch message={NOT_FOUND_CHAT} />
+				) : (
+					<>
+						<div className={styles.chat_container}>
+							<div className={styles.chat_icon_container}>
+								<PiChatCenteredDotsDuotone size={22} />
+							</div>
+							<div className={styles.chat_text}>개인 채팅</div>
+						</div>
+
+						{data.list
+							.filter(item => item.recentMessage && item.chatType === 'DIRECT')
+							.map((item, index) => (
+								<div
+									key={index}
+									className={styles.profile_container}
+									onClick={() => handleMessageModal(item.chatId)}
+								>
+									<Profile chat={item}></Profile>
+								</div>
+							))}
+						<div className={styles.chat_container}>
+							<div className={styles.chat_icon_container}>
+								<PiUsersThreeDuotone size={22} />
+							</div>
+							<div className={styles.chat_text}>그룹 채팅</div>
+						</div>
+
+						{data.list
+							.filter(item => item.recentMessage && item.chatType === 'GROUP')
+							.map((item, index) => (
+								<>
+									{item.group && (
+										<div
+											key={index}
+											className={styles.profile_container}
+											onClick={() => handleMessageModal(item.chatId)}
+										>
+											<GroupAndMemberProfile
+												group={item.group}
+												member={{
+													username: item.recentMessage.memberName,
+													email: item.recentMessage.memberEmail,
+													profileImage: item.recentMessage.memberProfileImage,
+													id: item.recentMessage.memberId,
+												}}
+												chat={item}
+											></GroupAndMemberProfile>
+										</div>
+									)}
+								</>
+							))}
+					</>
+				)}
 			</motion.div>
 		</motion.div>
 	);

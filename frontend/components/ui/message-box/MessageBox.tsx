@@ -3,6 +3,7 @@ import styles from './MessageBox.module.scss';
 import Profile from '../profile/Profile';
 import cn from 'classnames';
 import { MessageBoxProps } from './message-box.interface';
+import ChatCreateDate from '../chat/chat-create-date/ChatCreateDate';
 
 const MessageBox: FC<MessageBoxProps> = ({ isMine, message }) => {
 	return (
@@ -18,6 +19,7 @@ const MessageBox: FC<MessageBoxProps> = ({ isMine, message }) => {
 					<div className={styles.description}>{message.message}</div>
 				</div>
 			</div>
+			<ChatCreateDate createdAt={message.createdAt} />
 		</div>
 	);
 };

@@ -244,11 +244,7 @@ const CreateFeed: FC = () => {
 							data.map(group => (
 								<div className={styles.group_card_wrap} key={group.id}>
 									<GroupProfile
-										group={{
-											id: group.group.id,
-											groupDescription: group.group.groupDescription,
-											groupName: group.group.groupName,
-										}}
+										group={group.group}
 										onSelectedGroup={handleSelectedGroup}
 										isSelecteGroup={isSelecteGroup}
 									/>
@@ -353,7 +349,20 @@ const CreateFeed: FC = () => {
 									}}
 								/>
 							</div> */}
-							<GroupAndMemberProfile username="양광성" groupName="양씨네가족" />
+							<GroupAndMemberProfile
+								group={{
+									id: 'sdfsdf',
+									groupDescription: '양씨 가족의 그룹입니다',
+									groupName: '양씨네가족',
+									groupCoverImage: '/images/banner/sm/group-base-sm.png',
+								}}
+								member={{
+									username: '양광성',
+									email: 'yang@gmail.com',
+									profileImage: '/images/profile/profile.png',
+									id: 'sdfsdf',
+								}}
+							/>
 
 							<FeedPublicSelect
 								onChageIsPublic={handleChageIsPublic}

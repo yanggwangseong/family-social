@@ -29,5 +29,13 @@
 		.profile_container {
 			@apply p-4 hover:bg-gray-50 rounded-lg cursor-pointer;
 		}
+
+		.chat_container {
+			@apply flex items-center gap-2;
+
+			.chat_text {
+				@apply font-medium;
+			}
+		}
 	}
 }

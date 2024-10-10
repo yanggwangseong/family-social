@@ -1,0 +1,20 @@
+// chat_container
+.chat_container {
+	@apply flex-1 ml-4;
+
+	.chat_card_container {
+		@apply flex flex-col justify-between relative;
+
+		.chat_top_container {
+			@apply flex gap-2;
+
+			.chat_username {
+				@apply text-base font-medium;
+			}
+		}
+
+		.chat_message {
+			@apply text-sm text-customGray;
+		}
+	}
+}

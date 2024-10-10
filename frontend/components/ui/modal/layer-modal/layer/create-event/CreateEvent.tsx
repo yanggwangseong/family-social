@@ -33,11 +33,20 @@ import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { Notify } from 'notiflix';
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 
-import { CreateEventFields, CreateEventProps } from './create-event.interface';
+import {
+	CreateEventFields,
+	CreateEventProps,
+	CreateEventPropsWithAuth,
+} from './create-event.interface';
 import { FormatDateToString } from '@/utils/formatDateToString';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { withAuthClientSideProps } from 'hoc/with-auth-client-side-props';
 
-const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
+const CreateEvent: FC<CreateEventPropsWithAuth> = ({
+	event,
+	isGroupEventId,
+	authData,
+}) => {
 	const [isEndDateOpen, setIsEndDateOpen] = useReducer(
 		state => {
 			return !state;
@@ -249,8 +258,7 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 						</div>
 					</div>
 
-					{/* 프로필 */}
-					<Profile username="양광성" />
+					<Profile username={authData.username} searchMember={authData} />
 
 					<div className={styles.field_container}>
 						<Field
@@ -391,4 +399,4 @@ const CreateEvent: FC<CreateEventProps> = ({ event, isGroupEventId }) => {
 	);
 };
 
-export default CreateEvent;
+export default withAuthClientSideProps<CreateEventProps>(CreateEvent);

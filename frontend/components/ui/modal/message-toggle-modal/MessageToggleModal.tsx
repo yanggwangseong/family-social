@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
 import styles from './MessageToggleModal.module.scss';
-import Profile from '../../profile/Profile';
 import { IoCloseSharp, IoSend } from 'react-icons/io5';
 import { FaRegSmile } from 'react-icons/fa';
 import { useEmoji } from '@/hooks/useEmoji';
@@ -15,12 +14,16 @@ import {
 	MessageModalDefaultValue,
 	messageModalAtom,
 } from '@/atoms/messageModalAtom';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { MessageService } from '@/services/message/message.service';
 import { useSocket } from '@/hooks/useSocket';
 import { ChatService } from '@/services/chat/chat.service';
+import MessageGroupProfile from '../../profile/message-group-profile/MessageGroupProfile';
+import DirectChatMembers from '../../chat/direct-chat-members/DirectChatMembers';
 
 const MessageToggleModal: FC = () => {
+	const queryClient = useQueryClient();
+
 	const [layer, setLayer] =
 		useRecoilState<MessageModalAtomType>(messageModalAtom);
 
@@ -53,21 +56,37 @@ const MessageToggleModal: FC = () => {
 
 	const onSubmit: SubmitHandler<{ message: string }> = async data => {
 		if (layer.isNewMessage) {
-			const chat = await ChatService.postChat([
-				'410b7202-660a-4423-a6c3-6377857241cc',
-				'83491506-9047-4cfc-9dec-9f1e2016ae13',
-			]);
+			/**
+			 * 새로운 채팅방 생성시
+			 * 이미 존재하는 채팅방이라면 chatId를 반환 받는다.
+			 * GROUP인지 DIRECT인지에 따라 요청
+			 * 그룹 채팅방 생성 또는 다이렉트 채팅방 생성시에 본인의 memberIds는 제외하고
+			 * 서버에서 authentication된 사용자의 memberIds를 받아온다.
+			 */
+			const chat = await ChatService.postChat(
+				layer.memberIds,
+				layer.chatType,
+				layer.groupId,
+			);
 
+			/**
+			 * 새로운 채팅방 생성이기 때문에 isNewMessage를 false로 변경
+			 */
 			setLayer({
 				isMessageModal: true,
 				isNewMessage: false,
-				chatId: chat.id,
+				chatId: chat,
+				memberIds: layer.memberIds,
+				chatType: layer.chatType,
 			});
 
 			socket.emit('send-message', {
 				message: data.message,
-				chatId: chat.id,
+				chatId: chat,
 			});
+
+			/** get-chat-list 캐시 무효화  */
+			await queryClient.invalidateQueries('get-chat-list');
 		} else {
 			socket.emit('send-message', {
 				message: data.message,
@@ -82,6 +101,14 @@ const MessageToggleModal: FC = () => {
 	const { data, isLoading, refetch } = useQuery(
 		['get-messages-chat', layer.chatId],
 		async () => await MessageService.getMessages(layer.chatId),
+		{
+			enabled: !!layer.chatId,
+		},
+	);
+
+	const { data: chatData } = useQuery(
+		['get-chat', layer.chatId],
+		async () => await ChatService.getChat(layer.chatId),
 		{
 			enabled: !!layer.chatId,
 		},
@@ -112,10 +139,21 @@ const MessageToggleModal: FC = () => {
 				<div className={styles.container}>
 					<div className={styles.top_container}>
 						<div className={styles.top_wrap}>
-							<div>
-								<Profile />
-							</div>
-							<div>양우성</div>
+							{chatData && chatData.chatType === 'GROUP' && chatData.group ? (
+								<MessageGroupProfile
+									chatGroup={chatData.group}
+									joinMemberCount={chatData.joinMemberCount}
+								/>
+							) : (
+								<>
+									<DirectChatMembers chat={chatData} />
+									{chatData?.chatMembers
+										.slice(0, 4)
+										.map(member => member.member.username)
+										.join(', ')}
+									{chatData && chatData.chatMembers.length > 4 && '...'}
+								</>
+							)}
 							<div
 								className={styles.close_btn}
 								onClick={handleCloseMessageModal}
@@ -133,6 +171,15 @@ const MessageToggleModal: FC = () => {
 									message={item}
 								></MessageBox>
 							))}
+							{layer.isNewMessage && (
+								<>
+									<div className={styles.title}>
+										{layer.chatType === 'GROUP'
+											? '그룹 채팅 새메지를 입력하면 방이 생성됩니다'
+											: '개인 채팅 새메지를 입력하면 방이 생성됩니다'}
+									</div>
+								</>
+							)}
 						</div>
 
 						<div className={styles.bottom_container}>

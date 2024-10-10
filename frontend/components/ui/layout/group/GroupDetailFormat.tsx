@@ -106,8 +106,17 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 						</div>
 						<div className={styles.main_contents_container}>
 							<div className={styles.banner_profile_contaienr}>
-								{/* 프로필 */}
-								<Profile username="양광성" role="관리자" />
+								{/* 프로필 [TODO] */}
+								<Profile
+									username="양광성"
+									role="관리자"
+									searchMember={{
+										id: '410b7202-660a-4423-a6c3-6377857241cc',
+										username: '양광성',
+										email: 'rhkdtjd_12@naver.com',
+										profileImage: '/images/profile/profile.png',
+									}}
+								/>
 								<div className={styles.banner_profile_right_contaienr}>
 									{page === 'GROUPFEED' && (
 										<div className={styles.create_feed_btn}>

@@ -1,5 +1,4 @@
 import { GroupDetailResponse } from '@/shared/interfaces/fam.interface';
-import { FeedsResponse } from '@/shared/interfaces/feed.interface';
 import {
 	CreateGroupRequest,
 	GroupResponse,
@@ -19,18 +18,24 @@ export const GroupService = {
 		return data;
 	},
 
-	async getMemberBelongToGroups(): Promise<MemberBelongToGroupsResponse[]> {
-		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(
-			'/groups',
-		);
+	async getMemberBelongToGroups(
+		forChatCreation?: boolean,
+	): Promise<MemberBelongToGroupsResponse[]> {
+		let url = '/groups';
+		if (forChatCreation) {
+			url += '?forChatCreation=true';
+		}
+		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(url);
 
 		return data;
 	},
 
-	async getMembersBelongToGroup(groupId: string) {
-		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(
-			`groups/${groupId}/members`,
-		);
+	async getMembersBelongToGroup(groupId: string, excludeSelf?: boolean) {
+		let url = `/groups/${groupId}/members`;
+		if (excludeSelf) {
+			url += '?excludeSelf=true';
+		}
+		const { data } = await axiosAPI.get<MembersBelongToGroupResponse[]>(url);
 		return data;
 	},
 

@@ -1,6 +1,6 @@
 import React, { FC, useRef, useState } from 'react';
 import styles from './FeedItem.module.scss';
-import { BsBoxArrowUp, BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots } from 'react-icons/bs';
 import { useModal } from '@/hooks/useModal';
 import ToggleModal from '../modal/ToggleModal';
 import { FeedSettingMenu } from '../modal/toggle-menu.constants';
@@ -16,13 +16,12 @@ import { MediaInfo } from '@/shared/interfaces/media.interface';
 import {
 	PiArrowSquareOutDuotone,
 	PiChatDuotone,
-	PiChatTextDuotone,
 	PiHeartDuotone,
 	PiLockKeyDuotone,
 } from 'react-icons/pi';
 import GroupAndMemberProfile from '../profile/group-and-member-profile/GroupAndMemberProfile';
 import SwiperContainer from '../swiper/SwiperContainer';
-import { Variants, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
 import MentionView from '../mention/mention-view/MentionView';
 
@@ -88,8 +87,18 @@ const FeedItem: FC<FeedItemProps> = ({
 					<div className={styles.feed_card_top_container}>
 						{/* <Profile username="양광성"></Profile> */}
 						<GroupAndMemberProfile
-							username={feed.username}
-							groupName={feed.groupName}
+							member={{
+								username: feed.username,
+								profileImage: feed.profileImage,
+								email: feed.email,
+								id: feed.memberId,
+							}}
+							group={{
+								groupCoverImage: feed.groupCoverImage,
+								id: feed.groupId,
+								groupName: feed.groupName,
+								groupDescription: feed.groupDescription,
+							}}
 						></GroupAndMemberProfile>
 
 						<div className={styles.feed_right_top_container}>

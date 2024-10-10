@@ -31,7 +31,7 @@ const MentionView: FC<{ contents: string; mentions: MentionsResponse[] }> = ({
 					<Link
 						className={style.mentions__mention}
 						onMouseOver={() => handleMouseOver(index)}
-						onMouseOut={() => handleMouseOut(index)}
+						onMouseOut={() => handleMouseOut()}
 						key={index}
 						href={`/accounts/${existsMention.mentionRecipient.email}`}
 					>

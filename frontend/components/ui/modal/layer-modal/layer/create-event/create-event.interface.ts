@@ -1,5 +1,6 @@
 import { groupEventIdAtomType } from '@/atoms/groupEventIdAtom';
 import { GroupEventItemResponse } from '@/shared/interfaces/group-event.interface';
+import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 
 export interface CreateEventFields {
 	eventName: string;
@@ -9,6 +10,10 @@ export interface CreateEventFields {
 }
 
 export interface CreateEventProps {
-	event?: GroupEventItemResponse;
+	event: GroupEventItemResponse | undefined;
 	isGroupEventId: groupEventIdAtomType;
+}
+
+export interface CreateEventPropsWithAuth extends CreateEventProps {
+	authData: SearchMemberResponse;
 }

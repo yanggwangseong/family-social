@@ -1,11 +1,9 @@
 .profile_container {
-	@apply flex p-3 cursor-pointer relative;
+	@apply flex gap-4 p-3 cursor-pointer relative;
 
 	&.isSelected {
 		@apply text-customOrange border border-solid border-customDark;
-		.profile_img_container {
-			@apply border-customOrange;
-		}
+
 		.profile_description {
 			@apply text-customOrange;
 		}
@@ -13,18 +11,10 @@
 
 	&:hover {
 		@apply text-customOrange;
-		.profile_img_container {
-			@apply border-customOrange;
-		}
+
 		.profile_description {
 			@apply text-customOrange;
 		}
-	}
-
-	.profile_img_container {
-		@apply border border-solid border-customDark mr-3;
-		width: 42px;
-		height: 42px;
 	}
 
 	.profile_description {

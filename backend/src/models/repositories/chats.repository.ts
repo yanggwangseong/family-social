@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
+import { ChatType, Union } from '@/types';
+
+import { MemberBelongToChatsResDto } from '../dto/member-chat/res/member-belong-to-chats-res.dto';
 import { ChatEntity } from '../entities/chat.entity';
 
 @Injectable()
@@ -20,17 +23,119 @@ export class ChatsRepository extends Repository<ChatEntity> {
 			: this.repository;
 	}
 
-	async createChat(qr?: QueryRunner): Promise<{ id: string }> {
+	async createChat(
+		chatType: Union<typeof ChatType>,
+		groupId?: string,
+		qr?: QueryRunner,
+	): Promise<string> {
 		const chatsRepository = this.getChatsRepository(qr);
 
-		const chat = await chatsRepository.insert({
-			id: uuidv4(),
+		const chatId = uuidv4();
+
+		const insertChat = {
+			id: chatId,
+			group: groupId ? { id: groupId } : undefined,
+			chatType: { chatType },
+		};
+
+		await chatsRepository.insert(insertChat);
+
+		return chatId;
+	}
+
+	private createChatQuery() {
+		return this.repository
+			.createQueryBuilder('c')
+			.leftJoinAndSelect('c.enteredByChats', 'mc')
+			.leftJoinAndSelect('c.chatType', 'ct')
+			.leftJoinAndSelect('c.group', 'g')
+			.select([
+				'c.id as "chatId"',
+				'c.createdAt as "chatCreateAt"',
+				'ct.chatType as "chatType"',
+				'g.id as "groupId"',
+				'mc.memberId as "targetMemberId"',
+				'g.groupName as "groupName"',
+				'g.groupDescription as "groupDescription"',
+				'g.groupCoverImage as "groupCoverImage"',
+			]);
+	}
+
+	private formatChatResult(result: any): MemberBelongToChatsResDto {
+		const { groupId, groupName, groupDescription, groupCoverImage, ...rest } =
+			result;
+		return {
+			...rest,
+			group: groupId
+				? {
+						id: groupId,
+						groupName,
+						groupDescription,
+						groupCoverImage,
+				  }
+				: null,
+		};
+	}
+
+	async getMemberBelongToChats(
+		memberId: string,
+	): Promise<MemberBelongToChatsResDto[]> {
+		const query = this.createChatQuery().where('mc.memberId = :memberId', {
+			memberId,
 		});
 
-		return await chatsRepository.findOneOrFail({
-			where: {
-				id: chat.identifiers[0].id,
-			},
-		});
+		const results = await query.getRawMany();
+		return results.map(this.formatChatResult);
+	}
+
+	async getChatById(chatId: string): Promise<MemberBelongToChatsResDto> {
+		const query = this.createChatQuery().where('c.id = :chatId', { chatId });
+
+		const result = await query.getRawOne();
+		return this.formatChatResult(result);
+	}
+
+	/**
+	 * @summary 채팅방 중복 생성 확인
+	 * @param memberIds 채팅방 멤버 id 배열
+	 * @param chatType 채팅방 타입
+	 * @returns 채팅방 존재 여부
+	 */
+	async findExistingChat(
+		memberIds: string[],
+		chatType: Union<typeof ChatType>,
+	): Promise<ChatEntity | null> {
+		return await this.createQueryBuilder('chat')
+			.innerJoin('chat.enteredByChats', 'memberChat')
+			.where('chat.chatType = :chatType', { chatType })
+			.groupBy('chat.id')
+			.having('COUNT(DISTINCT memberChat.memberId) = :memberCount', {
+				memberCount: memberIds.length,
+			})
+			.andHaving(
+				'COUNT(DISTINCT CASE WHEN memberChat.memberId IN (:...memberIds) THEN 1 END) = :memberCount',
+				{ memberIds, memberCount: memberIds.length },
+			)
+			.getOne();
+	}
+
+	/**
+	 * @summary 그룹 채팅방 중복 생성 확인
+	 * @description 그룹 채팅방은 그룹 id와 채팅방 타입으로 중복 생성 확인
+	 * @param groupId 그룹 id
+	 * @param chatType 채팅방 타입
+	 * @returns 채팅방 존재 여부
+	 */
+	async findExistingGroupChat(
+		groupId: string,
+		chatType: Union<typeof ChatType>,
+	): Promise<ChatEntity | null> {
+		return await this.createQueryBuilder('chat')
+			.select('chat.id, chatType.chatType, group.id')
+			.innerJoin('chat.group', 'group')
+			.innerJoin('chat.chatType', 'chatType')
+			.where('chatType.chatType = :chatType', { chatType })
+			.andWhere('group.id = :groupId', { groupId })
+			.getOne();
 	}
 }

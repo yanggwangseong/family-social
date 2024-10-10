@@ -11,6 +11,7 @@ import {
 import {
 	ERROR_AUTHORIZATION_MEMBER,
 	ERROR_CANNOT_INVITE_SELF,
+	ERROR_CHAT_NOT_FOUND,
 	ERROR_COMMENT_NOT_FOUND,
 	ERROR_DELETE_COMMENT,
 	ERROR_DELETE_FEED_OR_MEDIA,
@@ -329,5 +330,17 @@ export const SearchErrorResponse = {
 		exampleDescription: '검색 타입이 올바르지 않을때 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_SEARCH_TYPE_PIPE_MESSAGE}`,
 		message: `${ERROR_SEARCH_TYPE_PIPE_MESSAGE}`,
+	},
+};
+
+// 채팅
+export const ChatErrorResponse = {
+	// 404
+	'Chat-404-1': {
+		model: EntityNotFoundException,
+		exampleDescription:
+			'해당하는 채팅방이 존재하지 않을때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_CHAT_NOT_FOUND}`,
+		message: `${ERROR_CHAT_NOT_FOUND}`,
 	},
 };

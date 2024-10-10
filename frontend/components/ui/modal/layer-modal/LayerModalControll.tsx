@@ -17,6 +17,8 @@ import ScheduleThumbnailImage from './layer/schedule-thumbnail-image/ScheduleThu
 import SuccessLayerModal from './layer/success-layer-modal/SuccessLayerModal';
 import GroupEventDeleteConfirm from './layer/GroupEventDeleteConfirm';
 import CreateEventContainer from './layer/create-event/CreateEventContainer';
+import SelectGroupForChat from './layer/select-group-for-chat/SelectGroupForChat';
+import CreateVideoCall from './layer/create-video-call/CreateVideoCall';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -36,6 +38,8 @@ const StatusLookUpTable = {
 	[LayerMode.successLayerModal]: SuccessLayerModal,
 	[LayerMode.createEvent]: CreateEventContainer,
 	[LayerMode.groupEventDeleteConfirm]: GroupEventDeleteConfirm,
+	[LayerMode.selectGroupForChat]: SelectGroupForChat,
+	[LayerMode.createVideoCall]: CreateVideoCall,
 };
 
 interface StatusProps {
