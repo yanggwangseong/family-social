@@ -9,13 +9,17 @@ import BackSpace from '@/components/ui/back-space/BackSpace';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
-import { CreateGroupFields } from './group-create.interface';
+import {
+	CreateGroupFields,
+	CreateGroupPropsWithAuth,
+} from './group-create.interface';
 import { GroupService } from '@/services/group/group.service';
 import { useRouter } from 'next/router';
 import FieldWithTextarea from '@/components/ui/field/field-area/FieldArea';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { withAuthClientSideProps } from 'hoc/with-auth-client-side-props';
 
-const GroupCreate: FC = () => {
+const GroupCreate: FC<CreateGroupPropsWithAuth> = ({ authData }) => {
 	const router = useRouter();
 
 	const {
@@ -70,7 +74,7 @@ const GroupCreate: FC = () => {
 
 							{/* 프로필 */}
 							<div className={styles.form_container}>
-								<Profile username="양광성" role="관리자" />
+								<Profile username={authData.username} searchMember={authData} />
 							</div>
 
 							{/* 작성폼 */}
@@ -120,4 +124,4 @@ const GroupCreate: FC = () => {
 	);
 };
 
-export default GroupCreate;
+export default withAuthClientSideProps(GroupCreate);

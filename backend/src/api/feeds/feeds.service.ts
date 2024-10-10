@@ -126,6 +126,7 @@ export class FeedsService implements OnModuleInit {
 			medias,
 			comments,
 			mentions,
+			sumComment: comments.length,
 		};
 	}
 
@@ -195,7 +196,6 @@ export class FeedsService implements OnModuleInit {
 		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
 			MENTION_ON_FEED,
 		);
-		//
 
 		const query = await this.feedsRepository.findAllFeed({
 			take,

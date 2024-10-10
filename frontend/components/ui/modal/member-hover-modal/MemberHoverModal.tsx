@@ -1,10 +1,8 @@
 import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 import React, { FC } from 'react';
 import styles from './MemberHoverModal.module.scss';
-import Profile from '../../profile/Profile';
 import { PiAtDuotone } from 'react-icons/pi';
 import Image from 'next/image';
-import Link from 'next/link';
 import CustomButton from '../../button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
 
@@ -48,7 +46,10 @@ const MemberHoverModal: FC<{ mentionRecipient: SearchMemberResponse }> = ({
                 rounded-full p-[10px]
                 w-full"
 				type="button"
-				onClick={handleProfilePage}
+				onClick={e => {
+					e.stopPropagation(); // 이벤트 버블링 중지
+					handleProfilePage();
+				}}
 			>
 				프로필 바로가기
 			</CustomButton>

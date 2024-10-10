@@ -56,6 +56,8 @@ export class MessagesRepository extends Repository<MessageEntity> {
 					message: true,
 					member: {
 						username: true,
+						email: true,
+						profileImage: true,
 					},
 				},
 				where: {
@@ -80,6 +82,8 @@ export class MessagesRepository extends Repository<MessageEntity> {
 					memberId: data.memberId,
 					message: data.message,
 					memberName: data.member.username,
+					memberEmail: data.member.email,
+					memberProfileImage: data.member.profileImage,
 				};
 			});
 	}

@@ -42,6 +42,12 @@ export class FeedResDto {
 	})
 	groupDescription?: string;
 
+	@ApiPropertyOptional({
+		nullable: true,
+		description: '그룹 커버 이미지',
+	})
+	groupCoverImage?: string;
+
 	@ApiProperty({
 		nullable: false,
 		description: '피드 작성 멤버 아이디',
@@ -55,6 +61,18 @@ export class FeedResDto {
 	username!: string;
 
 	@ApiProperty({
+		nullable: false,
+		description: '피드 작성 멤버 이메일',
+	})
+	email!: string;
+
+	@ApiPropertyOptional({
+		nullable: true,
+		description: '피드 작성 멤버 프로필 이미지',
+	})
+	profileImage?: string;
+
+	@ApiProperty({
 		nullable: true,
 		description: '피드 내가 좋아요 여/부',
 	})
@@ -65,6 +83,12 @@ export class FeedResDto {
 		description: '피드 좋아요 갯수',
 	})
 	sumLike?: number;
+
+	@ApiProperty({
+		nullable: false,
+		description: '피드 댓글 갯수',
+	})
+	sumComment!: number;
 
 	@ApiPropertyOptional({
 		nullable: true,

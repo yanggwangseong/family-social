@@ -1,15 +1,16 @@
 .sidebar_container {
-	@screen 2xl {
-		@apply sticky top-0;
+	@screen xl {
+		@apply sticky top-20;
 		width: 300px;
 	}
 
 	@screen md {
-		@apply top-20;
+		@apply top-0;
 		width: 300px;
 	}
 
-	@apply w-full pt-3 border-r border-solid border-customDark h-full fixed top-0 z-[70] bg-basic;
+	// mobile
+	@apply w-full pt-3 border-r border-solid border-customDark top-0 h-full fixed z-[70] bg-basic;
 
 	// mobile_close
 	.mobile_close_btn {

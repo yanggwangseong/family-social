@@ -57,6 +57,7 @@ export class NotificationsService {
 					sender: {
 						id: true,
 						username: true,
+						email: true,
 						profileImage: true,
 					},
 				},

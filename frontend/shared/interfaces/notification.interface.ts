@@ -1,4 +1,4 @@
-import { MembersResponse } from './member.interface';
+import { MembersResponse, SearchMemberResponse } from './member.interface';
 
 export interface NotificationResponse {
 	list: NotificationItem[];
@@ -16,5 +16,5 @@ export interface NotificationItem {
 	notificationFeedId: string;
 	isRead: boolean;
 	createdAt: string;
-	sender: MembersResponse;
+	sender: SearchMemberResponse;
 }

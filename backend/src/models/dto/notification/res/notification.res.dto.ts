@@ -2,7 +2,7 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 
 import { NotificationEntity } from '@/models/entities/notification.entity';
 
-import { MemberProfileImageResDto } from '../../member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '../../member/res/member-search-res.dto';
 
 export class NotificationResDto extends PickType(NotificationEntity, [
 	'id',
@@ -18,5 +18,5 @@ export class NotificationResDto extends PickType(NotificationEntity, [
 	@ApiProperty({
 		nullable: false,
 	})
-	sender!: MemberProfileImageResDto;
+	sender!: MemberSearchResDto;
 }

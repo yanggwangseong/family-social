@@ -37,9 +37,6 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 		async () => await ChatService.getChatList(),
 	);
 
-	if (isLoading) return <div>Loading</div>;
-	if (!data) return null;
-
 	const handleMessageModal = (chatId: string) => {
 		setLayer({
 			...MessageModalDefaultValue,
@@ -109,8 +106,13 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 											onClick={() => handleMessageModal(item.chatId)}
 										>
 											<GroupAndMemberProfile
-												username={item.chatMembers[0].member.username}
-												groupName={item.group.groupName}
+												group={item.group}
+												member={{
+													username: item.recentMessage.memberName,
+													email: item.recentMessage.memberEmail,
+													profileImage: item.recentMessage.memberProfileImage,
+													id: item.recentMessage.memberId,
+												}}
 												chat={item}
 											></GroupAndMemberProfile>
 										</div>

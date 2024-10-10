@@ -21,6 +21,20 @@
 				@apply rounded-full;
 			}
 		}
+
+		.group_image_container {
+			@apply w-full h-full relative;
+
+			&:hover {
+				.group_hover_modal {
+					@apply block z-[20];
+				}
+			}
+
+			.group_hover_modal {
+				@apply hidden absolute w-[400px] bg-white bottom-4 z-[20];
+			}
+		}
 	}
 
 	.shared_text {

@@ -4,6 +4,8 @@
 
 ## (이런 고민을 했어요)
 
+- [HOC(Higher-Order-Components)를 활용한 사용자 인증 정보 관심사 분리](https://threeyears.tistory.com/633)
+- [react에서 useHover 커스텀훅과 hover시 modal 재사용 컴포넌트](https://threeyears.tistory.com/632)
 - [NextJS getServerSideProps SSR에서 HOF를 이용한 auth 검증](https://threeyears.tistory.com/607)
 - [react-query useMutation 커스텀훅으로 재사용하기](https://threeyears.tistory.com/618)
 - [react-query useQuery 커스텀훅으로 재사용하기](https://threeyears.tistory.com/620)
