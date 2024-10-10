@@ -22,7 +22,7 @@
 				@apply flex-grow mt-12 px-4;
 
 				.page_label_container {
-					@apply mt-12;
+					@apply mt-12 flex flex-col gap-4;
 					.page_label {
 						@apply text-customGray;
 					}
