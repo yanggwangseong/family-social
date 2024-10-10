@@ -35,6 +35,15 @@ export class MembersService {
 		};
 	}
 
+	async findMemberById(memberId: string): Promise<MemberSearchResDto | null> {
+		return await this.membersRepository.findMemberByIdOrThrow(memberId, {
+			id: true,
+			username: true,
+			email: true,
+			profileImage: true,
+		});
+	}
+
 	async findMemberByIdOrThrow(
 		memberId: string,
 	): Promise<MemberProfileImageResDto> {

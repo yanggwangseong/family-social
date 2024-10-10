@@ -227,6 +227,20 @@ export class MembersRepository extends Repository<MemberEntity> {
 		});
 	}
 
+	async findMemberByIdOrThrow(
+		memberId: string,
+		overrideSelectOptions: FindOptionsSelect<MemberEntity>,
+	) {
+		return this.repository.findOne({
+			where: {
+				id: memberId,
+			},
+			select: {
+				...overrideSelectOptions,
+			},
+		});
+	}
+
 	async createMember(
 		overrideInsertFeilds: OverrideInsertFeild<MemberEntity>,
 		qr?: QueryRunner,
