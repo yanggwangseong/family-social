@@ -6,9 +6,15 @@ import {
 	SignInRequest,
 	SocialRegisterRequest,
 } from '@/shared/interfaces/auth.interface';
+import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 import { axiosAPI, axiosClassic } from 'api/axios';
 
 export const AuthService = {
+	async getAuthMember() {
+		const { data } = await axiosAPI.get<SearchMemberResponse>('/auth/me');
+		return data;
+	},
+
 	async signIn(email: string, password: string) {
 		const { data } = await axiosClassic.post<AuthResponse>('/auth/sign-in', {
 			email,
