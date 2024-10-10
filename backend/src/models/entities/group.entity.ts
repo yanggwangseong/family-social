@@ -18,6 +18,7 @@ import { DefaultEntity } from './common/default.entity';
 import { FamEntity } from './fam.entity';
 import { FeedEntity } from './feed.entity';
 import { GroupEventEntity } from './group-event.entity';
+import { GroupFollowEntity } from './group.follow.entity';
 import { ScheduleEntity } from './schedule.entity';
 
 @Entity({ name: 'fam_group' })
@@ -88,4 +89,10 @@ export class GroupEntity extends DefaultEntity {
 	// chat
 	@OneToMany(() => ChatEntity, (chat) => chat.group)
 	chats?: ChatEntity[];
+
+	@OneToMany(() => GroupFollowEntity, (gf) => gf.followingGroup)
+	following?: GroupFollowEntity[];
+
+	@OneToMany(() => GroupFollowEntity, (gf) => gf.followedGroup)
+	followers?: GroupFollowEntity[];
 }
