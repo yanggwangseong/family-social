@@ -74,6 +74,7 @@ import { FeedEntity } from '@/models/entities/feed.entity';
 
 import { FeedsService } from './feeds.service';
 import { CommentsService } from '../comments/comments.service';
+import { GroupsService } from '../groups/groups.service';
 import { MentionsService } from '../mentions/mentions.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -87,6 +88,7 @@ export class FeedsController {
 		private readonly commentsService: CommentsService,
 		private readonly notificationsService: NotificationsService,
 		private readonly mentionsService: MentionsService,
+		private readonly groupsService: GroupsService,
 	) {}
 
 	/**
@@ -162,7 +164,15 @@ export class FeedsController {
 		@Query() paginationDto: FeedPaginationReqDto,
 		@PaginationDecorator() pagination: Pagination<FeedEntity>,
 	) {
-		return await this.feedsService.findAllFeed(sub, paginationDto, pagination);
+		const userGroupIds = await this.groupsService
+			.getMemberBelongToGroups(sub, false)
+			.then((userGroupIds) => userGroupIds.map((group) => group.group.id));
+		return await this.feedsService.findAllFeed(
+			sub,
+			paginationDto,
+			pagination,
+			userGroupIds,
+		);
 	}
 
 	/**
