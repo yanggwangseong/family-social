@@ -118,3 +118,19 @@ export const PutGroupEventSwagger = () => {
 		]),
 	);
 };
+
+export const ToggleFollowGroupSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '특정 그룹 팔로우',
+		}),
+		ApiOkResponse({
+			description: '특정 그룹 팔로우',
+			type: Boolean,
+		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [GroupErrorResponse['Group-404-1']]),
+		ErrorResponse(HttpStatus.BAD_REQUEST, [
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};

@@ -21,6 +21,10 @@ import { ExTractGroupDecorator } from '@/common/decorators/extract-group.decorat
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
 import { PaginationDecorator } from '@/common/decorators/pagination.decorator';
+import {
+	QueryRunnerWithRedis,
+	QueryRunnerWithRedisDecorator,
+} from '@/common/decorators/query-runner-with-redis.decorator';
 import { QueryRunnerDecorator } from '@/common/decorators/query-runner.decorator';
 import {
 	DeleteGroupEventSwagger,
@@ -28,6 +32,7 @@ import {
 	GetGroupEventsSwagger,
 	PostGroupEventSwagger,
 	PutGroupEventSwagger,
+	ToggleFollowGroupSwagger,
 } from '@/common/decorators/swagger/swagger-group-event.decorator';
 import {
 	CreateFamByMemberOfGroupSwagger,
@@ -62,6 +67,7 @@ import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
 import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
+import { TransactionWithRedisInterceptor } from '@/common/interceptors/transaction-with-redis.interceptor';
 import { TransactionInterceptor } from '@/common/interceptors/transaction.interceptor';
 import { parseBooleanPipeMessage } from '@/common/pipe-message/parse-boolean-pipe-message';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
@@ -81,6 +87,7 @@ import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
 import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
 import { GroupEventItemResDto } from '@/models/dto/group-event/res/group-event-item-res.dto';
+import { ToggleFollowGroupReqDto } from '@/models/dto/group-follow/req/toggle-follow-group-req.dto';
 import { InvitationValidationCodeReqDto } from '@/models/dto/invitations/req/invitation-validation-code-req.dto';
 import {
 	ReturnBasicPaginationType,
@@ -94,6 +101,7 @@ import { GroupEventEntity } from '@/models/entities/group-event.entity';
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
 import { GroupEventsService } from '../group-events/group-events.service';
+import { GroupFollowService } from '../group-follow/group-follow.service';
 import { InvitationsService } from '../invitations/invitations.service';
 import { MailsService } from '../mails/mails.service';
 import { MembersService } from '../members/members.service';
@@ -106,6 +114,7 @@ import { SchedulesService } from '../schedules/schedules.service';
 export class GroupsController {
 	constructor(
 		private readonly groupsService: GroupsService,
+		private readonly groupFollowService: GroupFollowService,
 		private readonly famsService: FamsService,
 		private readonly membersService: MembersService,
 		private readonly schedulesService: SchedulesService,
@@ -835,6 +844,32 @@ export class GroupsController {
 				groupEventId,
 			},
 			qr,
+		);
+	}
+
+	/**
+	 * @summary 특정 그룹 팔로우
+	 * @param followedGroupId 팔로우 할 그룹 아이디
+	 * @param dto 팔로우 요청 데이터
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns void
+	 */
+	@ToggleFollowGroupSwagger()
+	@UseInterceptors(TransactionWithRedisInterceptor)
+	@Put(':groupId/follow')
+	async toggleFollowGroup(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		followedGroupId: string,
+		@Body() dto: ToggleFollowGroupReqDto,
+		@QueryRunnerWithRedisDecorator() qrAndRedis: QueryRunnerWithRedis,
+	) {
+		return await this.groupFollowService.followGroup(
+			dto.followingGroupId,
+			followedGroupId,
+			qrAndRedis,
 		);
 	}
 }
