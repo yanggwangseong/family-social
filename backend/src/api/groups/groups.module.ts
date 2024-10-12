@@ -22,6 +22,7 @@ import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
 import { FamsModule } from '../fams/fams.module';
 import { GroupEventsModule } from '../group-events/group-events.module';
+import { GroupFollowService } from '../group-follow/group-follow.service';
 import { InvitationsModule } from '../invitations/invitations.module';
 import { MailsModule } from '../mails/mails.module';
 import { MembersModule } from '../members/members.module';
@@ -43,6 +44,7 @@ import { SchedulesModule } from '../schedules/schedules.module';
 		GroupsRepository,
 		FamsRepository,
 		Pagination,
+		GroupFollowService,
 		GroupFollowCache,
 		GroupFollowRepository,
 	],
