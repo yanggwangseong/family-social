@@ -130,69 +130,74 @@ export class FeedsRepository extends Repository<FeedEntity> {
 			.limit(take);
 
 		// 서브쿼리 미리 생성
-		let mutualFollowSubQuery: string;
-		let followSubQuery: string;
+		//let mutualFollowSubQuery: string;
+		//let followSubQuery: string;
 
-		if (options === 'ALL') {
-			// 상호 팔로우 그룹의 피드 서브쿼리 생성
-			mutualFollowSubQuery = query
-				.subQuery()
-				.select('1')
-				.from(GroupFollowEntity, 'gf1')
-				.innerJoin(
-					GroupFollowEntity,
-					'gf2',
-					'gf1.followingGroupId = gf2.followedGroupId AND gf1.followedGroupId = gf2.followingGroupId',
-				)
-				.where('gf1.followedGroupId = a.groupId')
-				.andWhere('gf1.followingGroupId IN (:...userGroupIds)', {
-					userGroupIds,
-				})
-				.getQuery();
+		// 상호 팔로우 그룹의 피드 서브쿼리 생성
+		const mutualFollowSubQuery = query
+			.subQuery()
+			.select('1')
+			.from(GroupFollowEntity, 'gf1')
+			.innerJoin(
+				GroupFollowEntity,
+				'gf2',
+				'gf1.followingGroupId = gf2.followedGroupId AND gf1.followedGroupId = gf2.followingGroupId',
+			)
+			.where('gf1.followedGroupId = a.groupId')
+			.andWhere('gf1.followingGroupId IN (:...userGroupIds)', {
+				userGroupIds,
+			})
+			.getQuery();
 
-			// 사용자가 팔로우하는 그룹의 피드 서브쿼리 생성
-			followSubQuery = query
-				.subQuery()
-				.select('1')
-				.from(GroupFollowEntity, 'gf')
-				.where('gf.followedGroupId = a.groupId')
-				.andWhere('gf.followingGroupId IN (:...userGroupIds)', {
-					userGroupIds,
-				})
-				.getQuery();
-		}
+		// 사용자가 팔로우하는 그룹의 피드 서브쿼리 생성
+		const followSubQuery = query
+			.subQuery()
+			.select('1')
+			.from(GroupFollowEntity, 'gf')
+			.where('gf.followedGroupId = a.groupId')
+			.andWhere('gf.followingGroupId IN (:...userGroupIds)', {
+				userGroupIds,
+			})
+			.getQuery();
 
 		// 옵션에 따른 쿼리 조건 설정
-		if (options === 'TOP') {
-			// 공개 피드만 가져오기
-			query.where('a.isPublic = :isPublic', { isPublic: true });
+		if (options === 'TOP' || options === 'ALL') {
+			if (userGroupIds.length === 0) {
+				// userGroupIds가 빈 배열인 경우, 아무런 피드도 가져오지 않도록 처리
+				/**
+				 * 속한 그룹이 없다면 아무런 피드도 가져오지 않도록 처리 (ex 신규 가입자)
+				 */
+				query.where('1 = 0');
+			} else {
+				query.where(
+					new Brackets((qb) => {
+						// 조건 1: 사용자가 속한 그룹의 피드
+						qb.where('a.groupId IN (:...userGroupIds)', { userGroupIds });
+
+						// 조건 2: 상호 팔로우 그룹의 피드
+						qb.orWhere(
+							new Brackets((qb2) => {
+								qb2.where(`EXISTS (${mutualFollowSubQuery})`);
+							}),
+						);
+
+						// 조건 3: isVisibleToFollowers가 true이고, 사용자가 팔로우하는 그룹의 피드
+						qb.orWhere(
+							new Brackets((qb2) => {
+								qb2
+									.where('a.isVisibleToFollowers = TRUE')
+									.andWhere(`EXISTS (${followSubQuery})`);
+							}),
+						);
+					}),
+				);
+			}
+
+			// TOP, ALL 옵션일 경우 공개 피드만 추가로 필터링
+			query.andWhere('a.isPublic = :isPublic', { isPublic: true });
 		} else if (options === 'MYFEED') {
 			// 본인의 피드만 가져오기
 			query.where('a.memberId = :memberId', { memberId });
-		} else if (options === 'ALL') {
-			// 피드 노출 조건 반영
-			query.where(
-				new Brackets((qb) => {
-					// 조건 1: 사용자가 속한 그룹의 피드
-					qb.where('a.groupId IN (:...userGroupIds)', { userGroupIds });
-
-					// 조건 2: 상호 팔로우 그룹의 피드
-					qb.orWhere(
-						new Brackets((qb2) => {
-							qb2.where(`EXISTS (${mutualFollowSubQuery})`);
-						}),
-					);
-
-					// 조건 3: isVisibleToFollowers가 true이고, 사용자가 팔로우하는 그룹의 피드
-					qb.orWhere(
-						new Brackets((qb2) => {
-							qb2
-								.where('a.isVisibleToFollowers = TRUE')
-								.andWhere(`EXISTS (${followSubQuery})`);
-						}),
-					);
-				}),
-			);
 		} else if (options === 'GROUPFEED') {
 			// 특정 그룹의 피드 가져오기
 			query.where('a.groupId = :groupId', { groupId });
