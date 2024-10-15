@@ -7,6 +7,8 @@ import {
 	PiUserDuotone,
 	PiHouseDuotone,
 	PiGearSixDuotone,
+	PiUsersDuotone,
+	PiUserPlusDuotone,
 } from 'react-icons/pi';
 import Line from '@/components/ui/line/Line';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
@@ -21,8 +23,16 @@ import { useMainSidebar } from '@/hooks/useMainSidebar';
 import { motion } from 'framer-motion';
 import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useMenuAnimation } from '@/hooks/useMenuAnimation';
+import { withGroupDetailProps } from 'hoc/with-group-detail-props';
+import {
+	GroupDetailSidebarProps,
+	GroupDetailSidebarPropsWithGroupDetail,
+} from './group-detail-sidebar.interface';
 
-const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
+const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
+	groupId,
+	groupDetail,
+}) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 
 	const invitationModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -66,11 +76,41 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 				{/* 라인 */}
 				<Line />
 
-				<div className={styles.sidebar_member_container}>
+				{/* <div className={styles.sidebar_member_container}>
 					<div className={styles.icon_container}>
 						<PiUserDuotone size={24} color="#0a0a0a" />
 					</div>
-					<div className={styles.member_text}>1명</div>
+					<div
+						className={styles.member_text}
+					>{`${groupDetail.memberCount} 명`}</div>
+				</div> */}
+				<div className={styles.sidebar_member_container}>
+					<div className={styles.member_container}>
+						<div className={styles.icon_container}>
+							<PiUserDuotone size={24} color="#0a0a0a" />
+						</div>
+						<div
+							className={styles.member_text}
+						>{`멤버 ${groupDetail.memberCount}명`}</div>
+					</div>
+					<div className={styles.follow_container}>
+						<div className={styles.follower_container}>
+							<div className={styles.icon_container}>
+								<PiUsersDuotone size={24} color="#0a0a0a" />
+							</div>
+							<div
+								className={styles.member_text}
+							>{`팔로워 ${groupDetail.followers}개`}</div>
+						</div>
+						<div className={styles.following_container}>
+							<div className={styles.icon_container}>
+								<PiUserPlusDuotone size={24} color="#0a0a0a" />
+							</div>
+							<div
+								className={styles.member_text}
+							>{`팔로잉 ${groupDetail.followings}개`}</div>
+						</div>
+					</div>
 				</div>
 
 				{/* 라인 */}
@@ -172,4 +212,6 @@ const GroupDetailSidebar: FC<{ groupId: string }> = ({ groupId }) => {
 	);
 };
 
-export default GroupDetailSidebar;
+export default withGroupDetailProps<GroupDetailSidebarProps>(
+	GroupDetailSidebar,
+);
