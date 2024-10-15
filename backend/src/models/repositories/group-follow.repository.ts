@@ -19,24 +19,24 @@ export class GroupFollowRepository extends Repository<GroupFollowEntity> {
 			: this.repository;
 	}
 
-	async getFollowers(
-		followedGroupId: string,
-	): Promise<{ followingGroupId: string }[]> {
-		return await this.repository.find({
-			select: {
-				followingGroupId: true,
-			},
-			where: { followedGroupId },
-		});
+	async getFollowers(followedGroupId: string): Promise<string[]> {
+		return await this.repository
+			.find({
+				select: {
+					followingGroupId: true,
+				},
+				where: { followedGroupId },
+			})
+			.then((data) => data.map((data) => data.followingGroupId));
 	}
 
-	async getFollowings(
-		followingGroupId: string,
-	): Promise<{ followedGroupId: string }[]> {
-		return await this.repository.find({
-			select: { followedGroupId: true },
-			where: { followingGroupId },
-		});
+	async getFollowings(followingGroupId: string): Promise<string[]> {
+		return await this.repository
+			.find({
+				select: { followedGroupId: true },
+				where: { followingGroupId },
+			})
+			.then((data) => data.map((data) => data.followedGroupId));
 	}
 
 	async removeFollow(

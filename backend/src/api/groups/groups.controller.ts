@@ -82,6 +82,7 @@ import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invita
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
+import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
@@ -166,8 +167,16 @@ export class GroupsController {
 		)
 		groupId: string,
 		@CurrentUser('sub') sub: string,
-	) {
-		return await this.famsService.getGroupByGroupId(groupId, sub);
+	): Promise<GroupDetailResDto> {
+		const response = await this.famsService.getGroupByGroupId(groupId, sub);
+		const followers = await this.groupFollowService.getFollowers(groupId);
+		const followings = await this.groupFollowService.getFollowings(groupId);
+
+		return {
+			...response,
+			followers: followers.length,
+			followings: followings.length,
+		};
 	}
 
 	/**

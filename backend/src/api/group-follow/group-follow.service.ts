@@ -24,11 +24,7 @@ export class GroupFollowService implements OnModuleInit {
 				this.groupFollowRepository.getFollowings(groupId),
 			]);
 
-			await this.groupFollowCache.syncFollows(
-				groupId,
-				followers.map((data) => data.followingGroupId),
-				following.map((data) => data.followedGroupId),
-			);
+			await this.groupFollowCache.syncFollows(groupId, followers, following);
 		}
 	}
 
@@ -36,14 +32,22 @@ export class GroupFollowService implements OnModuleInit {
 	 * 레디스에서 해당 그룹을 팔로우하는 그룹들을 가져온다.
 	 */
 	async getFollowers(groupId: string) {
-		return await this.groupFollowCache.getFollowers(groupId);
+		const followers = await this.groupFollowCache.getFollowers(groupId);
+		if (followers.length === 0) {
+			return await this.groupFollowRepository.getFollowers(groupId);
+		}
+		return followers;
 	}
 
 	/**
 	 * 레디스에서 해당 그룹을 팔로우하는 그룹들을 가져온다.
 	 */
 	async getFollowings(groupId: string) {
-		return await this.groupFollowCache.getFollowing(groupId);
+		const followings = await this.groupFollowCache.getFollowing(groupId);
+		if (followings.length === 0) {
+			return await this.groupFollowRepository.getFollowings(groupId);
+		}
+		return followings;
 	}
 
 	async followGroup(
