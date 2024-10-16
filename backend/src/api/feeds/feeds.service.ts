@@ -190,6 +190,7 @@ export class FeedsService implements OnModuleInit {
 		memberId: string,
 		paginationDto: FeedPaginationReqDto,
 		pagination: Pagination<FeedEntity>,
+		userGroupIds: string[],
 	): Promise<BasicPaginationResponse<FeedResDto>> {
 		const { page, limit, groupId, options } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
@@ -203,6 +204,7 @@ export class FeedsService implements OnModuleInit {
 			memberId,
 			options,
 			groupId,
+			userGroupIds,
 		});
 
 		const {

@@ -14,6 +14,7 @@ import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { Loading, Report } from 'notiflix';
+import { useGroupDetailQuery } from '@/hooks/use-query/useGroupDetailQuery';
 
 const InviteCode: FC = () => {
 	const router = useRouter();
@@ -36,10 +37,8 @@ const InviteCode: FC = () => {
 		mode: 'onChange',
 	});
 
-	const { data: groupData, isLoading: groupLoading } = useQuery(
-		['get-group-detail', groupId],
-		async () => await GroupService.getGroupDetail(groupId),
-	);
+	const { groupDetail: groupData, groupDetailLoading: groupLoading } =
+		useGroupDetailQuery(groupId);
 
 	const { mutate: validateInviteCode } = useCreateMutation(
 		async (data: InviteCodeRequest) =>

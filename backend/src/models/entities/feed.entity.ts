@@ -66,6 +66,16 @@ export class FeedEntity extends DefaultEntity {
 	@IsUUID(4, { message: uuidValidationMessage })
 	public readonly memberId!: string;
 
+	@Column({ type: 'boolean', default: false })
+	@ApiProperty({
+		description: '팔로워에게 공개 여부',
+		default: false,
+	})
+	@IsBoolean({
+		message: booleanValidationMessage,
+	})
+	isVisibleToFollowers!: boolean;
+
 	@OneToMany(() => LikeFeedEntity, (lf) => lf.feed)
 	LikedByMembers?: LikeFeedEntity[];
 
