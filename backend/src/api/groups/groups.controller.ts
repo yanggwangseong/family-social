@@ -174,8 +174,8 @@ export class GroupsController {
 
 		return {
 			...response,
-			followers: followers.length,
-			followings: followings.length,
+			followers,
+			followings,
 		};
 	}
 

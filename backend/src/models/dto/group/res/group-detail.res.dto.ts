@@ -7,10 +7,10 @@ export class GroupDetailResDto extends FamGroupDetailResDto {
 		nullable: true,
 		description: '그룹 팔로워 수',
 	})
-	followers!: number;
+	followers!: string[];
 
 	@ApiProperty({
 		nullable: true,
 	})
-	followings!: number;
+	followings!: string[];
 }

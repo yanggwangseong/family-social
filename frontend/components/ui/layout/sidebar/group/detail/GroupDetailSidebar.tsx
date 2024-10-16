@@ -100,7 +100,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 							</div>
 							<div
 								className={styles.member_text}
-							>{`팔로워 ${groupDetail.followers}개`}</div>
+							>{`팔로워 ${groupDetail.followers.length}개`}</div>
 						</div>
 						<div className={styles.following_container}>
 							<div className={styles.icon_container}>
@@ -108,7 +108,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 							</div>
 							<div
 								className={styles.member_text}
-							>{`팔로잉 ${groupDetail.followings}개`}</div>
+							>{`팔로잉 ${groupDetail.followings.length}개`}</div>
 						</div>
 					</div>
 				</div>
