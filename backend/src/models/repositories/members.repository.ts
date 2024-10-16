@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
+	Brackets,
 	FindOptionsSelect,
-	ILike,
 	In,
 	Not,
 	QueryRunner,
@@ -18,6 +18,7 @@ import { OverrideInsertFeild } from '@/types/repository';
 import { MemberByIdResDto } from '../dto/member/res/member-by-id-res.dto';
 import { MemberProfileImageResDto } from '../dto/member/res/member-profile-image-res.dto';
 import { MemberSearchResDto } from '../dto/member/res/member-search-res.dto';
+import { GroupFollowEntity } from '../entities/group.follow.entity';
 
 @Injectable()
 export class MembersRepository extends Repository<MemberEntity> {
@@ -112,25 +113,63 @@ export class MembersRepository extends Repository<MemberEntity> {
 		authorMemberId: string,
 		groupIds: string[],
 	): Promise<MemberSearchResDto[]> {
-		return await this.repository.find({
-			select: {
-				id: true,
-				username: true,
-				profileImage: true,
-				email: true,
-			},
-			relations: {
-				memberGroups: true,
-			},
-			where: {
-				username: ILike(`${username}%`),
-				id: Not(authorMemberId),
-				memberGroups: {
-					groupId: In(groupIds),
-					invitationAccepted: true,
-				},
-			},
-		});
+		// return await this.repository.find({
+		// 	select: {
+		// 		id: true,
+		// 		username: true,
+		// 		profileImage: true,
+		// 		email: true,
+		// 	},
+		// 	relations: {
+		// 		memberGroups: true,
+		// 	},
+		// 	where: {
+		// 		username: ILike(`${username}%`),
+		// 		id: Not(authorMemberId),
+		// 		memberGroups: {
+		// 			groupId: In(groupIds),
+		// 			invitationAccepted: true,
+		// 		},
+		// 	},
+		// });
+
+		// 상호 팔로우 그룹의 ID를 가져오는 서브쿼리 생성
+		const mutualFollowSubQuery = this.manager
+			.getRepository(GroupFollowEntity)
+			.createQueryBuilder('gf1')
+			.select('gf1.followedGroupId')
+			.innerJoin(
+				GroupFollowEntity,
+				'gf2',
+				'gf1.followingGroupId = gf2.followedGroupId AND gf1.followedGroupId = gf2.followingGroupId',
+			)
+			.where('gf1.followingGroupId IN (:...groupIds)', { groupIds });
+
+		// 메인 쿼리 작성
+		const members = await this.repository
+			.createQueryBuilder('member')
+			.distinct(true) // 중복 멤버 제거
+			.select([
+				'member.id',
+				'member.username',
+				'member.profileImage',
+				'member.email',
+			])
+			.innerJoin('member.memberGroups', 'fam')
+			.where('member.username ILIKE :username', { username: `${username}%` })
+			.andWhere('member.id != :authorMemberId', { authorMemberId })
+			.andWhere('fam.invitationAccepted = TRUE')
+			.andWhere(
+				new Brackets((qb) => {
+					qb.where('fam.groupId IN (:...groupIds)', { groupIds }).orWhere(
+						`fam.groupId IN (${mutualFollowSubQuery.getQuery()})`,
+					);
+				}),
+			)
+			.setParameters({ groupIds })
+			.getMany();
+
+		return members;
 	}
 
 	async findGroupIdsBelongToMyGroup(memberId: string) {

@@ -125,7 +125,11 @@ const SearchBox: FC = () => {
 							key={index}
 							onClick={() => router.push(`/accounts/${item.email}`)}
 						>
-							<Profile username={item.username} email={item.email} />
+							<Profile
+								searchMember={item}
+								username={item.username}
+								email={item.email}
+							/>
 						</motion.div>
 					))
 				) : (

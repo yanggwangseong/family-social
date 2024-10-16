@@ -38,4 +38,6 @@ export interface FamRejectInvitationArgs extends FamAcceptInvitationArgs {}
 export interface GroupDetailResponse extends FamResponse {
 	group: GroupProfileResponse;
 	memberCount: number;
+	followers: string[];
+	followings: string[];
 }

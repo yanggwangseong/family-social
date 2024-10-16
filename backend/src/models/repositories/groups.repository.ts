@@ -130,4 +130,10 @@ export class GroupsRepository extends Repository<GroupEntity> {
 
 		return !!affected;
 	}
+
+	async findAllGroupIds(): Promise<string[]> {
+		return await this.repository
+			.find({ select: { id: true } })
+			.then((groups) => groups.map((group) => group.id));
+	}
 }

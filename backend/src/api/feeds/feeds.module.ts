@@ -21,6 +21,7 @@ import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository
 
 import { FeedsController } from './feeds.controller';
 import { FeedsService } from './feeds.service';
+import { GroupsModule } from '../groups/groups.module';
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { FeedsService } from './feeds.service';
 		CommentsModule,
 		NotificationsModule,
 		MentionsModule,
+		GroupsModule,
 	],
 	controllers: [FeedsController],
 	providers: [
