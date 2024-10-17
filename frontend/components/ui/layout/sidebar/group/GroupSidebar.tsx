@@ -60,6 +60,12 @@ const GroupSidebar: FC = () => {
 						menu="찾아보기"
 						handleCloseMainSidebar={handleCloseMainSidebar}
 					/>
+					<Menu
+						link="/groups/events"
+						Icon={PiCompassDuotone}
+						menu="이벤트"
+						handleCloseMainSidebar={handleCloseMainSidebar}
+					/>
 				</div>
 
 				<motion.div {...BUTTONGESTURE} className={styles.sidebar_btn_container}>
