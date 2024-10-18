@@ -1,5 +1,5 @@
 import Format from '@/components/ui/layout/Format';
-import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
+import GroupDetailFormat from '@/components/ui/layout/group/group-detail/GroupDetailFormat';
 import Line from '@/components/ui/line/Line';
 import Profile from '@/components/ui/profile/Profile';
 import { GroupService } from '@/services/group/group.service';

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { useLottieLike } from '@/hooks/useLottieLike';
 
-import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
+import GroupDetailFormat from '@/components/ui/layout/group/group-detail/GroupDetailFormat';
 import FeedContainer from '../../feed/feed-container/FeedContainer';
 
 const GroupDetail: FC = () => {
