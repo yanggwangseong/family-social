@@ -1,43 +1,14 @@
-.container {
-	@screen md {
-		@apply h-full;
+.top_title_container {
+	@apply mb-10 flex;
+	.top_title {
+		@apply font-medium text-xl;
 	}
-	@apply h-full text-customDark;
 
-	//컨텐츠
-	.contents_container {
-		@apply flex relative;
-		height: calc(100vh - 80px);
-		overflow-y: auto;
+	.top_title_icon_container {
+		@apply flex justify-center items-center;
+	}
 
-		.detail_container {
-			@screen md {
-				flex: 1;
-			}
-			@apply relative w-full;
-
-			.main_contents_container {
-				@screen md {
-					@apply mx-auto my-10 px-0;
-					width: 768px;
-				}
-				@apply w-full z-10 relative my-10 px-4;
-
-				.top_title_container {
-					@apply mb-10 flex;
-					.top_title {
-						@apply font-medium text-xl;
-					}
-
-					.top_title_icon_container {
-						@apply flex justify-center items-center;
-					}
-
-					.top_title_count {
-						@apply flex justify-center items-center text-xl text-customGray;
-					}
-				}
-			}
-		}
+	.top_title_count {
+		@apply flex justify-center items-center text-xl text-customGray;
 	}
 }

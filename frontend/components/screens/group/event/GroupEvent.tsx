@@ -14,6 +14,7 @@ import {
 	NOT_FOUND_GROUP_EVENT,
 	NOT_FOUND_TOUR_MESSAGE,
 } from '@/constants/index';
+import GroupFormat from '@/components/ui/layout/group/GroupFormat';
 
 const GroupEvent: FC = () => {
 	const {
@@ -37,46 +38,39 @@ const GroupEvent: FC = () => {
 
 	return (
 		<Format title={'group-events'}>
-			<div className={styles.container}>
-				{/* 헤더 */}
-				<Header />
-				<div className={styles.contents_container}>
-					<GroupSidebar />
-					<div className={styles.main_contents_container}>
-						<div className={styles.top_title_container}>
-							<div className={styles.top_title}>그룹 이벤트</div>
-						</div>
-						<div className={styles.group_event_container}>
-							{isLoading && <Skeleton />}
-
-							{data?.pages.map((page, pageIndex) => (
-								<AnimatePresence key={pageIndex}>
-									{page.list.map((event, index) => (
-										<GroupEventItem
-											key={event.id}
-											index={index}
-											page={page.page}
-											data={event}
-										/>
-									))}
-								</AnimatePresence>
-							))}
-
-							{isRefetching && (
-								<React.Fragment>
-									<Skeleton />
-									<Skeleton />
-									<Skeleton />
-								</React.Fragment>
-							)}
-
-							{data?.pages[0].list.length === 0 && (
-								<NotFoundSearch message={NOT_FOUND_GROUP_EVENT} />
-							)}
-						</div>
-					</div>
+			<GroupFormat>
+				<div className={styles.top_title_container}>
+					<div className={styles.top_title}>그룹 이벤트</div>
 				</div>
-			</div>
+				<div className={styles.group_event_container}>
+					{isLoading && <Skeleton />}
+
+					{data?.pages.map((page, pageIndex) => (
+						<AnimatePresence key={pageIndex}>
+							{page.list.map((event, index) => (
+								<GroupEventItem
+									key={event.id}
+									index={index}
+									page={page.page}
+									data={event}
+								/>
+							))}
+						</AnimatePresence>
+					))}
+
+					{isRefetching && (
+						<React.Fragment>
+							<Skeleton />
+							<Skeleton />
+							<Skeleton />
+						</React.Fragment>
+					)}
+
+					{data?.pages[0].list.length === 0 && (
+						<NotFoundSearch message={NOT_FOUND_GROUP_EVENT} />
+					)}
+				</div>
+			</GroupFormat>
 		</Format>
 	);
 };
