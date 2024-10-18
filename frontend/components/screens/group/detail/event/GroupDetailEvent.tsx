@@ -1,5 +1,5 @@
 import Format from '@/components/ui/layout/Format';
-import GroupDetailFormat from '@/components/ui/layout/group/GroupDetailFormat';
+import GroupDetailFormat from '@/components/ui/layout/group/group-detail/GroupDetailFormat';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 import styles from './GroupDetailEvent.module.scss';
