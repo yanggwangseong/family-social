@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './RightSidebar.module.scss';
 import cn from 'classnames';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
@@ -11,10 +11,6 @@ import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGrou
 import GroupSelect from '@/components/ui/select/group/GroupSelect';
 
 const RightSidebar: FC = () => {
-	// const [selectedGroupId, setSelectedGroupId] = useState<string>('');
-
-	const groupId = '75aca3da-1dac-48ef-84b8-cdf1be8fe37d';
-
 	const {
 		data: groupList,
 		isLoading: groupLoading,
@@ -31,16 +27,20 @@ const RightSidebar: FC = () => {
 
 	const { data, isLoading } = useQuery(
 		['get-members', isSelecteGroup],
-		async () => await GroupService.getMembersBelongToGroup(groupId),
+		async () => await GroupService.getMembersBelongToGroup(isSelecteGroup),
 		{
 			enabled: !!isSelecteGroup,
 		},
 	);
 
-	// const { data: groupList, isLoading: groupLoading } = useQuery(
-	// 	['member-belong-to-groups'],
-	// 	async () => await GroupService.getMemberBelongToGroups(),
-	// );
+	useEffect(() => {
+		/**
+		 * 최초 로드시에 isSelectGroup이 없으므로 첫번째 그룹으로 설정
+		 */
+		if (!isSelecteGroup && groupList && groupList.length > 0) {
+			handleSelectedGroup(groupList[0].group.id);
+		}
+	}, [groupList, handleSelectedGroup, isSelecteGroup]);
 
 	return (
 		<div className={styles.right_sidebar_container}>

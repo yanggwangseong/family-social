@@ -29,8 +29,24 @@
 				@apply text-customOrange;
 			}
 
-			.icon_container {
-				@apply ml-auto border border-solid border-customOrange rounded-full px-[0.1rem] py-[0.1rem];
+			.group_container {
+				@apply flex items-center gap-4;
+
+				.group_image_container {
+					@apply relative w-[32px] h-[32px] border border-solid border-customDark;
+				}
+
+				.group_name {
+					@apply text-sm font-medium;
+				}
+			}
+
+			.check_icon_wrapper {
+				@apply ml-auto;
+
+				.icon_container {
+					@apply border border-solid border-customOrange rounded-full px-[0.1rem] py-[0.1rem];
+				}
 			}
 		}
 	}

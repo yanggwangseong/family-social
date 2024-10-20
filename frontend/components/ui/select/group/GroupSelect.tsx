@@ -1,4 +1,5 @@
 import React, { FC, useReducer } from 'react';
+import Image from 'next/image';
 import styles from './GroupSelect.module.scss';
 import { motion } from 'framer-motion';
 import { AiOutlineCheck, AiOutlineEye } from 'react-icons/ai';
@@ -7,9 +8,11 @@ import {
 	toggleVariant,
 	toggleWrapperVariant,
 } from '@/utils/animation/toggle-variant';
-import { PiLightningDuotone, PiUsersThreeDuotone } from 'react-icons/pi';
+import { PiUsersThreeDuotone } from 'react-icons/pi';
 import cn from 'classnames';
 import { MemberBelongToGroupsResponse } from '@/shared/interfaces/group.interface';
+import { useHover } from '@/hooks/useHover';
+import ProfileHoverContainerModal from '../../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 const GroupSelect: FC<{
 	groupList: MemberBelongToGroupsResponse[];
@@ -19,6 +22,8 @@ const GroupSelect: FC<{
 	const [isSelectToggle, setIsSelectToggle] = useReducer(state => {
 		return !state;
 	}, false);
+
+	const { handleMouseOver, handleMouseOut, isHovering } = useHover();
 
 	const handleSelectedGroupId = (groupId: string) => {
 		onSelectedGroupId(groupId);
@@ -74,10 +79,31 @@ const GroupSelect: FC<{
 						})}
 						onClick={() => handleSelectedGroupId(group.group.id)}
 					>
-						{`${group.group.groupName}`}
+						<div className={styles.group_container}>
+							<div className={styles.group_image_container}>
+								<Image
+									fill
+									src={
+										group.group.groupCoverImage ||
+										'/images/banner/sm/group-base-sm.png'
+									}
+									alt="group-img"
+								/>
+							</div>
+							<div className={styles.group_name}>{group.group.groupName}</div>
+						</div>
+
+						{/* <ProfileHoverContainerModal
+							group={group.group}
+							handleMouseOver={handleMouseOver}
+							handleMouseOut={handleMouseOut}
+							isHovering={isHovering}
+						/> */}
 						{selectedGroupId === group.group.id && (
-							<div className={styles.icon_container}>
-								<AiOutlineCheck size={14} color="#e5855d" />
+							<div className={styles.check_icon_wrapper}>
+								<div className={styles.icon_container}>
+									<AiOutlineCheck size={16} color="#e5855d" />
+								</div>
 							</div>
 						)}
 					</motion.div>
