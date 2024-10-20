@@ -1,8 +1,6 @@
 import Format from '@/components/ui/layout/Format';
 import styles from './GroupEvent.module.scss';
 import React, { FC } from 'react';
-import Header from '@/components/ui/header/Header';
-import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
 import { useGroupEventItemIntersectionObserver } from '@/hooks/useGroupEventItemIntersectionObserver';
 import { GroupEventService } from '@/services/group-event/group-event.service';
 import { TranslateDateFormat } from '@/utils/translate-date-format';

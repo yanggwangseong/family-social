@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import styles from './GroupRequests.module.scss';
 import Format from '@/components/ui/layout/Format';
-import Header from '@/components/ui/header/Header';
-import GroupSidebar from '@/components/ui/layout/sidebar/group/GroupSidebar';
 import Invitations from './invitations/Invitations';
 import { BsDot } from 'react-icons/bs';
 import { useQuery } from 'react-query';
