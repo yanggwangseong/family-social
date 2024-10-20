@@ -125,6 +125,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			return {
 				id: item.id,
 				invitationAccepted: item.invitationAccepted,
+				role: item.role,
 				group: {
 					id: item.groupId,
 					groupName: item.groupName,
@@ -142,6 +143,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			select: {
 				id: true,
 				invitationAccepted: true,
+				role: true,
 				group: {
 					id: true,
 					groupName: true,
