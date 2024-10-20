@@ -1,4 +1,4 @@
-import { FamResponse } from './fam.interface';
+import { FamWithRoleResponse } from './fam.interface';
 
 export interface GroupResponse {
 	id: string;
@@ -6,7 +6,7 @@ export interface GroupResponse {
 	groupDescription: string;
 }
 
-export interface MemberBelongToGroupsResponse extends FamResponse {
+export interface MemberBelongToGroupsResponse extends FamWithRoleResponse {
 	group: GroupProfileResponse;
 }
 

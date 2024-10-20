@@ -30,14 +30,22 @@
 			}
 
 			.group_container {
-				@apply flex items-center gap-4;
+				@apply flex gap-4;
 
 				.group_image_container {
 					@apply relative w-[32px] h-[32px] border border-solid border-customDark;
 				}
 
-				.group_name {
-					@apply text-sm font-medium;
+				.group_right_container {
+					@apply grow;
+
+					.group_name {
+						@apply text-sm font-medium;
+					}
+
+					.group_description {
+						@apply text-xs text-customGray;
+					}
 				}
 			}
 

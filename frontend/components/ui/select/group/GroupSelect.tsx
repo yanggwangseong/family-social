@@ -12,7 +12,6 @@ import { PiUsersThreeDuotone } from 'react-icons/pi';
 import cn from 'classnames';
 import { MemberBelongToGroupsResponse } from '@/shared/interfaces/group.interface';
 import { useHover } from '@/hooks/useHover';
-import ProfileHoverContainerModal from '../../modal/profile-hover-container-modal/ProfileHoverContainerModal';
 
 const GroupSelect: FC<{
 	groupList: MemberBelongToGroupsResponse[];
@@ -90,7 +89,12 @@ const GroupSelect: FC<{
 									alt="group-img"
 								/>
 							</div>
-							<div className={styles.group_name}>{group.group.groupName}</div>
+							<div className={styles.group_right_container}>
+								<div className={styles.group_name}>{group.group.groupName}</div>
+								<div className={styles.group_description}>
+									{group.group.groupDescription}
+								</div>
+							</div>
 						</div>
 
 						{/* <ProfileHoverContainerModal

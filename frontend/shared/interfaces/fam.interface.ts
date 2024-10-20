@@ -12,6 +12,12 @@ export interface FamInvitation extends FamResponse {
 	member: AuthResponse;
 }
 
+export interface FamWithRoleResponse {
+	id: string;
+	invitationAccepted: boolean;
+	role: 'main' | 'user';
+}
+
 export interface FamResponse {
 	id: string;
 	invitationAccepted: boolean;

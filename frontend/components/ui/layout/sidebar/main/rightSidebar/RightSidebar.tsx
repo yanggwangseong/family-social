@@ -9,6 +9,7 @@ import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { GroupService } from '@/services/group/group.service';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
 import GroupSelect from '@/components/ui/select/group/GroupSelect';
+import Link from 'next/link';
 
 const RightSidebar: FC = () => {
 	const {
@@ -90,16 +91,7 @@ const RightSidebar: FC = () => {
 								onSelectedGroupId={handleSelectedGroup}
 							/>
 						</div>
-						{/* <div className={styles.group_profile_container}>
-							<GroupProfile
-								group={{
-									id: 'sdfsdf',
-									groupDescription: '양씨네 가족입니다',
-									groupName: '양씨네가족',
-									groupCoverImage: '/images/banner/sm/group-base-sm.png',
-								}}
-							></GroupProfile>
-						</div> */}
+
 						<div className={styles.list_container}>
 							{data.map((item, index) => (
 								<Profile
@@ -118,9 +110,22 @@ const RightSidebar: FC = () => {
 					<Skeleton />
 				) : (
 					<div className={styles.list_container}>
-						{groupList.map((item, index) => (
-							<GroupProfile key={index} group={item.group}></GroupProfile>
-						))}
+						<div className={styles.group_title}>관리중인 그룹</div>
+						{groupList
+							.filter(data => data.role === 'main')
+							.map((item, index) => (
+								<Link href={`/groups/${item.group.id}`} key={index}>
+									<GroupProfile key={index} group={item.group}></GroupProfile>
+								</Link>
+							))}
+						<div className={styles.group_title}>참여중인 그룹</div>
+						{groupList
+							.filter(data => data.role === 'user')
+							.map((item, index) => (
+								<Link href={`/groups/${item.group.id}`} key={index}>
+									<GroupProfile group={item.group}></GroupProfile>
+								</Link>
+							))}
 					</div>
 				))}
 		</div>
