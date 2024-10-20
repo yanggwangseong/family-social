@@ -63,6 +63,7 @@ import { CheckDuplicateGroupNameGuard } from '@/common/guards/check-duplicate-gr
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { IsMineGroupEventGaurd } from '@/common/guards/Is-mine-group-event.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
+import { LimitMainRoleGroupGuard } from '@/common/guards/limit-main-role-group.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
@@ -190,7 +191,7 @@ export class GroupsController {
 	 * @returns 그룹명
 	 */
 	@CreateGroupSwagger()
-	@UseGuards(CheckDuplicateGroupNameGuard)
+	@UseGuards(CheckDuplicateGroupNameGuard, LimitMainRoleGroupGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async createGroup(

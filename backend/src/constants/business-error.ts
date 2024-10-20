@@ -76,6 +76,9 @@ export const ERROR_CHAT_NOT_FOUND = '존재하지 않는 chat 입니다' as cons
 export const ERROR_TOKEN_EXPIRED = '토큰이 만료되었습니다' as const;
 export const ERROR_INVALID_TOKEN = '토큰이 유효하지 않습니다' as const;
 
+export const ERROR_MAIN_ROLE_GROUP_LIMIT =
+	'그룹은 최대 10개까지 생성 가능 합니다' as const;
+
 //pipe-message
 export const ERROR_UUID_PIPE_MESSAGE = 'uuid형식이 올바르지 않습니다' as const;
 export const ERROR_INT_PIPE_MESSAGE = 'number형식이 올바르지 않습니다' as const;
