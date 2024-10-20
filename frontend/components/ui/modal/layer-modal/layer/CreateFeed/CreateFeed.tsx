@@ -349,6 +349,7 @@ const CreateFeed: FC = () => {
 									}}
 								/>
 							</div> */}
+							{/* [TODO] 그룹 프로필 이미지 추가 */}
 							<GroupAndMemberProfile
 								group={{
 									id: 'sdfsdf',

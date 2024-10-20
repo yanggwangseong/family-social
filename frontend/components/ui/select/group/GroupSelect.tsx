@@ -7,7 +7,7 @@ import {
 	toggleVariant,
 	toggleWrapperVariant,
 } from '@/utils/animation/toggle-variant';
-import { PiLightningDuotone } from 'react-icons/pi';
+import { PiLightningDuotone, PiUsersThreeDuotone } from 'react-icons/pi';
 import cn from 'classnames';
 import { MemberBelongToGroupsResponse } from '@/shared/interfaces/group.interface';
 
@@ -59,7 +59,7 @@ const GroupSelect: FC<{
 					variants={toggleVariant}
 				>
 					<div>
-						<PiLightningDuotone size={22} />
+						<PiUsersThreeDuotone size={22} />
 					</div>
 					<div className={styles.modal_title}>
 						선택된 그룹에 따라 멤버가 변경 됩니다

@@ -30,6 +30,12 @@
 		}
 	}
 
+	.member_container {
+		.group_select_box {
+			@apply my-4;
+		}
+	}
+
 	.group_profile_container {
 		@apply p-1 border-b border-solid border-customDark;
 	}
