@@ -89,6 +89,24 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
+	async findFeedsByBelongToGroups(memberId: string) {
+		const respont = this.repository.find({
+			where: {
+				groupByMemberGroups: {
+					memberId,
+				},
+				feedByGroups: {
+					memberId,
+				},
+			},
+			relations: {
+				feedByGroups: true,
+			},
+		});
+
+		return respont;
+	}
+
 	async createGroup(
 		overrideInsertFeilds: OverrideInsertFeild<GroupEntity>,
 		qr?: QueryRunner,

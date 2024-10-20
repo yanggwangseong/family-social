@@ -125,6 +125,11 @@ export class GroupsController {
 		private readonly invitationsService: InvitationsService,
 	) {}
 
+	@Get('/feeds')
+	async findFeedsByBelongToGroups(@CurrentUser('sub') sub: string) {
+		return await this.groupsService.findFeedsByBelongToGroups(sub);
+	}
+
 	/**
 	 * @summary 유저가 속한 모든 그룹 가져오기
 	 *

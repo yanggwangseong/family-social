@@ -37,6 +37,10 @@ export class GroupsService {
 		private readonly famsRepository: FamsRepository,
 	) {}
 
+	async findFeedsByBelongToGroups(memberId: string) {
+		return await this.groupsRepository.findFeedsByBelongToGroups(memberId);
+	}
+
 	async getMemberListBelongToGroup({
 		groupId,
 		memberId,
