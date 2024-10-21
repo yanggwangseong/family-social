@@ -12,3 +12,7 @@
 		@apply flex justify-center items-center text-xl text-customGray;
 	}
 }
+
+.group_item_card_container {
+	@apply flex flex-wrap;
+}
