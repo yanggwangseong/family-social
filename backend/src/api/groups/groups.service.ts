@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { groupBy, omit } from 'es-toolkit';
 import { Not, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,6 +23,7 @@ import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dt
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupsRepository } from '@/models/repositories/groups.repository';
+import { IGroupedFeedsItem } from '@/types/args/feed';
 import {
 	ICreateGroupArgs,
 	IDeleteGroupArgs,
@@ -38,7 +40,54 @@ export class GroupsService {
 	) {}
 
 	async findFeedsByBelongToGroups(memberId: string) {
-		return await this.groupsRepository.findFeedsByBelongToGroups(memberId);
+		const feeds = await this.groupsRepository.findFeedsByBelongToGroups(
+			memberId,
+		);
+
+		/**
+		 * es-toolkit groupby를 통해서 코드를 개선해보려고 했으나 아래 reduce 방식이 더 좋아보인다.
+		 */
+		// const result = groupBy(feeds, (feed) => feed.groupId);
+
+		// const groupedFeedsArray = Object.entries(result).map(([groupId, feeds]) => {
+		// 	const { groupName, groupDescription, groupCoverImage } = feeds[0];
+		// 	return {
+		// 		groupId,
+		// 		groupName,
+		// 		groupDescription,
+		// 		groupCoverImage,
+		// 		feeds: feeds.map((feed) =>
+		// 			omit(feed, [
+		// 				'groupId',
+		// 				'groupName',
+		// 				'groupDescription',
+		// 				'groupCoverImage',
+		// 			]),
+		// 		),
+		// 	};
+		// });
+
+		// return groupedFeedsArray;
+
+		const groupedFeeds = feeds.reduce((acc, feed) => {
+			const { groupId, groupName, groupDescription, groupCoverImage, ...rest } =
+				feed;
+
+			if (!acc[feed.groupId]) {
+				acc[feed.groupId] = {
+					groupId: groupId,
+					groupName: groupName,
+					groupDescription: groupDescription,
+					groupCoverImage: groupCoverImage,
+					feeds: [],
+				};
+			}
+
+			acc[feed.groupId].feeds.push(rest);
+			return acc;
+		}, {});
+
+		return Object.values(groupedFeeds);
 	}
 
 	async getMemberListBelongToGroup({

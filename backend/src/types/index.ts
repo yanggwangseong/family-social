@@ -19,6 +19,15 @@ export type Union<
 type ValueType = string | number | boolean;
 
 /**
+ * 보다 정확한 type추론을 위한 OmitStrict
+ * @name OmitStrict
+ * @example K를 제외한 T값
+ */
+export type OmitStrict<T, K extends keyof T> = T extends any
+	? Pick<T, Exclude<keyof T, K>>
+	: never;
+
+/**
  * 특정 프로퍼티만 옵셔널로 지정해서 다 가져온다.
  */
 export type PartialPick<T, K extends keyof T> = {
