@@ -6,6 +6,8 @@ import { BsDot } from 'react-icons/bs';
 import { useQuery } from 'react-query';
 import { FamService } from '@/services/fam/fam.service';
 import GroupFormat from '@/components/ui/layout/group/GroupFormat';
+import NotFoundSearch from '@/components/ui/not-found/search/NotFoundSearch';
+import { NOT_FOUND_GROUP_REQUEST } from '@/constants/index';
 
 const GroupRequests: FC = () => {
 	const { data, isLoading } = useQuery(
@@ -26,6 +28,9 @@ const GroupRequests: FC = () => {
 					</div>
 					<div className={styles.top_title_count}>{data.count}개</div>
 				</div>
+				{data.list.length === 0 && (
+					<NotFoundSearch message={NOT_FOUND_GROUP_REQUEST} />
+				)}
 				{/* 그룹 초대 요청리스트 */}
 				<Invitations invitations={data.list} />
 			</GroupFormat>
