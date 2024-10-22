@@ -81,6 +81,7 @@ import {
 import { PaginationEnum } from '@/constants/pagination.const';
 import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invitation-update-req.dto';
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
+import { GroupFeedsPaginationReqDto } from '@/models/dto/group/req/group-feeds-pagination-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
@@ -99,6 +100,7 @@ import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
 import { ScheduleItemResDto } from '@/models/dto/schedule/res/schedule-item-res.dto';
 import { GroupEventEntity } from '@/models/entities/group-event.entity';
+import { GroupEntity } from '@/models/entities/group.entity';
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
@@ -125,9 +127,19 @@ export class GroupsController {
 		private readonly invitationsService: InvitationsService,
 	) {}
 
+	@UseInterceptors(PaginationInterceptor<GroupEntity>)
+	@IsPagination(PaginationEnum.BASIC)
 	@Get('/feeds')
-	async findFeedsByBelongToGroups(@CurrentUser('sub') sub: string) {
-		return await this.groupsService.findFeedsByBelongToGroups(sub);
+	async findFeedsByBelongToGroups(
+		@CurrentUser('sub') sub: string,
+		@Query() paginationDto: GroupFeedsPaginationReqDto,
+		@PaginationDecorator() pagination: Pagination<GroupEntity>,
+	) {
+		return await this.groupsService.findFeedsByBelongToGroups(
+			sub,
+			paginationDto,
+			pagination,
+		);
 	}
 
 	/**

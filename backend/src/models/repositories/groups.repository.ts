@@ -91,7 +91,15 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return group;
 	}
 
-	async findFeedsByBelongToGroups(memberId: string) {
+	async findFeedsByBelongToGroups({
+		memberId,
+		take,
+		skip,
+	}: {
+		memberId: string;
+		take: number;
+		skip: number;
+	}) {
 		const query = this.repository
 			.createQueryBuilder('group')
 			.select([
@@ -132,9 +140,11 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			.innerJoin('feed.member', 'member')
 			.where('member.id = :memberId', { memberId })
 			.orderBy('feed.updatedAt', 'DESC')
-			.addOrderBy('feed.createdAt', 'DESC');
+			.addOrderBy('feed.createdAt', 'DESC')
+			.offset(skip)
+			.limit(take);
 
-		return query.getRawMany();
+		return query;
 	}
 
 	async createGroup(

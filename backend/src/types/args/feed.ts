@@ -28,3 +28,16 @@ export interface IGetFeedDeatilArgs
 
 export interface IGroupedFeedsItem
 	extends OmitStrict<FeedResDto, 'medias' | 'comments' | 'mentions'> {}
+
+export interface GroupedFeeds {
+	[groupId: string]: {
+		groupId: string;
+		groupName: string;
+		groupDescription?: string;
+		groupCoverImage?: string;
+		feeds: Omit<
+			IGroupedFeedsItem,
+			'groupId' | 'groupName' | 'groupDescription' | 'groupCoverImage'
+		>[];
+	};
+}

@@ -8,6 +8,7 @@
 
 ## (이런 고민을 했어요)
 
+- [NestJS에서 쿼리빌더의 결과 객체들을 병합하는 방법 with es-toolki](https://threeyears.tistory.com/637)
 - [NestJS Swaager 사용시 직관적이고 구체적인 응답 문서화 하기](https://threeyears.tistory.com/555)
 - [NestJS ResponseDto 적극 활용하기](https://threeyears.tistory.com/553)
 - [외부 api사용시 class-transformer의 클래스 인스턴스화 하기](https://threeyears.tistory.com/560)
