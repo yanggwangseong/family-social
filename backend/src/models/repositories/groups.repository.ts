@@ -8,8 +8,6 @@ import { GroupEntity } from '@/models/entities/group.entity';
 import { OverrideInsertFeild } from '@/types/repository';
 
 import { GroupProfileResDto } from '../dto/group/res/group-profile.rest.dto';
-import { CommentEntity } from '../entities/comment.entity';
-import { LikeFeedEntity } from '../entities/like-feed.entity';
 
 @Injectable()
 export class GroupsRepository extends Repository<GroupEntity> {
@@ -89,62 +87,6 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		});
 
 		return group;
-	}
-
-	async findFeedsByBelongToGroups({
-		memberId,
-		take,
-		skip,
-	}: {
-		memberId: string;
-		take: number;
-		skip: number;
-	}) {
-		const query = this.repository
-			.createQueryBuilder('group')
-			.select([
-				'group.id AS "groupId"',
-				'group.groupName AS "groupName"',
-				'group.groupDescription AS "groupDescription"',
-				'group.groupCoverImage AS "groupCoverImage"',
-				'feed.id AS "feedId"',
-				'feed.contents AS "contents"',
-				'feed.isPublic AS "isPublic"',
-				'feed.isVisibleToFollowers AS "isVisibleToFollowers"',
-				'member.id AS "memberId"',
-				'member.username AS "username"',
-				'member.profileImage AS "profileImage"',
-				'member.email AS "email"',
-			])
-			.addSelect((qb) => {
-				return qb
-					.select('(CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END)::bool')
-					.from(LikeFeedEntity, 'lfa')
-					.where('lfa.feedId = feed.id')
-					.andWhere('lfa.memberId = :memberId', { memberId })
-					.limit(1);
-			}, 'myLike')
-			.addSelect((qb) => {
-				return qb
-					.select('count(lf.feedId)')
-					.from(LikeFeedEntity, 'lf')
-					.where('lf.feedId = feed.id');
-			}, 'sumLike')
-			.addSelect((qb) => {
-				return qb
-					.select('count(cm.feedId)')
-					.from(CommentEntity, 'cm')
-					.where('cm.feedId = feed.id');
-			}, 'sumComment')
-			.innerJoin('group.feedByGroups', 'feed')
-			.innerJoin('feed.member', 'member')
-			.where('member.id = :memberId', { memberId })
-			.orderBy('feed.updatedAt', 'DESC')
-			.addOrderBy('feed.createdAt', 'DESC')
-			.offset(skip)
-			.limit(take);
-
-		return query;
 	}
 
 	async createGroup(

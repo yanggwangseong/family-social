@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { groupBy, omit } from 'es-toolkit';
 import { Not, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -8,7 +7,6 @@ import {
 	EntityNotFoundException,
 	ForBiddenException,
 } from '@/common/exception/service.exception';
-import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_DELETE_GROUP,
 	ERROR_DELETE_GROUP_MEMBER,
@@ -18,15 +16,12 @@ import {
 	ERROR_NO_PERMISSTION_TO_GROUP,
 } from '@/constants/business-error';
 import { MAIN_ROLE } from '@/constants/string-constants';
-import { GroupFeedsPaginationReqDto } from '@/models/dto/group/req/group-feeds-pagination-req.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
-import { GroupEntity } from '@/models/entities/group.entity';
 import { FamsRepository } from '@/models/repositories/fams.repository';
 import { GroupsRepository } from '@/models/repositories/groups.repository';
-import { IGroupedFeedsItem } from '@/types/args/feed';
 import {
 	ICreateGroupArgs,
 	IDeleteGroupArgs,
@@ -41,86 +36,6 @@ export class GroupsService {
 		private readonly groupsRepository: GroupsRepository,
 		private readonly famsRepository: FamsRepository,
 	) {}
-
-	async findFeedsByBelongToGroups(
-		memberId: string,
-		paginationDto: GroupFeedsPaginationReqDto,
-		pagination: Pagination<GroupEntity>,
-	) {
-		const { page, limit } = paginationDto;
-		const { take, skip } = getOffset({ page, limit });
-
-		const query = await this.groupsRepository.findFeedsByBelongToGroups({
-			memberId,
-			take,
-			skip,
-		});
-
-		const {
-			list,
-			count,
-		}: {
-			list: IGroupedFeedsItem[];
-			count: number;
-		} = await pagination.paginateQueryBuilder(paginationDto, query);
-
-		/**
-		 * es-toolkit groupby를 통해서 코드를 개선해보려고 했으나 아래 reduce 방식이 더 좋아보인다.
-		 * https://es-toolkit.slash.page/reference/array/chunk.html
-		 */
-		const result = Object.entries(groupBy(list, (feed) => feed.groupId)).map(
-			([groupId, feeds]) => {
-				const { groupName, groupDescription, groupCoverImage } = feeds[0];
-				return {
-					groupId,
-					groupName,
-					groupDescription,
-					groupCoverImage,
-					feeds: feeds.map((feed) =>
-						omit(feed, [
-							'groupId',
-							'groupName',
-							'groupDescription',
-							'groupCoverImage',
-						]),
-					),
-				};
-			},
-		);
-
-		return {
-			list: result,
-			count,
-			page,
-			take,
-		};
-
-		// return Object.values(
-		// 	feeds.reduce<GroupedFeeds>((acc, feed) => {
-		// 		const {
-		// 			groupId,
-		// 			groupName,
-		// 			groupDescription,
-		// 			groupCoverImage,
-		// 			...rest
-		// 		} = feed;
-
-		// 		const accKey = feed.groupId;
-		// 		if (!acc[accKey]) {
-		// 			acc[feed.groupId] = {
-		// 				groupId: groupId,
-		// 				groupName: groupName,
-		// 				groupDescription: groupDescription,
-		// 				groupCoverImage: groupCoverImage,
-		// 				feeds: [],
-		// 			};
-		// 		}
-
-		// 		acc[feed.groupId].feeds.push(rest);
-		// 		return acc;
-		// 	}, {}),
-		// );
-	}
 
 	async getMemberListBelongToGroup({
 		groupId,
