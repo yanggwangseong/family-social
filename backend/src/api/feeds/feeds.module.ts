@@ -50,6 +50,7 @@ export class FeedsModule implements NestModule {
 				{ path: 'feeds', method: RequestMethod.GET },
 				{ path: 'feeds', method: RequestMethod.POST },
 				{ path: 'feeds/test', method: RequestMethod.POST },
+				{ path: 'feeds/my-group-feeds', method: RequestMethod.GET },
 			)
 			.forRoutes(FeedsController);
 

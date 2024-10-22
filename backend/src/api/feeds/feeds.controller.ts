@@ -35,6 +35,7 @@ import {
 	GetFeedsSwagger,
 	LikesFeedSwagger,
 	GetFeedDetailSwagger,
+	GetFeedsByBelongToGroupsSwagger,
 } from '@/common/decorators/swagger/swagger-feed.decorator';
 import { CurrentUser } from '@/common/decorators/user.decorator';
 import { AccessTokenGuard } from '@/common/guards/accessToken.guard';
@@ -65,7 +66,9 @@ import { FeedCreateReqDto } from '@/models/dto/feed/req/feed-create-req.dto';
 import { FeedLikeUpdateReqDto } from '@/models/dto/feed/req/feed-like-update-req.dto';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedUpdateReqDto } from '@/models/dto/feed/req/feed-update.req.dto';
+import { FeedMyGroupResDto } from '@/models/dto/feed/res/feed-my-group-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { GroupFeedsPaginationReqDto } from '@/models/dto/group/req/group-feeds-pagination-req.dto';
 import {
 	ReturnBasicPaginationType,
 	withBasicPaginationResponse,
@@ -90,6 +93,34 @@ export class FeedsController {
 		private readonly mentionsService: MentionsService,
 		private readonly groupsService: GroupsService,
 	) {}
+
+	/**
+	 * @summary 그룹별로 유저가 올린 피드를 가져옵니다.
+	 *
+	 * @param {string} sub - 인증된 사용자의 아이디
+	 * @param {GroupFeedsPaginationReqDto} paginationDto - 페이지네이션 정보
+	 * @param {Pagination<FeedEntity>} pagination - 페이지네이션 객체
+	 * @returns {Promise<ReturnBasicPaginationType<typeof FeedMyGroupResDto>>} - 피드 리스트
+	 */
+	@GetFeedsByBelongToGroupsSwagger()
+	@UseInterceptors(
+		ResponseDtoInterceptor<ReturnBasicPaginationType<typeof FeedMyGroupResDto>>,
+		PaginationInterceptor<FeedEntity>,
+	)
+	@IsPagination(PaginationEnum.BASIC)
+	@IsResponseDtoDecorator(withBasicPaginationResponse(FeedMyGroupResDto))
+	@Get('my-group-feeds')
+	async findFeedsByBelongToGroups(
+		@CurrentUser('sub') sub: string,
+		@Query() paginationDto: GroupFeedsPaginationReqDto,
+		@PaginationDecorator() pagination: Pagination<FeedEntity>,
+	) {
+		return await this.feedsService.findFeedsByBelongToGroups(
+			sub,
+			paginationDto,
+			pagination,
+		);
+	}
 
 	/**
 	 * @summary 단일 피드를 가져옵니다

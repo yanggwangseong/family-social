@@ -10,6 +10,7 @@ import {
 	FeedErrorResponse,
 } from '@/constants/swagger-error-response';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
+import { FeedMyGroupResDto } from '@/models/dto/feed/res/feed-my-group-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { withBasicPaginationResponse } from '@/models/dto/pagination/res/basic-pagination-res.dto';
 
@@ -29,6 +30,21 @@ export const GetFeedDetailSwagger = () => {
 			},
 		]),
 		ErrorResponse(HttpStatus.NOT_FOUND, [FeedErrorResponse['Feed-404-1']]),
+	);
+};
+//
+export const GetFeedsByBelongToGroupsSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '그룹별로 유저가 올린 피드를 가져옵니다.',
+		}),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(FeedMyGroupResDto),
+				exampleTitle: '피드 리스트 가져오기',
+				exampleDescription: '피드 조회 성공',
+			},
+		]),
 	);
 };
 
