@@ -12,14 +12,17 @@ import {
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 
 import { axiosAPI } from 'api/axios';
-import { OmitStrict } from 'types';
+import { OmitStrict, FeedPaginateLimit } from 'types';
 
 export function sleep(ms: number) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export const FeedService = {
-	async getMyFeedsByBelongToGroups(page: number = 1, limit: number = 3) {
+	async getMyFeedsByBelongToGroups(
+		page: number = 1,
+		limit: FeedPaginateLimit = 3,
+	) {
 		const endPoint = `/feeds/my-group-feeds?page=${page}&limit=${limit}`;
 		const { data } = await axiosAPI.get<
 			BasicPaginationResponse<MyFeedsByBelongToGroupsResponse>

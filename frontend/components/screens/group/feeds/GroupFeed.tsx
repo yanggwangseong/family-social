@@ -4,9 +4,29 @@ import Format from '@/components/ui/layout/Format';
 import feedAnimation from '@/assets/lottie/feed.json';
 import Lottie from 'lottie-react';
 import GroupFormat from '@/components/ui/layout/group/GroupFormat';
+import { useInfiniteSelect } from '@/hooks/useInfiniteSelect';
+import { FeedService } from '@/services/feed/feed.service';
+import { FEED_PAGINATE_LIMIT } from '@/constants/pagination.constant';
 
 const GroupFeed: FC = () => {
 	const [observedPost, setObservedPost] = useState<string | null>(null);
+
+	const {
+		data,
+		isLoading,
+		isRefetching,
+		fetchNextPage,
+		hasNextPage,
+		isError,
+		refetch,
+	} = useInfiniteSelect(
+		['my-group-feeds'],
+		async ({ pageParam = 1 }) =>
+			await FeedService.getMyFeedsByBelongToGroups(
+				pageParam,
+				FEED_PAGINATE_LIMIT,
+			),
+	);
 
 	return (
 		<Format title={'group-feeds'}>
