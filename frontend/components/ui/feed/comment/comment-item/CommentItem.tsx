@@ -80,7 +80,7 @@ const CommentItem: FC<{
 		<>
 			<div>
 				{/* 프로필 */}
-				<Profile comment={comment} />
+				<Profile comment={comment} searchMember={comment.member} />
 				<div className={styles.comment_card_bottom_container}>
 					<div className={styles.comment_published}>5분전</div>
 					<div>

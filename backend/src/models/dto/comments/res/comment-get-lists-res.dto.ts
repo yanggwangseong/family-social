@@ -7,7 +7,7 @@ import {
 
 import { CommentEntity } from '@/models/entities/comment.entity';
 
-import { MemberResDto } from '../../member/res/member-res.dto';
+import { MemberSearchResDto } from '../../member/res/member-search-res.dto';
 import { MentionResDto } from '../../mention/res/mention-res.dto';
 
 export class CommentGetListsResDto extends PickType(CommentEntity, [
@@ -33,7 +33,7 @@ export class CommentGetListsResDto extends PickType(CommentEntity, [
 	@ApiProperty({
 		nullable: false,
 	})
-	member!: MemberResDto;
+	member!: MemberSearchResDto;
 
 	@ApiPropertyOptional({
 		nullable: true,

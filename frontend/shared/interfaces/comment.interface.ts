@@ -1,8 +1,8 @@
 import { OmitStrict } from 'types';
-import { AuthResponse } from './auth.interface';
 import { MentionsResponse } from './mention.interface';
 import { CreateCommentRequest } from '@/components/ui/feed/comment/comments-interface';
 import { CreateMentionRequest } from '@/components/ui/form/comment-form.interface';
+import { SearchMemberResponse } from './member.interface';
 
 export interface CommentsResponse {
 	id: string;
@@ -13,7 +13,7 @@ export interface CommentsResponse {
 	feedId: string;
 	myLikeByComment: boolean;
 	sumLikeByComment: number;
-	member: AuthResponse;
+	member: SearchMemberResponse;
 	mentions: MentionsResponse[];
 	childrenComments?: OmitStrict<CommentsResponse, 'childrenComments'>[];
 }
