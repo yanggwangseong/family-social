@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './GroupFeed.module.scss';
 import Format from '@/components/ui/layout/Format';
 import feedAnimation from '@/assets/lottie/feed.json';
@@ -6,6 +6,8 @@ import Lottie from 'lottie-react';
 import GroupFormat from '@/components/ui/layout/group/GroupFormat';
 
 const GroupFeed: FC = () => {
+	const [observedPost, setObservedPost] = useState<string | null>(null);
+
 	return (
 		<Format title={'group-feeds'}>
 			<GroupFormat>

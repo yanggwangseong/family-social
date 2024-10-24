@@ -4,7 +4,11 @@ import {
 	UpdateFeedRequest,
 } from '@/components/ui/modal/layer-modal/layer/CreateFeed/create-feed.interface';
 
-import { FeedByIdResponse, FeedInfo } from '@/shared/interfaces/feed.interface';
+import {
+	FeedByIdResponse,
+	FeedInfo,
+	MyFeedsByBelongToGroupsResponse,
+} from '@/shared/interfaces/feed.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 
 import { axiosAPI } from 'api/axios';
@@ -15,6 +19,15 @@ export function sleep(ms: number) {
 }
 
 export const FeedService = {
+	async getMyFeedsByBelongToGroups(page: number = 1, limit: number = 3) {
+		const endPoint = `/feeds/my-group-feeds?page=${page}&limit=${limit}`;
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<MyFeedsByBelongToGroupsResponse>
+		>(endPoint);
+
+		return data;
+	},
+
 	async getFeeds(
 		page: number,
 		options: 'TOP' | 'MYFEED' | 'ALL' | 'GROUPFEED' = 'TOP',
