@@ -1,7 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
-import { FeedGroupItemResDto } from './feed-group-item-res.dto';
 import { FeedResDto } from './feed-res.dto';
 
 export class FeedMyGroupResDto extends PickType(FeedResDto, [
@@ -12,8 +11,8 @@ export class FeedMyGroupResDto extends PickType(FeedResDto, [
 ]) {
 	@ApiProperty({
 		nullable: false,
-		type: [FeedGroupItemResDto],
+		type: [FeedResDto],
 	})
-	@Type(() => FeedGroupItemResDto)
-	feeds!: FeedGroupItemResDto[];
+	@Type(() => FeedResDto)
+	feeds!: FeedResDto[];
 }

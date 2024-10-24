@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { groupBy, omit } from 'es-toolkit';
+import { groupBy } from 'es-toolkit';
 import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,6 +23,7 @@ import {
 import { LikesCache } from '@/models/cache/likes-cache';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
+import { FeedMyGroupResDto } from '@/models/dto/feed/res/feed-my-group-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
 import { GroupFeedsPaginationReqDto } from '@/models/dto/group/req/group-feeds-pagination-req.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
@@ -195,7 +196,7 @@ export class FeedsService implements OnModuleInit {
 		memberId: string,
 		paginationDto: GroupFeedsPaginationReqDto,
 		pagination: Pagination<FeedEntity>,
-	) {
+	): Promise<BasicPaginationResponse<FeedMyGroupResDto>> {
 		const { page, limit } = paginationDto;
 		const { take, skip } = getOffset({ page, limit });
 
@@ -268,14 +269,7 @@ export class FeedsService implements OnModuleInit {
 				groupName,
 				groupDescription,
 				groupCoverImage,
-				feeds: feeds.map((feed) =>
-					omit(feed, [
-						'groupId',
-						'groupName',
-						'groupDescription',
-						'groupCoverImage',
-					]),
-				),
+				feeds,
 			};
 		});
 

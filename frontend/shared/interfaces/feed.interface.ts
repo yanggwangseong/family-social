@@ -39,8 +39,5 @@ export interface MyFeedsByBelongToGroupsResponse {
 	groupName: string;
 	groupDescription: string;
 	groupCoverImage: string;
-	feeds: OmitStrict<
-		FeedInfo,
-		'groupId' | 'groupName' | 'groupDescription' | 'groupCoverImage'
-	>[];
+	feeds: FeedInfo[];
 }
