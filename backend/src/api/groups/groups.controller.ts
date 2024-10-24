@@ -73,6 +73,7 @@ import { TransactionInterceptor } from '@/common/interceptors/transaction.interc
 import { parseBooleanPipeMessage } from '@/common/pipe-message/parse-boolean-pipe-message';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { ParseIntWithRangePipe } from '@/common/pipes/parse-int-with-range.pipe';
 import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_CANNOT_INVITE_SELF,
@@ -670,12 +671,7 @@ export class GroupsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		groupId: string,
-		@Query(
-			'maxUses',
-			new ParseIntPipe({
-				exceptionFactory: () => parseIntPipeMessage('maxUses'),
-			}),
-		)
+		@Query('maxUses', new ParseIntWithRangePipe(1, 20))
 		maxUses: number,
 	) {
 		return await this.invitationsService.createGroupInviteLink(

@@ -85,6 +85,9 @@ export const ERROR_INT_PIPE_MESSAGE = 'number형식이 올바르지 않습니다
 export const ERROR_BOOLEAN_PIPE_MESSAGE =
 	'boolean형식이 올바르지 않습니다' as const;
 
+export const ERROR_NOT_DEFINED_METADATA_DATA =
+	'pipe에서 metadata.data가 정의 되지 않았습니다' as const;
+
 export const ERROR_EMAIL_PIPE_MESSAGE =
 	'이메일 형식이 올바르지 않습니다' as const;
 export const ERROR_IS_READ_OPTIONS_PIPE_MESSAGE =
