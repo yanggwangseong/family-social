@@ -12,7 +12,10 @@ import { ObjectLiteral } from 'typeorm';
 
 import { IsPagination } from '@/common/decorators/is-pagination.decorator';
 import { IsResponseDtoDecorator } from '@/common/decorators/is-response-dto.decorator';
-import { GetMembersByUserNameSwagger } from '@/common/decorators/swagger/swagger-member.decorator';
+import {
+	GetGroupsByGroupNameSwagger,
+	GetMembersByUserNameSwagger,
+} from '@/common/decorators/swagger/swagger-member.decorator';
 import {
 	DeleteSearchHistorySwagger,
 	DeleteSearchTermSwagger,
@@ -99,6 +102,7 @@ export class SearchController {
 	 * @param sub 인증된 사용자 아이디
 	 * @returns 검색된 그룹 정보 리스트
 	 */
+	@GetGroupsByGroupNameSwagger()
 	async getGroupsByGroupName(
 		@Param('groupName') groupName: string,
 		@CurrentUser('sub') sub: string,
