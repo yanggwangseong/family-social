@@ -103,8 +103,9 @@ export class SearchController {
 	 * @returns 검색된 그룹 정보 리스트
 	 */
 	@GetGroupsByGroupNameSwagger()
+	@Get('/groups')
 	async getGroupsByGroupName(
-		@Param('groupName') groupName: string,
+		@Query('groupName') groupName: string,
 		@CurrentUser('sub') sub: string,
 	) {
 		const groups = await this.groupsService.getGroupsByGroupName(
