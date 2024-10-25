@@ -34,6 +34,7 @@ import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
 import { modalAtom } from '@/atoms/modalAtom';
+import FeedFollowSelect from '@/components/ui/select/follow/FeedFollowSelect';
 
 const CreateFeed: FC = () => {
 	const [isShowing, setIsShowing] = useRecoilState<boolean>(modalAtom);
@@ -55,6 +56,9 @@ const CreateFeed: FC = () => {
 	const { feed, remove } = useFeedByIdQuery(isFeedId, {
 		enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
 	});
+
+	const [isVisibleToFollowersOptions, setIsVisibleToFollowersOptions] =
+		useState<boolean>(feed?.isVisibleToFollowersOptions || false);
 
 	const [isPublic, setIsPublic] = useState<
 		Union<typeof feedPublicSelectOptions>
@@ -167,6 +171,10 @@ const CreateFeed: FC = () => {
 		setIsFiles(isFiles.filter((file, index) => index !== key));
 	};
 
+	const handleChangeIsVisibleToFollowersOptions = (status: boolean) => {
+		setIsVisibleToFollowersOptions(status);
+	};
+
 	useEffect(() => {
 		if (isFiles) {
 			const blobArrayImage: string[] = isFiles.map(file =>
@@ -216,6 +224,7 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
+				isVisibleToFollowers: isVisibleToFollowersOptions,
 				medias,
 				mentions,
 			});
@@ -227,6 +236,7 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
+				isVisibleToFollowers: isVisibleToFollowersOptions,
 				medias: medias,
 				mentions,
 			});
@@ -246,6 +256,7 @@ const CreateFeed: FC = () => {
 			setIsPublic('public'); // 공개 설정 초기화
 			setIsFeedId(''); // 피드 ID 초기화
 			handleSelectedGroup('');
+			setIsVisibleToFollowersOptions(false);
 		}
 	}, [handleSelectedGroup, isShowing, reset, setIsFeedId]);
 
@@ -381,11 +392,20 @@ const CreateFeed: FC = () => {
 									id: 'sdfsdf',
 								}}
 							/>
-
-							<FeedPublicSelect
-								onChageIsPublic={handleChageIsPublic}
-								isPublic={isPublic}
-							/>
+							<div className={styles.feed_select_container}>
+								{/* 피드 공개 여부 selectbox */}
+								<FeedPublicSelect
+									onChageIsPublic={handleChageIsPublic}
+									isPublic={isPublic}
+								/>
+								{/* 해당 그룹을 팔로우한 사람들에게도 공개 */}
+								<FeedFollowSelect
+									isVisibleToFollowersOptions={isVisibleToFollowersOptions}
+									onChangeIsVisibleToFollowersOptions={
+										handleChangeIsVisibleToFollowersOptions
+									}
+								/>
+							</div>
 						</div>
 						{/* <div className="my-5">
 							<select

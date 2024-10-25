@@ -12,6 +12,7 @@ export interface CreateMediaType {
 export interface CreateFeedRequest {
 	contents: string;
 	isPublic: boolean;
+	isVisibleToFollowers: boolean;
 	groupId: string;
 	medias: CreateMediaType[];
 	mentions: CreateMentionRequest[];

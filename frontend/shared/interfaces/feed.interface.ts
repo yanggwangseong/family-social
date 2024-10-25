@@ -13,6 +13,7 @@ export interface FeedInfo {
 	feedId: string;
 	contents: string;
 	isPublic: boolean;
+	isVisibleToFollowersOptions: boolean;
 	groupId: string;
 	groupName: string;
 	groupDescription: string;
