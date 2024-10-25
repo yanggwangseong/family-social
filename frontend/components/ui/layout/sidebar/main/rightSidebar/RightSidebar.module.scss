@@ -39,6 +39,10 @@
 	.group_profile_container {
 		@apply p-1 border-b border-solid border-customDark;
 	}
+
+	.member_list_container {
+		@apply my-6 mx-4 flex flex-col gap-4;
+	}
 	//list_container
 	.list_container {
 		@apply my-6 mx-4 flex flex-col;

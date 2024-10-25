@@ -92,7 +92,7 @@ const RightSidebar: FC = () => {
 							/>
 						</div>
 
-						<div className={styles.list_container}>
+						<div className={styles.member_list_container}>
 							{data.map((item, index) => (
 								<Profile
 									key={index}
