@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import LayerModalVariantWrapper from '../LayerModalVariantWrapper';
 import styles from './LinkInvite.module.scss';
 import Field from '@/components/ui/field/Field';
@@ -9,8 +9,11 @@ import { useQuery } from 'react-query';
 import { GroupService } from '@/services/group/group.service';
 import { GroupInviteLinkPaginateLimit } from 'types';
 import { FaCheck, FaRegCopy } from 'react-icons/fa';
+import { useRecoilState } from 'recoil';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const LinkInvite: FC = () => {
+	const [isShowing, setIsShowing] = useRecoilState<boolean>(modalAtom);
 	const { groupId } = useRouter().query as { groupId: string };
 	const [isLinkCreated, setIsLinkCreated] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
@@ -45,6 +48,16 @@ const LinkInvite: FC = () => {
 			setTimeout(() => setIsCopied(false), 2000); // 2초 후 복사 상태 초기화
 		}
 	};
+
+	useEffect(() => {
+		return () => {
+			if (!isShowing) {
+				setIsLinkCreated(false);
+				setIsCopied(false);
+				reset();
+			}
+		};
+	}, [isLinkCreated, isShowing, reset]);
 
 	return (
 		<LayerModalVariantWrapper>
