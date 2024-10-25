@@ -73,6 +73,13 @@ export class GroupsService {
 		});
 	}
 
+	async getGroupsByGroupName(groupName: string, memberId: string) {
+		return await this.groupsRepository.findGroupsByGroupName(
+			groupName,
+			memberId,
+		);
+	}
+
 	async getMemberBelongToGroups(
 		memberId: string,
 		forChatCreation: boolean,

@@ -28,6 +28,7 @@ import { TimeoutInterceptor } from '@/common/interceptors/timeout.interceptor';
 import { ParseSearchTypePipe } from '@/common/pipes/parse-search-type.pipe';
 import { PaginationEnum } from '@/constants/pagination.const';
 import {
+	SEARCH_TYPE_GROUP,
 	SEARCH_TYPE_MEMBER,
 	SEARCH_TYPE_TOUR,
 } from '@/constants/string-constants';
@@ -40,6 +41,7 @@ import { TourHttpSearchTourismResDto } from '@/models/dto/tour/res/tour-http-sea
 import { SearchType, Union } from '@/types';
 
 import { SearchService } from './search.service';
+import { GroupsService } from '../groups/groups.service';
 import { MembersService } from '../members/members.service';
 import { ToursService } from '../tours/tours.service';
 
@@ -52,6 +54,7 @@ export class SearchController {
 		private readonly membersService: MembersService,
 		private readonly toursService: ToursService,
 		private readonly searchService: SearchService,
+		private readonly groupsService: GroupsService,
 	) {}
 
 	/**
@@ -86,6 +89,32 @@ export class SearchController {
 		}
 
 		return members;
+	}
+
+	/**
+	 * @summary 그룹 이름에 해당하는 그룹 리스트 검색
+	 *
+	 * @tag groups
+	 * @param groupName 그룹 이름
+	 * @param sub 인증된 사용자 아이디
+	 * @returns 검색된 그룹 정보 리스트
+	 */
+	async getGroupsByGroupName(
+		@Param('groupName') groupName: string,
+		@CurrentUser('sub') sub: string,
+	) {
+		const groups = await this.groupsService.getGroupsByGroupName(
+			groupName,
+			sub,
+		);
+
+		// 검색어 저장을 위해 호출
+		// 검색어가 없으면 저장하지 않음
+		if (groups.length > 0) {
+			await this.searchService.addSearchTerm(sub, groupName, SEARCH_TYPE_GROUP);
+		}
+
+		return groups;
 	}
 
 	/**
