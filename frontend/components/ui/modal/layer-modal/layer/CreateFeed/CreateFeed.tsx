@@ -33,8 +33,11 @@ import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
+import { modalAtom } from '@/atoms/modalAtom';
 
 const CreateFeed: FC = () => {
+	const [isShowing, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
@@ -78,6 +81,7 @@ const CreateFeed: FC = () => {
 		handleSubmit,
 		getValues,
 		setValue,
+		reset,
 	} = useForm<CreateFeedFields>({
 		mode: 'onChange',
 		defaultValues: {
@@ -231,6 +235,19 @@ const CreateFeed: FC = () => {
 
 	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
 	const dragRef = useRef<HTMLLabelElement | null>(null);
+
+	useEffect(() => {
+		if (!isShowing) {
+			setIsFeedPage('selectGroup'); // 페이지 초기화
+			setIsFiles([]); // 업로드한 파일 초기화
+			setIsImageUrl([]); // 이미지 URL 초기화
+			setIsUpload(false); // 업로드 상태 초기화
+			reset(); // 폼 데이터 초기화
+			setIsPublic('public'); // 공개 설정 초기화
+			setIsFeedId(''); // 피드 ID 초기화
+			handleSelectedGroup('');
+		}
+	}, [handleSelectedGroup, isShowing, reset, setIsFeedId]);
 
 	return (
 		<LayerModalVariantWrapper className={styles.create_feed_container}>
