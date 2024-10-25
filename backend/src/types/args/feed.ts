@@ -10,6 +10,7 @@ import { OmitStrict } from '../index';
 export interface ICreateFeedArgs {
 	contents: string;
 	isPublic: boolean;
+	isVisibleToFollowers: boolean;
 	groupId: string;
 	memberId: string;
 	medias: MediaCreateReqDto[];
@@ -21,7 +22,10 @@ export interface IUpdateFeedArgs extends ICreateFeedArgs {
 }
 
 export interface IGetFeedDeatilArgs
-	extends Pick<FeedEntity, 'id' | 'contents' | 'isPublic'> {
+	extends Pick<
+		FeedEntity,
+		'id' | 'contents' | 'isPublic' | 'isVisibleToFollowers'
+	> {
 	group: GroupProfileResDto;
 	member: MemberSearchResDto;
 }

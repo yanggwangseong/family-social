@@ -47,6 +47,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				id: true,
 				contents: true,
 				isPublic: true,
+				isVisibleToFollowers: true,
 				group: {
 					id: true,
 					groupName: true,
@@ -85,6 +86,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				'a.id AS "feedId"',
 				'a.contents AS "contents"',
 				'a.isPublic AS "isPublic"',
+				'a.isVisibleToFollowers AS "isVisibleToFollowers"',
 				'group.id AS "groupId"',
 				'group.groupName AS "groupName"',
 				'group.groupDescription AS "groupDescription"',
