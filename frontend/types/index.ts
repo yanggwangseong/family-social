@@ -123,7 +123,7 @@ type NumberRange<
 	: NumberRange<L, H, [...LAcc, L], [...LAcc, L], Acc>;
 
 export type FeedPaginateLimit = NumberRange<1, 10>;
-
+export type GroupInviteLinkPaginateLimit = NumberRange<1, 20>;
 /*
 type NumericRange<
 	START extends number,

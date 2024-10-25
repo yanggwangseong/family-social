@@ -1,0 +1,39 @@
+.container {
+	@apply flex flex-col gap-4 my-4;
+
+	.section_title {
+		@apply font-medium text-base;
+	}
+
+	.section_sub_title {
+		@apply text-customGray text-sm;
+	}
+
+	.invite_field_container {
+		@apply flex gap-4;
+
+		.field_wrap {
+			@apply w-full;
+		}
+
+		.add_invite_link_btn {
+			@apply w-[15%];
+		}
+	}
+
+	.link_container {
+		@apply mt-4 p-4 border border-solid border-gray-300 rounded-md;
+
+		.generated_link {
+			@apply flex items-center justify-between mb-2;
+
+			button {
+				@apply bg-transparent border-none cursor-pointer text-customOrange;
+			}
+		}
+
+		.link_info {
+			@apply text-sm text-customGray;
+		}
+	}
+}

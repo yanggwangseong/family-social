@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import EmailInvite from './layer/email-invite/EmailInvite';
-import LinkInvite from './layer/LinkInvite';
+import LinkInvite from './layer/link-invite/LinkInvite';
 import { LayerMode, Union } from 'types';
 import GroupDeleteConfirm from './layer/GroupDeleteConfirm';
 import CreateFeed from './layer/CreateFeed/CreateFeed';

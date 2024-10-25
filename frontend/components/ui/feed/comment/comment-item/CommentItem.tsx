@@ -3,13 +3,11 @@ import styles from './CommentItem.module.scss';
 import Profile from '@/components/ui/profile/Profile';
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 import { BsDot } from 'react-icons/bs';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import CommentForm from '@/components/ui/form/CommentForm';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { commentAtom } from '@/atoms/commentAtom';
-import { useLottieLike } from '@/hooks/useLottieLike';
 import { PiHeartDuotone } from 'react-icons/pi';
 
 const CommentItem: FC<{

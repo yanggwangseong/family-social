@@ -8,6 +8,7 @@ import {
 import { MembersBelongToGroupResponse } from '@/shared/interfaces/member.interface';
 import { GetScheduleListResponse } from '@/shared/interfaces/schedule.interface';
 import { axiosAPI } from 'api/axios';
+import { GroupInviteLinkPaginateLimit } from 'types';
 
 export const GroupService = {
 	async getGroupDetail(groupId: string) {
@@ -80,6 +81,17 @@ export const GroupService = {
 		const { data } = await axiosAPI.post(`/groups/${groupId}/invite`, {
 			inviteCode,
 		} satisfies { inviteCode: string });
+
+		return data;
+	},
+
+	async getInviteLinkByGroupId(
+		groupId: string,
+		maxUses: GroupInviteLinkPaginateLimit,
+	) {
+		const { data } = await axiosAPI.get<string>(
+			`/groups/${groupId}/invite-link?maxUses=${maxUses}`,
+		);
 
 		return data;
 	},
