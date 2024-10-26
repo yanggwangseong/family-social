@@ -14,7 +14,7 @@ import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { LayerMode } from 'types';
 import { SearchBoxDiscoverProps } from './search-box-discover.interface';
 
-const SearchBoxDiscorver: FC<SearchBoxDiscoverProps> = ({
+const SearchBoxDiscover: FC<SearchBoxDiscoverProps> = ({
 	debounceSearch,
 	onSearch,
 	onChangeSearchTerm,
@@ -92,7 +92,7 @@ const SearchBoxDiscorver: FC<SearchBoxDiscoverProps> = ({
 		<div className={styles.search_field_wrap}>
 			<Field
 				fieldClass={'input'}
-				placeholder="키워드를 입력하세요."
+				placeholder="그룹 이름을 입력하세요."
 				onChange={onSearch}
 				onFocus={handleFocus}
 				onBlur={handleBlur}
@@ -114,4 +114,4 @@ const SearchBoxDiscorver: FC<SearchBoxDiscoverProps> = ({
 	);
 };
 
-export default SearchBoxDiscorver;
+export default SearchBoxDiscover;

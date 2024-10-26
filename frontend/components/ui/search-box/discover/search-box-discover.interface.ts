@@ -1,5 +1,5 @@
 export interface SearchBoxDiscoverProps {
 	debounceSearch: string;
-	onSearch: () => void;
+	onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onChangeSearchTerm: (term: string) => void;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, QueryRunner, Repository } from 'typeorm';
+import { ILike, Not, QueryRunner, Repository } from 'typeorm';
 
 import { MAIN_ROLE } from '@/constants/string-constants';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
@@ -48,7 +48,7 @@ export class GroupsRepository extends Repository<GroupEntity> {
 					},
 				},
 				where: {
-					groupName,
+					groupName: ILike(`${groupName}%`),
 					groupByMemberGroups: {
 						memberId: Not(memberId),
 					},

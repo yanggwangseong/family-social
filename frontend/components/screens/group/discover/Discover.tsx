@@ -2,16 +2,53 @@ import React, { FC } from 'react';
 import styles from './Discover.module.scss';
 import Format from '@/components/ui/layout/Format';
 import GroupFormat from '@/components/ui/layout/group/GroupFormat';
+import { useQuery, useQueryClient } from 'react-query';
+import { useSearch } from '@/hooks/useSearch';
+import SearchBoxDiscover from '@/components/ui/search-box/discover/SearchBoxDiscover';
+import { SearchService } from '@/services/search/search.service';
+import NotFoundSearch from '@/components/ui/not-found/search/NotFoundSearch';
+import { NOT_FOUND_GROUP_MESSAGE } from '@/constants/index';
 
 const Discover: FC = () => {
+	const queryClient = useQueryClient();
+	const { handleSearch, debounceSearch, handleChangeSearchTerm } = useSearch();
+
+	const { data } = useQuery(
+		['search-group-name', debounceSearch],
+		async () => await SearchService.getGroupByGroupName(debounceSearch),
+		{
+			enabled: !!debounceSearch,
+			onSuccess: () => {
+				// 최근 검색어에 방금 검색한 검색어를 반영
+				queryClient.invalidateQueries(['search-recent-group', 'group']);
+			},
+		},
+	);
+
+	/**
+	 * 그룹 이름으로 검색 완료 했을때 그룹 카드로 보여주고
+	 * 그룹 가입 신청 버튼과 내가 관리하고 있는 그룹과 해당 그룹의 팔로우 신청 버튼
+	 * 그룹 팔로우 신청 layer-modal 만들기
+	 */
+
 	return (
 		<Format title={'group-discover'}>
 			<GroupFormat>
 				<div className={styles.top_title_container}>
 					<div className={styles.top_title}>찾아보기</div>
 				</div>
-				{/* 그룹별 내가 올린 피드가 만약 없을경우 */}
-				<div>찾아보기 작업중</div>
+				<div className={styles.contents_container}>
+					<SearchBoxDiscover
+						debounceSearch={debounceSearch}
+						onSearch={handleSearch}
+						onChangeSearchTerm={handleChangeSearchTerm}
+					/>
+					{data && data.length > 0 ? (
+						<div>{data.map(item => item.groupName)}</div>
+					) : (
+						<NotFoundSearch message={NOT_FOUND_GROUP_MESSAGE} />
+					)}
+				</div>
 			</GroupFormat>
 		</Format>
 	);
