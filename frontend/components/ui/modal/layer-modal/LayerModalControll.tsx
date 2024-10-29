@@ -19,6 +19,7 @@ import GroupEventDeleteConfirm from './layer/GroupEventDeleteConfirm';
 import CreateEventContainer from './layer/create-event/CreateEventContainer';
 import SelectGroupForChat from './layer/select-group-for-chat/SelectGroupForChat';
 import CreateVideoCall from './layer/create-video-call/CreateVideoCall';
+import GroupFollowModal from './layer/group-follow/GroupFollowModal';
 
 const StatusLookUpTable = {
 	[LayerMode.emailInvite]: EmailInvite,
@@ -40,6 +41,7 @@ const StatusLookUpTable = {
 	[LayerMode.groupEventDeleteConfirm]: GroupEventDeleteConfirm,
 	[LayerMode.selectGroupForChat]: SelectGroupForChat,
 	[LayerMode.createVideoCall]: CreateVideoCall,
+	[LayerMode.groupFollowModal]: GroupFollowModal,
 };
 
 interface StatusProps {

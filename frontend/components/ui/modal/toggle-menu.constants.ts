@@ -8,6 +8,7 @@ import {
 	PiPaperPlaneTiltDuotone,
 	PiTrashDuotone,
 	PiPencilDuotone,
+	PiUsersFourDuotone,
 } from 'react-icons/pi';
 
 export const InviteMenu: ToggleMenu[] = [
@@ -71,5 +72,14 @@ export const GroupEventSettingMenu: ToggleMenu[] = [
 		title: '이벤트 수정',
 		description: '이벤트를 수정 합니다',
 		layer: LayerMode.createEvent,
+	},
+];
+
+export const GroupDiscoverSettingMenu: ToggleMenu[] = [
+	{
+		Icon: PiUsersFourDuotone,
+		title: '그룹 팔로우',
+		description: '그룹을 팔로우 합니다',
+		layer: LayerMode.groupFollowModal,
 	},
 ];

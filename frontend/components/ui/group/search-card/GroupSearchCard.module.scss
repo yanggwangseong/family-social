@@ -19,7 +19,7 @@
 			}
 
 			.group_icon_container {
-				@apply w-1/3 items-center flex justify-center border border-solid border-customDark rounded cursor-pointer;
+				@apply w-1/3 items-center relative flex justify-center border border-solid border-customDark rounded cursor-pointer;
 			}
 		}
 	}

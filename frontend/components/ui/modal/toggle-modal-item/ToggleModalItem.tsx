@@ -6,6 +6,8 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { feedIdAtom } from '@/atoms/feedIdAtom';
 import { motion } from 'framer-motion';
 import { toggleVariant } from '@/utils/animation/toggle-variant';
+import { LayerMode } from 'types';
+import { groupFollowAtom } from '@/atoms/groupFollowAtom';
 
 const ToggleModalItem: FC<ToggleMenu> = ({
 	Icon,
@@ -14,11 +16,14 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 	layer,
 	onClose,
 	feedId,
+	groupId,
 }) => {
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
 	const [, setIsLayer] = useRecoilState(modalLayerAtom);
 
 	const [, setIsFeedId] = useRecoilState(feedIdAtom);
+
+	const [, setGroupFollow] = useRecoilState(groupFollowAtom);
 
 	return (
 		<motion.div
@@ -31,6 +36,9 @@ const ToggleModalItem: FC<ToggleMenu> = ({
 						layer: layer,
 					}); // layer modal 어떤 layer를 보여 줄건지
 					feedId && setIsFeedId(feedId);
+					if (layer === LayerMode.groupFollowModal && groupId) {
+						setGroupFollow({ groupId });
+					}
 					onClose(); //toggle modal 닫기
 				}
 			}}
