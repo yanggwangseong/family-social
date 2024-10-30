@@ -117,6 +117,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 				<Line />
 
 				<div className={styles.sidebar_btn_container}>
+					{/* TODO 그룹 역할이 main일때 가능 아닐경우 팔로우 버튼 표시 */}
 					<motion.div
 						className={styles.toggle_menu_btn_container}
 						initial={false}
@@ -173,6 +174,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 
 				<Line />
 
+				{/* TODO 그룹 역할이 main일때 가능 */}
 				<div className={styles.management_menu_container}>
 					<div
 						className={styles.management_toggle_menu_container}
