@@ -97,9 +97,9 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 
 						{data.list
 							.filter(item => item.recentMessage && item.chatType === 'GROUP')
-							.map((item, index) => (
-								<>
-									{item.group && (
+							.map(
+								(item, index) =>
+									item.group && (
 										<div
 											key={index}
 											className={styles.profile_container}
@@ -114,11 +114,10 @@ const ChatToggleModal: FC<{ isOpenMessage: boolean }> = ({ isOpenMessage }) => {
 													id: item.recentMessage.memberId,
 												}}
 												chat={item}
-											></GroupAndMemberProfile>
+											/>
 										</div>
-									)}
-								</>
-							))}
+									),
+							)}
 					</>
 				)}
 			</motion.div>

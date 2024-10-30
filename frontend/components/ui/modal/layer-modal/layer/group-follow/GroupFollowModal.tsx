@@ -13,6 +13,7 @@ import { Loading, Notify } from 'notiflix';
 import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { LayerMode } from 'types';
 import { modalAtom } from '@/atoms/modalAtom';
+import { MemberBelongToGroupsResponse } from '@/shared/interfaces/group.interface';
 
 const GroupFollowModal: FC = () => {
 	const [groupFollowId, setGroupFollow] = useRecoilState(groupFollowAtom);
@@ -58,6 +59,13 @@ const GroupFollowModal: FC = () => {
 		followGroup();
 	};
 
+	const filterUnfollowedGroups = (
+		groups: MemberBelongToGroupsResponse[],
+		followings: string[],
+	) => {
+		return groups.filter(data => !followings.includes(data.group.id));
+	};
+
 	return (
 		<div className={styles.container}>
 			{groupData && (
@@ -78,7 +86,8 @@ const GroupFollowModal: FC = () => {
 				<div className={styles.groupList_body}>
 					{groups &&
 						groups.length > 0 &&
-						groups.map(group => (
+						groupData &&
+						filterUnfollowedGroups(groups, groupData.followings).map(group => (
 							<GroupProfile
 								key={group.group.id}
 								group={group.group}
