@@ -21,11 +21,17 @@ export const GroupService = {
 
 	async getMemberBelongToGroups(
 		forChatCreation?: boolean,
+		isMainRole?: boolean,
 	): Promise<MemberBelongToGroupsResponse[]> {
 		let url = '/groups';
 		if (forChatCreation) {
 			url += '?forChatCreation=true';
 		}
+
+		if (isMainRole) {
+			url += '?isMainRole=true';
+		}
+
 		const { data } = await axiosAPI.get<MemberBelongToGroupsResponse[]>(url);
 
 		return data;
@@ -92,6 +98,14 @@ export const GroupService = {
 		const { data } = await axiosAPI.get<string>(
 			`/groups/${groupId}/invite-link?maxUses=${maxUses}`,
 		);
+
+		return data;
+	},
+
+	async followGroup(groupId: string, followingGroupId: string) {
+		const { data } = await axiosAPI.put(`/groups/${groupId}/follow`, {
+			followingGroupId,
+		} satisfies { followingGroupId: string });
 
 		return data;
 	},
