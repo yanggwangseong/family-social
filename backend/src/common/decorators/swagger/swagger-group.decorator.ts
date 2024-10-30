@@ -126,6 +126,7 @@ export const CreateGroupSwagger = () => {
 		]),
 
 		ErrorResponse(HttpStatus.CONFLICT, [GroupErrorResponse['Group-409-1']]),
+		ErrorResponse(HttpStatus.BAD_REQUEST, [GroupErrorResponse['Group-400-3']]),
 	);
 };
 

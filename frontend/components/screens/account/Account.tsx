@@ -110,20 +110,22 @@ const Account: FC<{ email: string }> = ({ email }) => {
 										alt="banner"
 										objectFit="cover"
 									></Image>
-									<div className={styles.banner_edit_btn}>
-										<PiPencilDuotone size={22} />
-										<button className={styles.btn_text} onClick={handleClick}>
-											수정
-										</button>
+									{data.isMine && (
+										<div className={styles.banner_edit_btn}>
+											<PiPencilDuotone size={22} />
+											<button className={styles.btn_text} onClick={handleClick}>
+												수정
+											</button>
 
-										<input
-											type="file"
-											id="fileUpload"
-											style={{ display: 'none' }}
-											onChange={handleMemberCoverImageUpload}
-											ref={hiddenFileInput}
-										/>
-									</div>
+											<input
+												type="file"
+												id="fileUpload"
+												style={{ display: 'none' }}
+												onChange={handleMemberCoverImageUpload}
+												ref={hiddenFileInput}
+											/>
+										</div>
+									)}
 								</div>
 								<div className={styles.main_contents_container}>
 									<div className={styles.account_top_container}>

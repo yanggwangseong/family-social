@@ -31,6 +31,7 @@ export class MailsService {
 			group.id,
 			invitedEmails.length,
 		);
+
 		const sendResult = await Promise.allSettled(
 			invitedEmails.map(async (email) => {
 				const subject = `${group.groupName} 그룹에 그룹 가입 초대를 받았습니다`;

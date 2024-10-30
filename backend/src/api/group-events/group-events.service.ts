@@ -31,6 +31,80 @@ export class GroupEventsService {
 		private readonly groupEventTypeRepository: GroupEventTypeRepository,
 	) {}
 
+	/**
+	 * 사용자가 속한 그룹의 이벤트 목록 조회
+	 * @param pagination 페이지네이션 객체
+	 * @param paginationDto 페이지네이션 DTO
+	 * @param userId 사용자 ID
+	 * @returns 이벤트 목록 및 페이지네이션 정보
+	 */
+	async findAllByBelongToGroup(
+		pagination: Pagination<GroupEventEntity>,
+		paginationDto: GroupEventPaginationReqDto,
+		userId: string,
+	) {
+		const { page, limit } = paginationDto;
+		const { take, skip } = getOffset({ page, limit });
+
+		const { list, count }: { list: GroupEventItemResDto[]; count: number } =
+			await pagination.paginate(paginationDto, this.groupEventRepository, {
+				select: {
+					id: true,
+					eventType: true,
+					eventCoverImage: true,
+					eventName: true,
+					eventDescription: true,
+					eventStartDate: true,
+					eventStartTime: true,
+					eventEndDate: true,
+					eventEndTime: true,
+					eventGroupId: true,
+					eventOrganizerId: true,
+					createdAt: true,
+					eventGroup: {
+						id: true,
+						groupName: true,
+						groupDescription: true,
+						groupCoverImage: true,
+					},
+					eventOrganizer: {
+						id: true,
+						username: true,
+						profileImage: true,
+						email: true,
+					},
+				},
+				where: {
+					eventGroup: {
+						groupByMemberGroups: {
+							memberId: userId,
+							invitationAccepted: true,
+						},
+					},
+				},
+				relations: {
+					eventGroup: true,
+					eventOrganizer: true,
+				},
+				skip,
+				take,
+			});
+
+		return {
+			list,
+			page,
+			count,
+			take,
+		};
+	}
+
+	/**
+	 * 특정 그룹의 이벤트 목록 조회
+	 * @param pagination 페이지네이션 객체
+	 * @param paginationDto 페이지네이션 DTO
+	 * @param eventGroupId 그룹 ID
+	 * @returns 이벤트 목록 및 페이지네이션 정보
+	 */
 	async findAllGroupEvent(
 		pagination: Pagination<GroupEventEntity>,
 		paginationDto: GroupEventPaginationReqDto,

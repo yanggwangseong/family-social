@@ -47,6 +47,7 @@ export class FeedsRepository extends Repository<FeedEntity> {
 				id: true,
 				contents: true,
 				isPublic: true,
+				isVisibleToFollowers: true,
 				group: {
 					id: true,
 					groupName: true,
@@ -68,6 +69,62 @@ export class FeedsRepository extends Repository<FeedEntity> {
 		});
 
 		return feed;
+	}
+
+	async findFeedsByBelongToGroups({
+		memberId,
+		take,
+		skip,
+	}: {
+		memberId: string;
+		take: number;
+		skip: number;
+	}) {
+		const query = this.repository
+			.createQueryBuilder('a')
+			.select([
+				'a.id AS "feedId"',
+				'a.contents AS "contents"',
+				'a.isPublic AS "isPublic"',
+				'a.isVisibleToFollowers AS "isVisibleToFollowers"',
+				'group.id AS "groupId"',
+				'group.groupName AS "groupName"',
+				'group.groupDescription AS "groupDescription"',
+				'group.groupCoverImage AS "groupCoverImage"',
+				'member.id AS "memberId"',
+				'member.username AS "username"',
+				'member.profileImage AS "profileImage"',
+				'member.email AS "email"',
+			])
+			.addSelect((qb) => {
+				return qb
+					.select('(CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END)::bool')
+					.from(LikeFeedEntity, 'lfa')
+					.where('lfa.feedId = a.id')
+					.andWhere('lfa.memberId = :memberId', { memberId })
+					.limit(1);
+			}, 'myLike')
+			.addSelect((qb) => {
+				return qb
+					.select('count(lf.feedId)')
+					.from(LikeFeedEntity, 'lf')
+					.where('lf.feedId = a.id');
+			}, 'sumLike')
+			.addSelect((qb) => {
+				return qb
+					.select('count(cm.feedId)')
+					.from(CommentEntity, 'cm')
+					.where('cm.feedId = a.id');
+			}, 'sumComment')
+			.innerJoin('a.group', 'group')
+			.innerJoin('a.member', 'member')
+			.where('member.id = :memberId', { memberId })
+			.orderBy('a.updatedAt', 'DESC')
+			.addOrderBy('a.createdAt', 'DESC')
+			.offset(skip)
+			.limit(take);
+
+		return query;
 	}
 
 	async findAllFeed({

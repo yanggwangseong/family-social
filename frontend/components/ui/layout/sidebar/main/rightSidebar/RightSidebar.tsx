@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './RightSidebar.module.scss';
 import cn from 'classnames';
 import GroupProfile from '@/components/ui/profile/group-profile/GroupProfile';
@@ -8,9 +8,16 @@ import { useQuery } from 'react-query';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { GroupService } from '@/services/group/group.service';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
+import GroupSelect from '@/components/ui/select/group/GroupSelect';
+import Link from 'next/link';
 
 const RightSidebar: FC = () => {
-	const groupId = '75aca3da-1dac-48ef-84b8-cdf1be8fe37d';
+	const {
+		data: groupList,
+		isLoading: groupLoading,
+		handleSelectedGroup,
+		isSelecteGroup,
+	} = useMemberBelongToGroups();
 
 	const [isMenu, setIsMenu] =
 		useState<Union<typeof rightSideTabMenus>>('members');
@@ -20,18 +27,21 @@ const RightSidebar: FC = () => {
 	};
 
 	const { data, isLoading } = useQuery(
-		['get-members', groupId],
-		async () => await GroupService.getMembersBelongToGroup(groupId),
+		['get-members', isSelecteGroup],
+		async () => await GroupService.getMembersBelongToGroup(isSelecteGroup),
+		{
+			enabled: !!isSelecteGroup,
+		},
 	);
 
-	// const { data: groupList, isLoading: groupLoading } = useQuery(
-	// 	['member-belong-to-groups'],
-	// 	async () => await GroupService.getMemberBelongToGroups(),
-	// );
-
-	const { data: groupList, isLoading: groupLoading } = useMemberBelongToGroups({
-		updateGroupId: groupId,
-	});
+	useEffect(() => {
+		/**
+		 * 최초 로드시에 isSelectGroup이 없으므로 첫번째 그룹으로 설정
+		 */
+		if (!isSelecteGroup && groupList && groupList.length > 0) {
+			handleSelectedGroup(groupList[0].group.id);
+		}
+	}, [groupList, handleSelectedGroup, isSelecteGroup]);
 
 	return (
 		<div className={styles.right_sidebar_container}>
@@ -69,30 +79,30 @@ const RightSidebar: FC = () => {
 			</div>
 
 			{isMenu === 'members' &&
-				(isLoading || !data ? (
+				(isLoading || !data || !groupList ? (
 					<Skeleton />
 				) : (
-					<>
-						<div className={styles.group_profile_container}>
-							<GroupProfile
-								group={{
-									id: 'sdfsdf',
-									groupDescription: '양씨네 가족입니다',
-									groupName: '양씨네가족',
-									groupCoverImage: '/images/banner/sm/group-base-sm.png',
-								}}
-							></GroupProfile>
+					<div className={styles.member_container}>
+						{/* group-select-box */}
+						<div className={styles.group_select_box}>
+							<GroupSelect
+								groupList={groupList}
+								selectedGroupId={isSelecteGroup}
+								onSelectedGroupId={handleSelectedGroup}
+							/>
 						</div>
-						<div className={styles.list_container}>
+
+						<div className={styles.member_list_container}>
 							{data.map((item, index) => (
 								<Profile
 									key={index}
 									username={item.member.username}
 									role={item.role}
+									searchMember={item.member}
 								/>
 							))}
 						</div>
-					</>
+					</div>
 				))}
 
 			{isMenu === 'groups' &&
@@ -100,9 +110,22 @@ const RightSidebar: FC = () => {
 					<Skeleton />
 				) : (
 					<div className={styles.list_container}>
-						{groupList.map((item, index) => (
-							<GroupProfile key={index} group={item.group}></GroupProfile>
-						))}
+						<div className={styles.group_title}>관리중인 그룹</div>
+						{groupList
+							.filter(data => data.role === 'main')
+							.map((item, index) => (
+								<Link href={`/groups/${item.group.id}`} key={index}>
+									<GroupProfile key={index} group={item.group}></GroupProfile>
+								</Link>
+							))}
+						<div className={styles.group_title}>참여중인 그룹</div>
+						{groupList
+							.filter(data => data.role === 'user')
+							.map((item, index) => (
+								<Link href={`/groups/${item.group.id}`} key={index}>
+									<GroupProfile group={item.group}></GroupProfile>
+								</Link>
+							))}
 					</div>
 				))}
 		</div>

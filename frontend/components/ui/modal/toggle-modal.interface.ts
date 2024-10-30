@@ -6,6 +6,7 @@ export interface ToggleModalProps {
 	onClose: () => void;
 	direction?: Union<typeof ToggleModalDerection>;
 	feedId?: string;
+	groupId?: string;
 }
 
 export interface ToggleMenu {
@@ -15,4 +16,5 @@ export interface ToggleMenu {
 	layer: Union<typeof LayerMode>;
 	onClose?: () => void;
 	feedId?: string;
+	groupId?: string;
 }

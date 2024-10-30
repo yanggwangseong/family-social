@@ -2,7 +2,7 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 
 import { MessageEntity } from '@/models/entities/message.entity';
 
-import { MemberProfileImageResDto } from '../../member/res/member-profile-image-res.dto';
+import { MemberSearchResDto } from '../../member/res/member-search-res.dto';
 
 export class MessagesByChatResDto extends PickType(MessageEntity, [
 	'id',
@@ -18,5 +18,5 @@ export class MessagesByChatResDto extends PickType(MessageEntity, [
 	@ApiProperty({
 		nullable: false,
 	})
-	member!: MemberProfileImageResDto;
+	member!: MemberSearchResDto;
 }

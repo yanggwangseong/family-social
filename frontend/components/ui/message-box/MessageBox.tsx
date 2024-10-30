@@ -12,7 +12,7 @@ const MessageBox: FC<MessageBoxProps> = ({ isMine, message }) => {
 				[styles.mine_message_card_container]: !!isMine,
 			})}
 		>
-			{!isMine && <Profile />}
+			{!isMine && <Profile searchMember={message.member} />}
 
 			<div className={styles.description_container}>
 				<div className={styles.description_wrapper}>

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/swagger';
 
 import { MemberErrorResponse } from '@/constants/swagger-error-response';
+import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { MemberAccountResDto } from '@/models/dto/member/res/member-account-res.dto';
 import { MemberByIdResDto } from '@/models/dto/member/res/member-by-id-res.dto';
 import { MemberProfileImageResDto } from '@/models/dto/member/res/member-profile-image-res.dto';
@@ -120,6 +121,19 @@ export const GetMembersByUserNameSwagger = () => {
 		ApiOkResponse({
 			description: '유저이름에 해당하는 유저 리스트 검색',
 			type: MemberSearchResDto,
+			isArray: true,
+		}),
+	);
+};
+
+export const GetGroupsByGroupNameSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: '내가 속하지 않은 그룹 이름에 해당하는 그룹 리스트 검색',
+		}),
+		ApiOkResponse({
+			description: '내가 속하지 않은 그룹 이름에 해당하는 그룹 리스트 검색',
+			type: GroupProfileResDto,
 			isArray: true,
 		}),
 	);

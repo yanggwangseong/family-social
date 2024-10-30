@@ -101,6 +101,7 @@ export class MessagesRepository extends Repository<MessageEntity> {
 					message: true,
 					member: {
 						id: true,
+						email: true,
 						username: true,
 						profileImage: true,
 					},

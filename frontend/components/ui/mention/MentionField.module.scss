@@ -6,6 +6,7 @@
 	display: inline-block;
 	//padding-left: 10px;
 }
+
 .mentions--singleLine .mentions__highlighter {
 	//padding: 1px;
 	//border: 2px inset transparent;
@@ -18,11 +19,23 @@
 
 // .mentions--multiLine .mentions__control {
 // }
+// .mentions--multiLine {
+// 	:nth-child(2) {
+// 		z-index: 2 !important;
+// 	}
+// }
+
 .mentions--multiLine {
-	:nth-child(2) {
+	> :nth-child(1) {
+		z-index: 3 !important;
+		position: relative; // Ensure the element is positioned
+	}
+	> :nth-child(2) {
 		z-index: 2 !important;
+		position: relative; // Ensure the element is positioned
 	}
 }
+
 .mentions--multiLine .mentions__highlighter {
 	//border: 1px solid transparent; // 중요
 	//padding: 9px;
@@ -45,6 +58,7 @@
 	padding: 5px 15px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
+
 .mentions__suggestions__item--focused {
 	background-color: #e5855d;
 	color: #fff;
@@ -53,7 +67,7 @@
 .mentions__mention {
 	@apply text-customOrange;
 	position: relative;
-	z-index: 1;
+	z-index: 1 !important;
 	color: #e5855d;
 	text-shadow: 1px 1px 1px white, 1px -1px 1px white, -1px 1px 1px white,
 		-1px -1px 1px white;

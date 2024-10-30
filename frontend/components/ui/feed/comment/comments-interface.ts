@@ -1,5 +1,6 @@
 import { CommentsResponse } from '@/shared/interfaces/comment.interface';
 import { CreateMentionRequest } from '../../form/comment-form.interface';
+import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 
 export interface CommentsProps {
 	comments: CommentsResponse[];
@@ -8,6 +9,10 @@ export interface CommentsProps {
 	isToggleCommentWrite: boolean;
 	onCommentRefetch: () => void;
 	onLikeComment: (commentId: string) => void;
+}
+
+export interface CommentsPropsWithAuth extends CommentsProps {
+	authData: SearchMemberResponse;
 }
 
 export interface CreateCommentRequest {

@@ -5,6 +5,7 @@ import createScheduleAnimation from '@/assets/lottie/createSchedule.json';
 import createEventAnimation from '@/assets/lottie/eventAnimation.json';
 import deleteAnimation from '@/assets/lottie/deleteAnimation.json';
 import inviteCodeAnimation from '@/assets/lottie/createFam.json';
+import groupFollowAnimation from '@/assets/lottie/group-follow.json';
 import { useRecoilState } from 'recoil';
 import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { successLayerModalAtom } from '@/atoms/successLayerModalAtom';
@@ -12,12 +13,13 @@ import { LayerMode, Union } from 'types';
 import { useRouter } from 'next/router';
 
 export const successLottie = {
-	createFeedAnimation: createFeedAnimation,
-	createCommentAnimation: createCommentAnimation,
-	createScheduleAnimation: createScheduleAnimation,
-	createEventAnimation: createEventAnimation,
-	deleteAnimation: deleteAnimation,
-	inviteCodeAnimation: inviteCodeAnimation,
+	createFeedAnimation,
+	createCommentAnimation,
+	createScheduleAnimation,
+	createEventAnimation,
+	deleteAnimation,
+	inviteCodeAnimation,
+	groupFollowAnimation,
 } as const;
 
 export const useSuccessLayerModal = () => {

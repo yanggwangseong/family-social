@@ -30,6 +30,7 @@ import {
 	ERROR_INVITE_USES_LIMIT,
 	ERROR_INVITED_GROUP_NOT_FOUND,
 	ERROR_INVITED_MEMBER_NOT_FOUND,
+	ERROR_MAIN_ROLE_GROUP_LIMIT,
 	ERROR_NO_PERMISSION_TO_DELETE_GROUP,
 	ERROR_NO_PERMISSTION_TO_FEED,
 	ERROR_NO_PERMISSTION_TO_GROUP,
@@ -204,6 +205,13 @@ export const GroupErrorResponse = {
 		exampleDescription: '초대받은 멤버와 다를 경우 발생하는 에러 입니다',
 		exampleTitle: `${ERROR_INVITED_MEMBER_NOT_FOUND}`,
 		message: `${ERROR_INVITED_MEMBER_NOT_FOUND}`,
+	},
+	'Group-400-3': {
+		model: BadRequestServiceException,
+		exampleDescription:
+			'생성할 수 있는 그룹 수를 초과 했을 때 발생하는 에러 입니다',
+		exampleTitle: `${ERROR_MAIN_ROLE_GROUP_LIMIT}`,
+		message: `${ERROR_MAIN_ROLE_GROUP_LIMIT}`,
 	},
 
 	// 404

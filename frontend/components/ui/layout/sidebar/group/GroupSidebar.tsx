@@ -5,6 +5,7 @@ import {
 	PiUserPlusDuotone,
 	PiUserRectangleDuotone,
 	PiCompassDuotone,
+	PiSparkleDuotone,
 } from 'react-icons/pi';
 import CustomButton from '@/components/ui/button/custom-button/CustomButton';
 import { useRouter } from 'next/router';
@@ -52,6 +53,12 @@ const GroupSidebar: FC = () => {
 						link="/groups/requests"
 						Icon={PiUserPlusDuotone}
 						menu="그룹 요청"
+						handleCloseMainSidebar={handleCloseMainSidebar}
+					/>
+					<Menu
+						link="/groups/events"
+						Icon={PiSparkleDuotone}
+						menu="이벤트"
 						handleCloseMainSidebar={handleCloseMainSidebar}
 					/>
 					<Menu

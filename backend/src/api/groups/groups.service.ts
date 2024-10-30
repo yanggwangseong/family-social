@@ -73,9 +73,17 @@ export class GroupsService {
 		});
 	}
 
+	async getGroupsByGroupName(groupName: string, memberId: string) {
+		return await this.groupsRepository.findGroupsByGroupName(
+			groupName,
+			memberId,
+		);
+	}
+
 	async getMemberBelongToGroups(
 		memberId: string,
 		forChatCreation: boolean,
+		isMainRole: boolean,
 	): Promise<BelongToGroupResDto[]> {
 		if (forChatCreation) {
 			return await this.famsRepository.getMemberBelongToGroupsForChatCreation(
@@ -83,7 +91,10 @@ export class GroupsService {
 			);
 		}
 
-		return await this.famsRepository.getMemberBelongToGroups(memberId);
+		return await this.famsRepository.getMemberBelongToGroups(
+			memberId,
+			isMainRole,
+		);
 	}
 
 	async createGroup(

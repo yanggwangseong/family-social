@@ -63,6 +63,7 @@ import { CheckDuplicateGroupNameGuard } from '@/common/guards/check-duplicate-gr
 import { GroupMemberShipGuard } from '@/common/guards/group-membership.guard';
 import { IsMineGroupEventGaurd } from '@/common/guards/Is-mine-group-event.guard';
 import { IsMineScheduleGuard } from '@/common/guards/is-mine-schedule.guard';
+import { LimitMainRoleGroupGuard } from '@/common/guards/limit-main-role-group.guard';
 import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
 import { PaginationInterceptor } from '@/common/interceptors/pagination.interceptor';
 import { ResponseDtoInterceptor } from '@/common/interceptors/reponse-dto.interceptor';
@@ -72,6 +73,7 @@ import { TransactionInterceptor } from '@/common/interceptors/transaction.interc
 import { parseBooleanPipeMessage } from '@/common/pipe-message/parse-boolean-pipe-message';
 import { parseIntPipeMessage } from '@/common/pipe-message/parse-int-pipe-message';
 import { parseUUIDPipeMessage } from '@/common/pipe-message/parse-uuid-pipe-message';
+import { ParseIntWithRangePipe } from '@/common/pipes/parse-int-with-range.pipe';
 import { Pagination } from '@/common/strategies/context/pagination';
 import {
 	ERROR_CANNOT_INVITE_SELF,
@@ -142,10 +144,17 @@ export class GroupsController {
 			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
 		)
 		forChatCreation: boolean,
+		@Query(
+			'isMainRole',
+			new DefaultValuePipe(false),
+			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
+		)
+		isMainRole: boolean,
 	) {
 		return await this.groupsService.getMemberBelongToGroups(
 			sub,
 			forChatCreation,
+			isMainRole,
 		);
 	}
 
@@ -190,7 +199,7 @@ export class GroupsController {
 	 * @returns 그룹명
 	 */
 	@CreateGroupSwagger()
-	@UseGuards(CheckDuplicateGroupNameGuard)
+	@UseGuards(CheckDuplicateGroupNameGuard, LimitMainRoleGroupGuard)
 	@UseInterceptors(TransactionInterceptor)
 	@Post()
 	async createGroup(
@@ -669,12 +678,7 @@ export class GroupsController {
 			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
 		)
 		groupId: string,
-		@Query(
-			'maxUses',
-			new ParseIntPipe({
-				exceptionFactory: () => parseIntPipeMessage('maxUses'),
-			}),
-		)
+		@Query('maxUses', new ParseIntWithRangePipe(1, 20))
 		maxUses: number,
 	) {
 		return await this.invitationsService.createGroupInviteLink(

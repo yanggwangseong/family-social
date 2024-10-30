@@ -27,6 +27,8 @@ export class CommentsRepository extends Repository<CommentEntity> {
 				member: {
 					id: true,
 					username: true,
+					email: true,
+					profileImage: true,
 				},
 			},
 			where: {
@@ -40,6 +42,8 @@ export class CommentsRepository extends Repository<CommentEntity> {
 		return {
 			id: comment.member.id,
 			username: comment.member.username,
+			email: comment.member.email,
+			profileImage: comment.member.profileImage,
 		};
 	}
 
@@ -56,6 +60,8 @@ export class CommentsRepository extends Repository<CommentEntity> {
 				member: {
 					id: true,
 					username: true,
+					email: true,
+					profileImage: true,
 				},
 			},
 			where: {

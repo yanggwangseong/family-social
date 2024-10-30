@@ -16,6 +16,10 @@ export class GroupEventPaginationReqDto extends DefaultPaginationReqDto {
 	@IsIn([...OrderOptions], { message: isInValidationMessage })
 	order__eventStartDate: Union<typeof OrderOptions> = 'ASC';
 
+	/**
+	 * 이벤트 시작 날짜
+	 * 종료된 이벤트는 가져오지 않기 위해
+	 */
 	@ApiProperty({
 		nullable: false,
 	})

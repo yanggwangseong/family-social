@@ -1,0 +1,16 @@
+.container {
+	@apply min-h-screen text-customDark;
+
+	//컨텐츠
+	.contents_container {
+		@apply flex;
+
+		.main_contents_container {
+			@screen md {
+				@apply mx-auto;
+				width: 768px;
+			}
+			@apply w-full my-10 mx-4;
+		}
+	}
+}

@@ -33,8 +33,12 @@ import { useSuccessLayerModal } from '@/hooks/useSuccessLayerModal';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
 import { useFeedByIdQuery } from '@/hooks/use-query/useFeedByIdQuery';
 import { useMemberBelongToGroups } from '@/hooks/use-query/useMemberBelongToGroups';
+import { modalAtom } from '@/atoms/modalAtom';
+import FeedFollowSelect from '@/components/ui/select/follow/FeedFollowSelect';
 
 const CreateFeed: FC = () => {
+	const [isShowing, setIsShowing] = useRecoilState<boolean>(modalAtom);
+
 	const [isFeedId, setIsFeedId] = useRecoilState(feedIdAtom);
 
 	const { handleSuccessLayerModal } = useSuccessLayerModal();
@@ -52,6 +56,9 @@ const CreateFeed: FC = () => {
 	const { feed, remove } = useFeedByIdQuery(isFeedId, {
 		enabled: !!isFeedId, // isFeedId가 true일 때만 쿼리 활성화
 	});
+
+	const [isVisibleToFollowersOptions, setIsVisibleToFollowersOptions] =
+		useState<boolean>(feed?.isVisibleToFollowersOptions || false);
 
 	const [isPublic, setIsPublic] = useState<
 		Union<typeof feedPublicSelectOptions>
@@ -78,6 +85,7 @@ const CreateFeed: FC = () => {
 		handleSubmit,
 		getValues,
 		setValue,
+		reset,
 	} = useForm<CreateFeedFields>({
 		mode: 'onChange',
 		defaultValues: {
@@ -163,6 +171,10 @@ const CreateFeed: FC = () => {
 		setIsFiles(isFiles.filter((file, index) => index !== key));
 	};
 
+	const handleChangeIsVisibleToFollowersOptions = (status: boolean) => {
+		setIsVisibleToFollowersOptions(status);
+	};
+
 	useEffect(() => {
 		if (isFiles) {
 			const blobArrayImage: string[] = isFiles.map(file =>
@@ -212,6 +224,7 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
+				isVisibleToFollowers: isVisibleToFollowersOptions,
 				medias,
 				mentions,
 			});
@@ -223,6 +236,7 @@ const CreateFeed: FC = () => {
 				contents: contents,
 				isPublic: isPublic === 'public' ? true : false,
 				groupId: isSelecteGroup,
+				isVisibleToFollowers: isVisibleToFollowersOptions,
 				medias: medias,
 				mentions,
 			});
@@ -231,6 +245,20 @@ const CreateFeed: FC = () => {
 
 	// 드래그 이벤트를 감지하는 ref 참조변수 (label 태그에 들어갈 예정)
 	const dragRef = useRef<HTMLLabelElement | null>(null);
+
+	useEffect(() => {
+		if (!isShowing) {
+			setIsFeedPage('selectGroup'); // 페이지 초기화
+			setIsFiles([]); // 업로드한 파일 초기화
+			setIsImageUrl([]); // 이미지 URL 초기화
+			setIsUpload(false); // 업로드 상태 초기화
+			reset(); // 폼 데이터 초기화
+			setIsPublic('public'); // 공개 설정 초기화
+			setIsFeedId(''); // 피드 ID 초기화
+			handleSelectedGroup('');
+			setIsVisibleToFollowersOptions(false);
+		}
+	}, [handleSelectedGroup, isShowing, reset, setIsFeedId]);
 
 	return (
 		<LayerModalVariantWrapper className={styles.create_feed_container}>
@@ -349,6 +377,7 @@ const CreateFeed: FC = () => {
 									}}
 								/>
 							</div> */}
+							{/* [TODO] 그룹 프로필 이미지 추가 */}
 							<GroupAndMemberProfile
 								group={{
 									id: 'sdfsdf',
@@ -363,11 +392,20 @@ const CreateFeed: FC = () => {
 									id: 'sdfsdf',
 								}}
 							/>
-
-							<FeedPublicSelect
-								onChageIsPublic={handleChageIsPublic}
-								isPublic={isPublic}
-							/>
+							<div className={styles.feed_select_container}>
+								{/* 피드 공개 여부 selectbox */}
+								<FeedPublicSelect
+									onChageIsPublic={handleChageIsPublic}
+									isPublic={isPublic}
+								/>
+								{/* 해당 그룹을 팔로우한 사람들에게도 공개 */}
+								<FeedFollowSelect
+									isVisibleToFollowersOptions={isVisibleToFollowersOptions}
+									onChangeIsVisibleToFollowersOptions={
+										handleChangeIsVisibleToFollowersOptions
+									}
+								/>
+							</div>
 						</div>
 						{/* <div className="my-5">
 							<select

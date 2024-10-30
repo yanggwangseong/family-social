@@ -1,24 +1,26 @@
 import React, { FC } from 'react';
-import { CommentsProps } from './comments-interface';
+import { CommentsProps, CommentsPropsWithAuth } from './comments-interface';
 import styles from './Comments.module.scss';
 import CommentItem from './comment-item/CommentItem';
 import Profile from '../../profile/Profile';
 import CommentForm from '../../form/CommentForm';
+import { withAuthClientSideProps } from 'hoc/with-auth-client-side-props';
 
-const Comments: FC<CommentsProps> = ({
+const Comments: FC<CommentsPropsWithAuth> = ({
 	comments,
 	feedId,
 	feedWriterId,
 	isToggleCommentWrite,
 	onCommentRefetch,
 	onLikeComment,
+	authData,
 }) => {
 	return (
 		<div className={styles.comment_container}>
 			{isToggleCommentWrite && (
 				<div className={styles.comment_write_container}>
 					{/* 프로필 */}
-					<Profile />
+					<Profile searchMember={authData} />
 					<div className={styles.comment_write_form}>
 						{/* comment form */}
 						<CommentForm
@@ -45,4 +47,4 @@ const Comments: FC<CommentsProps> = ({
 	);
 };
 
-export default Comments;
+export default withAuthClientSideProps<CommentsProps>(Comments);

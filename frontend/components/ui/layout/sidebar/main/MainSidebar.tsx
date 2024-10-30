@@ -51,7 +51,7 @@ const MainSidebar: FC = () => {
 							handleCloseMainSidebar={handleCloseMainSidebar}
 						/>
 						<Menu
-							link="/groups"
+							link="/groups/feeds"
 							Icon={PiUsersThreeDuotone}
 							menu="그룹"
 							handleCloseMainSidebar={handleCloseMainSidebar}

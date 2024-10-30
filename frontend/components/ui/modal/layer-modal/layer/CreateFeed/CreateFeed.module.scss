@@ -44,6 +44,10 @@
 	.form {
 		.form_top_wrap {
 			@apply flex flex-col gap-4;
+
+			.feed_select_container {
+				@apply flex gap-4;
+			}
 		}
 
 		.form_field_container {

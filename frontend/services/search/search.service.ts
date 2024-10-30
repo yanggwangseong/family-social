@@ -1,3 +1,4 @@
+import { GroupProfileResponse } from '@/shared/interfaces/group.interface';
 import { SearchMemberResponse } from '@/shared/interfaces/member.interface';
 import { BasicPaginationResponse } from '@/shared/interfaces/pagination.interface';
 import { SearchTourListArgs } from '@/shared/interfaces/search.interface';
@@ -16,6 +17,13 @@ export const SearchService = {
 	async getMembersByUserName(username: string) {
 		const { data } = await axiosAPI.get<SearchMemberResponse[]>(
 			`/search/members/username/${username}`,
+		);
+		return data;
+	},
+
+	async getGroupByGroupName(groupName: string) {
+		const { data } = await axiosAPI.get<GroupProfileResponse[]>(
+			`/search/groups?groupName=${groupName}`,
 		);
 		return data;
 	},

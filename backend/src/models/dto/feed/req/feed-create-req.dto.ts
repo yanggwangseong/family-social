@@ -13,6 +13,7 @@ export class FeedCreateReqDto extends PickType(FeedEntity, [
 	'isPublic',
 	'contents',
 	'groupId',
+	'isVisibleToFollowers',
 ] as const) {
 	@ApiProperty({
 		nullable: false,

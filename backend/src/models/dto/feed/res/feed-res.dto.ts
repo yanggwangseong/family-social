@@ -26,6 +26,12 @@ export class FeedResDto {
 
 	@ApiProperty({
 		nullable: false,
+		description: '피드가 올라간 그룹의 팔로워에게 공개 여부',
+	})
+	isVisibleToFollowers!: boolean;
+
+	@ApiProperty({
+		nullable: false,
 		description: '피드의 그룹 아이디',
 	})
 	groupId!: string;

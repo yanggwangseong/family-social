@@ -16,6 +16,17 @@ export const GroupEventService = {
 		return data;
 	},
 
+	async getGroupEventsByBelongToGroup(queryOptions: GroupEventQueryOptions) {
+		const { eventStartDate, page, limit, order } = queryOptions;
+		const { data } = await axiosAPI.get<
+			BasicPaginationResponse<GroupEventItemResponse>
+		>(
+			`/group-events?where__eventStartDate__more_than_or_equal=${eventStartDate}&order__eventStartDate=${order}&page=${page}&limit=${limit}`,
+		);
+
+		return data;
+	},
+
 	async getListGroupEvent(
 		queryOptions: GroupEventQueryOptions,
 		groupId: string,

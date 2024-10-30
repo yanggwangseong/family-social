@@ -11,6 +11,7 @@ const ToggleModal: FC<ToggleModalProps> = ({
 	onClose,
 	direction = 'left',
 	feedId,
+	groupId,
 }) => {
 	return (
 		<motion.div
@@ -31,6 +32,7 @@ const ToggleModal: FC<ToggleModalProps> = ({
 					layer={item.layer}
 					onClose={onClose}
 					feedId={feedId}
+					groupId={groupId}
 				/>
 			))}
 		</motion.div>

@@ -17,6 +17,22 @@ import { ErrorResponse } from './error-response.decorator';
 import { PagiNationQuerySwagger } from './query/swagger-pagination-query';
 import { SuccessResponse } from './sucess-response.decorator';
 
+export const GetGroupEventsByBelongToGroupSwagger = () => {
+	return applyDecorators(
+		PagiNationQuerySwagger(),
+		ApiOperation({
+			summary: '사용자가 속한 그룹의 이벤트 목록 조회',
+		}),
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: withBasicPaginationResponse(GroupEventItemResDto),
+				exampleTitle: '사용자가 속한 그룹의 이벤트 목록 조회',
+				exampleDescription: '사용자가 속한 그룹의 이벤트 목록 조회',
+			},
+		]),
+	);
+};
+
 export const GetGroupEventsSwagger = () => {
 	return applyDecorators(
 		PagiNationQuerySwagger(),
