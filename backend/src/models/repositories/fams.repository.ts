@@ -91,6 +91,12 @@ export class FamsRepository extends Repository<FamEntity> {
 		});
 	}
 
+	/**
+	 * 채팅방 생성을 위한 그룹 조회
+	 * @param memberId 사용자 아이디
+	 * @description 채팅방 생성을 위해 자신이 main역할을 가진 채팅방 생성 가능한 그룹을 조회합니다.
+	 * @returns 그룹 리스트
+	 */
 	async getMemberBelongToGroupsForChatCreation(
 		memberId: string,
 	): Promise<BelongToGroupResDto[]> {
@@ -138,6 +144,7 @@ export class FamsRepository extends Repository<FamEntity> {
 
 	async getMemberBelongToGroups(
 		memberId: string,
+		isMainRole: boolean,
 	): Promise<BelongToGroupResDto[]> {
 		return await this.repository.find({
 			select: {
@@ -154,6 +161,7 @@ export class FamsRepository extends Repository<FamEntity> {
 			where: {
 				memberId,
 				invitationAccepted: true,
+				...(isMainRole && { role: MAIN_ROLE }),
 			},
 			relations: {
 				group: true,

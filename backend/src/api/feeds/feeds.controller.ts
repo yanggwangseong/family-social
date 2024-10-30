@@ -196,7 +196,7 @@ export class FeedsController {
 		@PaginationDecorator() pagination: Pagination<FeedEntity>,
 	) {
 		const userGroupIds = await this.groupsService
-			.getMemberBelongToGroups(sub, false)
+			.getMemberBelongToGroups(sub, false, false)
 			.then((userGroupIds) => userGroupIds.map((group) => group.group.id));
 		return await this.feedsService.findAllFeed(
 			sub,

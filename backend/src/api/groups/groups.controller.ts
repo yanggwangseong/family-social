@@ -144,10 +144,17 @@ export class GroupsController {
 			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
 		)
 		forChatCreation: boolean,
+		@Query(
+			'isMainRole',
+			new DefaultValuePipe(false),
+			new ParseBoolPipe({ exceptionFactory: parseBooleanPipeMessage }),
+		)
+		isMainRole: boolean,
 	) {
 		return await this.groupsService.getMemberBelongToGroups(
 			sub,
 			forChatCreation,
+			isMainRole,
 		);
 	}
 
