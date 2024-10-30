@@ -65,7 +65,7 @@ const GroupCreate: FC<CreateGroupPropsWithAuth> = ({ authData }) => {
 					<div className={styles.contents_card}>
 						<div className={styles.contents_wrap}>
 							{/* 뒤로가기 */}
-							<BackSpace title={'Back'} link={'/groups'} />
+							<BackSpace title={'Back'} link={'/groups/feeds'} />
 
 							<div className={styles.page_label_container}>
 								<div className={styles.page_label}>그룹 {'>'} 그룹 만들기</div>

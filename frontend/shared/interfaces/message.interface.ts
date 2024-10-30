@@ -1,4 +1,4 @@
-import { MembersResponse } from './member.interface';
+import { SearchMemberResponse } from './member.interface';
 
 export interface GetMessagesResponse {
 	list: MessageItemResponse[];
@@ -10,5 +10,5 @@ export interface MessageItemResponse {
 	updatedAt: string;
 	message: string;
 	isMine: boolean;
-	member: MembersResponse;
+	member: SearchMemberResponse;
 }

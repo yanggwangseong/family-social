@@ -162,7 +162,7 @@ export class CommentsService implements OnModuleInit {
 		feedId: string,
 		mentionTypeId: string,
 	): Promise<CommentGetListsResDto> {
-		const { id, username } =
+		const { id, username, profileImage, email } =
 			await this.commentsRepository.getUserIdAndNameByCommentId(comment.id);
 		// 해당 부분을 redis cache로 개선
 		// const likedByComments =
@@ -195,7 +195,7 @@ export class CommentsService implements OnModuleInit {
 			feedId: comment.feedId,
 			myLikeByComment,
 			sumLikeByComment,
-			member: { id, username },
+			member: { id, username, profileImage, email },
 			childrenComments: childComments,
 			mentions,
 		};

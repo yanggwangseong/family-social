@@ -69,7 +69,15 @@ export class InformationTypeResponseDtoInterceptor implements NestInterceptor {
 
 	private plainToInstanceIntroductionResponseDto(
 		contentTypeId: TourContentTypeId,
-		item: any,
+		item:
+			| TourHttpTouristResDto
+			| TourHttpCulturalResDto
+			| TourHttpFestivalResDto
+			| TourHttpTravelCourseResDto
+			| TourHttpLeisureResDto
+			| TourHttpAccommodationResDto
+			| TourHttpShoppingResDto
+			| TourHttpRestaurantResDto,
 	) {
 		switch (contentTypeId) {
 			case '12':
@@ -118,7 +126,10 @@ export class InformationTypeResponseDtoInterceptor implements NestInterceptor {
 
 	private plainToInstanceAdditionalResponseDto(
 		contentTypeId: TourContentTypeId,
-		item: any,
+		item:
+			| AdditionalCommonResDto
+			| AdditionalTravelCourseResDto
+			| AdditionalAccommodationResDto,
 	) {
 		switch (contentTypeId) {
 			// 문화시설(14), 관광지(12), 축제공연행사(15), 28(레저), 38(쇼핑), 39(음식점)

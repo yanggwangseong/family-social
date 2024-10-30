@@ -1,0 +1,35 @@
+.container {
+	@apply flex flex-col gap-6 p-6;
+
+	.groupDetail {
+		@apply flex flex-col gap-4;
+
+		.groupDetail_header {
+			@apply flex items-center gap-2 text-lg font-medium pb-2 border-b border-gray-200;
+
+			svg {
+				@apply text-customOrange;
+			}
+		}
+	}
+
+	.groupList {
+		@apply flex flex-col gap-4;
+
+		.groupList_header {
+			@apply flex items-center gap-2 text-lg font-medium sticky top-0 bg-white py-2 border-b border-gray-200;
+
+			svg {
+				@apply text-customOrange;
+			}
+		}
+
+		.groupList_body {
+			@apply flex flex-col gap-4 max-h-[40vh] overflow-y-auto pr-2;
+		}
+	}
+
+	.bottom_btn_container {
+		@apply mt-2;
+	}
+}

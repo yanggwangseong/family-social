@@ -57,6 +57,7 @@ export class GroupsModule implements NestModule {
 			.exclude(
 				{ path: 'groups', method: RequestMethod.GET },
 				{ path: 'groups', method: RequestMethod.POST },
+				{ path: 'groups/feeds', method: RequestMethod.GET },
 			)
 			.forRoutes(GroupsController);
 

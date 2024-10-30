@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { groupBy } from 'es-toolkit';
 import { QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,7 +23,9 @@ import {
 import { LikesCache } from '@/models/cache/likes-cache';
 import { FeedPaginationReqDto } from '@/models/dto/feed/req/feed-pagination-req.dto';
 import { FeedByIdResDto } from '@/models/dto/feed/res/feed-by-id-res.dto';
+import { FeedMyGroupResDto } from '@/models/dto/feed/res/feed-my-group-res.dto';
 import { FeedResDto } from '@/models/dto/feed/res/feed-res.dto';
+import { GroupFeedsPaginationReqDto } from '@/models/dto/group/req/group-feeds-pagination-req.dto';
 import { FeedEntity } from '@/models/entities/feed.entity';
 import { FeedsRepository } from '@/models/repositories/feeds.repository';
 import { LikesFeedRepository } from '@/models/repositories/likes-feed.repository';
@@ -186,6 +189,98 @@ export class FeedsService implements OnModuleInit {
 		return hasLiked;
 	}
 
+	/**
+	 * 그룹별 사용자가 올린 피드 가져오기
+	 */
+	async findFeedsByBelongToGroups(
+		memberId: string,
+		paginationDto: GroupFeedsPaginationReqDto,
+		pagination: Pagination<FeedEntity>,
+	): Promise<BasicPaginationResponse<FeedMyGroupResDto>> {
+		const { page, limit } = paginationDto;
+		const { take, skip } = getOffset({ page, limit });
+
+		const mentionTypeId = await this.mentionsService.findMentionIdByMentionType(
+			MENTION_ON_FEED,
+		);
+
+		const query = await this.feedsRepository.findFeedsByBelongToGroups({
+			memberId,
+			take,
+			skip,
+		});
+
+		const {
+			list,
+			count,
+		}: {
+			list: Omit<FeedResDto, 'medias' | 'comments' | 'mentions'>[];
+			count: number;
+		} = await pagination.paginateQueryBuilder(paginationDto, query);
+
+		const mappedList = await Promise.all(
+			list.map(async (feed) => {
+				const [[medias, comments], mentions] = await Promise.all([
+					this.getMediaUrlAndCommentsByFeedId(feed.feedId, memberId),
+					this.mentionsService.findMentionsByFeedId(feed.feedId, mentionTypeId),
+				]);
+
+				return {
+					...feed,
+					medias,
+					comments,
+					mentions,
+				};
+			}),
+		);
+
+		// return Object.values(
+		// 	feeds.reduce<GroupedFeeds>((acc, feed) => {
+		// 		const {
+		// 			groupId,
+		// 			groupName,
+		// 			groupDescription,
+		// 			groupCoverImage,
+		// 			...rest
+		// 		} = feed;
+
+		// 		const accKey = feed.groupId;
+		// 		if (!acc[accKey]) {
+		// 			acc[feed.groupId] = {
+		// 				groupId: groupId,
+		// 				groupName: groupName,
+		// 				groupDescription: groupDescription,
+		// 				groupCoverImage: groupCoverImage,
+		// 				feeds: [],
+		// 			};
+		// 		}
+
+		// 		acc[feed.groupId].feeds.push(rest);
+		// 		return acc;
+		// 	}, {}),
+		// );
+
+		const mappedResult = Object.entries(
+			groupBy(mappedList, (feed) => feed.groupId),
+		).map(([groupId, feeds]) => {
+			const { groupName, groupDescription, groupCoverImage } = feeds[0];
+			return {
+				groupId,
+				groupName,
+				groupDescription,
+				groupCoverImage,
+				feeds,
+			};
+		});
+
+		return {
+			list: mappedResult,
+			page,
+			count,
+			take,
+		};
+	}
+
 	async findAllFeed(
 		memberId: string,
 		paginationDto: FeedPaginationReqDto,
@@ -211,21 +306,16 @@ export class FeedsService implements OnModuleInit {
 			list,
 			count,
 		}: {
-			list: Omit<FeedResDto, 'medias'>[];
+			list: Omit<FeedResDto, 'medias' | 'comments' | 'mentions'>[];
 			count: number;
 		} = await pagination.paginateQueryBuilder(paginationDto, query);
 
-		const mappedList = Promise.all(
+		const mappedList = await Promise.all(
 			list.map(async (feed) => {
-				const [medias, comments] = await this.getMediaUrlAndCommentsByFeedId(
-					feed.feedId,
-					memberId,
-				);
-
-				const mentions = await this.mentionsService.findMentionsByFeedId(
-					feed.feedId,
-					mentionTypeId,
-				);
+				const [[medias, comments], mentions] = await Promise.all([
+					this.getMediaUrlAndCommentsByFeedId(feed.feedId, memberId),
+					this.mentionsService.findMentionsByFeedId(feed.feedId, mentionTypeId),
+				]);
 
 				return {
 					...feed,
@@ -237,7 +327,7 @@ export class FeedsService implements OnModuleInit {
 		);
 
 		return {
-			list: await mappedList,
+			list: mappedList,
 			page,
 			count,
 			take,

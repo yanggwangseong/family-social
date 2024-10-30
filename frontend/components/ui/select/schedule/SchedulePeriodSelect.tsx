@@ -7,7 +7,7 @@ import {
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import styles from './SchedulePeriodSelect.module.scss';
 import { useRecoilState } from 'recoil';
-import { PeriodsType, periodAtom } from '@/atoms/periodAtom';
+import { periodAtom } from '@/atoms/periodAtom';
 import cn from 'classnames';
 import { selectedPeriodAtom } from '@/atoms/selectedPeriodAtom';
 import { motion } from 'framer-motion';

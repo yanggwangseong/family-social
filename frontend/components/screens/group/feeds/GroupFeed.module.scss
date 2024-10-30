@@ -5,15 +5,22 @@
 	}
 }
 
-.lottie_container {
-	@screen md {
-		@apply w-full flex justify-center;
-	}
+.contents_container {
+	@apply flex flex-col gap-4;
 
-	.lottie {
-		@apply w-1/2;
+	.feed_container {
+		@apply flex flex-col gap-4;
 	}
-}
-.found_title {
-	@apply font-bold text-center text-customGray;
+	.lottie_container {
+		@screen md {
+			@apply w-full flex justify-center;
+		}
+
+		.lottie {
+			@apply w-1/2;
+		}
+	}
+	.found_title {
+		@apply font-bold text-center text-customGray;
+	}
 }

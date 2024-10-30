@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { ILike, Not, QueryRunner, Repository } from 'typeorm';
 
 import { MAIN_ROLE } from '@/constants/string-constants';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
@@ -22,6 +22,49 @@ export class GroupsRepository extends Repository<GroupEntity> {
 		return qr
 			? qr.manager.getRepository<GroupEntity>(GroupEntity)
 			: this.repository;
+	}
+
+	/**
+	 * @summary 그룹 이름에 해당하는 그룹 리스트 검색
+	 * @description 인증된 사용자가 속한 그룹 제외
+	 * @param groupName 그룹 이름
+	 * @param memberId 인증된 사용자 아이디
+	 * @returns 검색된 그룹 정보 리스트
+	 */
+	async findGroupsByGroupName(
+		groupName: string,
+		memberId: string,
+	): Promise<GroupProfileResDto[]> {
+		return await this.repository
+			.find({
+				select: {
+					id: true,
+					groupName: true,
+					groupDescription: true,
+					groupCoverImage: true,
+					groupByMemberGroups: {
+						groupId: true,
+						memberId: true,
+					},
+				},
+				where: {
+					groupName: ILike(`${groupName}%`),
+					groupByMemberGroups: {
+						memberId: Not(memberId),
+					},
+				},
+				relations: {
+					groupByMemberGroups: true,
+				},
+			})
+			.then((groups) =>
+				groups.map((group) => ({
+					id: group.id,
+					groupName: group.groupName,
+					groupDescription: group.groupDescription,
+					groupCoverImage: group.groupCoverImage,
+				})),
+			);
 	}
 
 	async findGroupByGroupName({

@@ -22,6 +22,11 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useCreateEvent } from '@/hooks/useCreateEvent';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { useRecoilState } from 'recoil';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { useRouter } from 'next/router';
+import { LayerMode } from 'types';
+import { groupFollowAtom } from '@/atoms/groupFollowAtom';
 
 const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
@@ -30,6 +35,11 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	handleLottieComplete,
 	page,
 }) => {
+	const router = useRouter();
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+	const [, setGroupFollow] = useRecoilState(groupFollowAtom);
+
 	const { handleCreateFeed } = useCreateFeed();
 
 	const { handleCreateEvent } = useCreateEvent();
@@ -67,6 +77,18 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 		hiddenFileInput.current!.click();
 	};
 
+	const handleFollowLayerModal = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '그룹 팔로우',
+			layer: LayerMode.groupFollowModal,
+		});
+		setGroupFollow({ groupId });
+	};
+
+	// [TODO] api/groups/:groupId 수정 필요.
+	const isMineGroup = false;
+
 	return (
 		<div className={styles.container}>
 			{/* 헤더 */}
@@ -79,6 +101,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 						onLottieComplete={handleLottieComplete}
 					/>
 				)}
+				{/* TODO 여기에 hoc말고 밖에 format에서 호출한후에 props로 넘기기 */}
 				<GroupDetailSidebar groupId={groupId} />
 
 				<div className={styles.detail_container}>
@@ -89,6 +112,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 								src={'/images/banner/group-base.png'}
 								alt="banner"
 							></Image>
+							{/* TODO 그룹 역할이 main일때 수정 가능 */}
 							<div className={styles.banner_edit_btn}>
 								<PiPencilDuotone size={22} />
 								<button className={styles.btn_text} onClick={handleClick}>
@@ -107,54 +131,81 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 						<div className={styles.main_contents_container}>
 							<div className={styles.banner_profile_contaienr}>
 								{/* 프로필 [TODO] */}
-								<Profile
-									username="양광성"
-									role="관리자"
-									searchMember={{
-										id: '410b7202-660a-4423-a6c3-6377857241cc',
-										username: '양광성',
-										email: 'rhkdtjd_12@naver.com',
-										profileImage: '/images/profile/profile.png',
-									}}
-								/>
-								<div className={styles.banner_profile_right_contaienr}>
-									{page === 'GROUPFEED' && (
-										<div className={styles.create_feed_btn}>
-											<CustomButton
-												type="button"
-												className="bg-customOrange text-customDark 
-												font-bold border border-solid border-customDark 
-												rounded-full w-full py-[10px] px-7
-												hover:bg-orange-500
-												"
-												onClick={handleCreateFeed}
-											>
-												+ 피드
-											</CustomButton>
-										</div>
-									)}
+								{/* 본인이 해당 그룹에 속해 있을때만 표시 */}
+								{isMineGroup ? (
+									<>
+										<Profile
+											username="양광성2"
+											role="관리자"
+											searchMember={{
+												id: '410b7202-660a-4423-a6c3-6377857241cc',
+												username: '양광성',
+												email: 'rhkdtjd_12@naver.com',
+												profileImage: '/images/profile/profile.png',
+											}}
+										/>
 
-									{page === 'GROUPEVENT' && (
-										<div className={styles.create_feed_btn}>
-											<CustomButton
-												type="button"
-												className="bg-customOrange text-customDark 
+										<div className={styles.banner_profile_right_contaienr}>
+											{page === 'GROUPFEED' && (
+												<div className={styles.create_feed_btn}>
+													<CustomButton
+														type="button"
+														className="bg-customOrange text-customDark 
 												font-bold border border-solid border-customDark 
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
-												onClick={handleCreateEvent}
+														onClick={handleCreateFeed}
+													>
+														+ 피드
+													</CustomButton>
+												</div>
+											)}
+
+											{page === 'GROUPEVENT' && (
+												<div className={styles.create_feed_btn}>
+													<CustomButton
+														type="button"
+														className="bg-customOrange text-customDark 
+												font-bold border border-solid border-customDark 
+												rounded-full w-full py-[10px] px-7
+												hover:bg-orange-500
+												"
+														onClick={handleCreateEvent}
+													>
+														+ 이벤트 만들기
+													</CustomButton>
+												</div>
+											)}
+											{/* TODO 그룹 역할이 main일때 초대 가능 */}
+											<motion.div
+												className={styles.toggle_menu_container}
+												initial={false}
+												animate={isOpenInvitation ? 'open' : 'closed'}
+												ref={invitationModalWrapperRef}
 											>
-												+ 이벤트 만들기
-											</CustomButton>
+												<CustomButton
+													type="button"
+													className="bg-customOrange text-customDark 
+												font-bold border border-solid border-customDark 
+												rounded-full w-full py-[10px] px-7
+												hover:bg-orange-500
+												"
+													onClick={handleCloseInvitationModal}
+												>
+													+ 초대하기
+												</CustomButton>
+
+												{/*  toggle modal */}
+												<ToggleModal
+													list={InviteMenu}
+													onClose={handleCloseInvitationModal}
+												/>
+											</motion.div>
 										</div>
-									)}
-									<motion.div
-										className={styles.toggle_menu_container}
-										initial={false}
-										animate={isOpenInvitation ? 'open' : 'closed'}
-										ref={invitationModalWrapperRef}
-									>
+									</>
+								) : (
+									<div className={styles.create_feed_btn}>
 										<CustomButton
 											type="button"
 											className="bg-customOrange text-customDark 
@@ -162,18 +213,12 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
-											onClick={handleCloseInvitationModal}
+											onClick={handleFollowLayerModal}
 										>
-											+ 초대하기
+											+ 팔로우
 										</CustomButton>
-
-										{/*  toggle modal */}
-										<ToggleModal
-											list={InviteMenu}
-											onClose={handleCloseInvitationModal}
-										/>
-									</motion.div>
-								</div>
+									</div>
+								)}
 							</div>
 							{/* 탭 메뉴 */}
 							<div className={styles.tap_menu_container}>

@@ -15,12 +15,13 @@ export interface UseMemberBelongToGroupsQueryOptions
 	> {
 	forChatCreation?: boolean;
 	updateGroupId?: string;
+	isMainRole?: boolean;
 }
 
 export const useMemberBelongToGroups = (
 	options?: UseMemberBelongToGroupsQueryOptions,
 ) => {
-	const { updateGroupId, forChatCreation } = options || {};
+	const { updateGroupId, forChatCreation, isMainRole } = options || {};
 
 	const [isSelecteGroup, setIsSelectGroup] = useState(updateGroupId || '');
 
@@ -30,7 +31,8 @@ export const useMemberBelongToGroups = (
 
 	const { data, isLoading, ...rest } = useQuery(
 		['member-belong-to-groups'],
-		async () => await GroupService.getMemberBelongToGroups(forChatCreation),
+		async () =>
+			await GroupService.getMemberBelongToGroups(forChatCreation, isMainRole),
 		{
 			...options,
 		},

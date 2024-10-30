@@ -1,3 +1,4 @@
+import { OmitStrict } from 'types';
 import { CommentsResponse } from './comment.interface';
 import { MediaInfo } from './media.interface';
 import { MentionsResponse } from './mention.interface';
@@ -12,6 +13,7 @@ export interface FeedInfo {
 	feedId: string;
 	contents: string;
 	isPublic: boolean;
+	isVisibleToFollowersOptions: boolean;
 	groupId: string;
 	groupName: string;
 	groupDescription: string;
@@ -31,4 +33,12 @@ export interface FeedInfo {
 export interface FeedByIdResponse {
 	id: string;
 	isPublic: boolean;
+}
+
+export interface MyFeedsByBelongToGroupsResponse {
+	groupId: string;
+	groupName: string;
+	groupDescription: string;
+	groupCoverImage: string;
+	feeds: FeedInfo[];
 }

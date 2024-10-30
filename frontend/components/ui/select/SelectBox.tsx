@@ -35,6 +35,7 @@ const SelectBox: FC<{
 	const handleChangeSelected = (status: orderSelectOptionsKeys) => {
 		onChangeSelected(status);
 	};
+
 	return (
 		<motion.div
 			className={styles.public_select_container}

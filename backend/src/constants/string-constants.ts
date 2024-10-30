@@ -26,6 +26,7 @@ export const MAIN_ROLE = 'main' satisfies roleType;
 
 export const SEARCH_TYPE_TOUR = 'tour' satisfies Union<typeof SearchType>;
 export const SEARCH_TYPE_MEMBER = 'member' satisfies Union<typeof SearchType>;
+export const SEARCH_TYPE_GROUP = 'group' satisfies Union<typeof SearchType>;
 
 export const LIKE_CACHE_TYPE_FEED = 'feed' satisfies Union<
 	typeof LikeCacheType
