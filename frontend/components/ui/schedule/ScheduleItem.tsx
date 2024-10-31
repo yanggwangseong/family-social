@@ -20,6 +20,7 @@ import { easeOutAnimation } from '@/utils/animation/ease-out';
 import SharedMembers from '../shared-members/SharedMembers';
 import DDay from '../d-day/DDay';
 import { formatDateDistance } from '@/utils/format-date-distance';
+import { calculateDDay } from '@/utils/calculate-dday';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 	schedule,
@@ -95,7 +96,7 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						) : (
 							<>
 								{/* d-day */}
-								<DDay day={'248'} />
+								<DDay day={calculateDDay(schedule.startPeriod)} />
 								<div className={styles.title}>{schedule.scheduleName}</div>
 
 								<div

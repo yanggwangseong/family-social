@@ -15,6 +15,7 @@ import ToggleModal from '../../modal/ToggleModal';
 import { GroupEventSettingMenu } from '../../modal/toggle-menu.constants';
 import { useRecoilState } from 'recoil';
 import { groupEventIdAtom } from '@/atoms/groupEventIdAtom';
+import { calculateDDay } from '@/utils/calculate-dday';
 
 const GroupEventItem: FC<GroupItemProps> = ({ index, page, data }) => {
 	const ModalWrapperRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,7 @@ const GroupEventItem: FC<GroupItemProps> = ({ index, page, data }) => {
 					<div className={styles.description_container}>
 						{/* d-day */}
 						<div className={styles.d_day_container}>
-							<DDay day={'5'} />
+							<DDay day={calculateDDay(data.eventStartDate)} />
 							<EventTypeIcon Icon={PiCakeDuotone} iconSize={24} />
 							<div className={styles.title}>{data.eventName}</div>
 						</div>
