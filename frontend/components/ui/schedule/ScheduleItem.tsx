@@ -19,6 +19,7 @@ import { motion } from 'framer-motion';
 import { easeOutAnimation } from '@/utils/animation/ease-out';
 import SharedMembers from '../shared-members/SharedMembers';
 import DDay from '../d-day/DDay';
+import { formatDateDistance } from '@/utils/format-date-distance';
 
 const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 	schedule,
@@ -142,12 +143,9 @@ const ScheduleItem: FC<{ schedule: ScheduleResponse; index: number }> = ({
 						sharedMembers={schedule.sharedMembers}
 						sharedGroup={schedule.group}
 					/>
-					<div
-						className={styles.update_date}
-					>{`최근 수정일 ${TranslateDateFormat(
-						new Date(schedule.updatedAt),
-						'yyyy-MM-dd',
-					)}`}</div>
+					<div className={styles.update_date}>
+						{formatDateDistance(schedule.updatedAt)}
+					</div>
 				</div>
 			</div>
 		</motion.div>
