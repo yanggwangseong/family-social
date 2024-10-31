@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { MENTION_MATCH_PATTERN } from '@/constants/mention-match-pattern.const';
 import ProfileHoverContainerModal from '../../profile-hover-container-modal/ProfileHoverContainerModal';
 import { useHover } from '@/hooks/useHover';
+import { formatDateDistance } from '@/utils/format-date-distance';
 
 const NotificationItem: FC<NotificationItemProps> = ({
 	notificationItem,
@@ -68,7 +69,7 @@ const NotificationItem: FC<NotificationItemProps> = ({
 						</div>
 					)}
 					<div className={styles.notification_date}>
-						{notificationItem.createdAt}
+						{formatDateDistance(notificationItem.createdAt)}
 					</div>
 				</div>
 			</div>
