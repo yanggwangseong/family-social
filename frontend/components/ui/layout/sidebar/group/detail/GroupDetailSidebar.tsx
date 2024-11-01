@@ -24,10 +24,12 @@ import { motion } from 'framer-motion';
 import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useMenuAnimation } from '@/hooks/useMenuAnimation';
 import { GroupDetailSidebarProps } from './group-detail-sidebar.interface';
+import { isGroupAccessLevelResponse } from '@/utils/type-guard';
 
 const GroupDetailSidebar: FC<GroupDetailSidebarProps> = ({
 	groupId,
 	groupAccessLevel,
+	handleFollowLayerModal,
 }) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 
@@ -60,7 +62,14 @@ const GroupDetailSidebar: FC<GroupDetailSidebarProps> = ({
 				>
 					x
 				</motion.div>
-				<GroupProfile group={groupAccessLevel.group} />
+				<GroupProfile
+					group={{
+						id: groupAccessLevel.id,
+						groupDescription: groupAccessLevel.groupDescription,
+						groupName: groupAccessLevel.groupName,
+						groupCoverImage: groupAccessLevel.groupCoverImage,
+					}}
+				/>
 
 				{/* 라인 */}
 				<Line />
@@ -106,45 +115,64 @@ const GroupDetailSidebar: FC<GroupDetailSidebarProps> = ({
 				<Line />
 
 				<div className={styles.sidebar_btn_container}>
-					{/* TODO 그룹 역할이 main일때 가능 아닐경우 팔로우 버튼 표시 */}
-					<motion.div
-						className={styles.toggle_menu_btn_container}
-						initial={false}
-						animate={isOpenInvitation ? 'open' : 'closed'}
-						ref={invitationModalWrapperRef}
-					>
-						<CustomButton
-							type="button"
-							className="bg-customOrange text-customDark 
+					{/* 그룹 역할이 main일때 가능 아닐경우 팔로우 버튼 표시 */}
+					{isGroupAccessLevelResponse(groupAccessLevel) &&
+					groupAccessLevel.fam.role === 'main' ? (
+						<>
+							<motion.div
+								className={styles.toggle_menu_btn_container}
+								initial={false}
+								animate={isOpenInvitation ? 'open' : 'closed'}
+								ref={invitationModalWrapperRef}
+							>
+								<CustomButton
+									type="button"
+									className="bg-customOrange text-customDark 
 							font-bold border border-solid border-customDark 
 							rounded-full p-[10px] w-full
 							hover:bg-orange-500
 							"
-							onClick={handleCloseInvitationModal}
-						>
-							+ 초대하기
-						</CustomButton>
+									onClick={handleCloseInvitationModal}
+								>
+									+ 초대하기
+								</CustomButton>
 
-						<ToggleModal
-							list={InviteMenu}
-							onClose={handleCloseInvitationModal}
-						/>
-					</motion.div>
-					<motion.div
-						className={styles.toggle_menu_icon_container}
-						initial={false}
-						animate={isOpenSetting ? 'open' : 'closed'}
-						ref={settingModalWrapperRef}
-					>
-						<motion.div {...BUTTONGESTURE}>
-							<BsThreeDots size={22} onClick={handleCloseSettingModal} />
-						</motion.div>
+								<ToggleModal
+									list={InviteMenu}
+									onClose={handleCloseInvitationModal}
+								/>
+							</motion.div>
+							<motion.div
+								className={styles.toggle_menu_icon_container}
+								initial={false}
+								animate={isOpenSetting ? 'open' : 'closed'}
+								ref={settingModalWrapperRef}
+							>
+								<motion.div {...BUTTONGESTURE}>
+									<BsThreeDots size={22} onClick={handleCloseSettingModal} />
+								</motion.div>
 
-						<ToggleModal
-							list={GroupSettingMenu}
-							onClose={handleCloseSettingModal}
-						/>
-					</motion.div>
+								<ToggleModal
+									list={GroupSettingMenu}
+									onClose={handleCloseSettingModal}
+								/>
+							</motion.div>
+						</>
+					) : (
+						<>
+							<CustomButton
+								type="button"
+								className="bg-customOrange text-customDark 
+												font-bold border border-solid border-customDark 
+												rounded-full w-full py-[10px] px-7
+												hover:bg-orange-500
+												"
+								onClick={handleFollowLayerModal}
+							>
+								+ 팔로우
+							</CustomButton>
+						</>
+					)}
 				</div>
 				<motion.div
 					className={styles.sidebar_home_btn_container}
@@ -163,41 +191,44 @@ const GroupDetailSidebar: FC<GroupDetailSidebarProps> = ({
 
 				<Line />
 
-				{/* TODO 그룹 역할이 main일때 가능 */}
-				<div className={styles.management_menu_container}>
-					<div
-						className={styles.management_toggle_menu_container}
-						onClick={() => setToggleSetting(!isToggleSetting)}
-					>
-						<div className={styles.menu_text}>관리자 도구</div>
-						<div className={styles.toggle_icon}>
-							{isToggleSetting ? (
-								<IoIosArrowUp size={22} />
-							) : (
-								<IoIosArrowDown size={22} />
+				{/* 그룹 역할이 main일때 가능 */}
+				{isGroupAccessLevelResponse(groupAccessLevel) &&
+					groupAccessLevel.fam.role === 'main' && (
+						<div className={styles.management_menu_container}>
+							<div
+								className={styles.management_toggle_menu_container}
+								onClick={() => setToggleSetting(!isToggleSetting)}
+							>
+								<div className={styles.menu_text}>관리자 도구</div>
+								<div className={styles.toggle_icon}>
+									{isToggleSetting ? (
+										<IoIosArrowUp size={22} />
+									) : (
+										<IoIosArrowDown size={22} />
+									)}
+								</div>
+							</div>
+							{isToggleSetting && (
+								<motion.div {...INLINEBUTTONGESTURE}>
+									<Link
+										className={styles.menu_item_container}
+										href={`/groups/${groupId}/edit`}
+										onClick={handleCloseMainSidebar}
+									>
+										<div className={styles.icon_container}>
+											<PiGearSixDuotone size={22} />
+										</div>
+										<div className={styles.menu_container}>
+											<div>그룹 설정</div>
+											<div className={styles.description}>
+												그룹 정보 수정 등 관리
+											</div>
+										</div>
+									</Link>
+								</motion.div>
 							)}
 						</div>
-					</div>
-					{isToggleSetting && (
-						<motion.div {...INLINEBUTTONGESTURE}>
-							<Link
-								className={styles.menu_item_container}
-								href={`/groups/${groupId}/edit`}
-								onClick={handleCloseMainSidebar}
-							>
-								<div className={styles.icon_container}>
-									<PiGearSixDuotone size={22} />
-								</div>
-								<div className={styles.menu_container}>
-									<div>그룹 설정</div>
-									<div className={styles.description}>
-										그룹 정보 수정 등 관리
-									</div>
-								</div>
-							</Link>
-						</motion.div>
 					)}
-				</div>
 			</motion.div>
 		</>
 	);
