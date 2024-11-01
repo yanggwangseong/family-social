@@ -49,6 +49,10 @@ export interface GroupDetailResponse extends FamResponse {
 	followings: string[];
 }
 
-export interface GroupAccessLevelResponse {
+export interface GroupAccessLevelResponse extends FamWithRoleResponse {
+	group: GroupProfileResponse;
+	memberCount: number;
+	followers: string[];
+	followings: string[];
 	accessLevel: GroupAccessLevel;
 }
