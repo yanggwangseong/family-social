@@ -34,6 +34,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	lottieRef,
 	handleLottieComplete,
 	page,
+	groupAccessLevel,
 }) => {
 	const router = useRouter();
 	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
@@ -101,8 +102,11 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 						onLottieComplete={handleLottieComplete}
 					/>
 				)}
-				{/* TODO 여기에 hoc말고 밖에 format에서 호출한후에 props로 넘기기 */}
-				<GroupDetailSidebar groupId={groupId} />
+
+				<GroupDetailSidebar
+					groupId={groupId}
+					groupAccessLevel={groupAccessLevel}
+				/>
 
 				<div className={styles.detail_container}>
 					<div className={styles.main}>

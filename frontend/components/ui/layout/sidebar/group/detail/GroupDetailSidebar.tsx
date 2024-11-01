@@ -23,15 +23,11 @@ import { useMainSidebar } from '@/hooks/useMainSidebar';
 import { motion } from 'framer-motion';
 import { BUTTONGESTURE, INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useMenuAnimation } from '@/hooks/useMenuAnimation';
-import { withGroupDetailProps } from 'hoc/with-group-detail-props';
-import {
-	GroupDetailSidebarProps,
-	GroupDetailSidebarPropsWithGroupDetail,
-} from './group-detail-sidebar.interface';
+import { GroupDetailSidebarProps } from './group-detail-sidebar.interface';
 
-const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
+const GroupDetailSidebar: FC<GroupDetailSidebarProps> = ({
 	groupId,
-	groupDetail,
+	groupAccessLevel,
 }) => {
 	const [isToggleSetting, setToggleSetting] = useState<boolean>(true);
 
@@ -64,14 +60,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 				>
 					x
 				</motion.div>
-				<GroupProfile
-					group={{
-						id: 'sdfsdf',
-						groupDescription: '한국을 좋아하는 그룹입니다',
-						groupName: 'korea',
-						groupCoverImage: '/images/banner/sm/group-base-sm.png',
-					}}
-				/>
+				<GroupProfile group={groupAccessLevel.group} />
 
 				{/* 라인 */}
 				<Line />
@@ -91,7 +80,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 						</div>
 						<div
 							className={styles.member_text}
-						>{`멤버 ${groupDetail.memberCount}명`}</div>
+						>{`멤버 ${groupAccessLevel.memberCount}명`}</div>
 					</div>
 					<div className={styles.follow_container}>
 						<div className={styles.follower_container}>
@@ -100,7 +89,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 							</div>
 							<div
 								className={styles.member_text}
-							>{`팔로워 ${groupDetail.followers.length}개`}</div>
+							>{`팔로워 ${groupAccessLevel.followers.length}개`}</div>
 						</div>
 						<div className={styles.following_container}>
 							<div className={styles.icon_container}>
@@ -108,7 +97,7 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 							</div>
 							<div
 								className={styles.member_text}
-							>{`팔로잉 ${groupDetail.followings.length}개`}</div>
+							>{`팔로잉 ${groupAccessLevel.followings.length}개`}</div>
 						</div>
 					</div>
 				</div>
@@ -214,6 +203,4 @@ const GroupDetailSidebar: FC<GroupDetailSidebarPropsWithGroupDetail> = ({
 	);
 };
 
-export default withGroupDetailProps<GroupDetailSidebarProps>(
-	GroupDetailSidebar,
-);
+export default GroupDetailSidebar;
