@@ -49,10 +49,22 @@ export interface GroupDetailResponse extends FamResponse {
 	followings: string[];
 }
 
-export interface GroupAccessLevelResponse extends FamWithRoleResponse {
-	group: GroupProfileResponse;
+export interface GroupAccessLevelResponse extends GroupProfileResponse {
+	fam: FamWithRoleResponse;
+	member: SearchMemberResponse;
 	memberCount: number;
 	followers: string[];
 	followings: string[];
 	accessLevel: GroupAccessLevel;
 }
+
+export interface GroupPublicResponse extends GroupProfileResponse {
+	memberCount: number;
+	followers: string[];
+	followings: string[];
+	accessLevel: GroupAccessLevel;
+}
+
+export type GroupAccessLevelUnionType =
+	| GroupAccessLevelResponse
+	| GroupPublicResponse;

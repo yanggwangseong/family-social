@@ -1,9 +1,6 @@
-import {
-	GroupAccessLevelResponse,
-	GroupDetailResponse,
-} from '@/shared/interfaces/fam.interface';
+import { GroupAccessLevelUnionType } from '@/shared/interfaces/fam.interface';
 
 export interface GroupDetailSidebarProps {
 	groupId: string;
-	groupAccessLevel: GroupAccessLevelResponse;
+	groupAccessLevel: GroupAccessLevelUnionType;
 }

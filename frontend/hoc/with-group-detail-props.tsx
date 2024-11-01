@@ -1,12 +1,12 @@
 import { GroupService } from '@/services/group/group.service';
 
-import { GroupAccessLevelResponse } from '@/shared/interfaces/fam.interface';
+import { GroupAccessLevelUnionType } from '@/shared/interfaces/fam.interface';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 
 export function withGroupDetailProps<P extends object>(
 	WrappedComponent: React.ComponentType<
-		P & { groupAccessLevel: GroupAccessLevelResponse }
+		P & { groupAccessLevel: GroupAccessLevelUnionType }
 	>,
 ): React.ComponentType<P> {
 	const WithGroupDetailProps: React.FC<P> = props => {
