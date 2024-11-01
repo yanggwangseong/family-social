@@ -5,6 +5,7 @@ import { GroupAccessLevel } from '@/types/enum';
 
 import { GroupProfileResDto } from './group-profile.rest.dto';
 import { FamWithRoleResDto } from '../../fam/res/fam-with-role-res.dto';
+import { MemberSearchResDto } from '../../member/res/member-search-res.dto';
 
 export class GroupAccessLevelResDto extends GroupProfileResDto {
 	@ApiProperty({
@@ -14,6 +15,14 @@ export class GroupAccessLevelResDto extends GroupProfileResDto {
 	})
 	@Type(() => FamWithRoleResDto)
 	fam!: FamWithRoleResDto;
+
+	@ApiProperty({
+		nullable: true,
+		description: '사용자에 대한 정보',
+		type: MemberSearchResDto,
+	})
+	@Type(() => MemberSearchResDto)
+	member!: MemberSearchResDto;
 
 	@ApiProperty({
 		nullable: false,

@@ -36,18 +36,27 @@ export class GroupsRepository extends Repository<GroupEntity> {
 						id: true,
 						invitationAccepted: true,
 						role: true,
-						memberId: true,
+						member: {
+							id: true,
+							username: true,
+							email: true,
+							profileImage: true,
+						},
 					},
 				},
 				where: {
 					id: groupId,
 					groupByMemberGroups: {
 						invitationAccepted: true,
-						memberId,
+						member: {
+							id: memberId,
+						},
 					},
 				},
 				relations: {
-					groupByMemberGroups: true,
+					groupByMemberGroups: {
+						member: true,
+					},
 				},
 			})
 			.then((group) => {
@@ -59,6 +68,12 @@ export class GroupsRepository extends Repository<GroupEntity> {
 							id: groupByMemberGroups[0].id,
 							role: groupByMemberGroups[0].role,
 							invitationAccepted: groupByMemberGroups[0].invitationAccepted,
+						},
+						member: {
+							id: groupByMemberGroups[0].member.id,
+							username: groupByMemberGroups[0].member.username,
+							email: groupByMemberGroups[0].member.email,
+							profileImage: groupByMemberGroups[0].member.profileImage,
 						},
 					};
 				}
