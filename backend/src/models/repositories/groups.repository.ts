@@ -25,30 +25,46 @@ export class GroupsRepository extends Repository<GroupEntity> {
 	}
 
 	async getGroupByGroupId(groupId: string, memberId: string) {
-		return await this.repository.findOneOrFail({
-			select: {
-				id: true,
-				groupName: true,
-				groupCoverImage: true,
-				groupDescription: true,
-				groupByMemberGroups: {
+		return await this.repository
+			.findOneOrFail({
+				select: {
 					id: true,
-					invitationAccepted: true,
-					role: true,
-					memberId: true,
+					groupName: true,
+					groupCoverImage: true,
+					groupDescription: true,
+					groupByMemberGroups: {
+						id: true,
+						invitationAccepted: true,
+						role: true,
+						memberId: true,
+					},
 				},
-			},
-			where: {
-				id: groupId,
-				groupByMemberGroups: {
-					invitationAccepted: true,
-					memberId,
+				where: {
+					id: groupId,
+					groupByMemberGroups: {
+						invitationAccepted: true,
+						memberId,
+					},
 				},
-			},
-			relations: {
-				groupByMemberGroups: true,
-			},
-		});
+				relations: {
+					groupByMemberGroups: true,
+				},
+			})
+			.then((group) => {
+				const { groupByMemberGroups, ...rest } = group;
+				if (groupByMemberGroups) {
+					return {
+						...rest,
+						fam: {
+							id: groupByMemberGroups[0].id,
+							role: groupByMemberGroups[0].role,
+							invitationAccepted: groupByMemberGroups[0].invitationAccepted,
+						},
+					};
+				}
+
+				return group;
+			});
 	}
 
 	async getGroupByGroupIdPublic(groupId: string) {

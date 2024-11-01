@@ -6,7 +6,6 @@ import { MAIN_ROLE } from '@/constants/string-constants';
 import { FamInvitationsResDto } from '@/models/dto/fam/res/fam-invitations-res.dto';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { FamEntity, roleType } from '@/models/entities/fam.entity';
-import { OmitStrict } from '@/types';
 import {
 	IFindInvitationByFamArgs,
 	IUpdateFamInvitationAcceptArgs,
@@ -15,7 +14,6 @@ import { IDeleteGroupArgs } from '@/types/args/group';
 import { OverrideInsertFeild } from '@/types/repository';
 
 import { BelongToGroupResDto } from '../dto/group/res/belong-to-group.res.dto';
-import { GroupAccessLevelResDto } from '../dto/group/res/group-access-level-res.dto';
 import { GroupMembersResDto } from '../dto/group/res/group-members.res.dto';
 
 @Injectable()
