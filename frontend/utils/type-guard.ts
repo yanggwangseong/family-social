@@ -113,3 +113,14 @@ export const isGroupAccessLevelResponse = (
 ): data is GroupAccessLevelResponse => {
 	return data.accessLevel === GroupAccessLevel.PRIVATE;
 };
+
+/**
+ * 그룹에 속한 인원이 아닐때 GroupPublicResponse를 추론하는 타입 가드
+ * @param data 그룹 접근 레벨 유니온 타입
+ * @returns {GroupPublicResponse} 그룹에 속한 인원이 아닐때 확인
+ */
+export const isGroupPublicResponse = (
+	data: GroupAccessLevelUnionType,
+): data is GroupPublicResponse => {
+	return data.accessLevel === GroupAccessLevel.PUBLIC;
+};
