@@ -13,12 +13,29 @@ import {
 } from '@/constants/swagger-error-response';
 import { FamResDto } from '@/models/dto/fam/res/fam-res.dto';
 import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.dto';
+import { GroupAccessLevelResDto } from '@/models/dto/group/res/group-access-level-res.dto';
 import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
 import { SuccessResponse } from './sucess-response.decorator';
+
+export const GetGroupDetailPublicSwagger = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: 'groupId에 해당하는 특정 그룹 공개 정보 가져오기',
+		}),
+		ApiOkResponse({
+			description: 'groupId에 해당하는 특정 그룹 공개 정보 가져오기',
+			type: GroupAccessLevelResDto,
+		}),
+		ErrorResponse(HttpStatus.NOT_FOUND, [
+			GroupErrorResponse['Group-404-1'],
+			BadRequestErrorResponse['BadRequest-400-1'],
+		]),
+	);
+};
 
 export const GetGroupDetailSwagger = () => {
 	return applyDecorators(

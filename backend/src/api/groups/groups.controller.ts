@@ -39,6 +39,7 @@ import {
 	CreateGroupSwagger,
 	DeleteFamByMemberOfGroupSwagger,
 	DeleteGroupSwagger,
+	GetGroupDetailPublicSwagger,
 	GetGroupDetailSwagger,
 	GetInviteLinkByGroup,
 	GetMemberBelongToGroupsSwagger,
@@ -84,6 +85,7 @@ import { AcceptInvitationUpdateReqDto } from '@/models/dto/fam/req/accept-invita
 import { GroupCreateReqDto } from '@/models/dto/group/req/group-create-req.dto';
 import { GroupInvitedEmailsReqDto } from '@/models/dto/group/req/group-invited-emails-req.dto';
 import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
+import { GroupAccessLevelResDto } from '@/models/dto/group/res/group-access-level-res.dto';
 import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
 import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
@@ -100,6 +102,7 @@ import { ScheduleCreateReqDto } from '@/models/dto/schedule/req/schedule-create-
 import { ScheduleUpdateReqDto } from '@/models/dto/schedule/req/schedule-update-req.dto';
 import { ScheduleItemResDto } from '@/models/dto/schedule/res/schedule-item-res.dto';
 import { GroupEventEntity } from '@/models/entities/group-event.entity';
+import { GroupAccessLevel } from '@/types/enum';
 
 import { GroupsService } from './groups.service';
 import { FamsService } from '../fams/fams.service';
@@ -177,14 +180,56 @@ export class GroupsController {
 		groupId: string,
 		@CurrentUser('sub') sub: string,
 	): Promise<GroupDetailResDto> {
-		const response = await this.famsService.getGroupByGroupId(groupId, sub);
-		const followers = await this.groupFollowService.getFollowers(groupId);
-		const followings = await this.groupFollowService.getFollowings(groupId);
+		const [response, followers, followings] = await Promise.all([
+			this.famsService.getGroupByGroupId(groupId, sub),
+			this.groupFollowService.getFollowers(groupId),
+			this.groupFollowService.getFollowings(groupId),
+		]);
 
 		return {
 			...response,
 			followers,
 			followings,
+		};
+	}
+
+	/**
+	 * @summary 특정 그룹 공개 정보 가져오기
+	 *
+	 * @tag groups
+	 * @param groupId 그룹 아이디
+	 * @param sub 인증된 유저 아이디
+	 * @author YangGwangSeong <soaw83@gmail.com>
+	 * @returns 특정 그룹 공개 정보
+	 */
+	@GetGroupDetailPublicSwagger()
+	@Get(':groupId/public')
+	async getPublicGroupDetail(
+		@Param(
+			'groupId',
+			new ParseUUIDPipe({ exceptionFactory: parseUUIDPipeMessage }),
+		)
+		groupId: string,
+		@CurrentUser('sub') sub: string,
+	): Promise<GroupAccessLevelResDto> {
+		const memberShip = await this.groupsService.memberShipOfGroupExists(
+			groupId,
+			sub,
+		);
+
+		const [response, followers, followings] = await Promise.all([
+			this.famsService.getGroupByGroupIdPublic(groupId),
+			this.groupFollowService.getFollowers(groupId),
+			this.groupFollowService.getFollowings(groupId),
+		]);
+
+		return {
+			...response,
+			followers,
+			followings,
+			accessLevel: !memberShip
+				? GroupAccessLevel.PUBLIC
+				: GroupAccessLevel.PRIVATE,
 		};
 	}
 
