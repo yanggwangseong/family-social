@@ -88,6 +88,7 @@ import { GroupUpdateReqDto } from '@/models/dto/group/req/group-update-req.dto';
 import { GroupAccessLevelResDto } from '@/models/dto/group/res/group-access-level-res.dto';
 import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
 import { GroupProfileResDto } from '@/models/dto/group/res/group-profile.rest.dto';
+import { GroupPublicResDto } from '@/models/dto/group/res/group-public-res.dto';
 import { GroupEventCreateReqDto } from '@/models/dto/group-event/req/group-event-create-req.dto';
 import { GroupEventPaginationReqDto } from '@/models/dto/group-event/req/group-event-pagination-req.dto';
 import { GroupEventUpdateReaDto } from '@/models/dto/group-event/req/group-event-update-req.dto';
@@ -200,7 +201,7 @@ export class GroupsController {
 	 * @param groupId 그룹 아이디
 	 * @param sub 인증된 유저 아이디
 	 * @author YangGwangSeong <soaw83@gmail.com>
-	 * @returns 특정 그룹 공개 정보
+	 * @returns 사용자 그룹에 속했을때와 속하지 않았을때 다른 정보 반환
 	 */
 	@GetGroupDetailPublicSwagger()
 	@Get(':groupId/public')
@@ -211,14 +212,14 @@ export class GroupsController {
 		)
 		groupId: string,
 		@CurrentUser('sub') sub: string,
-	): Promise<GroupAccessLevelResDto> {
+	): Promise<GroupAccessLevelResDto | GroupPublicResDto> {
 		const memberShip = await this.groupsService.memberShipOfGroupExists(
 			groupId,
 			sub,
 		);
 
 		const [response, followers, followings] = await Promise.all([
-			this.famsService.getGroupByGroupIdPublic(groupId),
+			this.groupsService.getGroupByGroupIdPublic(groupId, sub, memberShip),
 			this.groupFollowService.getFollowers(groupId),
 			this.groupFollowService.getFollowings(groupId),
 		]);

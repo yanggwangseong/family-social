@@ -37,6 +37,24 @@ export class GroupsService {
 		private readonly famsRepository: FamsRepository,
 	) {}
 
+	async getGroupByGroupIdPublic(
+		groupId: string,
+		memberId: string,
+		memberShip: boolean,
+	) {
+		const [member, memberCount] = await Promise.all([
+			memberShip
+				? this.groupsRepository.getGroupByGroupId(groupId, memberId)
+				: this.groupsRepository.getGroupByGroupIdPublic(groupId),
+			this.famsRepository.getCountBelongToGroupMember(groupId),
+		]);
+
+		return {
+			...member,
+			memberCount,
+		};
+	}
+
 	async getMemberListBelongToGroup({
 		groupId,
 		memberId,

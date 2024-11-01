@@ -1,19 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 
 import { GroupAccessLevel } from '@/types/enum';
 
 import { GroupProfileResDto } from './group-profile.rest.dto';
-import { FamWithRoleResDto } from '../../fam/res/fam-with-role-res.dto';
 
-export class GroupAccessLevelResDto extends FamWithRoleResDto {
-	@ApiProperty({
-		nullable: false,
-		description: '해당 그룹에 대한 정보',
-	})
-	@Type(() => GroupProfileResDto)
-	group!: GroupProfileResDto;
-
+export class GroupPublicResDto extends GroupProfileResDto {
 	@ApiProperty({
 		nullable: false,
 		description: '그룹에 속한 멤버 수',

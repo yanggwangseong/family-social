@@ -24,6 +24,45 @@ export class GroupsRepository extends Repository<GroupEntity> {
 			: this.repository;
 	}
 
+	async getGroupByGroupId(groupId: string, memberId: string) {
+		return await this.repository.findOneOrFail({
+			select: {
+				id: true,
+				groupName: true,
+				groupCoverImage: true,
+				groupDescription: true,
+				groupByMemberGroups: {
+					id: true,
+					invitationAccepted: true,
+					role: true,
+					memberId: true,
+				},
+			},
+			where: {
+				id: groupId,
+				groupByMemberGroups: {
+					invitationAccepted: true,
+					memberId,
+				},
+			},
+			relations: {
+				groupByMemberGroups: true,
+			},
+		});
+	}
+
+	async getGroupByGroupIdPublic(groupId: string) {
+		return await this.repository.findOneOrFail({
+			select: {
+				id: true,
+				groupName: true,
+				groupCoverImage: true,
+				groupDescription: true,
+			},
+			where: { id: groupId },
+		});
+	}
+
 	/**
 	 * @summary 그룹 이름에 해당하는 그룹 리스트 검색
 	 * @description 인증된 사용자가 속한 그룹 제외

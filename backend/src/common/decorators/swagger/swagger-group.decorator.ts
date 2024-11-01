@@ -16,6 +16,7 @@ import { BelongToGroupResDto } from '@/models/dto/group/res/belong-to-group.res.
 import { GroupAccessLevelResDto } from '@/models/dto/group/res/group-access-level-res.dto';
 import { GroupDetailResDto } from '@/models/dto/group/res/group-detail.res.dto';
 import { GroupMembersResDto } from '@/models/dto/group/res/group-members.res.dto';
+import { GroupPublicResDto } from '@/models/dto/group/res/group-public-res.dto';
 import { GroupResDto } from '@/models/dto/group/res/group-res.dto';
 
 import { ErrorResponse } from './error-response.decorator';
@@ -26,10 +27,24 @@ export const GetGroupDetailPublicSwagger = () => {
 		ApiOperation({
 			summary: 'groupId에 해당하는 특정 그룹 공개 정보 가져오기',
 		}),
-		ApiOkResponse({
-			description: 'groupId에 해당하는 특정 그룹 공개 정보 가져오기',
-			type: GroupAccessLevelResDto,
-		}),
+
+		SuccessResponse(HttpStatus.OK, [
+			{
+				model: GroupAccessLevelResDto,
+				exampleTitle:
+					'사용자가 그룹에 속할 경우 groupId에 해당하는 특정 그룹 공개 정보 가져오기',
+				exampleDescription:
+					'사용자가 그룹에 속할 경우 그룹 접근 수준, 그룹에 속한 멤버 수, 그룹 팔로워 수, 그룹 팔로잉 수 반환',
+			},
+			{
+				model: GroupPublicResDto,
+				exampleTitle:
+					'사용자가 그룹에 속하지 않을 경우 groupId에 해당하는 특정 그룹 공개 정보 가져오기',
+				exampleDescription:
+					'사용자가 그룹에 속하지 않을 경우 그룹 접근 수준, 그룹에 속한 멤버 수, 그룹 팔로워 수, 그룹 팔로잉 수 반환',
+			},
+		]),
+
 		ErrorResponse(HttpStatus.NOT_FOUND, [
 			GroupErrorResponse['Group-404-1'],
 			BadRequestErrorResponse['BadRequest-400-1'],

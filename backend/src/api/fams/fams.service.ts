@@ -100,18 +100,6 @@ export class FamsService {
 		};
 	}
 
-	async getGroupByGroupIdPublic(groupId: string) {
-		const [member, memberCount] = await Promise.all([
-			this.famsRepository.getGroupByGroupIdPublic(groupId),
-			this.famsRepository.getCountBelongToGroupMember(groupId),
-		]);
-
-		return {
-			...member,
-			memberCount,
-		};
-	}
-
 	async checkIfFamExists(
 		findInvitationByFamArgs: IFindInvitationByFamArgs,
 	): Promise<FamResDto> {
