@@ -9,8 +9,10 @@ import { useGroupEventItemIntersectionObserver } from '@/hooks/useGroupEventItem
 import { TranslateDateFormat } from '@/utils/translate-date-format';
 import Skeleton from '@/components/ui/skeleton/Skeleton';
 import { AnimatePresence } from 'framer-motion';
+import { withGroupDetailProps } from 'hoc/with-group-detail-props';
+import { GroupDetailProps } from '../group-detail.interface';
 
-const GroupDetailEvent: FC = () => {
+const GroupDetailEvent: FC<GroupDetailProps> = ({ groupAccessLevel }) => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
@@ -41,7 +43,11 @@ const GroupDetailEvent: FC = () => {
 
 	return (
 		<Format title={'group-detail-event'}>
-			<GroupDetailFormat groupId={groupId} page="GROUPEVENT">
+			<GroupDetailFormat
+				groupId={groupId}
+				groupAccessLevel={groupAccessLevel}
+				page="GROUPEVENT"
+			>
 				<div className={styles.group_event_container}>
 					{isLoading && <Skeleton />}
 
@@ -71,4 +77,4 @@ const GroupDetailEvent: FC = () => {
 	);
 };
 
-export default GroupDetailEvent;
+export default withGroupDetailProps(GroupDetailEvent);

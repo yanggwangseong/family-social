@@ -53,6 +53,35 @@ export class FamsRepository extends Repository<FamEntity> {
 		});
 	}
 
+	// async getGroupByGroupIdPublic(
+	// 	groupId: string,
+	// ): Promise<
+	// 	OmitStrict<
+	// 		GroupAccessLevelResDto,
+	// 		'accessLevel' | 'followers' | 'followings' | 'memberCount'
+	// 	>
+	// > {
+	// 	return await this.repository.findOneOrFail({
+	// 		select: {
+	// 			id: true,
+	// 			invitationAccepted: true,
+	// 			role: true,
+	// 			group: {
+	// 				id: true,
+	// 				groupName: true,
+	// 				groupCoverImage: true,
+	// 				groupDescription: true,
+	// 			},
+	// 		},
+	// 		where: {
+	// 			groupId,
+	// 		},
+	// 		relations: {
+	// 			group: true,
+	// 		},
+	// 	});
+	// }
+
 	async getCountBelongToGroupMember(groupId: string) {
 		return await this.repository.countBy({
 			groupId,

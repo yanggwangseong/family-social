@@ -3,4 +3,8 @@
 		@apply text-sm;
 	}
 	@apply bg-customOrange font-medium px-2 py-[1px] border border-solid border-customDark rounded-2xl text-xs;
+
+	&.ended {
+		@apply bg-gray-200 text-gray-600;
+	}
 }

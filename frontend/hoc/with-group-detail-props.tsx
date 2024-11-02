@@ -1,28 +1,35 @@
-import { useGroupDetailQuery } from '@/hooks/use-query/useGroupDetailQuery';
+import { GroupService } from '@/services/group/group.service';
 
-import { GroupDetailResponse } from '@/shared/interfaces/fam.interface';
+import { GroupAccessLevelUnionType } from '@/shared/interfaces/fam.interface';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
 export function withGroupDetailProps<P extends object>(
 	WrappedComponent: React.ComponentType<
-		P & { groupDetail: GroupDetailResponse }
+		P & { groupAccessLevel: GroupAccessLevelUnionType }
 	>,
 ): React.ComponentType<P> {
 	const WithGroupDetailProps: React.FC<P> = props => {
 		const router = useRouter();
 		const { groupId } = router.query as { groupId: string };
 
-		const { groupDetail, groupDetailLoading } = useGroupDetailQuery(groupId);
+		const { data, isLoading } = useQuery(
+			['get-group-access-level', groupId],
+			async () => await GroupService.getGroupAccessLevel(groupId),
+			{
+				enabled: !!groupId,
+			},
+		);
 
-		if (groupDetailLoading) {
+		if (isLoading) {
 			return <div>로딩 중...</div>;
 		}
 
-		if (!groupDetail) {
+		if (!data) {
 			return null;
 		}
 
-		return <WrappedComponent groupDetail={groupDetail} {...props} />;
+		return <WrappedComponent groupAccessLevel={data} {...props} />;
 	};
 
 	return WithGroupDetailProps;

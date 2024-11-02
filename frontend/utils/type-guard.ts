@@ -1,4 +1,9 @@
 import {
+	GroupAccessLevelResponse,
+	GroupAccessLevelUnionType,
+	GroupPublicResponse,
+} from '@/shared/interfaces/fam.interface';
+import {
 	TourAdditionalAccomodation,
 	TourAdditionalCommon,
 	TourAdditionalTourCourse,
@@ -15,6 +20,7 @@ import {
 	TourIntroductionUnionType,
 	TourIntroductionUnionTypeResponse,
 } from '@/shared/interfaces/tour.interface';
+import { GroupAccessLevel } from 'types/enum';
 
 export const isTourist = (
 	data: TourIntroductionUnionType,
@@ -95,4 +101,26 @@ export const isAdditionalAccomodation = (
 	data: TourAdditionalUnionType,
 ): data is TourAdditionalUnionTypeResponse<TourAdditionalAccomodation> => {
 	return data.kind === 'additionalAccomodation';
+};
+
+/**
+ * 그룹에 속한 인원일때 GroupAccessLevelResponse를 추론하는 타입 가드
+ * @param data 그룹 접근 레벨 유니온 타입
+ * @returns {GroupAccessLevelResponse} 그룹에 속한 인원인지 확인
+ */
+export const isGroupAccessLevelResponse = (
+	data: GroupAccessLevelUnionType,
+): data is GroupAccessLevelResponse => {
+	return data.accessLevel === GroupAccessLevel.PRIVATE;
+};
+
+/**
+ * 그룹에 속한 인원이 아닐때 GroupPublicResponse를 추론하는 타입 가드
+ * @param data 그룹 접근 레벨 유니온 타입
+ * @returns {GroupPublicResponse} 그룹에 속한 인원이 아닐때 확인
+ */
+export const isGroupPublicResponse = (
+	data: GroupAccessLevelUnionType,
+): data is GroupPublicResponse => {
+	return data.accessLevel === GroupAccessLevel.PUBLIC;
 };

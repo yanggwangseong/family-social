@@ -1,7 +1,5 @@
 import { GroupAccessLevelUnionType } from '@/shared/interfaces/fam.interface';
 
-export interface GroupDetailSidebarProps {
-	groupId: string;
+export interface GroupDetailProps {
 	groupAccessLevel: GroupAccessLevelUnionType;
-	handleFollowLayerModal: () => void;
 }

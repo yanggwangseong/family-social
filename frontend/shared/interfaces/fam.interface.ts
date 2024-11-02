@@ -1,3 +1,4 @@
+import { GroupAccessLevel } from 'types/enum';
 import { AuthResponse } from './auth.interface';
 import { GroupProfileResponse, GroupResponse } from './group.interface';
 import { SearchMemberResponse } from './member.interface';
@@ -47,3 +48,23 @@ export interface GroupDetailResponse extends FamResponse {
 	followers: string[];
 	followings: string[];
 }
+
+export interface GroupAccessLevelResponse extends GroupProfileResponse {
+	fam: FamWithRoleResponse;
+	member: SearchMemberResponse;
+	memberCount: number;
+	followers: string[];
+	followings: string[];
+	accessLevel: GroupAccessLevel;
+}
+
+export interface GroupPublicResponse extends GroupProfileResponse {
+	memberCount: number;
+	followers: string[];
+	followings: string[];
+	accessLevel: GroupAccessLevel;
+}
+
+export type GroupAccessLevelUnionType =
+	| GroupAccessLevelResponse
+	| GroupPublicResponse;

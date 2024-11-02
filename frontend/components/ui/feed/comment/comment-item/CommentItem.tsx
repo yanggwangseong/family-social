@@ -9,6 +9,7 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { LayerMode } from 'types';
 import { commentAtom } from '@/atoms/commentAtom';
 import { PiHeartDuotone } from 'react-icons/pi';
+import { formatDateDistance } from '@/utils/format-date-distance';
 
 const CommentItem: FC<{
 	comment: CommentsResponse;
@@ -80,7 +81,9 @@ const CommentItem: FC<{
 				{/* 프로필 */}
 				<Profile comment={comment} searchMember={comment.member} />
 				<div className={styles.comment_card_bottom_container}>
-					<div className={styles.comment_published}>5분전</div>
+					<div className={styles.comment_published}>
+						{formatDateDistance(comment.updatedAt)}
+					</div>
 					<div>
 						<BsDot size={22} color="#0a0a0a"></BsDot>
 					</div>
