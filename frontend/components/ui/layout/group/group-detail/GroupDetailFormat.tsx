@@ -87,6 +87,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 		setGroupFollow({ groupId });
 	};
 
+	console.log(groupAccessLevel.accessLevel);
 	// [TODO] api/groups/:groupId 수정 필요.
 	const isMineGroup = false;
 
@@ -106,6 +107,7 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 				<GroupDetailSidebar
 					groupId={groupId}
 					groupAccessLevel={groupAccessLevel}
+					handleFollowLayerModal={handleFollowLayerModal}
 				/>
 
 				<div className={styles.detail_container}>
