@@ -1,4 +1,8 @@
-import { GroupDetailResponse } from '@/shared/interfaces/fam.interface';
+import {
+	GroupAccessLevelResponse,
+	GroupAccessLevelUnionType,
+	GroupDetailResponse,
+} from '@/shared/interfaces/fam.interface';
 import {
 	CreateGroupRequest,
 	GroupResponse,
@@ -14,6 +18,14 @@ export const GroupService = {
 	async getGroupDetail(groupId: string) {
 		const { data } = await axiosAPI.get<GroupDetailResponse>(
 			`/groups/${groupId}`,
+		);
+
+		return data;
+	},
+
+	async getGroupAccessLevel(groupId: string) {
+		const { data } = await axiosAPI.get<GroupAccessLevelUnionType>(
+			`/groups/${groupId}/public`,
 		);
 
 		return data;

@@ -1,4 +1,5 @@
 import { ApiPropertyOptional, PickType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 import { FamEntity } from '@/models/entities/fam.entity';
 
@@ -13,5 +14,6 @@ export class FamSharedMemberResDto extends PickType(FamEntity, [
 	@ApiPropertyOptional({
 		nullable: false,
 	})
+	@Type(() => MemberSearchResDto)
 	member!: MemberSearchResDto;
 }

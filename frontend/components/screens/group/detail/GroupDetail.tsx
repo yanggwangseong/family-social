@@ -6,8 +6,10 @@ import { useLottieLike } from '@/hooks/useLottieLike';
 
 import GroupDetailFormat from '@/components/ui/layout/group/group-detail/GroupDetailFormat';
 import FeedContainer from '../../feed/feed-container/FeedContainer';
+import { GroupDetailProps } from './group-detail.interface';
+import { withGroupDetailProps } from 'hoc/with-group-detail-props';
 
-const GroupDetail: FC = () => {
+const GroupDetail: FC<GroupDetailProps> = ({ groupAccessLevel }) => {
 	const router = useRouter();
 
 	const { groupId } = router.query as { groupId: string };
@@ -21,6 +23,7 @@ const GroupDetail: FC = () => {
 				lottieRef={lottieRef}
 				handleLottieComplete={handleLottieComplete}
 				page="GROUPFEED"
+				groupAccessLevel={groupAccessLevel}
 			>
 				<FeedContainer
 					options="GROUPFEED"
@@ -32,4 +35,4 @@ const GroupDetail: FC = () => {
 	);
 };
 
-export default GroupDetail;
+export default withGroupDetailProps(GroupDetail);
