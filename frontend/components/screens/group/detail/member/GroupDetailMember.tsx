@@ -7,8 +7,10 @@ import { useRouter } from 'next/router';
 import React, { FC, Fragment } from 'react';
 import { useQuery } from 'react-query';
 import styles from './GroupDetailMember.module.scss';
+import { withGroupDetailProps } from 'hoc/with-group-detail-props';
+import { GroupDetailProps } from '../group-detail.interface';
 
-const GroupDetailMember: FC = () => {
+const GroupDetailMember: FC<GroupDetailProps> = ({ groupAccessLevel }) => {
 	const router = useRouter();
 	const { groupId } = router.query as { groupId: string };
 
@@ -19,7 +21,11 @@ const GroupDetailMember: FC = () => {
 
 	return (
 		<Format title={'group-detail-member'}>
-			<GroupDetailFormat groupId={groupId} page="GROUPMEMBER">
+			<GroupDetailFormat
+				groupId={groupId}
+				groupAccessLevel={groupAccessLevel}
+				page="GROUPMEMBER"
+			>
 				<div className={styles.list_container}>
 					{data && (
 						<>
@@ -59,4 +65,4 @@ const GroupDetailMember: FC = () => {
 	);
 };
 
-export default GroupDetailMember;
+export default withGroupDetailProps(GroupDetailMember);
