@@ -31,6 +31,8 @@ prefix로 `/api`를 붙입니다.
 
 ## 프리뷰
 
+### PC
+
 ![alt text](image-1.png)
 ![alt text](image-2.png)
 ![alt text](image-3.png)
@@ -43,6 +45,12 @@ prefix로 `/api`를 붙입니다.
 ![alt text](image-10.png)
 ![alt text](image-11.png)
 ![alt text](image-12.png)
+
+### Mobile
+
+![alt text](image-13.png)
+![alt text](image-14.png)
+![alt text](image-15.png)
 
 ## Infra
 

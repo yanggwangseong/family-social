@@ -27,6 +27,7 @@ import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
 import { useRouter } from 'next/router';
 import { LayerMode } from 'types';
 import { groupFollowAtom } from '@/atoms/groupFollowAtom';
+import { isGroupAccessLevelResponse } from '@/utils/type-guard';
 
 const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 	children,
@@ -87,10 +88,6 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 		setGroupFollow({ groupId });
 	};
 
-	console.log(groupAccessLevel.accessLevel);
-	// [TODO] api/groups/:groupId 수정 필요.
-	const isMineGroup = false;
-
 	return (
 		<div className={styles.container}>
 			{/* 헤더 */}
@@ -118,37 +115,34 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 								src={'/images/banner/group-base.png'}
 								alt="banner"
 							></Image>
-							{/* TODO 그룹 역할이 main일때 수정 가능 */}
-							<div className={styles.banner_edit_btn}>
-								<PiPencilDuotone size={22} />
-								<button className={styles.btn_text} onClick={handleClick}>
-									수정
-								</button>
+							{/* 그룹 역할이 main일때 수정 가능 */}
+							{isGroupAccessLevelResponse(groupAccessLevel) &&
+								groupAccessLevel.fam.role === 'main' && (
+									<div className={styles.banner_edit_btn}>
+										<PiPencilDuotone size={22} />
+										<button className={styles.btn_text} onClick={handleClick}>
+											수정
+										</button>
 
-								<input
-									type="file"
-									id="fileUpload"
-									style={{ display: 'none' }}
-									onChange={handleGroupCoverImageUpload}
-									ref={hiddenFileInput}
-								/>
-							</div>
+										<input
+											type="file"
+											id="fileUpload"
+											style={{ display: 'none' }}
+											onChange={handleGroupCoverImageUpload}
+											ref={hiddenFileInput}
+										/>
+									</div>
+								)}
 						</div>
 						<div className={styles.main_contents_container}>
 							<div className={styles.banner_profile_contaienr}>
-								{/* 프로필 [TODO] */}
 								{/* 본인이 해당 그룹에 속해 있을때만 표시 */}
-								{isMineGroup ? (
+								{isGroupAccessLevelResponse(groupAccessLevel) ? (
 									<>
 										<Profile
-											username="양광성2"
-											role="관리자"
-											searchMember={{
-												id: '410b7202-660a-4423-a6c3-6377857241cc',
-												username: '양광성',
-												email: 'rhkdtjd_12@naver.com',
-												profileImage: '/images/profile/profile.png',
-											}}
+											username={groupAccessLevel.member.username}
+											role={groupAccessLevel.fam.role}
+											searchMember={groupAccessLevel.member}
 										/>
 
 										<div className={styles.banner_profile_right_contaienr}>
@@ -183,31 +177,33 @@ const GroupDetailFormat: FC<PropsWithChildren<GroupDetailFormatProps>> = ({
 													</CustomButton>
 												</div>
 											)}
-											{/* TODO 그룹 역할이 main일때 초대 가능 */}
-											<motion.div
-												className={styles.toggle_menu_container}
-												initial={false}
-												animate={isOpenInvitation ? 'open' : 'closed'}
-												ref={invitationModalWrapperRef}
-											>
-												<CustomButton
-													type="button"
-													className="bg-customOrange text-customDark 
+											{/* 그룹 역할이 main일때 초대 가능 */}
+											{groupAccessLevel.fam.role === 'main' && (
+												<motion.div
+													className={styles.toggle_menu_container}
+													initial={false}
+													animate={isOpenInvitation ? 'open' : 'closed'}
+													ref={invitationModalWrapperRef}
+												>
+													<CustomButton
+														type="button"
+														className="bg-customOrange text-customDark 
 												font-bold border border-solid border-customDark 
 												rounded-full w-full py-[10px] px-7
 												hover:bg-orange-500
 												"
-													onClick={handleCloseInvitationModal}
-												>
-													+ 초대하기
-												</CustomButton>
+														onClick={handleCloseInvitationModal}
+													>
+														+ 초대하기
+													</CustomButton>
 
-												{/*  toggle modal */}
-												<ToggleModal
-													list={InviteMenu}
-													onClose={handleCloseInvitationModal}
-												/>
-											</motion.div>
+													{/*  toggle modal */}
+													<ToggleModal
+														list={InviteMenu}
+														onClose={handleCloseInvitationModal}
+													/>
+												</motion.div>
+											)}
 										</div>
 									</>
 								) : (
