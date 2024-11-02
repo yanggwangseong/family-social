@@ -22,9 +22,19 @@ import { useEditMode } from '@/hooks/useEditMode';
 import { motion } from 'framer-motion';
 import { INLINEBUTTONGESTURE } from '@/utils/animation/gestures';
 import { useCreateMutation } from '@/hooks/useCreateMutation';
+import { withGroupDetailProps } from 'hoc/with-group-detail-props';
+import { GroupDetailProps } from '../group-detail.interface';
+import { modalAtom, modalLayerAtom } from '@/atoms/modalAtom';
+import { useRecoilState } from 'recoil';
+import { groupFollowAtom } from '@/atoms/groupFollowAtom';
+import { LayerMode } from 'types';
 
-const GroupDetailEdit: FC = () => {
+const GroupDetailEdit: FC<GroupDetailProps> = ({ groupAccessLevel }) => {
 	const router = useRouter();
+
+	const [isShowing, setIsShowing] = useRecoilState(modalAtom);
+	const [, setIsLayer] = useRecoilState(modalLayerAtom);
+	const [, setGroupFollow] = useRecoilState(groupFollowAtom);
 	const { groupId } = router.query as { groupId: string };
 
 	const { isMode, handleEdit } = useEditMode<GroupDetailEditModeType>('reset');
@@ -67,13 +77,26 @@ const GroupDetailEdit: FC = () => {
 		updateGroupSync(data);
 	};
 
+	const handleFollowLayerModal = () => {
+		setIsShowing(!isShowing);
+		setIsLayer({
+			modal_title: '그룹 팔로우',
+			layer: LayerMode.groupFollowModal,
+		});
+		setGroupFollow({ groupId });
+	};
+
 	return (
 		<Format title={'group-detail'}>
 			<div className={styles.container}>
 				{/* 헤더 */}
 				<Header />
 				<div className={styles.contents_container}>
-					<GroupDetailSidebar groupId={groupId} />
+					<GroupDetailSidebar
+						groupId={groupId}
+						groupAccessLevel={groupAccessLevel}
+						handleFollowLayerModal={handleFollowLayerModal}
+					/>
 					<div className={styles.right_contents_container}>
 						<div className={styles.main_contents_container}>
 							<div className={styles.detail_container}>
@@ -230,4 +253,4 @@ const GroupDetailEdit: FC = () => {
 	);
 };
 
-export default GroupDetailEdit;
+export default withGroupDetailProps(GroupDetailEdit);
